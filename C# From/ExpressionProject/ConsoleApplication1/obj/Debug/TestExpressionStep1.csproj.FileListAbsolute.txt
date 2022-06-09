@@ -1,6 +1,0 @@
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\bin\Debug\TestExpressionStep1.exe.config
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\bin\Debug\TestExpressionStep1.exe
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\bin\Debug\TestExpressionStep1.pdb
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\obj\Debug\TestExpressionStep1.csprojResolveAssemblyReference.cache
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\obj\Debug\TestExpressionStep1.exe
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# From\ExpressionProject\ConsoleApplication1\obj\Debug\TestExpressionStep1.pdb
