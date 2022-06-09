@@ -1,6 +1,0 @@
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\bin\Debug\TestExpressionStep3.exe.config
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\bin\Debug\TestExpressionStep3.exe
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\bin\Debug\TestExpressionStep3.pdb
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\obj\Debug\TestExpressionStep3.exe
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\obj\Debug\TestExpressionStep3.pdb
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep3\obj\Debug\TestExpressionStep3.csprojResolveAssemblyReference.cache

@@ -1,7 +1,0 @@
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\bin\Debug\TestExpressionStep4.exe.config
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\bin\Debug\TestExpressionStep4.exe
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\bin\Debug\TestExpressionStep4.pdb
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\obj\Debug\TestExpressionStep4.exe
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\obj\Debug\TestExpressionStep4.pdb
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\bin\Debug\Newtonsoft.Json.dll
-C:\Users\H474357\source\repos\ConsoleApplication1\TestExpressionStep4\obj\Debug\TestExpressionStep4.csprojResolveAssemblyReference.cache
