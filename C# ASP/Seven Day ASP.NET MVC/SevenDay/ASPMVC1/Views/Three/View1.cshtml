@@ -1,0 +1,36 @@
+﻿@using ASPMVC1.Models
+@model PersonLstView
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View1</title>
+</head>
+<body>
+    Hello @Model.LoginUser
+    <hr />
+    <table>
+        <tr>
+            <th>Person Name</th>
+            <th>Person Score</th>
+        </tr>
+
+        @foreach(PersonModel person in Model.PersonModels)
+        {
+            <tr>
+                <td>@person.Name</td>
+                <td style="background-color:@person.Color">@person.Salary</td>
+            </tr>
+        }
+
+    </table>
+    <div>
+    </div>
+</body>
+</html>
