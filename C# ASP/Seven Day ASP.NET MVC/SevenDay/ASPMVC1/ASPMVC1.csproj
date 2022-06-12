@@ -159,6 +159,7 @@
     <Content Include="Views\Shared\ShareTest.cshtml" />
     <Content Include="Views\Second\View1.cshtml" />
     <Content Include="Views\Second\View2.cshtml" />
+    <Content Include="Views\Second\View3.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

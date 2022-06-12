@@ -1,0 +1,38 @@
+﻿<!---ViewData和ViewBag引起的所有问题根源都在于数据类型。参数值的数据类型是被封装在ViewData中的，称为对象。--->
+<!---如果能够设置Controller和View之间参数传递的数据类型，那么上述问题就会得到解决，因此从得出强类型View。--->
+<!---在View的顶部添加以下代码：代码中引用的是大写需注意--->
+@model ASPMVC1.Models.Employee
+
+@{
+    Layout = null;
+}
+
+
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View3</title>
+</head>
+<body>
+    <div>
+    </div>
+    <b>Employee Detail</b><br />
+    Employee Name:@Model.FirstName@Model.LastName<br />
+    @if (Model.Salary > 1500)
+    {
+        <span style="background-color:yellow">
+            Employee Salary:@Model.Salary.ToString("C")
+        </span>
+    }
+    else
+    {
+        <span style="background-color:green">
+            Employee Salary:@Model.Salary.ToString("C")
+        </span>
+    }
+
+</body>
+</html>
