@@ -1,6 +1,7 @@
 ﻿<!---ViewData 是 Key/Value字典集合，需要类型转换代码 --->
 <!---ViewBag 是 dynamic类型对象，查询不需要类型转换 --->
 
+
 @{
     Layout = null;
 }
@@ -10,17 +11,17 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>View1</title>
+    <title>View2</title>
 </head>
 <body>
     <div>
         @{
-            ASPMVC1.Models.Employee e = (ASPMVC1.Models.Employee)ViewData["Employee"];
+            ASPMVC1.Models.Employee e = ViewBag.Employee;
         }
     </div>
 
     <b>Employee Detail</b><br />
-    Employee Name:@e.FirstName@e.LastName<br/>
+    Employee Name:@e.FirstName@e.LastName<br />
     Employee Salart:@e.Salary.ToString("C")
 </body>
 </html>
