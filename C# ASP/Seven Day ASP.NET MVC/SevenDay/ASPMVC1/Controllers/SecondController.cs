@@ -1,4 +1,5 @@
 ﻿using ASPMVC1.Models;
+using ASPMVC1.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -52,7 +53,31 @@ namespace ASPMVC1.Controllers
             };
 
             e.Salary = salary;
-            return View("View3", e);
+            return View(viewName: "View3", model: e);
+        }
+
+        // http://localhost:62939/Second/StrongViewLst
+        // 将ViewModel直接传入html 渲染 表格
+        public ActionResult StrongViewLst()
+        {
+            List<StudentViewModel> model = new List<StudentViewModel>()
+            {
+                new StudentViewModel(){Name  ="aaa",Score = 50},
+                new StudentViewModel(){Name  ="bbb",Score = 60},
+                new StudentViewModel(){Name  ="ccc",Score = 40},
+                new StudentViewModel(){Name  ="ddd",Score = 80},
+                new StudentViewModel(){Name  ="eee",Score = 70},
+
+            };
+
+            model.ForEach(m => m.ScoreColor = m.Score >= 60 ? "green" : "yellow");
+            StudentListViewModel viewModel = new StudentListViewModel()
+            {
+                Students = model,
+                LoginName = "Admin"
+            };
+
+            return View(viewName: "View4", model: viewModel);
         }
     }
 }

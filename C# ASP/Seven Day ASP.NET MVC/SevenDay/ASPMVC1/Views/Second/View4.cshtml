@@ -1,0 +1,37 @@
+﻿<!---ViewModel封装展示:封装了一个集合和显示颜色 --->
+@using ASPMVC1.Models.ViewModel
+@model StudentListViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View4</title>
+</head>
+<body>
+     Hello @Model.LoginName 
+    <hr/>
+    <table>
+        <tr>
+            <th>Student Name</th>
+            <th>Student Score</th>
+        </tr>
+
+        @foreach (StudentViewModel stu in Model.Students)
+        { 
+           <tr>
+               <td>@stu.Name</td>
+               <td style="background-color:@stu.ScoreColor">@stu.Score</td>
+           </tr>
+        }
+
+    </table>
+    <div> 
+    </div>
+</body>
+</html>
