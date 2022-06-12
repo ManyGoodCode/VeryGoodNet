@@ -1,0 +1,23 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>View1</title>
+</head>
+<body>
+    <div>
+        @{
+            ASPMVC1.Models.Employee e = (ASPMVC1.Models.Employee)ViewData["Employee"];
+        }
+    </div>
+
+    <b>Employee Detail</b><br />
+    Employee Name:@e.FirstName@e.LastName<br/>
+    Employee Salart:@e.Salary.ToString("C")
+</body>
+</html>
