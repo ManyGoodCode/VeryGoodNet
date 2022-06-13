@@ -1,4 +1,6 @@
-﻿@using ASPMVC1.Models
+﻿<!---html中超链接 a 中执行控制器方法进行跳转到指定视图View --->
+
+@using ASPMVC1.Models
 @model PersonLstView
 
 @{
@@ -13,7 +15,7 @@
     <title>View1</title>
 </head>
 <body>
-    Hello @Model.LoginUser
+    <a href="/Three/AddPerson">Add Person</a>
     <hr />
     <table>
         <tr>
@@ -21,7 +23,7 @@
             <th>Person Score</th>
         </tr>
 
-        @foreach(PersonModel person in Model.PersonModels)
+        @foreach (PersonModel person in Model.PersonModels)
         {
             <tr>
                 <td>@person.Name</td>

@@ -1,0 +1,25 @@
+﻿<!---html中 post form  时。1. action 代表执行的控制器方法;2. 控件名称表示传输的对象属性值 --->
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddPerson</title>
+</head>
+<body>
+    <div>
+        <form action="/Three/SavePerson" method="post">
+            Name  : <input type="text" id="TxtName" name="Name" value="" /><br />
+            Salary: <input type="text" id="TxtSalary" name="Salary" value="" /><br />
+            <input type="submit" name="BtSave" value="保存" />
+            <input type="button" name="BtReset" value="重置" />
+        </form>
+    </div>
+</body>
+</html>

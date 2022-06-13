@@ -12,7 +12,7 @@ namespace ASPMVC1.Controllers
     {
         // http://localhost:62939/Three/StrongViewLst
         // 本地数据库继承软件需要引用 EntityFramework
-        public ActionResult StrongViewLst()
+        public ActionResult Index()
         {
             List<PersonModel> model = new List<PersonModel>();
             List<Person> persons = new PersonService().GetPersons();
@@ -31,7 +31,18 @@ namespace ASPMVC1.Controllers
                 LoginUser = "Admin"
             };
 
-            return View(viewName: "View1", model: viewModel);
+            return View(viewName: "Index", model: viewModel);
+        }
+
+        public ActionResult AddPerson()
+        {
+            return View(viewName:"AddPerson");
+        }
+
+        // html中 post form  时。1. action 代表执行的控制器方法;2. 控件名称表示传输的对象属性值 
+        public string SavePerson(Person person)
+        {
+            return string.Format("{0}|{1}", person.Name, person.Salary);
         }
     }
 }
