@@ -2,6 +2,8 @@
 <!---2也就是Model Binder会通过方法的元参数迭代，然后会和接收到参数名称做对比。如果匹配，则响应接收的数据，并分配给参数--->
 <!---br为换行--->
 <!---script 添加脚本 onclick="ResetPerson()"为执行方法；getElementById获取控件 --->
+<!---保存Person按钮 和 取消Person同名可以用通过传递给Action的名称进行区分--->
+<!---document.getElementById获取控件--->
 
 
 @{
@@ -11,6 +13,11 @@
     function ResetPerson() {
         document.getElementById('TxtPersonName').value = '';
         document.getElementById('TxtPersonSalary').value = '';
+    }
+
+    function ResetPerson2() {
+        document.getElementById('TxtPersonName2').value = '';
+        document.getElementById('TxtPersonSalary2').value = '';
     }
 </script>
 
@@ -38,6 +45,16 @@
             City: <input type="text" id="TxtCity" name="Address.City" value="" /><br />
             <input type="submit" name="BtSchoolSave" value="保存School" />
             <input type="button" name="BtSchoolReset" value="重置School" />
+        </form>
+        <br />
+        <br />
+        <br />
+        <form action="/Three/SavePerson2" method="post">
+            Name  : <input type="text" id="TxtPersonName2" name="Name" value="" /><br />
+            Salary: <input type="text" id="TxtPersonSalary2" name="Salary" value="" /><br />
+            <input type="submit" name="BtPersonSubmit2" value="保存Person2" />
+            <input type="button" name="BtPersonReset2" value="重置Person2" onclick="ResetPerson2()" />
+            <input type="submit" name="BtPersonSubmit2" value="取消Person2" />
         </form>
     </div>
 </body>

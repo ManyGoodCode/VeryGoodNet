@@ -47,9 +47,29 @@ namespace ASPMVC1.Controllers
             switch (BtPersonSubmit)
             {
                 case "保存Person":
-                    return Content(content: string.Format("{0}|{1}", person.Name, person.Salary));
+                    // Request.Form["Name"] 和 ModelBind的person.Name 实现相同的功能
+                    string name = Request.Form["Name"];
+                    return Content(content: string.Format("{0}|{1}", name, person.Salary));
 
                 case "取消Person":
+                    return RedirectToAction(actionName: "Index");
+
+
+            }
+
+            return new EmptyResult();
+        }
+
+        public ActionResult SavePerson2(Person person, string BtPersonSubmit2)
+        {
+            switch (BtPersonSubmit2)
+            {
+                case "保存Person2":
+                    // Request.Form["Name"] 和 ModelBind的person.Name 实现相同的功能
+                    new PersonService().SavePerson(person);
+                    return RedirectToAction(actionName: "Index");
+
+                case "取消Person2":
                     return RedirectToAction(actionName: "Index");
 
 

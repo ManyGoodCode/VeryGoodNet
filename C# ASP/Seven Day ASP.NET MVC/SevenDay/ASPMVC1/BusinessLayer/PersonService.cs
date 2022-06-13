@@ -14,5 +14,12 @@ namespace ASPMVC1.BusinessLayer
             PersonDal personDal = new PersonDal();
             return personDal.Employees.ToList();
         }
+
+        public void SavePerson(Person p)
+        {
+            PersonDal personDal = new PersonDal();
+            personDal.Employees.Add(p);
+            personDal.SaveChanges();
+        }
     }
 }
