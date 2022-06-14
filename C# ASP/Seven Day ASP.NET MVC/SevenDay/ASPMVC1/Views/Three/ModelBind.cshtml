@@ -1,0 +1,24 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ModelBind</title>
+</head>
+<body>
+    <div>
+        <div>
+            <form action="" id="upf" method="post">
+                Name  : <input type="text" id="TxtName" name="Name" value="12" /><br />
+                Salary: <input type="text" id="TxtSalary" name="Salary" value="" /><br />
+                <input type="submit" name="BToK" value="ModelBind1" onclick="document.getElementById('upf').action='/Three/Bind1'" />
+                <input type="submit" name="BToK" value="ModelBind2" onclick="document.getElementById('upf').action='/Three/Bind2'" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

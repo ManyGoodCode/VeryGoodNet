@@ -189,6 +189,7 @@
     <Content Include="Views\Three\HideCancel.cshtml" />
     <Content Include="Views\Three\LoadJavaScript.cshtml" />
     <Content Include="Views\Three\ResetView.cshtml" />
+    <Content Include="Views\Three\ModelBind.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
