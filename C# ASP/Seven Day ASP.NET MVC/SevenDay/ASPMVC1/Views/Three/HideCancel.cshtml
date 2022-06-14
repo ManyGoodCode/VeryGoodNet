@@ -1,0 +1,28 @@
+﻿<!--- 隐藏提交窗体 --->
+
+@{
+    Layout = null;
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>PrintSchool</title>
+</head>
+<body>
+    <div>
+        <form action="/Three/GetCancelClick" id="cancelForm" method="get" style="display:none">
+            Name  : <input type="text" id="TxtSchoolName" name="Name" value="" /><br />
+            Province: <input type="text" id="TxtProvince" name="Address.Province" value="" /><br />
+            City: <input type="text" id="TxtCity" name="Address.City" value="" /><br />
+            <input type="submit" name="UP" value="UP" />
+        </form>
+        <input type="button" name="BtOK" value="HideCancel" onclick="document.getElementById('cancelForm').submit()" />
+    </div>
+</body>
+</html>
+
