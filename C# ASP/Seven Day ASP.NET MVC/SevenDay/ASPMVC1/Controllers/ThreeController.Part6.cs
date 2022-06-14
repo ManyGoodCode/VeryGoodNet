@@ -36,15 +36,15 @@ namespace ASPMVC1.Controllers
         }
 
         // 自适配 DefaultModelBinder，将提交的字段映射到对象
-        public string Bind3([ModelBinder(typeof(PersonModelBinder))]Person p)
+        public string Bind3([System.Web.Mvc.ModelBinderAttribute(typeof(PersonModelBinder))]Person p)
         {
             return string.Format("Bind3 Name:{0}  Salary:{1}", p.Name, p.Salary);
         }
     }
 
-    public class PersonModelBinder : DefaultModelBinder
+    public class PersonModelBinder : System.Web.Mvc.DefaultModelBinder
     {
-        public override object BindModel(ControllerContext controllerContext, ModelBindingContext bindingContext)
+        public override object BindModel(System.Web.Mvc.ControllerContext controllerContext, System.Web.Mvc.ModelBindingContext bindingContext)
         {
             Person p = new Person();
             p.Name = controllerContext.HttpContext.Request.Form["ame"];

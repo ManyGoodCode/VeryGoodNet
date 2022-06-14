@@ -1,0 +1,24 @@
+﻿<!---  绑定数据可靠性验证 --->
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Verify</title>
+</head>
+<body>
+    <div>
+        <div>
+            <form action="" id="upf" method="post">
+                Name  : <input type="text" id="TxtKey" name="Key" value="" /><br />
+                Salary: <input type="text" id="TxtText" name="Text" value="22333" /><br />
+                <input type="submit" name="BToK" value="ModelBind2" onclick="document.getElementById('upf').action='/Three/VerifyModelBind'" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>
