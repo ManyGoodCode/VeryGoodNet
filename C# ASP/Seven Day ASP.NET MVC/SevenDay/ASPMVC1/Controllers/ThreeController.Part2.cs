@@ -11,7 +11,7 @@ namespace ASPMVC1.Controllers
     {
         public ActionResult PrintSchool()
         {
-            return View(viewName: "PrintShoolInfo");
+            return View(viewName: "PrintSchool");
         }
 
         // html中 post form  时。 控件名称表示传输的对象属性值 

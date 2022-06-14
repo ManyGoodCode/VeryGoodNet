@@ -19,7 +19,7 @@ namespace ASPMVC1.Controllers
         {
             switch (BtSubmit)
             {
-                case "保存保存数据库Person":
+                case "保存数据库Person":
                     // Request.Form["Name"] 和 ModelBind的person.Name 实现相同的功能
                     new PersonService().SavePerson(person);
                     return RedirectToAction(actionName: "Index");
