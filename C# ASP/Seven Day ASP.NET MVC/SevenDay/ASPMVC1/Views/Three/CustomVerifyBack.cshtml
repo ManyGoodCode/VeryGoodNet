@@ -1,0 +1,29 @@
+﻿<!---  自定义验证数据 --->
+
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>AddDataBasePerson</title>
+</head>
+<body>
+    <div>
+        <div>
+            <form action="" id="upf" method="post">
+                Key  : <input type="text" id="TxtKey" name="Key" value="" />
+                @Html.ValidationMessage("Key")
+                <br />
+                Text: <input type="text" id="TxtText" name="Text" value="22333" />
+                @Html.ValidationMessage("Text")
+                <br />
+                <input type="submit" name="BToK" value="ModelBind2" onclick="document.getElementById('upf').action='/Three/CustomVerify'" />
+            </form>
+        </div>
+    </div>
+</body>
+</html>

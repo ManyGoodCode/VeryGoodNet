@@ -13,22 +13,24 @@ namespace ASPMVC1.Controllers
             return View(viewName: "VerifyWithErrorMessage");
         }
 
-        // ModelState 服务器有效性验证
-        public string VerifyWithErrorMessageModelBind(VerifyModelWithErrorMessage model)
+        // ModelState 服务器有效性验证 
+        // 错误信息返回客户端 并且通过 @Html.ValidationMessage("Key") 获取，【界面被重新加载 需要注意与之前不同】
+
+        public ActionResult VerifyWithErrorMessageModelBind(VerifyModelWithErrorMessage model)
         {
             if (!ModelState.IsValid)
             {
-                return string.Empty;
+                return View(viewName: "VerifyErrorView");
             }
             else
             {
-                return string.Format("Key:{0} Text:{1}", model.Key, model.Text);
+                return RedirectToAction(actionName: "Index");
             }
         }
     }
     public class VerifyModelWithErrorMessage
     {
-        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "key must has value")]
+        [System.ComponentModel.DataAnnotations.Required(ErrorMessage = "Enter Key")]
         public int Key { get; set; }
 
 

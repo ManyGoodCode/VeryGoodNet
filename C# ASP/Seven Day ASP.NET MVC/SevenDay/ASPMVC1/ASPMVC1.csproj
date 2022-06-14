@@ -135,6 +135,7 @@
     <Compile Include="Controllers\ThreeController.Part6.cs" />
     <Compile Include="Controllers\ThreeController.Part7.cs" />
     <Compile Include="Controllers\ThreeController.Part8.cs" />
+    <Compile Include="Controllers\ThreeController.Part9.cs" />
     <Compile Include="DataAccessLayer\PersonDal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -194,6 +195,9 @@
     <Content Include="Views\Three\ModelBind.cshtml" />
     <Content Include="Views\Three\Verify.cshtml" />
     <Content Include="Views\Three\VerifyWithErrorMessage.cshtml" />
+    <Content Include="Views\Three\VerifyErrorView.cshtml" />
+    <Content Include="Views\Three\CustomVerify.cshtml" />
+    <Content Include="Views\Three\CustomVerifyBack.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
