@@ -14,7 +14,6 @@
         document.getElementById('TxtPersonName').value = '';
         document.getElementById('TxtPersonSalary').value = '';
     }
-
 </script>
 
 <!DOCTYPE html>
@@ -25,10 +24,10 @@
 </head>
 <body>
     <div>
-        <form action="/Three/PrintPerson" method="post">
+        <form action="/Three/SaveDataBasePerson" method="post">
             Name  : <input type="text" id="TxtPersonName" name="Name" value="" /><br />
             Salary: <input type="text" id="TxtPersonSalary" name="Salary" value="" /><br />
-            <input type="submit" name="BtSubmit" value="保存Person" />
+            <input type="submit" name="BtSubmit" value="保存数据库Person" />
             <input type="button" name="BtPersonReset" value="重置Person" onclick="ResetPerson()" />
             <input type="submit" name="BtSubmit" value="取消Person" />
         </form>

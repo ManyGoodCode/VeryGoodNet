@@ -8,7 +8,7 @@ using System.Web.Mvc;
 
 namespace ASPMVC1.Controllers
 {
-    public class ThreeController : Controller
+    public partial class ThreeController : Controller
     {
         // http://localhost:62939/Three/StrongViewLst
         // 本地数据库继承软件需要引用 EntityFramework
@@ -40,11 +40,12 @@ namespace ASPMVC1.Controllers
             return View(viewName: "AddPerson");
         }
 
+
         // html中 post form  时。1. action 代表执行的控制器方法;2. 控件名称表示传输的对象属性值 
         // 获取Submit的名称:RedirectToAction跳到当前控制器的位置；EmptyResult为空
-        public ActionResult SavePerson(Person person, string BtPersonSubmit)
+        public ActionResult PrintPerson(Person person, string BtSubmit)
         {
-            switch (BtPersonSubmit)
+            switch (BtSubmit)
             {
                 case "保存Person":
                     // Request.Form["Name"] 和 ModelBind的person.Name 实现相同的功能
@@ -58,31 +59,6 @@ namespace ASPMVC1.Controllers
             }
 
             return new EmptyResult();
-        }
-
-        public ActionResult SavePerson2(Person person, string BtPersonSubmit2)
-        {
-            switch (BtPersonSubmit2)
-            {
-                case "保存Person2":
-                    // Request.Form["Name"] 和 ModelBind的person.Name 实现相同的功能
-                    new PersonService().SavePerson(person);
-                    return RedirectToAction(actionName: "Index");
-
-                case "取消Person2":
-                    return RedirectToAction(actionName: "Index");
-
-
-            }
-
-            return new EmptyResult();
-        }
-
-        // html中 post form  时。 控件名称表示传输的对象属性值 
-        // 迭代属性名称命名控件
-        public string SaveSchool(School school)
-        {
-            return string.Format("学校名称:{0} 省份:{1} 城市:{2}", school.Name, school.Address.Province, school.Address.City);
         }
     }
 }

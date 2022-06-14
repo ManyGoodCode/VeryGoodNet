@@ -10,9 +10,10 @@
     Layout = null;
 }
 <script>
-    function ResetPerson() {
-        document.getElementById('TxtPersonName').value = '';
-        document.getElementById('TxtPersonSalary').value = '';
+    function ResetInfo() {
+        document.getElementById('TxtSchoolName').value = '';
+        document.getElementById('TxtProvince').value = '';
+        document.getElementById('TxtCity').value = '';
     }
 
 </script>
@@ -25,12 +26,12 @@
 </head>
 <body>
     <div>
-        <form action="/Three/PrintPerson" method="post">
-            Name  : <input type="text" id="TxtPersonName" name="Name" value="" /><br />
-            Salary: <input type="text" id="TxtPersonSalary" name="Salary" value="" /><br />
-            <input type="submit" name="BtSubmit" value="保存Person" />
-            <input type="button" name="BtPersonReset" value="重置Person" onclick="ResetPerson()" />
-            <input type="submit" name="BtSubmit" value="取消Person" />
+        <form action="/Three/PrintShoolInfo" method="post">
+            Name  : <input type="text" id="TxtSchoolName" name="Name" value="" /><br />
+            Province: <input type="text" id="TxtProvince" name="Address.Province" value="" /><br />
+            City: <input type="text" id="TxtCity" name="Address.City" value="" /><br />
+            <input type="submit" name="BtSchoolSave" value="打印School" />
+            <input type="button" name="BtSchoolReset" value="重置School" onclick="ResetInfo()" />
         </form>
     </div>
 </body>
