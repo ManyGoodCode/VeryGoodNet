@@ -1,0 +1,29 @@
+﻿<!--- 隐藏提交窗体 --->
+<!---  将提交按钮改为正常按钮，并且使用JavaScript脚本代码 --->
+<!---  修改action的submit 按钮需要放在form内部 --->
+
+@{
+    Layout = null;
+}
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>LoadJavaScript</title>
+</head>
+<body>
+    <div>
+        <form action="" id="upf" method="post">
+            Name  : <input type="text" id="TxtName" name="Name" value="" /><br />
+            Salary: <input type="text" id="TxtSalary" name="Salary" value="" /><br />
+            <input type="submit" name="BToK" value="NowJavaScriptURL" onclick="document.getElementById('upf').action='/Three/NowJavaScriptURL'" />
+            <input type="submit" name="BToK" value="ChangeJavaScriptURL" onclick="document.getElementById('upf').action='/Three/ChangeJavaScriptURL'" />
+        </form>
+    </div>
+</body>
+</html>
+
