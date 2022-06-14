@@ -131,6 +131,8 @@
     <Compile Include="Controllers\ThreeController.Part2.cs" />
     <Compile Include="Controllers\ThreeController.Part3.cs" />
     <Compile Include="Controllers\ThreeController.Part4.cs" />
+    <Compile Include="Controllers\ThreeController.Part5.cs" />
+    <Compile Include="Controllers\ThreeController.Part6.cs" />
     <Compile Include="DataAccessLayer\PersonDal.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -186,6 +188,7 @@
     <Content Include="Views\Three\AddDataBasePerson.cshtml" />
     <Content Include="Views\Three\HideCancel.cshtml" />
     <Content Include="Views\Three\LoadJavaScript.cshtml" />
+    <Content Include="Views\Three\ResetView.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
