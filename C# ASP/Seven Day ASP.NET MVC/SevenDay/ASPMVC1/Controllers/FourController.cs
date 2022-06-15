@@ -7,7 +7,7 @@ using System.Web.Mvc;
 
 namespace ASPMVC1.Controllers
 {
-    public class FourController : Controller
+    public partial class FourController : Controller
     {
         public ActionResult Index()
         {

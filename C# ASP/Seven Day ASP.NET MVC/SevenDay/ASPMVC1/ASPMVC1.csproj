@@ -123,6 +123,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BusinessLayer\PersonService.cs" />
+    <Compile Include="Controllers\FourController.Client.cs" />
     <Compile Include="Controllers\FourController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SecondController.cs" />
@@ -164,6 +165,7 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
+    <Content Include="Scripts\Validations.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
@@ -199,6 +201,7 @@
     <Content Include="Views\Three\VerifyErrorView.cshtml" />
     <Content Include="Views\Three\CustomVerify.cshtml" />
     <Content Include="Views\Three\CustomVerifyBack.cshtml" />
+    <Content Include="Views\Four\FourValidation.cshtml" />
     <None Include="Views\Four\Index.cshtml" />
     <Content Include="Views\Four\CallBack.cshtml" />
   </ItemGroup>
