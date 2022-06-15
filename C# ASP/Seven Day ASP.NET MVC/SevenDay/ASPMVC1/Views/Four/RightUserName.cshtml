@@ -1,0 +1,22 @@
+﻿<!---FormsAuthentication.SignOut(); 退出后下一次访问特性标记的资源将会让输入用户名 密码 --->
+
+
+@model ASPMVC1.Controllers.RightUser
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>RightUserName</title>
+</head>
+<body>
+    <div style="text-align:right">
+        Hello,@Model.Name
+        <a href="/four/LoginOut">LogOut</a>
+    </div>
+</body>
+</html>

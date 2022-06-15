@@ -126,6 +126,7 @@
     <Compile Include="Controllers\FourController.Authentication.cs" />
     <Compile Include="Controllers\FourController.Client.cs" />
     <Compile Include="Controllers\FourController.cs" />
+    <Compile Include="Controllers\FourController.UserName.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SecondController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -206,6 +207,7 @@
     <Content Include="Views\Four\Login.cshtml" />
     <None Include="Views\Four\Index.cshtml" />
     <Content Include="Views\Four\CallBack.cshtml" />
+    <Content Include="Views\Four\RightUserName.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>

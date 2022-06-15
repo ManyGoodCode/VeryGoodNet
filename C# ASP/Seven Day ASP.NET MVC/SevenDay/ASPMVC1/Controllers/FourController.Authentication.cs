@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Security;
 
 namespace ASPMVC1.Controllers
 {
@@ -20,9 +21,18 @@ namespace ASPMVC1.Controllers
 
         //  Html.BeginForm(actionName: "DoLogin", controllerName: "Four", method: FormMethod.Post) 转换为html代码<form action="/Authentication/DoLogin" method="post"> --->
         // Html.TextAreaFor(expression: x => x.UserName) 转换为html代码<input id="UserName" name="UserName" type="text" value="" --->
-        public ActionResult DoLogin()
+        public ActionResult DoLogin(UserDetails u)
         {
-            return Content("DoLogin");
+            if (u.UserName == "Admin" && u.PassWord == "Admin")
+            {
+                // false决定了是否创建永久有用的Cookie。临时Cookie会在浏览器关闭时自动删除，永久Cookie不会被删除。可通过浏览器设置或是编写代码手动删除。
+                FormsAuthentication.SetAuthCookie(userName: u.UserName, createPersistentCookie: false);
+                return RedirectToAction(actionName: "TestAuthentication1", "Four");
+            }
+            else
+            {
+                return View(viewName: "Login");
+            }
         }
 
         // 让Action 方法更安全; 在Index action 方法中添加认证属性 [Authorize].
