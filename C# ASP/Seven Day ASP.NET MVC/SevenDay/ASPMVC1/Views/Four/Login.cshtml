@@ -1,0 +1,38 @@
+﻿<!--- Html.BeginForm(actionName: "DoLogin", controllerName: "Four", method: FormMethod.Post) 转换为html代码  <form action="/Authentication/DoLogin" method="post"> --->
+<!--- Html.TextAreaFor(expression: x => x.UserName) 转换为html代码 <input id="UserName" name="UserName" type="text" value="" --->
+
+
+
+@model ASPMVC1.Controllers.UserDetails
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Login</title>
+</head>
+<body>
+    <div>
+        @using (Html.BeginForm(actionName: "DoLogin", controllerName: "Four", method: FormMethod.Post)) // 转换为html代码  <form action="/Authentication/DoLogin" method="post">
+        {
+            @Html.LabelFor(expression: c => c.UserName);
+            @Html.TextAreaFor(expression: x => x.UserName) // 转换为html代码 <input id="UserName" name="UserName" type="text" value="" />
+
+
+            <br /> // 换行
+
+            @Html.LabelFor(expression: c => c.PassWord);
+            @Html.TextAreaFor(expression: x => x.PassWord)
+
+
+            <input type="submit" name="BtnSubmit" value="Login" />
+            <br />// 换行
+        }
+    </div>
+</body>
+</html>
