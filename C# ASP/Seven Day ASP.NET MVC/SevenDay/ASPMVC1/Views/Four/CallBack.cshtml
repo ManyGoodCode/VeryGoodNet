@@ -1,4 +1,7 @@
-﻿@using ASPMVC1.Controllers
+﻿<!---成功就返回OK，没成功就把验证通过的数传回，看着像没改 --->
+<!---是否是真的将值保留？不是，是从post数据中重新获取的 --->
+
+@using ASPMVC1.Controllers
 @model FourEntity
 
 @{
@@ -14,7 +17,11 @@
 </head>
 <body>
     <div>
-        @Model.Name         @Model.PassWord
+        <form action="" id="upf" method="post">
+            Name  : <input type="text" id="TxtName" name="Name" value=@Model.Name /><br />
+            PassWord: <input type="text" id="TxtPassWord" name="PassWord" value=@Model.PassWord /><br />
+            <input type="submit" name="BToK" value="ModelBind2" onclick="document.getElementById('upf').action='/Four/CallBack'" />
+        </form>
     </div>
 </body>
 </html>

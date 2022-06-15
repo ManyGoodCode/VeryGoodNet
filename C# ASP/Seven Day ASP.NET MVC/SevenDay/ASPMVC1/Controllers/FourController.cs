@@ -14,30 +14,31 @@ namespace ASPMVC1.Controllers
             return View();
         }
 
-        // 无效验证把默认值返回
+
+        // 成功就返回OK，没成功就把验证通过的数传回，看着像没改
         public ActionResult CallBack(FourEntity entity)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
                 return View(viewName: "CallBack", model: new FourEntity()
                 {
-                    Name = "????",
-                    PassWord = "*****"
+                    Name = entity.Name,
+                    PassWord = entity.PassWord
                 }) ;
             }
             else
             {
-                return View(viewName: "Index");
+                return Content("OK");
             }
         }
     }
 
     public class FourEntity
     {
-        [StringLength(5)]
+        [Required]
         public string Name { get; set; }
 
-        [StringLength(6)]
+        [Required]
         public string PassWord { get; set; }
     }
 }
