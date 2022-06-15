@@ -123,6 +123,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BusinessLayer\PersonService.cs" />
+    <Compile Include="Controllers\FourController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SecondController.cs" />
     <Compile Include="Controllers\TestController.cs" />
@@ -198,6 +199,8 @@
     <Content Include="Views\Three\VerifyErrorView.cshtml" />
     <Content Include="Views\Three\CustomVerify.cshtml" />
     <Content Include="Views\Three\CustomVerifyBack.cshtml" />
+    <None Include="Views\Four\Index.cshtml" />
+    <Content Include="Views\Four\CallBack.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
