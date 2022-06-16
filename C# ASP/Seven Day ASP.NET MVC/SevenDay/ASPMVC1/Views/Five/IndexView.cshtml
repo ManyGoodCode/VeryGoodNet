@@ -1,0 +1,28 @@
+﻿<!---分布视图的界面 --->
+<!---Html.RenderPartial会将分部View的结果直接写入HTTP 响应流中，而 Html.Partial会返回 MvcHtmlString值。--->
+
+
+@using ASPMVC1.Models.ViewModel
+@model FiveMainViewModel
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>IndexView</title>
+</head>
+<body>
+    <div>
+        @Model.Text
+        @{
+            // Html.RenderPartial会将分部View的结果直接写入HTTP 响应流中，而 Html.Partial会返回 MvcHtmlString值。
+            Html.RenderPartial(partialViewName: "Footer", model: Model.Foot);
+        }
+    </div>
+</body>
+</html>

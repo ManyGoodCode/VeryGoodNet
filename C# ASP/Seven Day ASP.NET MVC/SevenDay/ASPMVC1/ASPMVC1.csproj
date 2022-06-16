@@ -123,6 +123,7 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="BusinessLayer\PersonService.cs" />
+    <Compile Include="Controllers\FiveController.cs" />
     <Compile Include="Controllers\FourController.Authentication.cs" />
     <Compile Include="Controllers\FourController.Client.cs" />
     <Compile Include="Controllers\FourController.cs" />
@@ -149,6 +150,7 @@
     <Compile Include="Models\Employee.cs" />
     <Compile Include="Models\Person.cs" />
     <Compile Include="Models\School.cs" />
+    <Compile Include="Models\ViewModel\FooterViewModel.cs" />
     <Compile Include="Models\ViewModel\StudentListViewModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -211,6 +213,8 @@
     <Content Include="Views\Three\CustomVerifyBack.cshtml" />
     <Content Include="Views\Four\FourValidation.cshtml" />
     <Content Include="Views\Four\Login.cshtml" />
+    <Content Include="Views\Shared\Footer.cshtml" />
+    <Content Include="Views\Five\IndexView.cshtml" />
     <None Include="Views\Four\Index.cshtml" />
     <Content Include="Views\Four\CallBack.cshtml" />
     <Content Include="Views\Four\RightUserName.cshtml" />
