@@ -1,0 +1,30 @@
+﻿@model ASPMVC1.Controllers.ImportJsEnitity
+
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>NoImportJs</title>
+</head>
+<body>
+    <div>
+        @Html.ValidationMessageFor(x => x.UserName)
+        @Html.ValidationMessage("CredentialError")
+
+        @using (Html.BeginForm(actionName: "NoImportJs", controllerName: "Four", method: FormMethod.Post)) // 转换为html代码  <form action="/Authentication/DoLogin" method="post">
+        {
+            @Html.LabelFor(expression: c => c.UserName)
+            @Html.TextAreaFor(expression: x => x.UserName) // 转换为html代码 <input id="UserName" name="UserName" type="text" value="" />
+            <br />// 换行
+            <input type="submit" name="BtnSubmit" value="Login" />
+        }
+
+
+    </div>
+</body>
+</html>

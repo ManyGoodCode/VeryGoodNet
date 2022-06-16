@@ -126,6 +126,7 @@
     <Compile Include="Controllers\FourController.Authentication.cs" />
     <Compile Include="Controllers\FourController.Client.cs" />
     <Compile Include="Controllers\FourController.cs" />
+    <Compile Include="Controllers\FourController.ImportJs.cs" />
     <Compile Include="Controllers\FourController.UserName.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\SecondController.cs" />
@@ -208,6 +209,8 @@
     <None Include="Views\Four\Index.cshtml" />
     <Content Include="Views\Four\CallBack.cshtml" />
     <Content Include="Views\Four\RightUserName.cshtml" />
+    <Content Include="Views\Four\LoadJsView.cshtml" />
+    <Content Include="Views\Four\NoImportJs.cshtml" />
   </ItemGroup>
   <ItemGroup />
   <ItemGroup>
