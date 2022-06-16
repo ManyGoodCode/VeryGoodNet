@@ -5,7 +5,6 @@
 }
 
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
@@ -13,13 +12,10 @@
 </head>
 <body>
     <div>
-        @Html.ValidationMessageFor(x => x.UserName)
-        @Html.ValidationMessage("CredentialError")
-
-        @using (Html.BeginForm(actionName: "NoImportJs", controllerName: "Four", method: FormMethod.Post)) // 转换为html代码  <form action="/Authentication/DoLogin" method="post">
+        @using (Html.BeginForm(actionName: "ImportJs", controllerName: "Four", method: FormMethod.Post)) // 转换为html代码  <form action="/Authentication/DoLogin" method="post">
         {
-            @Html.LabelFor(expression: c => c.UserName)
-            @Html.TextAreaFor(expression: x => x.UserName) // 转换为html代码 <input id="UserName" name="UserName" type="text" value="" />
+            <input data-val="true" data-val-length="UserName length should be between 2 and 7" data-val-length-max="7" data-val-length-min="2" id="UserName" name="UserName" type="text" value="" />
+            <span class="field-validation-error" data-valmsg-for="UserName" data-valmsg-replace="true"> </span>
             <br />// 换行
             <input type="submit" name="BtnSubmit" value="Login" />
         }

@@ -27,11 +27,16 @@ namespace ASPMVC1.Controllers
                 return View(viewName: "NoImportJs");
             }
         }
+
+        public ActionResult ImportJs(ImportJsEnitity enitity)
+        {
+            return Content("OK");
+        }
     }
 
     public class ImportJsEnitity
     {
-        [StringLength(7, MinimumLength = 2, ErrorMessage = "UserName length should be between 2 and 7")]
+        [StringLength(maximumLength: 7, MinimumLength = 2, ErrorMessage = "UserName length should be between 2 and 7")]
         public string UserName { get; set; }
 
     }
