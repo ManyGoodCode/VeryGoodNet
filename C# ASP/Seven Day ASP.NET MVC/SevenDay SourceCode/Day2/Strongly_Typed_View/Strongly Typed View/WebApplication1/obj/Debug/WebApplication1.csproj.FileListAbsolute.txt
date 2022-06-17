@@ -1,0 +1,106 @@
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.dll.config
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.pdb
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\Antlr3.Runtime.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\Newtonsoft.Json.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Helpers.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Mvc.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Optimization.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Razor.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Razor.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\WebGrease.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Helpers.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Mvc.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Optimization.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.Razor.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Razor.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\Newtonsoft.Json.xml
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\bin\Antlr3.Runtime.pdb
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.dll
+G:\My Educational Drive\My Work\MY Blogs\Blogs\CodeProject\MVC 5 7 days\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.dll.config
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\WebApplication1.pdb
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\Antlr3.Runtime.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\Newtonsoft.Json.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Helpers.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Mvc.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Optimization.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Razor.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Razor.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\WebGrease.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Helpers.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Mvc.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Optimization.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.Razor.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\System.Web.WebPages.Razor.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\Newtonsoft.Json.xml
+C:\From Local\Source Code\WebApplication1\WebApplication1\bin\Antlr3.Runtime.pdb
+C:\From Local\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+C:\From Local\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.dll
+C:\From Local\Source Code\WebApplication1\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\WebApplication1.dll.config
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\WebApplication1.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\WebApplication1.pdb
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\Antlr3.Runtime.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\Newtonsoft.Json.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Helpers.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Mvc.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Optimization.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Razor.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Razor.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\WebGrease.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Helpers.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Mvc.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Optimization.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.Razor.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Razor.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\Newtonsoft.Json.xml
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\bin\Antlr3.Runtime.pdb
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.csprojResolveAssemblyReference.cache
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.dll
+C:\From Local\Source Code\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.pdb
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\WebApplication1.dll.config
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\WebApplication1.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\WebApplication1.pdb
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\Antlr3.Runtime.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\Microsoft.Web.Infrastructure.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\Newtonsoft.Json.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Helpers.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Mvc.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Optimization.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Razor.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Deployment.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Razor.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\WebGrease.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Helpers.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Mvc.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Optimization.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.Razor.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Deployment.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\System.Web.WebPages.Razor.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\Newtonsoft.Json.xml
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\bin\Antlr3.Runtime.pdb
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.csproj.AssemblyReference.cache
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.csproj.CoreCompileInputs.cache
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.csproj.CopyComplete
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.dll
+C:\Users\H474357\Desktop\VeryGoodNet\C# ASP\Seven Day ASP.NET MVC\SevenDay SourceCode\Day2\Strongly_Typed_View\Strongly Typed View\WebApplication1\obj\Debug\WebApplication1.pdb
