@@ -1,0 +1,968 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Moon.Validation</name>
+    </assembly>
+    <members>
+        <member name="T:Moon.Validation.AttributeCache">
+            <summary>
+            The cache of Validation and Display attributes.
+            </summary>
+            <remarks>
+            This internal class serves as a cache of validation attributes and [Display] attributes.
+            It exists both to help performance as well as to abstract away the differences between
+            Reflection and TypeDescriptor.
+            </remarks>
+        </member>
+        <member name="M:Moon.Validation.AttributeCache.GetTypeValidationAttributes(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Retrieves the type level validation attributes for the given type.
+            </summary>
+            <param name="context">The context that describes the type.</param>
+        </member>
+        <member name="M:Moon.Validation.AttributeCache.GetTypeDisplayName(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Retrieves the name that is used for display in the UI.
+            </summary>
+            <param name="context">The context that describes the type.</param>
+        </member>
+        <member name="M:Moon.Validation.AttributeCache.GetPropertyValidationAttributes(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Retrieves the set of validation attributes for the property.
+            </summary>
+            <param name="context">The context that describes the property.</param>
+        </member>
+        <member name="M:Moon.Validation.AttributeCache.GetPropertyDisplayName(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Retrieves the name that is used for display in the UI.
+            </summary>
+            <param name="context">The context that describes the property.</param>
+        </member>
+        <member name="P:Moon.Validation.AttributeCache.Instance">
+            <summary>
+            Gets the singleton <see cref="T:Moon.Validation.AttributeCache"/>
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.EnumerableExtensions">
+            <summary>
+            <see cref="T:System.Collections.Generic.IEnumerable`1"/> extension methods
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.EnumerableExtensions.ThrowException(System.Collections.Generic.IEnumerable{System.ComponentModel.DataAnnotations.ValidationResult})">
+            <summary>
+            Throws a <see cref="T:System.ComponentModel.DataAnnotations.ValidationException"/> if the enumeration contains any error results.
+            </summary>
+            <param name="results">The enumeration of validation results.</param>
+        </member>
+        <member name="T:Moon.Validation.ValidationAttributeExtensions">
+            <summary>
+            <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/> extension methods.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.ValidationAttributeExtensions.GetValidatorName(System.ComponentModel.DataAnnotations.ValidationAttribute)">
+            <summary>
+            Returns the name of the validator.
+            </summary>
+            <param name="attribute">The validation attribute.</param>
+        </member>
+        <member name="T:Moon.Validation.IValidatable">
+            <summary>
+            When implemented, enables custom validation.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.IValidatable.Validate(System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Enumerates results of custom validation.
+            </summary>
+            <param name="context">The context that describes the object.</param>
+        </member>
+        <member name="T:Moon.Validation.IValidationTextProvider">
+            <summary>
+            Defines basic contract for error message and display name providers.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.IValidationTextProvider.GetErrorMessage(System.Type,System.String,System.String)">
+            <summary>
+            Returns an error message for the given object type.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.IValidationTextProvider.GetErrorMessage(System.Type,System.String,System.String,System.String)">
+            <summary>
+            Returns an error message for the specified property.
+            </summary>
+            <param name="objectType">The type the property is defined on.</param>
+            <param name="propertyName">The name of the validated property.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.IValidationTextProvider.GetDisplayName(System.Type)">
+            <summary>
+            Returns a display name for the given object type.
+            </summary>
+            <param name="objectType">The metadata describing validated object or property.</param>
+        </member>
+        <member name="M:Moon.Validation.IValidationTextProvider.GetDisplayName(System.Type,System.String)">
+            <summary>
+            Returns a display name for the specified property.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="propertyName">The name of the validated property.</param>
+        </member>
+        <member name="T:Moon.Validation.IValidatorNameProvider">
+            <summary>
+            An interface for attributes providing validator name.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.IValidatorNameProvider.GetValidatorName">
+            <summary>
+            Returns the name of the validator.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.MoonValidator">
+            <summary>
+            Better Data Annotations validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.IsValid(System.Object)">
+            <summary>
+            Returns whether the given object is valid or not.
+            </summary>
+            <param name="instance">The object to test. It cannot be null.</param>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.Validate(System.Object)">
+            <summary>
+            Validates the given object and returns an enumeration of <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/>s for the failures.
+            </summary>
+            <remarks>
+            <para>
+            This method evaluates all <see cref="T:System.ComponentModel.DataAnnotations.ValidationAttribute"/>s attached to the object instance's type
+            or it's properties. It will also execute the <see cref="M:Moon.Validation.IValidatable.Validate(System.ComponentModel.DataAnnotations.ValidationContext)"/> method.
+            </para>
+            <para>
+            For any given property, if it has a <see cref="T:System.ComponentModel.DataAnnotations.RequiredAttribute"/> that fails validation, no other validators
+            will be evaluated for that property.
+            </para>
+            </remarks>
+            <param name="instance">The object to test. It cannot be null.</param>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.IsValid``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Returns whether the given properties are valid or not.
+            </summary>
+            <typeparam name="TInstance">The type of the instance.</typeparam>
+            <param name="instance">The object properties are defined on. It cannot be null.</param>
+            <param name="properties">An array of properties to test. It can be empty, but cannot be null.</param>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.Validate``1(``0,System.Linq.Expressions.Expression{System.Func{``0,System.Object}}[])">
+            <summary>
+            Validates the given properties and returns an enumeration of <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/>s for the failures.
+            </summary>
+            <remarks>
+            <para>
+            For any given property, if it has a <see cref="T:System.ComponentModel.DataAnnotations.RequiredAttribute"/> that fails validation, no other validators
+            will be evaluated for that property.
+            </para>
+            </remarks>
+            <typeparam name="TInstance">The type of the instance.</typeparam>
+            <param name="instance">The object properties are defined on. It cannot be null.</param>
+            <param name="properties">An array of properties to test. It can be empty, but cannot be null.</param>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.IsValid(System.Object,System.String[])">
+            <summary>
+            Returns whether the given properties are valid or not.
+            </summary>
+            <param name="instance">The object properties are defined on. It cannot be null.</param>
+            <param name="propertyNames">An array of properties to test. It can be empty, but cannot be null.</param>
+        </member>
+        <member name="M:Moon.Validation.MoonValidator.Validate(System.Object,System.String[])">
+            <summary>
+            Validates the given properties and returns an enumeration of <see cref="T:System.ComponentModel.DataAnnotations.ValidationResult"/>s for the failures.
+            </summary>
+            <remarks>
+            <para>
+            For any given property, if it has a <see cref="T:System.ComponentModel.DataAnnotations.RequiredAttribute"/> that fails validation, no other validators
+            will be evaluated for that property.
+            </para>
+            </remarks>
+            <param name="instance">The object properties are defined on. It cannot be null.</param>
+            <param name="propertyNames">An array of properties to test. It can be empty, but cannot be null.</param>
+        </member>
+        <member name="T:Moon.Validation.ResourcesTextProvider">
+            <summary>
+            The convention-based provider which uses standard resources
+            to provide error messages and display names.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.ValidationTextProvider">
+            <summary>
+            The base class for text providers.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetErrorMessage(System.Type,System.String,System.String)">
+            <summary>
+            Returns an error message for the given object type.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetErrorMessage(System.Type,System.String,System.String,System.String)">
+            <summary>
+            Returns an error message for the specified property.
+            </summary>
+            <param name="objectType">The type the property is defined on.</param>
+            <param name="propertyName">The name of the validated property.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetDisplayName(System.Type)">
+            <summary>
+            Returns a display name for the given object type.
+            </summary>
+            <param name="objectType">The metadata describing validated object or property.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetDisplayName(System.Type,System.String)">
+            <summary>
+            Returns a display name for the specified property.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="propertyName">The name of the validated property.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetErrorMessageKeys(System.Type,System.String)">
+            <summary>
+            Enumerates keys that can be used to lookup error message for 
+            the given type and validator.
+            </summary>
+            <remarks>
+            <para>
+            Returned keys:
+            <list type="number">
+            <item>Error_{ValidatorName}</item>
+            </list>
+            </para>
+            </remarks>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetErrorMessageKeys(System.Type,System.String,System.String)">
+            <summary>
+            Enumerates keys that can be used to lookup error message the specified 
+            property and validator.
+            </summary>
+            <remarks>
+            <para>
+            Returned keys:
+            <list type="number">
+            <item>{LastNamespacePart}_{ObjectTypeName}_{PropertyName}_{ValidatorName}</item>
+            <item>{ObjectTypeName}_{PropertyName}_{ValidatorName}</item>
+            <item>{PropertyName}_{ValidatorName}</item>
+            <item>Error_{ValidatorName}</item>
+            </list>
+            </para>
+            </remarks>
+            <param name="objectType">The type the property is defined on.</param>
+            <param name="propertyName">The name of the validated property.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetDisplayNameKeys(System.Type)">
+            <summary>
+            Enumerates keys that can be used to lookup display name 
+            for the given type.
+            </summary>
+            <remarks>
+            <para>
+            Returned keys:
+            <list type="number">
+            <item>T:{LastNamespacePart}_{ObjectTypeName}</item>
+            <item>T:{ObjectTypeName}</item>
+            </list>
+            </para>
+            </remarks>
+            <param name="objectType">The type of the validated object.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTextProvider.GetDisplayNameKeys(System.Type,System.String)">
+            <summary>
+            Enumerates keys that can be used to lookup display name for
+            the specified property.
+            </summary>
+            <remarks>
+            <para>
+            Returned keys:
+            <list type="number">
+            <item>{LastNamespacePart}_{ObjectTypeName}_{PropertyName}</item>
+            <item>{ObjectTypeName}_{PropertyName}</item>
+            <item>{PropertyName}</item>
+            </list>
+            </para>
+            </remarks>
+            <param name="objectType">The type the property is defined on.</param>
+            <param name="propertyName">The name of the validated property.</param>
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.ResourcesTextProvider"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.ResourcesTextProvider"/> class.
+            </summary>
+            <param name="defaultResourceType">The default resource type to use for text lookup.</param>
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.GetErrorMessage(System.Type,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.GetErrorMessage(System.Type,System.String,System.String,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.GetDisplayName(System.Type)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.ResourcesTextProvider.GetDisplayName(System.Type,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.ValidationTexts">
+            <summary>
+            Helper used to retrieve error messages and display names.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.ValidationTexts.#cctor">
+            <summary>
+            Initializes the <see cref="T:Moon.Validation.ValidationTexts"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.ValidationTexts.GetErrorMessage(System.Type,System.String,System.String)">
+            <summary>
+            Returns an error message for the given object type.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTexts.GetErrorMessage(System.Type,System.String,System.String,System.String)">
+            <summary>
+            Returns an error message for the specified property.
+            </summary>
+            <param name="objectType">The type the property is defined on.</param>
+            <param name="propertyName">The name of the validated property.</param>
+            <param name="validatorName">The name of validator to return message for.</param>
+            <param name="messageKey">The preferred or default message key.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTexts.GetDisplayName(System.Type)">
+            <summary>
+            Returns a display name for the given object type.
+            </summary>
+            <param name="objectType">The metadata describing validated object or property.</param>
+        </member>
+        <member name="M:Moon.Validation.ValidationTexts.GetDisplayName(System.Type,System.String)">
+            <summary>
+            Returns a display name for the specified property.
+            </summary>
+            <param name="objectType">The type of the validated object.</param>
+            <param name="propertyName">The name of the validated property.</param>
+        </member>
+        <member name="P:Moon.Validation.ValidationTexts.Provider">
+            <summary>
+            Gets or sets the error message and display name provider.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.Equal">
+            <summary>
+            Specifies that a data field value is valid when it is 
+            equal to the other property value.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.CompareValidator">
+            <summary>
+            Specifies that a data field value is valid if it meets a condition 
+            specified by a comparison operator.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.DependentValidator">
+            <summary>
+            The base class for validators dependent on other properties / fields.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.DataValidator">
+            <summary>
+            Serves as the base class for data validators.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.IValidator">
+            <summary>
+            Defines basic contract for data validators.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.IValidator.DefaultErrorMessage">
+            <summary>
+            Gets the default error message.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.DataValidator.FormatErrorMessage(System.String)">
+            <summary>
+            Applies formatting to an error message, based on the data field where the error occurred.
+            </summary>
+            <param name="name">The name of the validated property.</param>
+        </member>
+        <member name="M:Moon.Validation.DataValidator.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determines whether the specified value is valid.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="context">The context information about the validation operation.</param>
+        </member>
+        <member name="M:Moon.Validation.DataValidator.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.DataValidator.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.DependentValidator.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.DependentValidator"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="M:Moon.Validation.DependentValidator.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.DependentValidator.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.DependentValidator.IsValidValue(System.Object,System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determines whether the specified value is valid.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="otherValue">The value of the property the validator is dependent on.</param>
+            <param name="context">The context information about the validation operation.</param>
+        </member>
+        <member name="P:Moon.Validation.DependentValidator.OtherProperty">
+            <summary>
+            Gets the property the validator is dependent on. 
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.DependentValidator.OtherPropertyDisplayName">
+            <summary>
+            Gets or sets the display name of the other property.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.CompareValidator.#ctor(Moon.Validation.Operators.IOperator,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.CompareValidator"/> class.
+            </summary>
+            <param name="operator">The comparison operator.</param>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="M:Moon.Validation.CompareValidator.IsValidValue(System.Object,System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.CompareValidator.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.CompareValidator.Operator">
+            <summary>
+            Gets the operator used to compare values.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Equal.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Equal"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="T:Moon.Validation.Double">
+            <summary>
+            Specifies that a data field value must be a double.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.DataTypeValidator">
+            <summary>
+            Specifies the name of an additional type to associate with a data field.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.DataTypeValidator.#ctor(System.ComponentModel.DataAnnotations.DataType)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.DataTypeValidator"/> class.
+            </summary>
+            <param name="dataType">The data type.</param>
+        </member>
+        <member name="M:Moon.Validation.DataTypeValidator.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.DataTypeValidator"/> class.
+            </summary>
+            <param name="customDataType">The custom data type.</param>
+        </member>
+        <member name="M:Moon.Validation.DataTypeValidator.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.DataTypeValidator.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <summary>
+            Determines whether the specified value is valid.
+            </summary>
+            <param name="value">The value to validate.</param>
+            <param name="context">The context information about the validation operation.</param>
+        </member>
+        <member name="M:Moon.Validation.DataTypeValidator.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.DataTypeValidator.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.Double.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Double"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Double.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Double.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.Equal">
+            <summary>
+            The Equal (=) operator.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.Operators.IOperator">
+            <summary>
+            The comparison operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.IOperator.Compare(System.Object,System.Object)">
+            <summary>
+            Compares the two objects and return whether they meet a condition represented by the operator.
+            </summary>
+            <param name="objA">The first object.</param>
+            <param name="objB">The second object.</param>
+        </member>
+        <member name="P:Moon.Validation.Operators.IOperator.DefaultErrorMessage">
+            <summary>
+            Gets the default error message.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.IOperator.Name">
+            <summary>
+            Gets the name of the operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.Equal.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.Equal.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.Equal.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.LessThanOrEqual">
+            <summary>
+            Specifies that a data field value is valid when it is less than or equal to the other property value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.LessThanOrEqual.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.LessThanOrEqual"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="T:Moon.Validation.LessThan">
+            <summary>
+            Specifies that a data field value is valid when it is less than the other property value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.LessThan.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.LessThan"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="T:Moon.Validation.GreaterThanOrEqual">
+            <summary>
+            Specifies that a data field value is valid when it is greater than 
+            or equal to the other property value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.GreaterThanOrEqual.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.GreaterThanOrEqual"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="T:Moon.Validation.GreaterThan">
+            <summary>
+            Specifies that a data field value is valid when it is greater than the other property value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.GreaterThan.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.GreaterThan"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="T:Moon.Validation.Min">
+            <summary>
+            Specifies that a data field value must be grater than or equal to a specified value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Min.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Min"/> class.
+            </summary>
+            <param name="minValue">The min value.</param>
+        </member>
+        <member name="M:Moon.Validation.Min.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Min"/> class.
+            </summary>
+            <param name="minValue">The min value.</param>
+        </member>
+        <member name="M:Moon.Validation.Min.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.Min.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Min.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Min.MinValue">
+            <summary>
+            Gets the minimal value.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.Max">
+            <summary>
+            Specifies that a data field value must be less than or equal to a specified value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Max.#ctor(System.Int32)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Max"/> class.
+            </summary>
+            <param name="maxValue">The max value.</param>
+        </member>
+        <member name="M:Moon.Validation.Max.#ctor(System.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Max"/> class.
+            </summary>
+            <param name="maxValue">The max value.</param>
+        </member>
+        <member name="M:Moon.Validation.Max.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.Max.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Max.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Max.MaxValue">
+            <summary>
+            Gets the maximal value.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.Float">
+            <summary>
+            Specifies that a data field value must be a float.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Float.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Float"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Float.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Float.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Integer">
+            <summary>
+            Specifies that a data field value must be integer.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Integer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Integer"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Integer.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Integer.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Digits">
+            <summary>
+            Specifies that a data field value should contain only digits.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Digits.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.Digits"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Digits.IsValidValue(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Digits.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.LessThanOrEqual">
+            <summary>
+            The LessThanOrEqual (&lt;=) operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.LessThanOrEqual.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.LessThanOrEqual.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.LessThanOrEqual.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.LessThan">
+            <summary>
+            The LessThan (&lt;) operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.LessThan.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.LessThan.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.LessThan.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.GreaterThanOrEqual">
+            <summary>
+            The GraterThanOrEqual (>=) operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.GreaterThanOrEqual.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.GreaterThanOrEqual.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.GreaterThanOrEqual.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.GreaterThan">
+            <summary>
+            The GraterThan (>) operator.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.GreaterThan.Compare(System.Object,System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.GreaterThan.DefaultErrorMessage">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.Operators.GreaterThan.Name">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.Operators.Ops">
+            <summary>
+            Provides instances of existing operators.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.Operators.Ops.#cctor">
+            <summary>
+            Initializes the <see cref="T:Moon.Validation.Operators.Ops"/> class.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.Ops.GreaterThan">
+            <summary>
+            Gets the GreaterThan operator.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.Ops.GreaterThanOrEqual">
+            <summary>
+            Gets the GreaterThanOrEqual operator.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.Ops.LessThan">
+            <summary>
+            Gets the LessThan operator.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.Ops.LessThanOrEqual">
+            <summary>
+            Gets the LessThanOrEqual operator.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Operators.Ops.Equal">
+            <summary>
+            Gets the Equal operator.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.RequiredIfEmpty">
+            <summary>
+            Specifies that a data field value is required when the other property value is empty.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.RequiredIfEmpty.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.RequiredIfEmpty"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="M:Moon.Validation.RequiredIfEmpty.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.RequiredIfEmpty.IsValidValue(System.Object,System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.RequiredIfNotEmpty">
+            <summary>
+            Specifies that a data field value is required when the other property value is not empty.
+            </summary>RequiredIfNotEmpty
+        </member>
+        <member name="M:Moon.Validation.RequiredIfNotEmpty.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.RequiredIfNotEmpty"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+        </member>
+        <member name="M:Moon.Validation.RequiredIfNotEmpty.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.RequiredIfNotEmpty.IsValidValue(System.Object,System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Validation.MetadataAttribute">
+            <summary>
+            The model metadata configuration.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.MetadataAttribute.#ctor(System.Type)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.MetadataAttribute"/> class.
+            </summary>
+            <param name="resourceType">Type of the resource.</param>
+        </member>
+        <member name="P:Moon.Validation.MetadataAttribute.ResourceType">
+            <summary>
+            Gets the resource type to use for string lookup.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.RequiredIf">
+            <summary>
+            Specifies that a data field value is required when the other property value is equal to the target value.
+            </summary>
+        </member>
+        <member name="M:Moon.Validation.RequiredIf.#ctor(System.String,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Validation.RequiredIf"/> class.
+            </summary>
+            <param name="otherProperty">The property the validator is dependent on.</param>
+            <param name="targetValue">The target value of the property.</param>
+        </member>
+        <member name="M:Moon.Validation.RequiredIf.FormatErrorMessage(System.String)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Validation.RequiredIf.IsValidValue(System.Object,System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Validation.RequiredIf.TargetValue">
+            <summary>
+            Gets the target value of the property the validator is dependent on.
+            </summary>
+        </member>
+        <member name="T:Moon.Validation.Resources.ValidationResources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Default">
+            <summary>
+              Looks up a localized string similar to The {0} field is invalid..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Digits">
+            <summary>
+              Looks up a localized string similar to The field {0} should contain only digits.
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Equal">
+            <summary>
+              Looks up a localized string similar to The field {0} must be equal to the field {1}. .
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_GreaterThan">
+            <summary>
+              Looks up a localized string similar to The field {0} must be greater than the field {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_GreaterThanOrEqual">
+            <summary>
+              Looks up a localized string similar to The field {0} must be greater than or equal to the field {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Integer">
+            <summary>
+              Looks up a localized string similar to The field {0} should be a positive or negative non-decimal number..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_LessThan">
+            <summary>
+              Looks up a localized string similar to The field {0} must be less than the field {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_LessThanOrEqual">
+            <summary>
+              Looks up a localized string similar to The field {0} must be less than or equal to the field {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Max">
+            <summary>
+              Looks up a localized string similar to The field {0} must be less than or equal to {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Min">
+            <summary>
+              Looks up a localized string similar to The field {0} must be greater than or equal to {1}..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Numeric">
+            <summary>
+              Looks up a localized string similar to The {0} field is not a valid number..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_Url">
+            <summary>
+              Looks up a localized string similar to The {0} field is not a valid fully-qualified http, https, or ftp URL..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_UrlDisallowProtocol">
+            <summary>
+              Looks up a localized string similar to The {0} field is not a valid protocol-less URL..
+            </summary>
+        </member>
+        <member name="P:Moon.Validation.Resources.ValidationResources.Error_UrlWithoutProtocolRequired">
+            <summary>
+              Looks up a localized string similar to The {0} field is not a valid URL..
+            </summary>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,326 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Moon.Web.Validation</name>
+    </assembly>
+    <members>
+        <member name="T:Moon.Web.Validation.CompareValidatorAdapter`1">
+            <summary>
+            Provides a model validator for the specified validator type.
+            </summary>
+            <typeparam name="TValidator">The type of the validator.</typeparam>
+        </member>
+        <member name="T:Moon.Web.Validation.DependentValidatorAdapter`1">
+            <summary>
+            Provides a model validator for the specified validator type.
+            </summary>
+            <typeparam name="TValidator">The type of the validator.</typeparam>
+        </member>
+        <member name="T:Moon.Web.Validation.ValidatorAdapter`1">
+            <summary>
+            Provides a model validator for the specified validator type.
+            </summary>
+            <typeparam name="TValidator">The type of the validator.</typeparam>
+        </member>
+        <member name="M:Moon.Web.Validation.ValidatorAdapter`1.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.ValidatorAdapter`1"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.ValidatorAdapter`1.GetClientValidationRules">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Web.Validation.ValidatorAdapter`1.GetClientValidationParameters">
+            <summary>
+            Returns a dictionary containing client validation parameters.
+            </summary>
+        </member>
+        <member name="P:Moon.Web.Validation.ValidatorAdapter`1.ClientValidationType">
+            <summary>
+            Gets the type of client validation. The default value is null
+            which means client validation is not supported.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.DependentValidatorAdapter`1.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.DependentValidatorAdapter`1"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.DependentValidatorAdapter`1.GetClientValidationParameters">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Web.Validation.CompareValidatorAdapter`1.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,`0)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.CompareValidatorAdapter`1"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.CompareValidatorAdapter`1.GetClientValidationParameters">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Web.Validation.CompareValidatorAdapter`1.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.DigitsValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Digits"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.DigitsValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Digits)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.DigitsValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.DigitsValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.DoubleValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Double"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.DoubleValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Double)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.DoubleValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.DoubleValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.FloatValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Float"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.FloatValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Float)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.FloatValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.FloatValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.IntegerValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Integer"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.IntegerValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Integer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.IntegerValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.IntegerValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.HtmlHelperExtensions">
+            <summary>
+            <see cref="T:System.Web.Mvc.HtmlHelper"/> extension methods.
+            </summary>
+            <summary>
+            <see cref="T:System.Web.Mvc.HtmlHelper"/> Validation extension methods.
+            </summary>
+        </member>
+        <member name="F:Moon.Web.Validation.HtmlHelperExtensions.ValidationErrorImage">
+            <summary>
+            Defines the default validation error image file name.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.HtmlHelperExtensions.ValidationImageFor``2(System.Web.Mvc.HtmlHelper{``0},System.Linq.Expressions.Expression{System.Func{``0,``1}},System.String)">
+            <summary>
+            Displays an image and validation message if an error exists for the specified field. Assumes the image file is
+            in the ~/content/images directory unless a full URL is specified.
+            </summary>
+            <typeparam name="TModel">The type of the model.</typeparam>
+            <typeparam name="TProperty">The type of the property.</typeparam>
+            <param name="html">The <see cref="T:System.Web.Mvc.HtmlHelper"/> instance.</param>
+            <param name="expression">An expression that identifies the object that contains the properties to render.</param>
+            <param name="imageFile">The image file name. Default value is "validation-error.png".</param>
+        </member>
+        <member name="T:Moon.Web.Validation.RequiredIfValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.RequiredIf"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.RequiredIfValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.RequiredIf)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RequiredIfValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.RequiredIfValidatorAdapter.GetClientValidationParameters">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Web.Validation.RequiredIfValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.RequiredIfNotEmptyValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.RequiredIfNotEmpty"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.RequiredIfNotEmptyValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.RequiredIfNotEmpty)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RequiredIfNotEmptyValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.RequiredIfNotEmptyValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.RequiredIfEmptyValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.RequiredIfEmpty"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.RequiredIfEmptyValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.RequiredIfEmpty)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RequiredIfEmptyValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="P:Moon.Web.Validation.RequiredIfEmptyValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.MaxValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Max"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.MaxValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Max)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.MaxValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.MaxValidatorAdapter.GetClientValidationParameters">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Web.Validation.MaxValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.MinValidatorAdapter">
+            <summary>
+            Adapter for <see cref="T:Moon.Validation.Min"/> validator.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.MinValidatorAdapter.#ctor(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,Moon.Validation.Min)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.MinValidatorAdapter"/> class.
+            </summary>
+            <param name="metadata">The metadata for the model.</param>
+            <param name="context">The controller context for the model.</param>
+            <param name="validator">The validator for the model.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.MinValidatorAdapter.GetClientValidationParameters">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Web.Validation.MinValidatorAdapter.ClientValidationType">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.RemoteValidator">
+            <summary>
+            Provides an attribute that uses the remote validator. In addition to
+            the original <see cref="T:System.Web.Mvc.RemoteAttribute"/> it supports convention-based resource names
+            and server-side validation.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RemoteValidator"/> class.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.#ctor(System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RemoteValidator"/> class using the specified action-method name and controller name.
+            </summary>
+            <param name="action">The name of the action method.</param>
+            <param name="controller">The name of the controller.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.#ctor(System.String,System.String,System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Moon.Web.Validation.RemoteValidator"/> class using the specified action-method name, controller name, and area name.
+            </summary>
+            <param name="action">The name of the action method.</param>
+            <param name="controller">The name of the controller.</param><param name="areaName">The name of the area.</param>
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.GetValidatorName">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.IsValid(System.Object)">
+            <inheritdoc />
+        </member>
+        <member name="M:Moon.Web.Validation.RemoteValidator.IsValid(System.Object,System.ComponentModel.DataAnnotations.ValidationContext)">
+            <inheritdoc />
+        </member>
+        <member name="P:Moon.Web.Validation.RemoteValidator.ActionName">
+            <summary>
+            Gets the action name.
+            </summary>
+        </member>
+        <member name="P:Moon.Web.Validation.RemoteValidator.ControllerName">
+            <summary>
+            Gets the controller name.
+            </summary>
+        </member>
+        <member name="P:Moon.Web.Validation.RemoteValidator.AreaName">
+            <summary>
+            Gets the area name.
+            </summary>
+        </member>
+        <member name="T:Moon.Web.Validation.MoonModelValidatorProvider">
+            <summary>
+            The convention-based model validator provider for ASP.NET MVC.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.MoonModelValidatorProvider.GetValidators(System.Web.Mvc.ModelMetadata,System.Web.Mvc.ControllerContext,System.Collections.Generic.IEnumerable{System.Attribute})">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.MoonModelMetadataProvider">
+            <summary>
+            The convention-based model metadata provider fro ASP.NET MVC.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.MoonModelMetadataProvider.CreateMetadata(System.Collections.Generic.IEnumerable{System.Attribute},System.Type,System.Func{System.Object},System.Type,System.String)">
+            <inheritdoc />
+        </member>
+        <member name="T:Moon.Web.Validation.ValidatorAdapters">
+            <summary>
+            Helper used to register validator adapters.
+            </summary>
+        </member>
+        <member name="M:Moon.Web.Validation.ValidatorAdapters.Register">
+            <summary>
+            Registers validator adapters.
+            </summary>
+        </member>
+    </members>
+</doc>
