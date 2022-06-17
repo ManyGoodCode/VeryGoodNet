@@ -1,0 +1,24 @@
+﻿@using WebApplication1.ViewModels
+@model EmployeeViewModel
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>MyView</title>
+</head>
+<body>
+    Hello @Model.UserName
+    <hr />
+    <div>
+        <b>Employee Details</b><br />
+        Employee Name : @Model.EmployeeName <br />
+        <span style="background-color:@Model.SalaryColor">
+            Employee Salary: @Model.Salary
+        </span>
+    </div>
+</body>
+</html>
