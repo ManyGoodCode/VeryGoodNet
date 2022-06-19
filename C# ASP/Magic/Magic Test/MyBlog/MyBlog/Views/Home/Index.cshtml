@@ -1,0 +1,42 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+<div class="jumbotron">
+    <h1>Nicky,Wu的博客</h1>
+    <p class="lead">本博客用于发布ASP.NET相关的学习分享</p>
+    <p>@Html.ActionLink(linkText: "关于我>>", actionName: "Contact", routeValues: "Home", htmlAttributes: new { @class = "btn btn-dedault" })</p>
+</div>
+
+<div class="row">
+    <div class="col-md-4">
+        <h2>最新博客</h2>
+        <ul>
+            <li>文章1</li>
+            <li>文章2</li>
+            <li>文章3</li>
+            <li>文章4</li>
+        </ul>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LickId=301867">更多 &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>阅读排行</h2>
+        <ul>
+            <li>文章1</li>
+            <li>文章2</li>
+            <li>文章3</li>
+            <li>文章4</li>
+        </ul>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LickId=301867">更多 &raquo;</a></p>
+    </div>
+    <div class="col-md-4">
+        <h2>评论排行</h2>
+        <ul>
+            <li>文章1</li>
+            <li>文章2</li>
+            <li>文章3</li>
+            <li>文章4</li>
+        </ul>
+        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LickId=301867">更多 &raquo;</a></p>
+    </div>
+</div>
