@@ -72,7 +72,6 @@ C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBl
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\bin\Newtonsoft.Json.xml
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\bin\Antlr3.Runtime.pdb
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\obj\Debug\MyBlog.csproj.AssemblyReference.cache
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\obj\Debug\MyBlog.csproj.CoreCompileInputs.cache
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\obj\Debug\MyBlog.csproj.CopyComplete
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\MyBlog\MyBlog\obj\Debug\MyBlog.dll
