@@ -1,0 +1,13 @@
+﻿
+@{
+    ViewBag.Title = "文章列表";
+}
+
+<h2>@ViewBag.Title</h2>
+
+<ul>
+    @foreach (var post in ViewBag.Posts)
+    {
+        <li>@Html.ActionLink(linkText: (string)post.Title, actionName: "Get", routeValues: new { id = post.ID })</li>
+    }
+</ul>
