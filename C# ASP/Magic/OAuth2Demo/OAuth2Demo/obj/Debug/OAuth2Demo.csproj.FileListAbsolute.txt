@@ -1,0 +1,246 @@
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\ApplicationInsights.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.exe
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.exe.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.rsp
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.exe
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.exe.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.rsp
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CSharp.Core.targets
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.VisualBasic.Core.targets
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.Win32.Primitives.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.AppContext.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Collections.Immutable.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Console.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.Process.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.StackTrace.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.Compression.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.Primitives.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.Pipes.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Reflection.Metadata.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.AccessControl.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Claims.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Encoding.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Primitives.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Principal.Windows.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Text.Encoding.CodePages.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Threading.Thread.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.ValueTuple.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.ReaderWriter.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XmlDocument.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XPath.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XPath.XDocument.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.exe
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.exe.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.rsp
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\VBCSCompiler.exe
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\roslyn\VBCSCompiler.exe.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.dll.config
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.pdb
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Antlr3.Runtime.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\EntityFramework.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\EntityFramework.SqlServer.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Agent.Intercept.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.DependencyCollector.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.PerfCounterCollector.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.ServerTelemetryChannel.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Web.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.WindowsServer.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.ApplicationInsights.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Core.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Owin.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Host.SystemWeb.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Cookies.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Facebook.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Google.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Jwt.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.OAuth.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Twitter.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Web.Infrastructure.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Newtonsoft.Json.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Owin.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.IdentityModel.Tokens.Jwt.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Helpers.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Mvc.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Optimization.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Razor.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Deployment.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Razor.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\WebGrease.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Jwt.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.OAuth.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.IdentityModel.Tokens.Jwt.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Helpers.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Mvc.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Optimization.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.Razor.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Deployment.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Razor.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Antlr3.Runtime.pdb
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Newtonsoft.Json.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\EntityFramework.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\EntityFramework.SqlServer.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Core.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Owin.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Host.SystemWeb.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Facebook.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Cookies.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Google.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Twitter.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.ApplicationInsights.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.DependencyCollector.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.ServerTelemetryChannel.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.WindowsServer.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Web.xml
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.csprojResolveAssemblyReference.cache
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.csproj.CoreCompileInputs.cache
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.dll
+D:\code\trunk\.NetCore Learning\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\ApplicationInsights.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.exe.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csc.rsp
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.exe.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\csi.rsp
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.Build.Tasks.CodeAnalysis.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.CSharp.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.CSharp.Scripting.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.Scripting.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CodeAnalysis.VisualBasic.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.CSharp.Core.targets
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.DiaSymReader.Native.amd64.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.DiaSymReader.Native.x86.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.VisualBasic.Core.targets
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\Microsoft.Win32.Primitives.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.AppContext.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Collections.Immutable.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Console.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.FileVersionInfo.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.Process.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Diagnostics.StackTrace.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.Compression.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.DriveInfo.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.FileSystem.Primitives.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.IO.Pipes.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Reflection.Metadata.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.AccessControl.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Claims.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Algorithms.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Encoding.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.Primitives.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Cryptography.X509Certificates.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Security.Principal.Windows.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Text.Encoding.CodePages.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Threading.Thread.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.ValueTuple.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.ReaderWriter.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XmlDocument.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XPath.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\System.Xml.XPath.XDocument.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.exe.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\vbc.rsp
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\VBCSCompiler.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\roslyn\VBCSCompiler.exe.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.dll.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\OAuth2Demo.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Antlr3.Runtime.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\EntityFramework.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\EntityFramework.SqlServer.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Agent.Intercept.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.DependencyCollector.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.PerfCounterCollector.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.ServerTelemetryChannel.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Web.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.WindowsServer.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.ApplicationInsights.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Core.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.EntityFramework.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Owin.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Host.SystemWeb.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Cookies.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Facebook.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Google.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Jwt.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.MicrosoftAccount.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.OAuth.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Twitter.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Web.Infrastructure.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Newtonsoft.Json.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Owin.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.IdentityModel.Tokens.Jwt.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Helpers.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Mvc.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Optimization.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Razor.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Deployment.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Razor.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\WebGrease.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Jwt.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.OAuth.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.IdentityModel.Tokens.Jwt.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Helpers.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Mvc.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Optimization.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.Razor.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Deployment.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\System.Web.WebPages.Razor.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Antlr3.Runtime.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Newtonsoft.Json.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\EntityFramework.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\EntityFramework.SqlServer.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Core.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.Owin.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AspNet.Identity.EntityFramework.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Host.SystemWeb.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Facebook.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Cookies.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Google.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.Twitter.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.ApplicationInsights.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.DependencyCollector.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.ServerTelemetryChannel.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.WindowsServer.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\bin\Microsoft.AI.Web.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\OAuth2Demo\OAuth2Demo\obj\Debug\OAuth2Demo.csproj.CopyComplete
