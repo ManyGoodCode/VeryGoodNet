@@ -1,0 +1,14 @@
+﻿@using WebApplication2.ViewModel;
+@model ContentViewModel
+@{
+
+    ViewBag.Title = "文档预览";
+}
+
+<label>
+    @Model.Title                         时间:@Model.UserName @Model.DateTime
+</label>
+<br />
+<textarea>
+    @Model.Content
+</textarea>

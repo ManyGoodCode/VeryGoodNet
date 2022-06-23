@@ -1,0 +1,57 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+
+
+<input id="dropDownList" />
+<div id="grid"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    dataType: "json",
+                    read: "/Province/GetProvinceList"
+                },
+                pageSize: 10,
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [{
+                field: "ProvinceID",
+                title: "省份ID",
+                width: 200
+            }, {
+                field: "ProvinceNo",
+                title: "省份编号"
+            }, {
+                field: "ProvinceName",
+                title: "省份名称"
+            }]
+        });
+    });
+</script>
+
+<script type="text/javascript">
+    $(function () {
+        var data = [
+            { text: "Black", value: "1" },
+            { text: "Orange", value: "2" },
+            { text: "White", value: "3" }
+        ];
+
+        $("#dropDownList").kendoDropDownList({
+            dataTextField: "text",
+            dataValueField: "value",
+            dataSource: data,
+            index: 1 // 当前默认选中项，索引从0开始。
+        });
+    });
+</script>
+
+

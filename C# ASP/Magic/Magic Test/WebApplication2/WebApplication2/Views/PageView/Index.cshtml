@@ -1,0 +1,46 @@
+﻿@using WebApplication2.ViewModel;
+@model DocumentListView
+@{
+
+    ViewBag.Title = "文档列表";
+}
+
+<div id="grid"></div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#grid").kendoGrid({
+            dataSource: {
+                transport: {
+                    dataType: "json",
+                    read: "/PageView/GetProvinceList"
+                },
+                pageSize: 10,
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: true,
+                buttonCount: 5
+            },
+            columns: [{
+                field: "ProvinceID",
+                title: "省份ID",
+                width: 200
+            }, {
+                field: "ProvinceNo",
+                title: "省份编号"
+            }, {
+                field: "ProvinceName",
+                title: "省份名称"
+            }]
+        });
+    });
+</script>
+
+<ul>
+    @foreach (WebApplication2.Models.Document doc in Model.Docs)
+    {
+        <li>@Html.ActionLink(doc.Title, "Get", new { id = doc.ID })</li>
+    }
+</ul>
+<p>显示当前第 @Model.CurrentPage 页，共有 @Model.PageCount 页 （记录总数:@Model.Count）。</p>

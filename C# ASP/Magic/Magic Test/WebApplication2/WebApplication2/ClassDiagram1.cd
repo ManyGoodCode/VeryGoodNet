@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Class Name="WebApplication2.Business.DocumentManager">
+    <Position X="4" Y="0.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAQAAAAAAAAAAAAAACIAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Business\DocumentManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplication2.Controllers.PageViewController">
+    <Position X="1.75" Y="3.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAABAAAAAAAAAAAAAAAAAAAEAAAAAAAA=</HashCode>
+      <FileName>Controllers\PageViewController.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplication2.ViewModel.ContentViewModel">
+    <Position X="5.25" Y="3" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAgAAAEAAAAAAAAAAAAAAAAQAAQAAAAAAAAA=</HashCode>
+      <FileName>ViewModel\ContentViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplication2.ViewModel.DocumentListView">
+    <Position X="6.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAABAAAAAAAAAAAEAAAAQAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>ViewModel\ListViewModel.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="WebApplication2.Repository.DocumentRepository">
+    <Position X="0.5" Y="0.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAgAAgAAAAAA=</HashCode>
+      <FileName>Repository\DocumentRepository.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
