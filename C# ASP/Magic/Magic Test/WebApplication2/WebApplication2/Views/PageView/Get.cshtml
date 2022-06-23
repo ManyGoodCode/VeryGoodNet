@@ -5,10 +5,17 @@
     ViewBag.Title = "文档预览";
 }
 
-<label>
-    @Model.Title                         时间:@Model.UserName @Model.DateTime
-</label>
-<br />
-<textarea>
-    @Model.Content
-</textarea>
+
+<div id="View">
+    <table>
+        <tr>
+            <td>用户:</td>
+            <td><input type="text" value="@Model.UserName"/> </td>
+        </tr>
+        <tr>
+            <td>内容:</td>
+            <td><input type="text" value="@Model.Content" /></td>
+        </tr>
+    </table>
+</div>
+

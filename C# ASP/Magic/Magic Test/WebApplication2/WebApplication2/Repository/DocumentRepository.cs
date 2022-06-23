@@ -9,7 +9,7 @@ namespace WebApplication2.Repository
     public class DocumentRepository
     {
         private static List<Document> Documents = new List<Document>();
-        private static readonly int Count = 100;
+        private static readonly int Count = 20;
 
         static DocumentRepository()
         {
