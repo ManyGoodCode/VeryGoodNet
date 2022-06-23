@@ -42,5 +42,15 @@ namespace WebApplication2.Controllers
 
             return View(model: viewDTO);
         }
+
+        public ActionResult GetDocumentJson()
+        {
+            DocumentManager manager = new DocumentManager();
+            List<Document> docs = manager.GetAllDocument();
+            JsonResult result = new JsonResult();
+            result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
+            result.Data = docs;
+            return result;
+        }
     }
 }

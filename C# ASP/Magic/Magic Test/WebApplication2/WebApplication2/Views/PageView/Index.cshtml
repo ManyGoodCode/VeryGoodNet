@@ -13,7 +13,7 @@
             dataSource: {
                 transport: {
                     dataType: "json",
-                    read: "/PageView/GetProvinceList"
+                    read: "/PageView/GetDocumentJson"
                 },
                 pageSize: 10,
             },
@@ -23,15 +23,15 @@
                 buttonCount: 5
             },
             columns: [{
-                field: "ProvinceID",
-                title: "省份ID",
+                field: "ID",
+                title: "序号",
                 width: 200
             }, {
-                field: "ProvinceNo",
-                title: "省份编号"
+                field: "Title",
+                title: "标题"
             }, {
-                field: "ProvinceName",
-                title: "省份名称"
+                field: "Content",
+                title: "内容"
             }]
         });
     });
