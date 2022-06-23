@@ -15,11 +15,12 @@ namespace OAuth2Demo.Controllers
         {
             if (Request.HttpMethod == "POST")
             {
-                var identity = this.User.Identity as ClaimsIdentity;
+                ClaimsIdentity identity = this.User.Identity as ClaimsIdentity;
                 identity = new ClaimsIdentity(identity.Claims, "Bearer", identity.NameClaimType, identity.RoleClaimType);
                 var authentication = HttpContext.GetOwinContext().Authentication;
                 authentication.SignIn(identity);
             }
+
             return View();
         }
     }
