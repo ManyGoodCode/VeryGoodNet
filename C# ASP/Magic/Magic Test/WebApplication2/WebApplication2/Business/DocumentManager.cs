@@ -13,15 +13,15 @@ namespace WebApplication2.Business
         public readonly DocumentRepository DocumentRepository = new DocumentRepository();
         public List<Dcument> GetAllDocument()
         {
-            return new EFResitory().GetAll();
-            return new ADOResitory().GetAll();
-            //return DocumentRepository.GetAll();
+            //return new EFResitory().GetAll();
+            //return new ADOResitory().GetAll();
+            return DocumentRepository.GetAll();
         }
 
         public Dcument GetDocumentByID(int id)
         {
-            return new EFResitory().GetByID(id);
-            return new ADOResitory().GetByID(id);
+            //return new EFResitory().GetByID(id);
+            //return new ADOResitory().GetByID(id);
             return DocumentRepository.GetByID(id);
         }
     }
@@ -70,6 +70,8 @@ namespace WebApplication2.Business
         }
     }
 
+    // 当已经存在数据库模型的时候，通过数据库模型构建代码访问【用到EntityFramework】
+    // Add -> New Item -> ADO.NET Entity Data Model
     public class EFResitory
     {
         public List<Dcument> GetAll()
@@ -86,20 +88,6 @@ namespace WebApplication2.Business
             {
                 return context.Dcuments.FirstOrDefault(d => d.Id == id);
             }
-        }
-    }
-
-    public class EFContext : DbContext
-    {
-        public virtual DbSet<Dcument> Dcuments { get; set; }
-
-        protected override void OnModelCreating(DbModelBuilder modelBuilder)
-        {
-        }
-        public EFContext()
-           : base(nameOrConnectionString: "Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\C# ASP\\Magic\\Magic Test\\WebApplication2\\WebApplication2\\bin\\AADB\\AADB.mdf;Integrated Security = True;")
-        {
-            
         }
     }
 }
