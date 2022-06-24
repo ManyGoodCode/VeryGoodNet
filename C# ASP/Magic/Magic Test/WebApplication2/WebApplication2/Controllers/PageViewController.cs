@@ -4,7 +4,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using WebApplication2.Business;
-using WebApplication2.Models;
 using WebApplication2.ViewModel;
 
 namespace WebApplication2.Controllers
@@ -15,13 +14,12 @@ namespace WebApplication2.Controllers
         public ActionResult Get(int id)
         {
             DocumentManager manager = new DocumentManager();
-            Document doc = manager.GetDocumentByID(id);
+            Dcument doc = manager.GetDocumentByID(id);
 
             ContentViewModel viewDTO = new ContentViewModel()
             {
                 Title = doc.Title,
                 Content = doc.Content,
-                DateTime = doc.CreateTime,
                 UserName = doc.UserName
             };
 
@@ -31,7 +29,7 @@ namespace WebApplication2.Controllers
         public ActionResult Index()
         {
             DocumentManager manager = new DocumentManager();
-            List<Document> docs = manager.GetAllDocument();
+            List<Dcument> docs = manager.GetAllDocument();
             DocumentListView viewDTO = new DocumentListView()
             {
                 Count = docs.Count,
@@ -46,7 +44,7 @@ namespace WebApplication2.Controllers
         public ActionResult GetDocumentJson()
         {
             DocumentManager manager = new DocumentManager();
-            List<Document> docs = manager.GetAllDocument();
+            List<Dcument> docs = manager.GetAllDocument();
             JsonResult result = new JsonResult();
             result.JsonRequestBehavior = JsonRequestBehavior.AllowGet;
             result.Data = docs;

@@ -47,6 +47,12 @@ C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplicat
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\System.Web.WebPages.Razor.xml
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\Newtonsoft.Json.xml
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\Antlr3.Runtime.pdb
-C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\Application2.csprojResolveAssemblyReference.cache
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\WebApplication2.dll
 C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\WebApplication2.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\Application2.csproj.AssemblyReference.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\Application2.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\obj\Debug\Application2.csproj.CopyComplete
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\EntityFramework.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\EntityFramework.SqlServer.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\EntityFramework.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\C# ASP\Magic\Magic Test\WebApplication2\WebApplication2\bin\EntityFramework.SqlServer.xml
