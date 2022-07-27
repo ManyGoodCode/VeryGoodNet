@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Data.SqlClient;
 using System.Linq;
+using System.Threading;
 using System.Web;
 using WebApplication2.Repository;
 
@@ -87,6 +88,44 @@ namespace WebApplication2.Business
             using (Model1 context = new Model1())
             {
                 return context.Dcuments.FirstOrDefault(d => d.Id == id);
+            }
+        }
+    }
+
+    public class SerialPortManager
+    {
+        public readonly System.IO.Ports.SerialPort SP = new System.IO.Ports.SerialPort();
+        static readonly object lck = new object();
+        static SerialPortManager instance;
+
+        private SerialPortManager()
+        {
+            SP.BaudRate = 115200;
+            SP.PortName = "COM4";
+        }
+
+        public static SerialPortManager GetInstance()
+        {
+            if (instance == null)
+            {
+                lock (lck)
+                {
+                    instance = instance ?? new SerialPortManager();
+                }
+            }
+
+            return instance;
+        }
+
+        public string Send(string text)
+        {
+            lock (SP)
+            {
+                if (!SP.IsOpen)
+                    SP.Open();
+                SP.Write(text);
+                Thread.Sleep(3000);
+                return "接收数据" + SP.ReadExisting();
             }
         }
     }
