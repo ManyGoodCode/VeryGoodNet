@@ -34,7 +34,10 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         public IDataReader Find(string contentTypeHeader)
         {
             string type = DataProviderUtility.ParseMediaType(contentTypeHeader);
-            var readers = readersByMime.Where(reader => Regex.Match(type, reader.Key, RegexOptions.Singleline).Success);
+
+            IEnumerable<KeyValuePair<string, IDataReader>> readers = readersByMime.Where
+                (reader => Regex.Match(type, reader.Key, RegexOptions.Singleline)
+                .Success);
 
             return readers.Any() ? readers.First().Value : null;
         }
