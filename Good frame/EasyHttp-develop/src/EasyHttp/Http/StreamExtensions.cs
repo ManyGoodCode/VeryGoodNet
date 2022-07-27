@@ -6,13 +6,14 @@ namespace EasyHttp.Http.Abstractions
     {
         public static Stream ToStream(this string s)
         {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
+            MemoryStream stream = new MemoryStream();
+            StreamWriter writer = new StreamWriter(stream);
             if (s != null)
             {
                 writer.Write(s);
                 writer.Flush();
             }
+
             stream.Position = 0;
             return stream;
         }
