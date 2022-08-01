@@ -29,7 +29,5 @@ namespace EasyHttp.Codecs
             string serialized = serializer.Write(input);
             return Encoding.UTF8.GetBytes(serialized);
         }
-
-       
-    }
+           }
 }
