@@ -7,8 +7,7 @@ namespace EasyHttp.Infrastructure
     {
         public static void WriteString(this Stream stream, string value)
         {
-            var buffer = Encoding.ASCII.GetBytes(value);
-
+            byte[] buffer = Encoding.ASCII.GetBytes(value);
             stream.Write(buffer, 0, buffer.Length);
         }
     }

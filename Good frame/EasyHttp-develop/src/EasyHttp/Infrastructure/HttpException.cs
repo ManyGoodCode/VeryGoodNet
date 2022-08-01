@@ -68,7 +68,8 @@ namespace EasyHttp.Infrastructure
         public HttpStatusCode StatusCode { get; private set; }
         public string StatusDescription { get; private set; }
 
-        public HttpException(HttpStatusCode statusCode, string statusDescription): base(String.Format("{0} {1}", statusCode, statusDescription))
+        public HttpException(HttpStatusCode statusCode, string statusDescription)
+            : base(string.Format("{0} {1}", statusCode, statusDescription))
         {
             StatusCode = statusCode;
             StatusDescription = statusDescription;
@@ -89,7 +90,5 @@ namespace EasyHttp.Infrastructure
         protected HttpException(SerializationInfo info, StreamingContext context) : base(info, context)
         {
         }
-
-      
     }
 }

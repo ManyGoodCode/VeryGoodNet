@@ -41,7 +41,6 @@ namespace EasyHttp.Specs.Specs
             {
                 httpClient = new HttpClient();
                 httpClient.Request.AllowAutoRedirect = false;
-
                 httpClient.Get("http://localhost:16000/redirector");
             }
 

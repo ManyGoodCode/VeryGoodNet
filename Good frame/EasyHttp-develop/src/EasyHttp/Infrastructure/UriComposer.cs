@@ -15,20 +15,21 @@ namespace EasyHttp.Infrastructure
 
         public string Compose(string baseuri, string uri, object query, bool parametersAsSegments)
         {
-            var returnUri = uri;
-            if(!String.IsNullOrEmpty(baseuri))
+            string returnUri = uri;
+            if (!string.IsNullOrEmpty(baseuri))
             {
-                returnUri = baseuri.EndsWith("/") ? baseuri : String.Concat(baseuri,"/");
+                returnUri = baseuri.EndsWith("/") ? baseuri : String.Concat(baseuri, "/");
                 returnUri += uri.StartsWith("/", StringComparison.InvariantCulture) ? uri.Substring(1) : uri;
             }
             if (parametersAsSegments)
             {
-                returnUri = query != null ? String.Concat(returnUri, _objectToUrlSegments.ParametersToUrl(query)) : returnUri;
+                returnUri = query != null ? string.Concat(returnUri, _objectToUrlSegments.ParametersToUrl(query)) : returnUri;
             }
             else
             {
-                returnUri = query != null ? String.Concat(returnUri, _objectToUrlParameters.ParametersToUrl(query)) : returnUri;
+                returnUri = query != null ? string.Concat(returnUri, _objectToUrlParameters.ParametersToUrl(query)) : returnUri;
             }
+
             return returnUri;
         }
     }

@@ -2,7 +2,6 @@
 {
     public class ObjectToUrlSegments : ObjectToUrl
     {
-
         protected override string PathStartCharacter
         {
             get { return "/"; }

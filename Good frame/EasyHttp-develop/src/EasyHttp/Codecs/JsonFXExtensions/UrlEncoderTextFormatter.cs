@@ -14,7 +14,6 @@ namespace EasyHttp.Codecs.JsonFXExtensions
         public void Format(IEnumerable<Token<ModelTokenType>> tokens, TextWriter writer)
         {
             bool firstProperty = true;
-
             foreach (Token<ModelTokenType> token in tokens)
             {
                 switch (token.TokenType)

@@ -14,36 +14,38 @@ namespace EasyHttp.Infrastructure
 
         public string ParametersToUrl(object parameters)
         {
-            var returnuri = "";
-            var properties = GetProperties(parameters);
+            string returnuri = "";
+            IEnumerable<PropertyValue> properties = GetProperties(parameters);
             if (parameters != null)
             {
-                var paramsList = properties.Select(BuildParam).ToList();
+                List<string> paramsList = properties.Select(BuildParam).ToList();
                 if (paramsList.Count > 0)
                 {
-                    returnuri = String.Format("{0}{1}", PathStartCharacter, String.Join(PathSeparatorCharacter, paramsList));
+                    returnuri = string.Format("{0}{1}", PathStartCharacter, String.Join(PathSeparatorCharacter, paramsList));
                 }
             }
+
             return returnuri;
         }
 
         private static IEnumerable<PropertyValue> GetProperties(object parameters)
         {
-            if (parameters == null) yield break;
+            if (parameters == null) 
+                yield break;
             if (parameters is ExpandoObject)
             {
-                var dictionary = parameters as IDictionary<string, object>;
-                foreach (var property in dictionary)
+                IDictionary<string, object> dictionary = parameters as IDictionary<string, object>;
+                foreach (KeyValuePair<string, object> property in dictionary)
                 {
                     yield return new PropertyValue { Name = property.Key, Value = property.Value.ToString() };
                 }
             }
             else
             {
-                var properties = TypeDescriptor.GetProperties(parameters);
+                PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(parameters);
                 foreach (PropertyDescriptor propertyDescriptor in properties)
                 {
-                    var val = propertyDescriptor.GetValue(parameters);
+                    object val = propertyDescriptor.GetValue(parameters);
                     if (val != null)
                     {
                         yield return new PropertyValue { Name = propertyDescriptor.Name, Value = val.ToString() };
