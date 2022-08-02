@@ -1,0 +1,48 @@
+# Ignore file for Visual Studio 2008
+
+# use glob syntax
+syntax: glob
+
+# Ignore Visual Studio 2008 files
+*.tss
+*.csproj.orig
+*.obj
+*.pdb
+*.user
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.suo
+*.tlb
+*.tlh
+*.bak
+*.cache
+*.ilk
+*.log
+*.lib
+*.sbr
+*.scc
+*.cs.orig
+[Bb]in
+[Db]ebug*/
+obj/
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+[Bb]uild[Ll]og.*
+*.[Pp]ublish.xml
+*.ncrunchproject
+*.ncrunchsolution
+*.testlog
+testlog.manifest
+src/.vs/TinyIoC/DesignTimeBuild/.dtbcache.v2
+
+.idea/.idea.TinyIoC/.idea/
+
+.DS_Store
+
+artifacts/
+/.vs
