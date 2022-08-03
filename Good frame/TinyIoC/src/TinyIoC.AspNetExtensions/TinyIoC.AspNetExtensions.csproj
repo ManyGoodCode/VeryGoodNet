@@ -34,9 +34,6 @@
     <Compile Remove="TinyIoCAspNetExtensions.cs" />
     <None Include="TinyIoCAspNetExtensions.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TinyIoC\TinyIoC.csproj" />
-  </ItemGroup>
 
   <ItemGroup Condition="'$(Configuration)'=='Source'">
     <Compile Include="TinyIoCAspNetExtensions.cs">
