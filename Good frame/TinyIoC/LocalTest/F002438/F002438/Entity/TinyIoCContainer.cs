@@ -1587,8 +1587,7 @@ namespace F002438.Entity
 
         private RegisterOptions RegisterInternal(Type registerType, string name, ObjectFactoryBase factory)
         {
-            var typeRegistration = new TypeRegistration(registerType, name);
-
+            TypeRegistration typeRegistration = new TypeRegistration(registerType, name);
             return AddUpdateRegistration(typeRegistration, factory);
         }
 
@@ -1815,9 +1814,8 @@ namespace F002438.Entity
                 throw new ArgumentNullException("parameters");
             if (type.IsValueType)
                 return null;
-            var ctors = TinyIoCReflectionCache.GetUsableConstructors(type);
-
-            foreach (var ctor in ctors)
+            IEnumerable<ConstructorInfo> ctors = TinyIoCReflectionCache.GetUsableConstructors(type);
+            foreach (ConstructorInfo ctor in ctors)
             {
                 if (this.CanConstruct(ctor, parameters, options))
                     return ctor;
@@ -1913,7 +1911,6 @@ namespace F002438.Entity
                 return new TypeRegistration[] { };
 
             var registrations = _Parent.RegisteredTypes.Keys.Where(tr => tr.Type == resolveType);
-
             return registrations.Concat(_Parent.GetParentRegistrationsForType(resolveType));
         }
 
