@@ -1961,7 +1961,10 @@ namespace TinyIoC
 
         private abstract class ObjectFactoryBase
         {
-            public virtual bool AssumeConstruction { get { return false; } }
+            public virtual bool AssumeConstruction 
+            { 
+                get { return false; } 
+            }
 
             public abstract Type CreatesType { get; }
 
