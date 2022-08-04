@@ -55,8 +55,11 @@
     <Compile Include="Entity\Enum\UnregisteredResolutionActions.cs" />
     <Compile Include="Entity\NamedParameterOverloads.cs" />
     <Compile Include="Entity\ResolveOptions.cs" />
+    <Compile Include="Entity\ReverseTypeExtender.cs" />
     <Compile Include="Entity\SafeDictionary.cs" />
+    <Compile Include="Entity\TinyIoCConstructorAttribute.cs" />
     <Compile Include="Entity\TinyIoCContainer.cs" />
+    <Compile Include="Entity\TinyIoCReflectionCache.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Form1.cs">

@@ -1456,11 +1456,11 @@ namespace F002438.Entity
                 return hashCode;
             }
         }
-        private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> _RegisteredTypes;
+
+        private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> RegisteredTypes;
         public TinyIoCContainer()
         {
-            _RegisteredTypes = new SafeDictionary<TypeRegistration, ObjectFactoryBase>();
-
+            RegisteredTypes = new SafeDictionary<TypeRegistration, ObjectFactoryBase>();
             RegisterDefaultTypes();
         }
 
@@ -1472,15 +1472,14 @@ namespace F002438.Entity
         }
 
         #region Internal Methods
-        private readonly object _AutoRegisterLock = new object();
+        private readonly object AutoRegisterLock = new object();
         private void AutoRegisterInternal(IEnumerable<Assembly> assemblies, DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
         {
-            var typeOfThis = this.GetType();
-            lock (_AutoRegisterLock)
+            Type typeOfThis = this.GetType();
+            lock (AutoRegisterLock)
             {
-                var types = assemblies.SelectMany(a => a.SafeGetTypes()).Where(t => !IsIgnoredType(t, registrationPredicate)).ToList();
-
-                var concreteTypes = types
+                List<Type> types = assemblies.SelectMany(a => a.SafeGetTypes()).Where(t => !IsIgnoredType(t, registrationPredicate)).ToList();
+                List<Type> concreteTypes = types
                     .Where(type => type.IsClass && (type.IsAbstract == false) && (type != typeOfThis && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition())) && !type.IsNestedPrivate())
                     .ToList();
 
@@ -1496,16 +1495,16 @@ namespace F002438.Entity
                     }
                 }
 
-                var abstractInterfaceTypes = from type in types
-                                             where ((type.IsInterface || type.IsAbstract) && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition))
-                                             select type;
+                IEnumerable<Type> abstractInterfaceTypes = from type in types
+                                                           where ((type.IsInterface || type.IsAbstract) && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition))
+                                                           select type;
 
-                foreach (var type in abstractInterfaceTypes)
+                foreach (Type type in abstractInterfaceTypes)
                 {
-                    var localType = type;
-                    var implementations = from implementationType in concreteTypes
-                                          where localType.IsAssignableFrom(implementationType)
-                                          select implementationType;
+                    Type localType = type;
+                    IEnumerable<Type> implementations = from implementationType in concreteTypes
+                                                        where localType.IsAssignableFrom(implementationType)
+                                                        select implementationType;
 
                     if (implementations.Skip(1).Any())
                     {
@@ -1582,9 +1581,7 @@ namespace F002438.Entity
         private ObjectFactoryBase GetCurrentFactory(TypeRegistration registration)
         {
             ObjectFactoryBase current = null;
-
-            _RegisteredTypes.TryGetValue(registration, out current);
-
+            RegisteredTypes.TryGetValue(registration, out current);
             return current;
         }
 
@@ -1597,14 +1594,14 @@ namespace F002438.Entity
 
         private RegisterOptions AddUpdateRegistration(TypeRegistration typeRegistration, ObjectFactoryBase factory)
         {
-            _RegisteredTypes[typeRegistration] = factory;
+            RegisteredTypes[typeRegistration] = factory;
 
             return new RegisterOptions(this, typeRegistration);
         }
 
         private bool RemoveRegistration(TypeRegistration typeRegistration)
         {
-            return _RegisteredTypes.Remove(typeRegistration);
+            return RegisteredTypes.Remove(typeRegistration);
         }
 
         private ObjectFactoryBase GetDefaultObjectFactory(Type registerType, Type registerImplementation)
@@ -1624,7 +1621,7 @@ namespace F002438.Entity
             string name = registration.Name;
 
             ObjectFactoryBase factory;
-            if (_RegisteredTypes.TryGetValue(new TypeRegistration(checkType, name), out factory))
+            if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType, name), out factory))
             {
                 if (factory.AssumeConstruction)
                     return true;
@@ -1640,7 +1637,7 @@ namespace F002438.Entity
 
             if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
-                if (_RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
+                if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
                 {
                     if (factory.AssumeConstruction)
                         return true;
@@ -1677,6 +1674,7 @@ namespace F002438.Entity
             return false;
         }
 
+        private readonly SafeDictionary<Type, object> _LazyAutomaticFactories = new SafeDictionary<Type, object>();
         private bool IsAutomaticLazyFactoryRequest(Type type)
         {
             if (_LazyAutomaticFactories.ContainsKey(type))
@@ -1706,8 +1704,7 @@ namespace F002438.Entity
                 return null;
 
             ObjectFactoryBase factory;
-
-            if (_Parent._RegisteredTypes.TryGetValue(registration, out factory))
+            if (_Parent.RegisteredTypes.TryGetValue(registration, out factory))
             {
                 return factory.GetFactoryForChildContainer(registration.Type, _Parent, this);
             }
@@ -1718,8 +1715,7 @@ namespace F002438.Entity
         private object ResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
         {
             ObjectFactoryBase factory;
-
-            if (_RegisteredTypes.TryGetValue(registration, out factory))
+            if (RegisteredTypes.TryGetValue(registration, out factory))
             {
                 try
                 {
@@ -1735,7 +1731,7 @@ namespace F002438.Entity
                 }
             }
 
-            var bubbledObjectFactory = GetParentObjectFactory(registration);
+            ObjectFactoryBase bubbledObjectFactory = GetParentObjectFactory(registration);
             if (bubbledObjectFactory != null)
             {
                 try
@@ -1757,7 +1753,7 @@ namespace F002438.Entity
 
             if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
-                if (_RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
+                if (RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
                 {
                     try
                     {
@@ -1788,8 +1784,7 @@ namespace F002438.Entity
 
         private object GetIEnumerableRequest(Type type)
         {
-            var genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
-
+            MethodInfo genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
             return genericResolveAllMethod.Invoke(this, new object[] { false });
         }
 
@@ -1798,12 +1793,12 @@ namespace F002438.Entity
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
 
-            foreach (var parameter in ctor.GetParameters())
+            foreach (ParameterInfo parameter in ctor.GetParameters())
             {
                 if (string.IsNullOrEmpty(parameter.Name))
                     return false;
 
-                var isParameterOverload = parameters.ContainsKey(parameter.Name);
+                bool isParameterOverload = parameters.ContainsKey(parameter.Name);
                 if (parameter.ParameterType.IsPrimitive && !isParameterOverload)
                     return false;
 
@@ -1857,13 +1852,11 @@ namespace F002438.Entity
             if (constructor == null)
                 throw new TinyIoCResolutionException(typeToConstruct);
 
-            var ctorParams = constructor.GetParameters();
+            ParameterInfo[] ctorParams = constructor.GetParameters();
             object[] args = new object[ctorParams.Length];
-
             for (int parameterIndex = 0; parameterIndex < ctorParams.Length; parameterIndex++)
             {
-                var currentParam = ctorParams[parameterIndex];
-
+                ParameterInfo currentParam = ctorParams[parameterIndex];
                 try
                 {
                     args[parameterIndex] = parameters.ContainsKey(currentParam.Name) ?
@@ -1919,14 +1912,14 @@ namespace F002438.Entity
             if (_Parent == null)
                 return new TypeRegistration[] { };
 
-            var registrations = _Parent._RegisteredTypes.Keys.Where(tr => tr.Type == resolveType);
+            var registrations = _Parent.RegisteredTypes.Keys.Where(tr => tr.Type == resolveType);
 
             return registrations.Concat(_Parent.GetParentRegistrationsForType(resolveType));
         }
 
         private IEnumerable<object> ResolveAllInternal(Type resolveType, bool includeUnnamed)
         {
-            IEnumerable<TypeRegistration> registrations = _RegisteredTypes.Keys.Where(tr => tr.Type == resolveType).Concat(GetParentRegistrationsForType(resolveType)).Distinct();
+            IEnumerable<TypeRegistration> registrations = RegisteredTypes.Keys.Where(tr => tr.Type == resolveType).Concat(GetParentRegistrationsForType(resolveType)).Distinct();
             if (!includeUnnamed)
                 registrations = registrations.Where(tr => tr.Name != string.Empty);
 
@@ -1964,7 +1957,7 @@ namespace F002438.Entity
             if (!disposed)
             {
                 disposed = true;
-                _RegisteredTypes.Dispose();
+                RegisteredTypes.Dispose();
                 GC.SuppressFinalize(this);
             }
         }
