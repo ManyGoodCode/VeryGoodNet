@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace F002438.Entity
 {
-
+    /// <summary>
+    /// 负责安全字典的职责
+    /// </summary>
     public class SafeDictionary<TKey, TValue> : IDisposable
     {
         private readonly object lck = new object();
@@ -87,6 +89,5 @@ namespace F002438.Entity
 
             GC.SuppressFinalize(this);
         }
-
     }
 }
