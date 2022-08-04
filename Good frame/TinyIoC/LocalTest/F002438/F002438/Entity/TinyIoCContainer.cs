@@ -1437,8 +1437,7 @@ namespace F002438.Entity
 
             public override bool Equals(object obj)
             {
-                var typeRegistration = obj as TypeRegistration;
-
+                TypeRegistration typeRegistration = obj as TypeRegistration;
                 if (typeRegistration == null)
                     return false;
 
