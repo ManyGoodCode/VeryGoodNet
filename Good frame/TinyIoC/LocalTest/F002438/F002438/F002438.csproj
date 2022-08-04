@@ -44,7 +44,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CoreException\TinyIoCAutoRegistrationException.cs" />
+    <Compile Include="CoreException\TinyIoCConstructorResolutionException.cs" />
+    <Compile Include="CoreException\TinyIoCRegistrationException.cs" />
+    <Compile Include="CoreException\TinyIoCRegistrationTypeException.cs" />
+    <Compile Include="CoreException\TinyIoCResolutionException.cs" />
+    <Compile Include="CoreException\TinyIoCWeakReferenceException.cs" />
+    <Compile Include="Entity\Enum\DuplicateImplementationActions.cs" />
+    <Compile Include="Entity\Enum\NamedResolutionFailureActions.cs" />
+    <Compile Include="Entity\Enum\UnregisteredResolutionActions.cs" />
+    <Compile Include="Entity\NamedParameterOverloads.cs" />
+    <Compile Include="Entity\ResolveOptions.cs" />
     <Compile Include="Entity\SafeDictionary.cs" />
+    <Compile Include="Entity\TinyIoCContainer.cs" />
     <Compile Include="Extensions\AssemblyExtensions.cs" />
     <Compile Include="Extensions\TypeExtensions.cs" />
     <Compile Include="Form1.cs">
@@ -77,6 +89,7 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
