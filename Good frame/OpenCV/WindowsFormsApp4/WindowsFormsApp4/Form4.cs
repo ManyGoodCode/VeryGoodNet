@@ -13,11 +13,11 @@ using System.Windows.Forms;
 namespace WindowsFormsApp4
 {
     /// <summary>
-    /// 图像腐蚀：腐蚀/膨胀
+    /// blur 图像模糊(均值滤波)
     /// </summary>
-    public partial class Form3 : Form
+    public partial class Form4 : Form
     {
-        public Form3()
+        public Form4()
         {
             InitializeComponent();
         }
@@ -27,29 +27,17 @@ namespace WindowsFormsApp4
             Mat srcImage = Cv2.ImRead("3.jpeg");
 
             // 在窗口显示原图
-            Cv2.ImShow("原图", srcImage);
+            Cv2.ImShow("均值滤波原图", srcImage);
 
-            // 进行腐蚀操作
-            // Morph Shapes :形态学
-            Mat element = Cv2.GetStructuringElement(
-                shape: MorphShapes.Rect,       // 类型：Rect=腐蚀/膨胀
-                ksize: new OpenCvSharp.Size()  // 腐蚀和大小
-                {
-                    Width = 15,
-                    Height = 15
-                });
-
+            // 均值滤波
             Mat dstImage = new Mat();
-            Cv2.Erode(
-                src: srcImage,
-                dst: dstImage,
-               element: element);
-
+            // 滤波和大小 7*7 
+            Cv2.Blur(srcImage, dstImage, new OpenCvSharp.Size() { Width = 7, Height = 7 });
 
             // 显示图片到Picture
             Bitmap map = BitmapConverter.ToBitmap(dstImage);
             pictureBox1.Image = map;
-            using (new Window("效果", dstImage))
+            using (new Window("均值滤波效果", dstImage))
             {
                 Cv2.WaitKey();
             }
