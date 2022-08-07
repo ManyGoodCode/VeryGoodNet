@@ -45,7 +45,14 @@ namespace WindowsFormsApp4
             }];
 
             // 重合两张图片
-            Cv2.AddWeighted(imageROI, 0.7, image2, 0.3, 0.0, imageROI);
+            Cv2.AddWeighted(
+                src1: imageROI,
+                alpha: 0.7,
+                src2: image2,
+                beta: 0.3,
+                gamma: 0.0,
+                dst: imageROI);
+
             // 显示图片到Picture
             Bitmap map = BitmapConverter.ToBitmap(image1);
             pictureBox1.Image = map;
