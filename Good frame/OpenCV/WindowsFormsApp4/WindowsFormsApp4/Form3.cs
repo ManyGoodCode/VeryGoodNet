@@ -32,7 +32,7 @@ namespace WindowsFormsApp4
             // 进行腐蚀操作
             // Morph Shapes :形态学
             Mat element = Cv2.GetStructuringElement(
-                shape: MorphShapes.Rect,       // 类型：腐蚀/膨胀
+                shape: MorphShapes.Rect,       // 类型：Rect=腐蚀/膨胀
                 ksize: new OpenCvSharp.Size()  // 腐蚀和大小
                 {
                     Width = 15,
