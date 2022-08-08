@@ -13,14 +13,14 @@ namespace WindowsFormsApp
             InitializeComponent();
         }
 
-        private Mat createAlphaMat()
+        private OpenCvSharp.Mat CreateAlphaMat()
         {
-            Mat mat = new Mat(480, 640, MatType.CV_8UC4);
+            OpenCvSharp.Mat mat = new OpenCvSharp.Mat(rows: 480, cols: 640, type: MatType.CV_8UC4);
             for (int i = 0; i < mat.Rows; ++i)
             {
                 for (int j = 0; j < mat.Cols; ++j)
                 {
-                    var rgba = new Vec4b();
+                    OpenCvSharp.Vec4b rgba = new OpenCvSharp.Vec4b();
                     // 蓝色
                     rgba.Item0 = 0xff;
                     // 绿色
@@ -38,11 +38,10 @@ namespace WindowsFormsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Mat srcImage = createAlphaMat();
-            Bitmap map = BitmapConverter.ToBitmap(srcImage);
+            OpenCvSharp.Mat srcImage = CreateAlphaMat();
+            Bitmap map = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(srcImage);
             pictureBox1.Image = map;
-
-            Cv2.ImWrite("透明Alpha值图.png", srcImage);
+            OpenCvSharp.Cv2.ImWrite("透明Alpha值图.png", srcImage);
         }
     }
 }
