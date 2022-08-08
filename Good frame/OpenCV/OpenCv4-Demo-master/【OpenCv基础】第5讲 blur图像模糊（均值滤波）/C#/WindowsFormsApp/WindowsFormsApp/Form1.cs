@@ -24,17 +24,24 @@ namespace WindowsFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             // 读取图像
-            Mat srcImage = Cv2.ImRead("girl.jpg");
+            OpenCvSharp.Mat srcImage = OpenCvSharp.Cv2.ImRead("girl.jpg");
             // 显示原图
-            Cv2.ImShow("原图", srcImage);
+            OpenCvSharp.Cv2.ImShow("原图", srcImage);
             // 均值滤波
-            Mat dstImage = new Mat();
-            Cv2.Blur(srcImage, dstImage, new OpenCvSharp.Size() { Width = 7, Height = 7 });
+            // Blur:模糊
+            OpenCvSharp.Mat dstImage = new OpenCvSharp.Mat();
+            OpenCvSharp.Cv2.Blur(srcImage, dstImage, new OpenCvSharp.Size() 
+            {
+                Width = 7, 
+                Height = 7 
+            });
+
             // 在pictureBox1中显示效果图
-            Bitmap map = BitmapConverter.ToBitmap(dstImage);
+            Bitmap map = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dstImage);
             pictureBox1.Image = map;
+
             // 弹窗显示效果图
-            using (new Window("效果", dstImage))
+            using (new OpenCvSharp.Window("效果", dstImage))
             {
                 Cv2.WaitKey();
             }
