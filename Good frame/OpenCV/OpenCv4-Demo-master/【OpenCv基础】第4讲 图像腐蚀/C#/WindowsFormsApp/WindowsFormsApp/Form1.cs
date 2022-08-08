@@ -23,24 +23,32 @@ namespace WindowsFormsApp
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Mat srcImage = Cv2.ImRead("girl.jpg");
-            
+            OpenCvSharp.Mat srcImage = OpenCvSharp.Cv2.ImRead("girl.jpg");
+
             // 在窗口中显示原画
-            Cv2.ImShow("原图", srcImage);
+            OpenCvSharp.Cv2.ImShow("原图", srcImage);
 
             // 进行腐蚀操作
-            Mat element = Cv2.GetStructuringElement(MorphShapes.Rect, new OpenCvSharp.Size(){Width=15,Height=15}); 
-            Mat dstImage = new Mat();
-            Cv2.Erode(srcImage, dstImage, element);
+            OpenCvSharp.Mat element = OpenCvSharp.Cv2.GetStructuringElement(
+                shape: MorphShapes.Rect,
+                ksize: new OpenCvSharp.Size()
+                {
+                    Width = 15,
+                    Height = 15
+                });
+
+            OpenCvSharp.Mat dstImage = new OpenCvSharp.Mat();
+            // Erode:腐蚀
+            OpenCvSharp.Cv2.Erode(srcImage, dstImage, element);
 
             // 输出图像到pictureBox控件
-            Bitmap map = BitmapConverter.ToBitmap(dstImage);
+            Bitmap map = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dstImage);
             pictureBox1.Image = map;
-            
+
             // 弹窗显示图像
-            using (new Window("效果", dstImage))
+            using (new OpenCvSharp.Window("效果", dstImage))
             {
-                Cv2.WaitKey();
+                OpenCvSharp.Cv2.WaitKey();
             }
         }
     }
