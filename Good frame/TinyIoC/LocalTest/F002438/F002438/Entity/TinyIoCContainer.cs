@@ -895,6 +895,11 @@ namespace F002438.Entity
             return parentContainer.GetParentObjectFactory(registration);
         }
 
+        #endregion
+
+
+        #region CanResolve / TryResolve 判断是否可以从容器中解析Type 
+
         public bool CanResolve(Type resolveType)
         {
             return CanResolveInternal(new TypeRegistration(resolveType), NamedParameterOverloads.Default, ResolveOptions.Default);
@@ -981,6 +986,94 @@ namespace F002438.Entity
             where ResolveType : class
         {
             return CanResolve(typeof(ResolveType), name, parameters, options);
+        }
+
+        private bool CanResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException("parameters");
+
+            Type checkType = registration.Type;
+            string name = registration.Name;
+
+            ObjectFactoryBase factory;
+            if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType, name), out factory))
+            {
+                if (factory.AssumeConstruction)
+                    return true;
+
+                if (factory.Constructor == null)
+                    return GetBestConstructor(factory.CreatesType, parameters, options) != null;
+                else
+                    return CanConstruct(factory.Constructor, parameters, options);
+            }
+
+            if (!string.IsNullOrEmpty(name) &&
+                options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
+                return (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
+
+            if (!string.IsNullOrEmpty(name) &&
+                options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
+            {
+                if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
+                {
+                    if (factory.AssumeConstruction)
+                        return true;
+
+                    return GetBestConstructor(factory.CreatesType, parameters, options) != null;
+                }
+            }
+
+            if (IsAutomaticLazyFactoryRequest(checkType))
+                return true;
+
+            if (IsIEnumerableRequest(registration.Type))
+                return true;
+
+            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || (checkType.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
+                return (GetBestConstructor(checkType, parameters, options) != null) ? true : (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
+
+            if (parentContainer != null)
+                return parentContainer.CanResolveInternal(registration, parameters, options);
+
+            return false;
+        }
+
+        private ConstructorInfo GetBestConstructor(Type type, NamedParameterOverloads parameters, ResolveOptions options)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException("parameters");
+            if (type.IsValueType)
+                return null;
+            IEnumerable<ConstructorInfo> ctors = TinyIoCReflectionCache.GetUsableConstructors(type);
+            foreach (ConstructorInfo ctor in ctors)
+            {
+                if (CanConstruct(ctor, parameters, options))
+                    return ctor;
+            }
+
+            return null;
+        }
+
+        private bool CanConstruct(ConstructorInfo ctor, NamedParameterOverloads parameters, ResolveOptions options)
+        {
+            if (parameters == null)
+                throw new ArgumentNullException("parameters");
+
+            foreach (ParameterInfo parameter in ctor.GetParameters())
+            {
+                if (string.IsNullOrEmpty(parameter.Name))
+                    return false;
+
+                bool isParameterOverload = parameters.ContainsKey(parameter.Name);
+                if (parameter.ParameterType.IsPrimitive && !isParameterOverload)
+                    return false;
+
+                if (!isParameterOverload && !CanResolveInternal(new TypeRegistration(parameter.ParameterType), NamedParameterOverloads.Default, options))
+                    return false;
+            }
+
+            return true;
         }
 
         public bool TryResolve(Type resolveType, out object resolvedType)
@@ -1248,6 +1341,7 @@ namespace F002438.Entity
         }
 
         #endregion
+
 
         #region Object Factories
 
@@ -1954,55 +2048,6 @@ namespace F002438.Entity
             return new MultiInstanceFactory(registerType, registerImplementation);
         }
 
-        private bool CanResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            Type checkType = registration.Type;
-            string name = registration.Name;
-
-            ObjectFactoryBase factory;
-            if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType, name), out factory))
-            {
-                if (factory.AssumeConstruction)
-                    return true;
-
-                if (factory.Constructor == null)
-                    return GetBestConstructor(factory.CreatesType, parameters, options) != null;
-                else
-                    return CanConstruct(factory.Constructor, parameters, options);
-            }
-
-            if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
-                return (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
-
-            if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
-            {
-                if (RegisteredTypes.TryGetValue(new TypeRegistration(checkType), out factory))
-                {
-                    if (factory.AssumeConstruction)
-                        return true;
-
-                    return GetBestConstructor(factory.CreatesType, parameters, options) != null;
-                }
-            }
-
-            if (IsAutomaticLazyFactoryRequest(checkType))
-                return true;
-
-            if (IsIEnumerableRequest(registration.Type))
-                return true;
-
-            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || (checkType.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
-                return (GetBestConstructor(checkType, parameters, options) != null) ? true : (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
-
-            if (parentContainer != null)
-                return parentContainer.CanResolveInternal(registration, parameters, options);
-
-            return false;
-        }
-
         private bool IsIEnumerableRequest(Type type)
         {
             if (!type.IsGenericType)
@@ -2044,43 +2089,6 @@ namespace F002438.Entity
         {
             MethodInfo genericResolveAllMethod = this.GetType().GetGenericMethod(BindingFlags.Public | BindingFlags.Instance, "ResolveAll", type.GetGenericArguments(), new[] { typeof(bool) });
             return genericResolveAllMethod.Invoke(this, new object[] { false });
-        }
-
-        private bool CanConstruct(ConstructorInfo ctor, NamedParameterOverloads parameters, ResolveOptions options)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-
-            foreach (ParameterInfo parameter in ctor.GetParameters())
-            {
-                if (string.IsNullOrEmpty(parameter.Name))
-                    return false;
-
-                bool isParameterOverload = parameters.ContainsKey(parameter.Name);
-                if (parameter.ParameterType.IsPrimitive && !isParameterOverload)
-                    return false;
-
-                if (!isParameterOverload && !CanResolveInternal(new TypeRegistration(parameter.ParameterType), NamedParameterOverloads.Default, options))
-                    return false;
-            }
-
-            return true;
-        }
-
-        private ConstructorInfo GetBestConstructor(Type type, NamedParameterOverloads parameters, ResolveOptions options)
-        {
-            if (parameters == null)
-                throw new ArgumentNullException("parameters");
-            if (type.IsValueType)
-                return null;
-            IEnumerable<ConstructorInfo> ctors = TinyIoCReflectionCache.GetUsableConstructors(type);
-            foreach (ConstructorInfo ctor in ctors)
-            {
-                if (this.CanConstruct(ctor, parameters, options))
-                    return ctor;
-            }
-
-            return null;
         }
 
         private object ConstructType(Type requestedType, Type implementationType, ResolveOptions options)
