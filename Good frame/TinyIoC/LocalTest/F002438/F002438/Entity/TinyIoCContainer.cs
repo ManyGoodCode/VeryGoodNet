@@ -660,44 +660,104 @@ namespace F002438.Entity
 
         #region Resolve 从IOC容器中解析出 object 对象
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  string.Empty 
+        /// 传入的参数     为  NamedParameterOverloads.Default
+        /// 传入的options  为  ResolveOptions.Default
+        /// </summary>
         public object Resolve(Type resolveType)
         {
-            return ResolveInternal(new TypeRegistration(resolveType), NamedParameterOverloads.Default, ResolveOptions.Default);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType),
+                parameters: NamedParameterOverloads.Default,
+                options: ResolveOptions.Default);
         }
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  string.Empty 
+        /// 传入的参数     为  NamedParameterOverloads.Default
+        /// 传入的options  为  options
+        /// </summary>
         public object Resolve(Type resolveType, ResolveOptions options)
         {
-            return ResolveInternal(new TypeRegistration(resolveType), NamedParameterOverloads.Default, options);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType),
+                parameters: NamedParameterOverloads.Default,
+                options: options);
         }
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  name 
+        /// 传入的参数     为  NamedParameterOverloads.Default
+        /// 传入的options  为  ResolveOptions.Default
+        /// </summary>
         public object Resolve(Type resolveType, string name)
         {
-            return ResolveInternal(new TypeRegistration(resolveType, name), NamedParameterOverloads.Default, ResolveOptions.Default);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType, name),
+                parameters: NamedParameterOverloads.Default,
+                options: ResolveOptions.Default);
         }
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  name 
+        /// 传入的参数     为  NamedParameterOverloads.Default
+        /// 传入的options  为  options
+        /// </summary>
         public object Resolve(Type resolveType, string name, ResolveOptions options)
         {
-            return ResolveInternal(new TypeRegistration(resolveType, name), NamedParameterOverloads.Default, options);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType, name),
+                parameters: NamedParameterOverloads.Default,
+                options: options);
         }
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  string.Empty 
+        /// 传入的参数     为  parameters
+        /// 传入的options  为  ResolveOptions.Default
+        /// </summary>
         public object Resolve(Type resolveType, NamedParameterOverloads parameters)
         {
-            return ResolveInternal(new TypeRegistration(resolveType), parameters, ResolveOptions.Default);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType),
+                parameters: parameters,
+                options: ResolveOptions.Default);
         }
 
+        /// <summary>
+        /// 从容器中解析  Type  类型实例。
+        /// 传入的Name     为  string.Empty 
+        /// 传入的参数     为  parameters
+        /// 传入的options  为  ResolveOptions.Default
+        /// </summary>
         public object Resolve(Type resolveType, NamedParameterOverloads parameters, ResolveOptions options)
         {
-            return ResolveInternal(new TypeRegistration(resolveType), parameters, options);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType),
+                parameters: parameters,
+                options: options);
         }
 
         public object Resolve(Type resolveType, string name, NamedParameterOverloads parameters)
         {
-            return ResolveInternal(new TypeRegistration(resolveType, name), parameters, ResolveOptions.Default);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType, name),
+                parameters: parameters,
+                options: ResolveOptions.Default);
         }
 
         public object Resolve(Type resolveType, string name, NamedParameterOverloads parameters, ResolveOptions options)
         {
-            return ResolveInternal(new TypeRegistration(resolveType, name), parameters, options);
+            return ResolveInternal(
+                registration: new TypeRegistration(resolveType, name),
+                parameters: parameters,
+                options: options);
         }
 
         public ResolveType Resolve<ResolveType>()
@@ -749,6 +809,11 @@ namespace F002438.Entity
             return (ResolveType)Resolve(typeof(ResolveType), name, parameters, options);
         }
 
+        /// <summary>
+        /// 通过 TypeRegistration 为 Key 在字典中找到创建者  ObjectFactoryBase ，通过传递参数给 ObjectFactoryBase 来创建对象实例
+        /// 1. 可以从子容器中创建
+        /// 2. 可以构建Name为空的 TypeRegistration 来寻找  ObjectFactoryBase 来创建
+        /// </summary>
         private object ResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
         {
             ObjectFactoryBase factory;
@@ -771,23 +836,32 @@ namespace F002438.Entity
             {
                 try
                 {
-                    return bubbledObjectFactory.GetObject(registration.Type, this, parameters, options);
+                    return bubbledObjectFactory.GetObject(
+                        requestedType: registration.Type,
+                        container: this,
+                        parameters: parameters,
+                        options: options);
                 }
                 catch (TinyIoCResolutionException) { throw; }
                 catch (Exception ex) { throw new TinyIoCResolutionException(registration.Type, ex); }
             }
 
-            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
+            if (!string.IsNullOrEmpty(registration.Name) &&
+                options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
                 throw new TinyIoCResolutionException(registration.Type);
 
-            if (!string.IsNullOrEmpty(registration.Name) && 
+            if (!string.IsNullOrEmpty(registration.Name) &&
                 options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
                 if (RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
                 {
                     try
                     {
-                        return factory.GetObject(registration.Type, this, parameters, options);
+                        return factory.GetObject(
+                             requestedType: registration.Type,
+                             container: this,
+                             parameters: parameters,
+                             options: options);
                     }
                     catch (TinyIoCResolutionException) { throw; }
                     catch (Exception ex) { throw new TinyIoCResolutionException(registration.Type, ex); }
@@ -797,7 +871,7 @@ namespace F002438.Entity
             if (IsIEnumerableRequest(registration.Type))
                 return GetIEnumerableRequest(registration.Type);
 
-            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || 
+            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) ||
                 (registration.Type.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
             {
                 if (!registration.Type.IsAbstract && !registration.Type.IsInterface)
@@ -805,6 +879,20 @@ namespace F002438.Entity
             }
 
             throw new TinyIoCResolutionException(registration.Type);
+        }
+
+        private ObjectFactoryBase GetParentObjectFactory(TypeRegistration registration)
+        {
+            if (parentContainer == null)
+                return null;
+
+            ObjectFactoryBase factory;
+            if (parentContainer.RegisteredTypes.TryGetValue(registration, out factory))
+            {
+                return factory.GetFactoryForChildContainer(registration.Type, parentContainer, this);
+            }
+
+            return parentContainer.GetParentObjectFactory(registration);
         }
 
         public bool CanResolve(Type resolveType)
@@ -1950,20 +2038,6 @@ namespace F002438.Entity
                 return true;
 
             return false;
-        }
-
-        private ObjectFactoryBase GetParentObjectFactory(TypeRegistration registration)
-        {
-            if (parentContainer == null)
-                return null;
-
-            ObjectFactoryBase factory;
-            if (parentContainer.RegisteredTypes.TryGetValue(registration, out factory))
-            {
-                return factory.GetFactoryForChildContainer(registration.Type, parentContainer, this);
-            }
-
-            return parentContainer.GetParentObjectFactory(registration);
         }
 
         private object GetIEnumerableRequest(Type type)
