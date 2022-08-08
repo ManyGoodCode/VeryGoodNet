@@ -15,52 +15,52 @@ namespace F002438.Entity
         #region "Fluent" API
         public sealed class RegisterOptions
         {
-            private TinyIoCContainer _Container;
-            private TypeRegistration _Registration;
+            private TinyIoCContainer container;
+            private TypeRegistration registration;
 
             public RegisterOptions(TinyIoCContainer container, TypeRegistration registration)
             {
-                _Container = container;
-                _Registration = registration;
+                this.container = container;
+                this.registration = registration;
             }
 
             public RegisterOptions AsSingleton()
             {
-                ObjectFactoryBase currentFactory = _Container.GetCurrentFactory(_Registration);
+                ObjectFactoryBase currentFactory = container.GetCurrentFactory(registration);
 
                 if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(_Registration.Type, "singleton");
+                    throw new TinyIoCRegistrationException(registration.Type, "singleton");
 
-                return _Container.AddUpdateRegistration(_Registration, currentFactory.SingletonVariant);
+                return container.AddUpdateRegistration(registration, currentFactory.SingletonVariant);
             }
 
             public RegisterOptions AsMultiInstance()
             {
-                ObjectFactoryBase currentFactory = _Container.GetCurrentFactory(_Registration);
+                ObjectFactoryBase currentFactory = container.GetCurrentFactory(registration);
                 if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(_Registration.Type, "multi-instance");
+                    throw new TinyIoCRegistrationException(registration.Type, "multi-instance");
 
-                return _Container.AddUpdateRegistration(_Registration, currentFactory.MultiInstanceVariant);
+                return container.AddUpdateRegistration(registration, currentFactory.MultiInstanceVariant);
             }
 
 
             public RegisterOptions WithWeakReference()
             {
-                ObjectFactoryBase currentFactory = _Container.GetCurrentFactory(_Registration);
+                ObjectFactoryBase currentFactory = container.GetCurrentFactory(registration);
                 if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(_Registration.Type, "weak reference");
+                    throw new TinyIoCRegistrationException(registration.Type, "weak reference");
 
-                return _Container.AddUpdateRegistration(_Registration, currentFactory.WeakReferenceVariant);
+                return container.AddUpdateRegistration(registration, currentFactory.WeakReferenceVariant);
             }
 
 
             public RegisterOptions WithStrongReference()
             {
-                ObjectFactoryBase currentFactory = _Container.GetCurrentFactory(_Registration);
+                ObjectFactoryBase currentFactory = container.GetCurrentFactory(registration);
                 if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(_Registration.Type, "strong reference");
+                    throw new TinyIoCRegistrationException(registration.Type, "strong reference");
 
-                return _Container.AddUpdateRegistration(_Registration, currentFactory.StrongReferenceVariant);
+                return container.AddUpdateRegistration(registration, currentFactory.StrongReferenceVariant);
             }
             public static RegisterOptions ToCustomLifetimeManager(RegisterOptions instance, ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
             {
@@ -73,34 +73,34 @@ namespace F002438.Entity
                 if (string.IsNullOrEmpty(errorString))
                     throw new ArgumentException("errorString is null or empty.", "errorString");
 
-                var currentFactory = instance._Container.GetCurrentFactory(instance._Registration);
+                ObjectFactoryBase currentFactory = instance.container.GetCurrentFactory(instance.registration);
 
                 if (currentFactory == null)
-                    throw new TinyIoCRegistrationException(instance._Registration.Type, errorString);
+                    throw new TinyIoCRegistrationException(instance.registration.Type, errorString);
 
-                return instance._Container.AddUpdateRegistration(instance._Registration, currentFactory.GetCustomObjectLifetimeVariant(lifetimeProvider, errorString));
+                return instance.container.AddUpdateRegistration(instance.registration, currentFactory.GetCustomObjectLifetimeVariant(lifetimeProvider, errorString));
             }
         }
 
 
         public sealed class MultiRegisterOptions
         {
-            private IEnumerable<RegisterOptions> _RegisterOptions;
+            private IEnumerable<RegisterOptions> registerOptions;
 
             public MultiRegisterOptions(IEnumerable<RegisterOptions> registerOptions)
             {
-                _RegisterOptions = registerOptions;
+                this.registerOptions = registerOptions;
             }
 
             public MultiRegisterOptions AsSingleton()
             {
-                _RegisterOptions = ExecuteOnAllRegisterOptions(ro => ro.AsSingleton());
+                registerOptions = ExecuteOnAllRegisterOptions(ro => ro.AsSingleton());
                 return this;
             }
 
             public MultiRegisterOptions AsMultiInstance()
             {
-                _RegisterOptions = ExecuteOnAllRegisterOptions(ro => ro.AsMultiInstance());
+                registerOptions = ExecuteOnAllRegisterOptions(ro => ro.AsMultiInstance());
                 return this;
             }
 
@@ -119,16 +119,15 @@ namespace F002438.Entity
                 if (string.IsNullOrEmpty(errorString))
                     throw new ArgumentException("errorString is null or empty.", "errorString");
 
-                instance._RegisterOptions = instance.ExecuteOnAllRegisterOptions(ro => RegisterOptions.ToCustomLifetimeManager(ro, lifetimeProvider, errorString));
+                instance.registerOptions = instance.ExecuteOnAllRegisterOptions(ro => RegisterOptions.ToCustomLifetimeManager(ro, lifetimeProvider, errorString));
 
                 return instance;
             }
 
             private IEnumerable<RegisterOptions> ExecuteOnAllRegisterOptions(Func<RegisterOptions, RegisterOptions> action)
             {
-                var newRegisterOptions = new List<RegisterOptions>();
-
-                foreach (var registerOption in _RegisterOptions)
+                List<RegisterOptions> newRegisterOptions = new List<RegisterOptions>();
+                foreach (RegisterOptions registerOption in registerOptions)
                 {
                     newRegisterOptions.Add(action(registerOption));
                 }
@@ -138,15 +137,11 @@ namespace F002438.Entity
         }
         #endregion
 
-        #region Public API
-        #region Child Containers
         public TinyIoCContainer GetChildContainer()
         {
             return new TinyIoCContainer(this);
         }
-        #endregion
 
-        #region Registration
 
         public void AutoRegister()
         {
@@ -348,7 +343,6 @@ namespace F002438.Entity
 
             return new MultiRegisterOptions(registerOptions);
         }
-        #endregion
 
         #region Unregistration
 
@@ -820,7 +814,6 @@ namespace F002438.Entity
             BuildUpInternal(input, resolveOptions);
         }
 
-        #endregion
         #endregion
 
         #region Object Factories
