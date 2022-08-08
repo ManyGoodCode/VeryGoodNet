@@ -190,6 +190,8 @@ namespace F002438.Entity
 
         #region Register 
 
+        #region 1. AutoRegister
+
         public void AutoRegister()
         {
             AutoRegisterInternal(
@@ -216,79 +218,159 @@ namespace F002438.Entity
 
         public void AutoRegister(DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
         {
-            AutoRegisterInternal(new Assembly[] { GetType().Assembly }, duplicateAction, registrationPredicate);
+            AutoRegisterInternal(
+                inputAssemblies: new Assembly[] { GetType().Assembly },
+                duplicateAction: duplicateAction,
+                registrationPredicate);
         }
 
         public void AutoRegister(IEnumerable<Assembly> assemblies)
         {
-            AutoRegisterInternal(assemblies, DuplicateImplementationActions.RegisterSingle, null);
+            AutoRegisterInternal(
+               inputAssemblies: assemblies,
+               duplicateAction: DuplicateImplementationActions.RegisterSingle,
+               registrationPredicate: null);
         }
 
         public void AutoRegister(IEnumerable<Assembly> assemblies, Func<Type, bool> registrationPredicate)
         {
-            AutoRegisterInternal(assemblies, DuplicateImplementationActions.RegisterSingle, registrationPredicate);
+            AutoRegisterInternal(
+                inputAssemblies: assemblies,
+                duplicateAction: DuplicateImplementationActions.RegisterSingle,
+                registrationPredicate: registrationPredicate);
         }
 
         public void AutoRegister(IEnumerable<Assembly> assemblies, DuplicateImplementationActions duplicateAction)
         {
-            AutoRegisterInternal(assemblies, duplicateAction, null);
+            AutoRegisterInternal(
+                inputAssemblies: assemblies,
+                duplicateAction: duplicateAction,
+                registrationPredicate: null);
         }
 
         public void AutoRegister(IEnumerable<Assembly> assemblies, DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
         {
-            AutoRegisterInternal(assemblies, duplicateAction, registrationPredicate);
+            AutoRegisterInternal(
+                inputAssemblies: assemblies,
+                duplicateAction: duplicateAction,
+                registrationPredicate: registrationPredicate);
         }
 
+        #endregion
+
+        #region 2. Internal Register
+
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  string.Empty ; Factory 为 默认的  GetDefaultObjectFactory(registerType, registerType));
+        /// </summary>
         public RegisterOptions Register(Type registerType)
         {
-            return RegisterInternal(registerType, string.Empty, GetDefaultObjectFactory(registerType, registerType));
+            return RegisterInternal(
+                registerType: registerType,
+                name: string.Empty,
+                factory: GetDefaultObjectFactory(registerType, registerType));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  name ; Factory 为 默认的  GetDefaultObjectFactory(registerType, registerType));
+        /// </summary>
         public RegisterOptions Register(Type registerType, string name)
         {
-            return RegisterInternal(registerType, name, GetDefaultObjectFactory(registerType, registerType));
-
+            return RegisterInternal(
+                registerType: registerType,
+                name: name,
+                factory: GetDefaultObjectFactory(registerType, registerType));
         }
 
-
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  string.Empty  ; Factory 为 默认的  GetDefaultObjectFactory(registerType, registerImplementation));
+        /// </summary>
         public RegisterOptions Register(Type registerType, Type registerImplementation)
         {
-            return RegisterInternal(registerType, string.Empty, GetDefaultObjectFactory(registerType, registerImplementation));
+            return RegisterInternal(
+                registerType: registerType,
+                name: string.Empty,
+                factory: GetDefaultObjectFactory(registerType, registerImplementation));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  name ; Factory 为 默认的  GetDefaultObjectFactory(registerType, registerImplementation));
+        /// </summary>
         public RegisterOptions Register(Type registerType, Type registerImplementation, string name)
         {
-            return RegisterInternal(registerType, name, GetDefaultObjectFactory(registerType, registerImplementation));
+            return RegisterInternal(
+                registerType: registerType,
+                name: name,
+                factory: GetDefaultObjectFactory(registerType, registerImplementation));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  string.Empty ; Factory 为   InstanceFactory(registerType, registerType, instance));
+        /// 当通过 Factory获取对象时得到的是 instance
+        /// </summary>
         public RegisterOptions Register(Type registerType, object instance)
         {
-            return RegisterInternal(registerType, string.Empty, new InstanceFactory(registerType, registerType, instance));
+            return RegisterInternal(
+                registerType: registerType,
+                name: string.Empty,
+                factory: new InstanceFactory(registerType, registerType, instance));
         }
+
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  name ; Factory 为   InstanceFactory(registerType, registerType, instance));
+        /// 当通过 Factory获取对象时得到的是 instance
+        /// </summary>
         public RegisterOptions Register(Type registerType, object instance, string name)
         {
-            return RegisterInternal(registerType, name, new InstanceFactory(registerType, registerType, instance));
+            return RegisterInternal(
+                registerType: registerType,
+                name: name,
+                factory: new InstanceFactory(registerType, registerType, instance));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为  string.Empty ; Factory 为   InstanceFactory(registerType, registerImplementation, instance));
+        /// 当通过 Factory获取对象时得到的是 instance
+        /// </summary>
         public RegisterOptions Register(Type registerType, Type registerImplementation, object instance)
         {
-            return RegisterInternal(registerType, string.Empty, new InstanceFactory(registerType, registerImplementation, instance));
+            return RegisterInternal(
+                registerType: registerType,
+                name: string.Empty,
+                factory: new InstanceFactory(registerType, registerImplementation, instance));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为 name ; Factory 为   InstanceFactory(registerType, registerImplementation, instance));
+        /// 当通过 Factory获取对象时得到的是 instance
+        /// </summary>
         public RegisterOptions Register(Type registerType, Type registerImplementation, object instance, string name)
         {
-            return RegisterInternal(registerType, name, new InstanceFactory(registerType, registerImplementation, instance));
+            return RegisterInternal(
+                registerType: registerType,
+                name: name,
+                factory: new InstanceFactory(registerType, registerImplementation, instance));
         }
 
         public RegisterOptions Register(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory)
         {
-            return RegisterInternal(registerType, string.Empty, new DelegateFactory(registerType, factory));
+            return RegisterInternal(
+                registerType: registerType,
+                name: string.Empty,
+                factory: new DelegateFactory(registerType, factory));
         }
 
         public RegisterOptions Register(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory, string name)
         {
-            return RegisterInternal(registerType, name, new DelegateFactory(registerType, factory));
+            return RegisterInternal(
+                registerType: registerType,
+                name: name,
+                factory: new DelegateFactory(registerType, factory));
         }
+
+        #endregion
+
+        #region 3. Register注入。 封装上面的方法，简化注入
 
         public RegisterOptions Register<RegisterType>()
             where RegisterType : class
@@ -399,6 +481,8 @@ namespace F002438.Entity
 
             return new MultiRegisterOptions(registerOptions);
         }
+
+        #endregion
 
         /// <summary>
         /// 注入锁
