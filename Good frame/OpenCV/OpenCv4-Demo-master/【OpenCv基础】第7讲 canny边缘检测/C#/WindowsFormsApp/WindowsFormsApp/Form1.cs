@@ -24,34 +24,38 @@ namespace WindowsFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             // 【1】读取图像
-            Mat srcImage = Cv2.ImRead("1.jpg");
-            Mat srcImage1 = srcImage.Clone();
+            OpenCvSharp.Mat srcImage = OpenCvSharp.Cv2.ImRead("1.jpg");
+            OpenCvSharp.Mat srcImage1 = srcImage.Clone();
 
             // 【2】显示原图
-            Cv2.ImShow("原图", srcImage);
+            OpenCvSharp.Cv2.ImShow("原图", srcImage);
 
             // 【3】创建与src同类型和大小的矩阵(dst)
-            Mat dstImage = new Mat(srcImage.Cols, srcImage.Rows, srcImage.Type());
+            OpenCvSharp.Mat dstImage = new OpenCvSharp.Mat(srcImage.Cols, srcImage.Rows, srcImage.Type());
 
             // 【4】将原图像转换为灰度图像
-            Mat grayImage = new Mat();
-            Cv2.CvtColor(srcImage1, grayImage, ColorConversionCodes.BGR2GRAY);
+            OpenCvSharp.Mat grayImage = new OpenCvSharp.Mat();
+            OpenCvSharp.Cv2.CvtColor(srcImage1, grayImage, OpenCvSharp.ColorConversionCodes.BGR2GRAY);
 
             // 【5】先用使用 3x3内核来降噪
-            Mat edge = new Mat();
-            Cv2.Blur(grayImage, edge, new OpenCvSharp.Size() { Width = 3, Height = 3 });
+            OpenCvSharp.Mat edge = new OpenCvSharp.Mat();
+            OpenCvSharp.Cv2.Blur(grayImage, edge, new OpenCvSharp.Size() 
+            {
+                Width = 3, 
+                Height = 3 
+            });
 
             // 【6】运行Canny算子
-            Cv2.Canny(edge, edge, 3, 9, 3);
+            OpenCvSharp.Cv2.Canny(edge, edge, 3, 9, 3);
 
             // 【7】使用Canny算子输出的边缘图g_cannyDetectedEdges作为掩码，来将原图g_srcImage拷到目标图g_dstImage中
             srcImage1.CopyTo(dstImage, edge);
 
             // 【8】显示效果图 
-            Cv2.ImShow("【效果图】整体方向Sobel", dstImage);
+            OpenCvSharp.Cv2.ImShow("【效果图】整体方向Sobel", dstImage);
 
             // 【9】在pictureBox1中显示效果图
-            Bitmap map = BitmapConverter.ToBitmap(dstImage);
+            Bitmap map = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(dstImage);
             pictureBox1.Image = map;
         }
     }
