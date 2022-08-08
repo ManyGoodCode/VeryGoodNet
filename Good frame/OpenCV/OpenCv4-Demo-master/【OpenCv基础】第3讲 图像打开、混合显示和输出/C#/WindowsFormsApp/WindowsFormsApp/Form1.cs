@@ -19,17 +19,24 @@ namespace WindowsFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             // 读取图片
-            Mat image1 = Cv2.ImRead("a.jpg");
-            Mat image2 = new Mat("b.jpg");
+            OpenCvSharp.Mat image1 = OpenCvSharp.Cv2.ImRead("a.jpg");
+            OpenCvSharp.Mat image2 = new OpenCvSharp.Mat("b.jpg");
             // 设置图片2需要显示的区域
-            Mat imageROI = image1[new Rect() { X = 800, Y = 350, Height = image2.Cols, Width = image2.Rows }];
+            OpenCvSharp.Mat imageROI = image1[new OpenCvSharp.Rect() 
+            { 
+                X = 800, Y = 350, 
+                Height = image2.Cols, 
+                Width = image2.Rows
+            }];
+
             // 重叠两张图片
-            Cv2.AddWeighted(imageROI, 0.7, image2, 0.3, 0.0, imageROI);
+            OpenCvSharp.Cv2.AddWeighted(imageROI, 0.7, image2, 0.3, 0.0, imageROI);
             // 显示图片到pictureBox
-            Bitmap map = BitmapConverter.ToBitmap(image1);
+            Bitmap map = OpenCvSharp.Extensions.BitmapConverter.ToBitmap(image1);
             pictureBox1.Image = map;
+
             // 弹窗显示
-            using (new Window("合并", image1))
+            using (new OpenCvSharp.Window("合并", image1))
             {
                 Cv2.WaitKey();
             }
