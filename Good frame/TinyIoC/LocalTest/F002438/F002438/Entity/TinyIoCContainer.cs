@@ -352,6 +352,10 @@ namespace F002438.Entity
                 factory: new InstanceFactory(registerType, registerImplementation, instance));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为 string.Empty ; Factory 为   DelegateFactory(registerType, factory));
+        /// 当通过 Factory获取对象时得到的是 委托执行的结果
+        /// </summary>
         public RegisterOptions Register(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory)
         {
             return RegisterInternal(
@@ -360,6 +364,10 @@ namespace F002438.Entity
                 factory: new DelegateFactory(registerType, factory));
         }
 
+        /// <summary>
+        /// 注入容器   registerType 。Name 为 name ; Factory 为   DelegateFactory(registerType, factory));
+        /// 当通过 Factory获取对象时得到的是 委托执行的结果
+        /// </summary>
         public RegisterOptions Register(Type registerType, Func<TinyIoCContainer, NamedParameterOverloads, object> factory, string name)
         {
             return RegisterInternal(
@@ -432,7 +440,7 @@ namespace F002438.Entity
                 throw new ArgumentNullException("factory");
             }
 
-            return Register(typeof(RegisterType), (c, o) => factory(c, o));
+            return Register(typeof(RegisterType), (ioc, pars) => factory(ioc, pars));
         }
 
         public RegisterOptions Register<RegisterType>(Func<TinyIoCContainer, NamedParameterOverloads, RegisterType> factory, string name)
@@ -443,7 +451,7 @@ namespace F002438.Entity
                 throw new ArgumentNullException("factory");
             }
 
-            return Register(typeof(RegisterType), (c, o) => factory(c, o), name);
+            return Register(typeof(RegisterType), (ioc, pars) => factory(ioc, pars), name);
         }
 
         public MultiRegisterOptions RegisterMultiple<RegisterType>(IEnumerable<Type> implementationTypes)
@@ -460,11 +468,12 @@ namespace F002438.Entity
                 if (!registrationType.IsAssignableFrom(type))
                     throw new ArgumentException(string.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
+            // 去重并抛出异常
             if (implementationTypes.Count() != implementationTypes.Distinct().Count())
             {
                 IEnumerable<string> queryForDuplicatedTypes = from i in implementationTypes
                                                               group i by i
-                                                  into j
+                                                              into j
                                                               where j.Count() > 1
                                                               select j.Key.FullName;
 
@@ -476,7 +485,10 @@ namespace F002438.Entity
             List<RegisterOptions> registerOptions = new List<RegisterOptions>();
             foreach (Type type in implementationTypes)
             {
-                registerOptions.Add(Register(registrationType, type, type.FullName));
+                registerOptions.Add(Register(
+                    registerType: registrationType,
+                    registerImplementation: type,
+                    name: type.FullName));
             }
 
             return new MultiRegisterOptions(registerOptions);
@@ -637,8 +649,7 @@ namespace F002438.Entity
 
         public bool Unregister(Type registerType, string name)
         {
-            var typeRegistration = new TypeRegistration(registerType, name);
-
+            TypeRegistration typeRegistration = new TypeRegistration(registerType, name);
             return RemoveRegistration(typeRegistration);
         }
 
@@ -1245,26 +1256,17 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase SingletonVariant
             {
-                get
-                {
-                    return new DelegateSingletonFactory(registerType, factory);
-                }
+                get { return new DelegateSingletonFactory(registerType, factory); }
             }
 
             public override ObjectFactoryBase WeakReferenceVariant
             {
-                get
-                {
-                    return new WeakDelegateFactory(this.registerType, factory);
-                }
+                get { return new WeakDelegateFactory(this.registerType, factory); }
             }
 
             public override ObjectFactoryBase StrongReferenceVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
 
             public override void SetConstructor(ConstructorInfo constructor)
@@ -1696,11 +1698,21 @@ namespace F002438.Entity
             public Type Type { get; private set; }
             public string Name { get; private set; }
 
+            /// <summary>
+            /// 类型 Type 和 名称Name 
+            /// 
+            /// 的数据结构封装。 Name 为 string.Empty
+            /// </summary>
             public TypeRegistration(Type type)
                 : this(type, string.Empty)
             {
             }
 
+            /// <summary>
+            /// 类型 Type 和 名称Name
+            /// 
+            /// 的数据结构封装。 Name 为 name
+            /// </summary>
             public TypeRegistration(Type type, string name)
             {
                 Type = type;
@@ -1774,6 +1786,9 @@ namespace F002438.Entity
             return new RegisterOptions(this, typeRegistration);
         }
 
+        /// <summary>
+        /// 移除 SafeDictionary【TypeRegistration, ObjectFactoryBase】 RegisteredTypes 字典中 Key对应的项
+        /// </summary>
         private bool RemoveRegistration(TypeRegistration typeRegistration)
         {
             return RegisteredTypes.Remove(typeRegistration);
