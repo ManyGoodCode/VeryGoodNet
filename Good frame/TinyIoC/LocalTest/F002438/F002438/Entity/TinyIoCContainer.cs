@@ -12,7 +12,31 @@ namespace F002438.Entity
 {
     public sealed partial class TinyIoCContainer : IDisposable
     {
+        /// <summary>
+        /// 封装Type 与 获得 其实例工厂 的字典
+        /// </summary>
+        private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> RegisteredTypes;
+
+        public TinyIoCContainer()
+        {
+            RegisteredTypes = new SafeDictionary<TypeRegistration, ObjectFactoryBase>();
+            RegisterDefaultTypes();
+        }
+
+        private TinyIoCContainer parentContainer;
+
+        private TinyIoCContainer(TinyIoCContainer parent)
+            : this()
+        {
+            parentContainer = parent;
+        }
+
+
         #region "Fluent" API
+
+        /// <summary>
+        /// 封装 TinyIoCContainer 和  TypeRegistration 的数据类型。往IOC注册类型的接口
+        /// </summary>
         public sealed class RegisterOptions
         {
             private TinyIoCContainer container;
@@ -62,7 +86,11 @@ namespace F002438.Entity
 
                 return container.AddUpdateRegistration(registration, currentFactory.StrongReferenceVariant);
             }
-            public static RegisterOptions ToCustomLifetimeManager(RegisterOptions instance, ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
+
+            public static RegisterOptions ToCustomLifetimeManager(
+                RegisterOptions instance,
+                ITinyIoCObjectLifetimeProvider lifetimeProvider,
+                string errorString)
             {
                 if (instance == null)
                     throw new ArgumentNullException("instance", "instance is null.");
@@ -78,11 +106,22 @@ namespace F002438.Entity
                 if (currentFactory == null)
                     throw new TinyIoCRegistrationException(instance.registration.Type, errorString);
 
-                return instance.container.AddUpdateRegistration(instance.registration, currentFactory.GetCustomObjectLifetimeVariant(lifetimeProvider, errorString));
+                return instance.container.AddUpdateRegistration(
+                    instance.registration,
+                    currentFactory.GetCustomObjectLifetimeVariant(lifetimeProvider, errorString));
             }
         }
 
-
+        /// <summary>
+        /// 封装批量注册Type到容器的对象 IEnumerable【RegisterOptions】
+        /// 
+        /// 可以实现多个 RegisterOptions  以 不同方式
+        /// AsSingleton
+        /// AsMultiInstance
+        /// ToCustomLifetimeManager【用户自定义】
+        /// 
+        /// 注入到IOC 容器
+        /// </summary>
         public sealed class MultiRegisterOptions
         {
             private IEnumerable<RegisterOptions> registerOptions;
@@ -94,13 +133,13 @@ namespace F002438.Entity
 
             public MultiRegisterOptions AsSingleton()
             {
-                registerOptions = ExecuteOnAllRegisterOptions(ro => ro.AsSingleton());
+                registerOptions = ExecuteOnAllRegisterOptions(registerOption => registerOption.AsSingleton());
                 return this;
             }
 
             public MultiRegisterOptions AsMultiInstance()
             {
-                registerOptions = ExecuteOnAllRegisterOptions(ro => ro.AsMultiInstance());
+                registerOptions = ExecuteOnAllRegisterOptions(registerOption => registerOption.AsMultiInstance());
                 return this;
             }
 
@@ -119,7 +158,9 @@ namespace F002438.Entity
                 if (string.IsNullOrEmpty(errorString))
                     throw new ArgumentException("errorString is null or empty.", "errorString");
 
-                instance.registerOptions = instance.ExecuteOnAllRegisterOptions(ro => RegisterOptions.ToCustomLifetimeManager(ro, lifetimeProvider, errorString));
+                instance.registerOptions = instance.ExecuteOnAllRegisterOptions(
+                       registerOption => RegisterOptions.ToCustomLifetimeManager(registerOption, lifetimeProvider, errorString)
+                    );
 
                 return instance;
             }
@@ -135,8 +176,13 @@ namespace F002438.Entity
                 return newRegisterOptions;
             }
         }
+
+
         #endregion
 
+        /// <summary>
+        /// 创建一个子容器。子容器的父容器为该容器
+        /// </summary>
         public TinyIoCContainer GetChildContainer()
         {
             return new TinyIoCContainer(this);
@@ -825,6 +871,19 @@ namespace F002438.Entity
             void ReleaseObject();
         }
 
+        /// <summary>
+        /// 此抽象类存在本身类型 ObjectFactoryBase的变量:
+        /// 
+        /// SingletonVariant
+        /// MultiInstanceVariant
+        /// StrongReferenceVariant
+        /// WeakReferenceVariant
+        /// GetCustomObjectLifetimeVariant() 函数 实现自定义返回 ObjectFactoryBase
+        /// 
+        /// 此抽象类包含抽象函数
+        /// public abstract object GetObject(Type requestedType, TinyIoCContainer container, NamedParameterOverloads parameters, ResolveOptions options)
+        /// 
+        /// </summary>
         private abstract class ObjectFactoryBase
         {
             public virtual bool AssumeConstruction
@@ -840,34 +899,22 @@ namespace F002438.Entity
 
             public virtual ObjectFactoryBase SingletonVariant
             {
-                get
-                {
-                    throw new TinyIoCRegistrationException(this.GetType(), "singleton");
-                }
+                get { throw new TinyIoCRegistrationException(this.GetType(), "singleton"); }
             }
 
             public virtual ObjectFactoryBase MultiInstanceVariant
             {
-                get
-                {
-                    throw new TinyIoCRegistrationException(this.GetType(), "multi-instance");
-                }
+                get { throw new TinyIoCRegistrationException(this.GetType(), "multi-instance"); }
             }
 
             public virtual ObjectFactoryBase StrongReferenceVariant
             {
-                get
-                {
-                    throw new TinyIoCRegistrationException(this.GetType(), "strong reference");
-                }
+                get { throw new TinyIoCRegistrationException(this.GetType(), "strong reference"); }
             }
 
             public virtual ObjectFactoryBase WeakReferenceVariant
             {
-                get
-                {
-                    throw new TinyIoCRegistrationException(this.GetType(), "weak reference");
-                }
+                get { throw new TinyIoCRegistrationException(this.GetType(), "weak reference"); }
             }
 
             public virtual ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
@@ -1410,6 +1457,11 @@ namespace F002438.Entity
 
         #endregion
 
+        /// <summary>
+        /// 类型 Type 和 名称Name
+        /// 
+        /// 的数据结构封装
+        /// </summary>
         public sealed class TypeRegistration
         {
             private int hashCode;
@@ -1447,20 +1499,6 @@ namespace F002438.Entity
             {
                 return hashCode;
             }
-        }
-
-        private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> RegisteredTypes;
-        public TinyIoCContainer()
-        {
-            RegisteredTypes = new SafeDictionary<TypeRegistration, ObjectFactoryBase>();
-            RegisterDefaultTypes();
-        }
-
-        TinyIoCContainer _Parent;
-        private TinyIoCContainer(TinyIoCContainer parent)
-            : this()
-        {
-            _Parent = parent;
         }
 
         #region Internal Methods
@@ -1570,6 +1608,10 @@ namespace F002438.Entity
             Register<TinyIoCContainer>(this);
         }
 
+        /// <summary>
+        /// 从 SafeDictionary【TypeRegistration, ObjectFactoryBase】 RegisteredTypes
+        /// 字典属性中根据 Key 获取 ObjectFactoryBase
+        /// </summary>
         private ObjectFactoryBase GetCurrentFactory(TypeRegistration registration)
         {
             ObjectFactoryBase current = null;
@@ -1583,10 +1625,14 @@ namespace F002438.Entity
             return AddUpdateRegistration(typeRegistration, factory);
         }
 
+        /// <summary>
+        /// 修改 SafeDictionary【TypeRegistration, ObjectFactoryBase】 RegisteredTypes 字典中
+        /// Key 的 值为 对应的 ObjectFactoryBase
+        /// 并返回 封装 IOCContainer 和 Key的数据结构 RegisterOptions
+        /// </summary>
         private RegisterOptions AddUpdateRegistration(TypeRegistration typeRegistration, ObjectFactoryBase factory)
         {
             RegisteredTypes[typeRegistration] = factory;
-
             return new RegisterOptions(this, typeRegistration);
         }
 
@@ -1624,7 +1670,7 @@ namespace F002438.Entity
             }
 
             if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
-                return (_Parent != null) ? _Parent.CanResolveInternal(registration, parameters, options) : false;
+                return (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
 
             if (!string.IsNullOrEmpty(name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
             {
@@ -1644,10 +1690,10 @@ namespace F002438.Entity
                 return true;
 
             if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || (checkType.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
-                return (GetBestConstructor(checkType, parameters, options) != null) ? true : (_Parent != null) ? _Parent.CanResolveInternal(registration, parameters, options) : false;
+                return (GetBestConstructor(checkType, parameters, options) != null) ? true : (parentContainer != null) ? parentContainer.CanResolveInternal(registration, parameters, options) : false;
 
-            if (_Parent != null)
-                return _Parent.CanResolveInternal(registration, parameters, options);
+            if (parentContainer != null)
+                return parentContainer.CanResolveInternal(registration, parameters, options);
 
             return false;
         }
@@ -1691,16 +1737,16 @@ namespace F002438.Entity
 
         private ObjectFactoryBase GetParentObjectFactory(TypeRegistration registration)
         {
-            if (_Parent == null)
+            if (parentContainer == null)
                 return null;
 
             ObjectFactoryBase factory;
-            if (_Parent.RegisteredTypes.TryGetValue(registration, out factory))
+            if (parentContainer.RegisteredTypes.TryGetValue(registration, out factory))
             {
-                return factory.GetFactoryForChildContainer(registration.Type, _Parent, this);
+                return factory.GetFactoryForChildContainer(registration.Type, parentContainer, this);
             }
 
-            return _Parent.GetParentObjectFactory(registration);
+            return parentContainer.GetParentObjectFactory(registration);
         }
 
         private object ResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
@@ -1899,11 +1945,11 @@ namespace F002438.Entity
 
         private IEnumerable<TypeRegistration> GetParentRegistrationsForType(Type resolveType)
         {
-            if (_Parent == null)
+            if (parentContainer == null)
                 return new TypeRegistration[] { };
 
-            var registrations = _Parent.RegisteredTypes.Keys.Where(tr => tr.Type == resolveType);
-            return registrations.Concat(_Parent.GetParentRegistrationsForType(resolveType));
+            IEnumerable<TypeRegistration> registrations = parentContainer.RegisteredTypes.Keys.Where(tr => tr.Type == resolveType);
+            return registrations.Concat(parentContainer.GetParentRegistrationsForType(resolveType));
         }
 
         private IEnumerable<object> ResolveAllInternal(Type resolveType, bool includeUnnamed)
