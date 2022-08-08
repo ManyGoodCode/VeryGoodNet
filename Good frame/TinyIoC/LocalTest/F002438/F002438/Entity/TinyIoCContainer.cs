@@ -216,7 +216,7 @@ namespace F002438.Entity
 
         public void AutoRegister(DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
         {
-            AutoRegisterInternal(new Assembly[] { this.GetType().Assembly }, duplicateAction, registrationPredicate);
+            AutoRegisterInternal(new Assembly[] { GetType().Assembly }, duplicateAction, registrationPredicate);
         }
 
         public void AutoRegister(IEnumerable<Assembly> assemblies)
@@ -253,12 +253,12 @@ namespace F002438.Entity
 
         public RegisterOptions Register(Type registerType, Type registerImplementation)
         {
-            return this.RegisterInternal(registerType, string.Empty, GetDefaultObjectFactory(registerType, registerImplementation));
+            return RegisterInternal(registerType, string.Empty, GetDefaultObjectFactory(registerType, registerImplementation));
         }
 
         public RegisterOptions Register(Type registerType, Type registerImplementation, string name)
         {
-            return this.RegisterInternal(registerType, name, GetDefaultObjectFactory(registerType, registerImplementation));
+            return RegisterInternal(registerType, name, GetDefaultObjectFactory(registerType, registerImplementation));
         }
 
         public RegisterOptions Register(Type registerType, object instance)
@@ -293,53 +293,53 @@ namespace F002438.Entity
         public RegisterOptions Register<RegisterType>()
             where RegisterType : class
         {
-            return this.Register(typeof(RegisterType));
+            return Register(typeof(RegisterType));
         }
 
         public RegisterOptions Register<RegisterType>(string name)
             where RegisterType : class
         {
-            return this.Register(typeof(RegisterType), name);
+            return Register(typeof(RegisterType), name);
         }
 
         public RegisterOptions Register<RegisterType, RegisterImplementation>()
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-            return this.Register(typeof(RegisterType), typeof(RegisterImplementation));
+            return Register(typeof(RegisterType), typeof(RegisterImplementation));
         }
 
         public RegisterOptions Register<RegisterType, RegisterImplementation>(string name)
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-            return this.Register(typeof(RegisterType), typeof(RegisterImplementation), name);
+            return Register(typeof(RegisterType), typeof(RegisterImplementation), name);
         }
 
         public RegisterOptions Register<RegisterType>(RegisterType instance)
            where RegisterType : class
         {
-            return this.Register(typeof(RegisterType), instance);
+            return Register(typeof(RegisterType), instance);
         }
 
         public RegisterOptions Register<RegisterType>(RegisterType instance, string name)
             where RegisterType : class
         {
-            return this.Register(typeof(RegisterType), instance, name);
+            return Register(typeof(RegisterType), instance, name);
         }
 
         public RegisterOptions Register<RegisterType, RegisterImplementation>(RegisterImplementation instance)
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-            return this.Register(typeof(RegisterType), typeof(RegisterImplementation), instance);
+            return Register(typeof(RegisterType), typeof(RegisterImplementation), instance);
         }
 
         public RegisterOptions Register<RegisterType, RegisterImplementation>(RegisterImplementation instance, string name)
             where RegisterType : class
             where RegisterImplementation : class, RegisterType
         {
-            return this.Register(typeof(RegisterType), typeof(RegisterImplementation), instance, name);
+            return Register(typeof(RegisterType), typeof(RegisterImplementation), instance, name);
         }
 
         public RegisterOptions Register<RegisterType>(Func<TinyIoCContainer, NamedParameterOverloads, RegisterType> factory)
@@ -350,7 +350,7 @@ namespace F002438.Entity
                 throw new ArgumentNullException("factory");
             }
 
-            return this.Register(typeof(RegisterType), (c, o) => factory(c, o));
+            return Register(typeof(RegisterType), (c, o) => factory(c, o));
         }
 
         public RegisterOptions Register<RegisterType>(Func<TinyIoCContainer, NamedParameterOverloads, RegisterType> factory, string name)
@@ -361,7 +361,7 @@ namespace F002438.Entity
                 throw new ArgumentNullException("factory");
             }
 
-            return this.Register(typeof(RegisterType), (c, o) => factory(c, o), name);
+            return Register(typeof(RegisterType), (c, o) => factory(c, o), name);
         }
 
         public MultiRegisterOptions RegisterMultiple<RegisterType>(IEnumerable<Type> implementationTypes)
@@ -376,7 +376,7 @@ namespace F002438.Entity
 
             foreach (Type type in implementationTypes)
                 if (!registrationType.IsAssignableFrom(type))
-                    throw new ArgumentException(String.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
+                    throw new ArgumentException(string.Format("types: The type {0} is not assignable from {1}", registrationType.FullName, type.FullName));
 
             if (implementationTypes.Count() != implementationTypes.Distinct().Count())
             {
@@ -492,7 +492,6 @@ namespace F002438.Entity
         {
             asm => asm.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
             asm => asm.FullName.StartsWith("System.", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("System,", StringComparison.Ordinal),
             asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.Ordinal),
             asm => asm.FullName.StartsWith("mscorlib,", StringComparison.Ordinal),
             asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.Ordinal),
@@ -1671,6 +1670,9 @@ namespace F002438.Entity
             return current;
         }
 
+        /// <summary>
+        /// 将 Type 和 ObjectFactoryBase 注入到this的容器的 SafeDictionary【TypeRegistration, ObjectFactoryBase】 字典中
+        /// </summary>
         private RegisterOptions RegisterInternal(Type registerType, string name, ObjectFactoryBase factory)
         {
             TypeRegistration typeRegistration = new TypeRegistration(registerType, name);
