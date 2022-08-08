@@ -20,12 +20,19 @@ namespace F002438
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            //TinyIoCContainer.MultiRegisterOptions
-            TinyIoCContainer.Current.Register<ISt, St>();
-            ISt st = TinyIoCContainer.Current.Resolve<St>();
-            st.Age = 4;
+            // 构造瞬时对象
+            TinyIoCContainer.InstanceContainer.Register<St>();
+            ISt aa1 = TinyIoCContainer.InstanceContainer.Resolve<St>();
+            aa1.Age = 4;
+            ISt aa2 = TinyIoCContainer.InstanceContainer.Resolve<St>();
+            aa2.Age = 5;
 
-            ISt st1 = TinyIoCContainer.Current.Resolve<ISt>();
+            // 构造单列对象
+            TinyIoCContainer.InstanceContainer.Register(typeof(St), new St() { Age = 99 });
+            ISt bb1 = TinyIoCContainer.InstanceContainer.Resolve<St>();
+            bb1.Age = 88;
+            ISt bb2 = TinyIoCContainer.InstanceContainer.Resolve<St>();
+            bb2.Age = 77;
         }
     }
 
@@ -35,6 +42,6 @@ namespace F002438
     }
     public abstract class ISt
     {
-        public  virtual int Age { get; set; }
+        public virtual int Age { get; set; }
     }
 }

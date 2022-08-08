@@ -17,6 +17,27 @@ namespace F002438.Entity
         /// </summary>
         private readonly SafeDictionary<TypeRegistration, ObjectFactoryBase> RegisteredTypes;
 
+        #region 单例容器
+
+        /// <summary>
+        /// 单例容器
+        /// </summary>
+        private static readonly TinyIoCContainer instanceContainer = new TinyIoCContainer();
+
+        static TinyIoCContainer()
+        {
+        }
+
+        /// <summary>
+        /// 单例容器
+        /// </summary>
+        public static TinyIoCContainer InstanceContainer
+        {
+            get { return instanceContainer; }
+        }
+
+        #endregion
+
         public TinyIoCContainer()
         {
             RegisteredTypes = new SafeDictionary<TypeRegistration, ObjectFactoryBase>();
@@ -988,6 +1009,9 @@ namespace F002438.Entity
             return CanResolve(typeof(ResolveType), name, parameters, options);
         }
 
+        /// <summary>
+        /// 查看类型Type中是否存在满足条件的构造函数。包括参数也要匹配
+        /// </summary>
         private bool CanResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
         {
             if (parameters == null)
@@ -1039,12 +1063,16 @@ namespace F002438.Entity
             return false;
         }
 
+        /// <summary>
+        /// 寻找最适合的匹配的构造函数
+        /// </summary>
         private ConstructorInfo GetBestConstructor(Type type, NamedParameterOverloads parameters, ResolveOptions options)
         {
             if (parameters == null)
                 throw new ArgumentNullException("parameters");
             if (type.IsValueType)
                 return null;
+            // 从字典缓存中查找type对应的构造函数【构造函数必须有TinyIoCConstructorAttribute特性修饰】
             IEnumerable<ConstructorInfo> ctors = TinyIoCReflectionCache.GetUsableConstructors(type);
             foreach (ConstructorInfo ctor in ctors)
             {
@@ -1055,6 +1083,9 @@ namespace F002438.Entity
             return null;
         }
 
+        /// <summary>
+        /// 判断构造函数是否匹配 
+        /// </summary>
         private bool CanConstruct(ConstructorInfo ctor, NamedParameterOverloads parameters, ResolveOptions options)
         {
             if (parameters == null)
@@ -1445,10 +1476,7 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase SingletonVariant
             {
-                get
-                {
-                    return new SingletonFactory(this.registerType, this.registerImplementation);
-                }
+                get { return new SingletonFactory(this.registerType, this.registerImplementation); }
             }
 
             public override ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
@@ -1458,10 +1486,7 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase MultiInstanceVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
         }
 
@@ -1568,10 +1593,7 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase WeakReferenceVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
 
             public override void SetConstructor(ConstructorInfo constructor)
@@ -1615,18 +1637,12 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase WeakReferenceVariant
             {
-                get
-                {
-                    return new WeakInstanceFactory(this.registerType, this.registerImplementation, this.instance);
-                }
+                get { return new WeakInstanceFactory(this.registerType, this.registerImplementation, this.instance); }
             }
 
             public override ObjectFactoryBase StrongReferenceVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
 
             public override void SetConstructor(ConstructorInfo constructor)
@@ -1674,18 +1690,12 @@ namespace F002438.Entity
 
             public override ObjectFactoryBase MultiInstanceVariant
             {
-                get
-                {
-                    return new MultiInstanceFactory(this.registerType, this.registerImplementation);
-                }
+                get { return new MultiInstanceFactory(this.registerType, this.registerImplementation); }
             }
 
             public override ObjectFactoryBase WeakReferenceVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
 
             public override ObjectFactoryBase StrongReferenceVariant
@@ -1744,34 +1754,28 @@ namespace F002438.Entity
                 if (parameters.Count != 0)
                     throw new ArgumentException("Cannot specify parameters for singleton types");
 
-                if (_Current != null) return _Current;
+                if (instanceContainer != null) return instanceContainer;
 
                 lock (SingletonLock)
                     if (current == null)
-                        current = container.ConstructType(requestedType, this.registerImplementation, Constructor, options);
+                        current = container.ConstructType(requestedType, registerImplementation, Constructor, options);
 
                 return current;
             }
 
             public override ObjectFactoryBase SingletonVariant
             {
-                get
-                {
-                    return this;
-                }
+                get { return this; }
             }
 
             public override ObjectFactoryBase GetCustomObjectLifetimeVariant(ITinyIoCObjectLifetimeProvider lifetimeProvider, string errorString)
             {
-                return new CustomObjectLifetimeFactory(this.registerType, this.registerImplementation, lifetimeProvider, errorString);
+                return new CustomObjectLifetimeFactory(registerType, registerImplementation, lifetimeProvider, errorString);
             }
 
             public override ObjectFactoryBase MultiInstanceVariant
             {
-                get
-                {
-                    return new MultiInstanceFactory(this.registerType, this.registerImplementation);
-                }
+                get { return new MultiInstanceFactory(registerType, registerImplementation); }
             }
 
             public override ObjectFactoryBase GetFactoryForChildContainer(Type type, TinyIoCContainer parent, TinyIoCContainer child)
@@ -1782,10 +1786,10 @@ namespace F002438.Entity
 
             public void Dispose()
             {
-                if (this.current == null)
+                if (current == null)
                     return;
 
-                IDisposable disposable = this.current as IDisposable;
+                IDisposable disposable = current as IDisposable;
                 if (disposable != null)
                     disposable.Dispose();
             }
@@ -1855,7 +1859,7 @@ namespace F002438.Entity
 
             public override Type CreatesType
             {
-                get { return this.registerImplementation; }
+                get { return registerImplementation; }
             }
 
             public override object GetObject(Type requestedType, TinyIoCContainer container, NamedParameterOverloads parameters, ResolveOptions options)
@@ -1907,23 +1911,6 @@ namespace F002438.Entity
             public void Dispose()
             {
                 lifetimeProvider.ReleaseObject();
-            }
-        }
-
-        #endregion
-        #region Singleton Container
-
-        private static readonly TinyIoCContainer _Current = new TinyIoCContainer();
-
-        static TinyIoCContainer()
-        {
-        }
-
-        public static TinyIoCContainer Current
-        {
-            get
-            {
-                return _Current;
             }
         }
 
