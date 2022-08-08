@@ -630,7 +630,7 @@ namespace F002438.Entity
 
         #endregion
 
-        #region Unregistration
+        #region Unregistration 从字典中移除类型。名字很重要在TypeRegistration中有一起生成Hashcode
 
         public bool Unregister<RegisterType>()
         {
@@ -647,6 +647,9 @@ namespace F002438.Entity
             return Unregister(registerType, string.Empty);
         }
 
+        /// <summary>
+        /// TypeRegistration 重写了 Equal 函数，且定义了HashCode方法，则移除字典可以通过新建类型
+        /// </summary>
         public bool Unregister(Type registerType, string name)
         {
             TypeRegistration typeRegistration = new TypeRegistration(registerType, name);
@@ -655,13 +658,12 @@ namespace F002438.Entity
 
         #endregion
 
-        #region Resolution
+        #region Resolve 从IOC容器中解析出 object 对象
 
         public object Resolve(Type resolveType)
         {
             return ResolveInternal(new TypeRegistration(resolveType), NamedParameterOverloads.Default, ResolveOptions.Default);
         }
-
 
         public object Resolve(Type resolveType, ResolveOptions options)
         {
@@ -745,6 +747,64 @@ namespace F002438.Entity
             where ResolveType : class
         {
             return (ResolveType)Resolve(typeof(ResolveType), name, parameters, options);
+        }
+
+        private object ResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
+        {
+            ObjectFactoryBase factory;
+            if (RegisteredTypes.TryGetValue(registration, out factory))
+            {
+                try
+                {
+                    return factory.GetObject(
+                       requestedType: registration.Type,
+                       container: this,
+                       parameters: parameters,
+                       options: options);
+                }
+                catch (TinyIoCResolutionException) { throw; }
+                catch (Exception ex) { throw new TinyIoCResolutionException(registration.Type, ex); }
+            }
+
+            ObjectFactoryBase bubbledObjectFactory = GetParentObjectFactory(registration);
+            if (bubbledObjectFactory != null)
+            {
+                try
+                {
+                    return bubbledObjectFactory.GetObject(registration.Type, this, parameters, options);
+                }
+                catch (TinyIoCResolutionException) { throw; }
+                catch (Exception ex) { throw new TinyIoCResolutionException(registration.Type, ex); }
+            }
+
+            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
+                throw new TinyIoCResolutionException(registration.Type);
+
+            if (!string.IsNullOrEmpty(registration.Name) && 
+                options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
+            {
+                if (RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
+                {
+                    try
+                    {
+                        return factory.GetObject(registration.Type, this, parameters, options);
+                    }
+                    catch (TinyIoCResolutionException) { throw; }
+                    catch (Exception ex) { throw new TinyIoCResolutionException(registration.Type, ex); }
+                }
+            }
+
+            if (IsIEnumerableRequest(registration.Type))
+                return GetIEnumerableRequest(registration.Type);
+
+            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || 
+                (registration.Type.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
+            {
+                if (!registration.Type.IsAbstract && !registration.Type.IsInterface)
+                    return ConstructType(null, registration.Type, parameters, options);
+            }
+
+            throw new TinyIoCResolutionException(registration.Type);
         }
 
         public bool CanResolve(Type resolveType)
@@ -1688,9 +1748,9 @@ namespace F002438.Entity
         #endregion
 
         /// <summary>
-        /// 类型 Type 和 名称Name
+        /// 类型 Type 和 名称Name 
         /// 
-        /// 的数据结构封装
+        /// 的数据结构封装。 重写了 Equql 函数，且定义了HashCode方法，则移除字典可以通过新建类型
         /// </summary>
         public sealed class TypeRegistration
         {
@@ -1701,7 +1761,7 @@ namespace F002438.Entity
             /// <summary>
             /// 类型 Type 和 名称Name 
             /// 
-            /// 的数据结构封装。 Name 为 string.Empty
+            /// 的数据结构封装。 Name 为 string.Empty。 重写了 Equql 函数，且定义了HashCode方法，则移除字典可以通过新建类型
             /// </summary>
             public TypeRegistration(Type type)
                 : this(type, string.Empty)
@@ -1711,7 +1771,7 @@ namespace F002438.Entity
             /// <summary>
             /// 类型 Type 和 名称Name
             /// 
-            /// 的数据结构封装。 Name 为 name
+            /// 的数据结构封装。 Name 为 name。 重写了 Equql 函数，且定义了HashCode方法，则移除字典可以通过新建类型
             /// </summary>
             public TypeRegistration(Type type, string name)
             {
@@ -1904,76 +1964,6 @@ namespace F002438.Entity
             }
 
             return parentContainer.GetParentObjectFactory(registration);
-        }
-
-        private object ResolveInternal(TypeRegistration registration, NamedParameterOverloads parameters, ResolveOptions options)
-        {
-            ObjectFactoryBase factory;
-            if (RegisteredTypes.TryGetValue(registration, out factory))
-            {
-                try
-                {
-                    return factory.GetObject(registration.Type, this, parameters, options);
-                }
-                catch (TinyIoCResolutionException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    throw new TinyIoCResolutionException(registration.Type, ex);
-                }
-            }
-
-            ObjectFactoryBase bubbledObjectFactory = GetParentObjectFactory(registration);
-            if (bubbledObjectFactory != null)
-            {
-                try
-                {
-                    return bubbledObjectFactory.GetObject(registration.Type, this, parameters, options);
-                }
-                catch (TinyIoCResolutionException)
-                {
-                    throw;
-                }
-                catch (Exception ex)
-                {
-                    throw new TinyIoCResolutionException(registration.Type, ex);
-                }
-            }
-
-            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.Fail)
-                throw new TinyIoCResolutionException(registration.Type);
-
-            if (!string.IsNullOrEmpty(registration.Name) && options.NamedResolutionFailureAction == NamedResolutionFailureActions.AttemptUnnamedResolution)
-            {
-                if (RegisteredTypes.TryGetValue(new TypeRegistration(registration.Type, string.Empty), out factory))
-                {
-                    try
-                    {
-                        return factory.GetObject(registration.Type, this, parameters, options);
-                    }
-                    catch (TinyIoCResolutionException)
-                    {
-                        throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        throw new TinyIoCResolutionException(registration.Type, ex);
-                    }
-                }
-            }
-
-            if (IsIEnumerableRequest(registration.Type))
-                return GetIEnumerableRequest(registration.Type);
-
-            if ((options.UnregisteredResolutionAction == UnregisteredResolutionActions.AttemptResolve) || (registration.Type.IsGenericType && options.UnregisteredResolutionAction == UnregisteredResolutionActions.GenericsOnly))
-            {
-                if (!registration.Type.IsAbstract && !registration.Type.IsInterface)
-                    return ConstructType(null, registration.Type, parameters, options);
-            }
-
-            throw new TinyIoCResolutionException(registration.Type);
         }
 
         private object GetIEnumerableRequest(Type type)
