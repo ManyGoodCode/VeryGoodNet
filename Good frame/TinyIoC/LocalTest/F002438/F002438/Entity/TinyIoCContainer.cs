@@ -188,20 +188,30 @@ namespace F002438.Entity
             return new TinyIoCContainer(this);
         }
 
+        #region Register 
 
         public void AutoRegister()
         {
-            AutoRegisterInternal(new Assembly[] { this.GetType().Assembly }, DuplicateImplementationActions.RegisterSingle, null);
+            AutoRegisterInternal(
+                inputAssemblies: new Assembly[] { GetType().Assembly },
+                duplicateAction: DuplicateImplementationActions.RegisterSingle,
+                registrationPredicate: null);
         }
 
         public void AutoRegister(Func<Type, bool> registrationPredicate)
         {
-            AutoRegisterInternal(new Assembly[] { this.GetType().Assembly }, DuplicateImplementationActions.RegisterSingle, registrationPredicate);
+            AutoRegisterInternal(
+                inputAssemblies: new Assembly[] { GetType().Assembly },
+                duplicateAction: DuplicateImplementationActions.RegisterSingle,
+                registrationPredicate: registrationPredicate);
         }
 
         public void AutoRegister(DuplicateImplementationActions duplicateAction)
         {
-            AutoRegisterInternal(new Assembly[] { this.GetType().Assembly }, duplicateAction, null);
+            AutoRegisterInternal(
+                inputAssemblies: new Assembly[] { GetType().Assembly },
+                duplicateAction: duplicateAction,
+                registrationPredicate: null);
         }
 
         public void AutoRegister(DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
@@ -389,6 +399,141 @@ namespace F002438.Entity
 
             return new MultiRegisterOptions(registerOptions);
         }
+
+        /// <summary>
+        /// 注入锁
+        /// </summary>
+        private readonly object AutoRegisterLock = new object();
+
+        /// <summary>
+        /// 注入 inputAssemblies 里面满足条件的Type 对象
+        /// 根据 duplicateAction 判断是否可以注入实现接口或抽象类的集合。 RegisterMultiple 为可以注入集合
+        /// 第一个实现抽象类或接口的元素 可以注入到容器
+        /// </summary>
+        private void AutoRegisterInternal(
+            IEnumerable<Assembly> inputAssemblies,
+            DuplicateImplementationActions duplicateAction,
+            Func<Type, bool> registrationPredicate)
+        {
+            Type typeOfThis = GetType();
+            lock (AutoRegisterLock)
+            {
+                List<Type> types = inputAssemblies.SelectMany(a => a.SafeGetTypes())
+                    .Where(t => !IsIgnoredType(t, registrationPredicate))
+                    .ToList();
+
+                // concrete：具体的  注入具体的类型
+                List<Type> concreteTypes = types
+                    .Where(
+                    type => type.IsClass &&
+                    (type.IsAbstract == false) &&
+                    (type != typeOfThis && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition())) && !type.IsNestedPrivate())
+                    .ToList();
+
+                foreach (Type type in concreteTypes)
+                {
+                    try
+                    {
+                        RegisterInternal(
+                            registerType: type,
+                            name: string.Empty,
+                            factory: GetDefaultObjectFactory(registerType: type, registerImplementation: type));
+                    }
+                    catch (MethodAccessException) { }
+                }
+
+                // 查找 Type  集合里面的 抽象类 和 接口
+                IEnumerable<Type> abstractInterfaceTypes = from type in types
+                                                           where ((type.IsInterface || type.IsAbstract) && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition))
+                                                           select type;
+
+                foreach (Type type in abstractInterfaceTypes)
+                {
+                    Type localType = type;
+                    IEnumerable<Type> implementations = from implementationType in concreteTypes
+                                                        where localType.IsAssignableFrom(implementationType)
+                                                        select implementationType;
+
+                    // 判断是否存在大于1的实现 及 根据 duplicateAction 判断是否可以重复注入IOC，如果可以这注入实现的数组
+                    if (implementations.Skip(1).Any())
+                    {
+                        if (duplicateAction == DuplicateImplementationActions.Fail)
+                            throw new TinyIoCAutoRegistrationException(type, implementations);
+
+                        if (duplicateAction == DuplicateImplementationActions.RegisterMultiple)
+                        {
+                            RegisterMultiple(
+                                registrationType: type,
+                                implementationTypes: implementations);
+                        }
+                    }
+
+                    // 将第一个元素单独注入IOC，如果存在
+                    Type firstImplementation = implementations.FirstOrDefault();
+                    if (firstImplementation != null)
+                    {
+                        try
+                        {
+                            RegisterInternal(
+                                registerType: type,
+                                name: string.Empty,
+                                factory: GetDefaultObjectFactory(registerType: type, registerImplementation: firstImplementation));
+                        }
+                        catch (MethodAccessException) { }
+                    }
+                }
+            }
+        }
+
+        /// <summary>
+        /// 命名空间以 Microsoft.  /  System. /  System / CR_ExtUnitTest /  mscorlib / CR_VSTest / DevExpress.CodeRush / xunit
+        /// </summary> 
+        private static readonly IReadOnlyList<Func<Assembly, bool>> ignoredAssemlies = new List<Func<Assembly, bool>>()
+        {
+            asm => asm.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("System.", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("System,", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("mscorlib,", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.Ordinal),
+            asm => asm.FullName.StartsWith("xunit.", StringComparison.Ordinal),
+        };
+
+        /// <summary>
+        /// 忽略注入的类型 委托
+        /// 1. 命名空间以 System. 开始
+        /// 2. 命名空间以 Microsoft. 开始
+        /// 3. 类型为泛型
+        /// 4. public 构造函数的个数为0 
+        /// 5. 为接口或抽象类型
+        /// </summary>
+        private static readonly IReadOnlyList<Func<Type, bool>> ignoreChecks = new List<Func<Type, bool>>()
+        {
+            t => t.FullName.StartsWith("System.", StringComparison.Ordinal),
+            t => t.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
+            t => t.IsPrimitive,
+            t => t.IsGenericTypeDefinition,
+            t => (t.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length == 0) && !(t.IsInterface || t.IsAbstract),
+        };
+
+        /// <summary>
+        /// 是否为可以忽略的Type 类型。返回 true表示应该忽略注入到容器
+        /// </summary>
+        private bool IsIgnoredType(Type type, Func<Type, bool> registrationPredicate)
+        {
+            if (ignoreChecks.Any(c => c(type)))
+                return true;
+
+            return registrationPredicate != null && !registrationPredicate(type);
+        }
+
+        private void RegisterDefaultTypes()
+        {
+            Register<TinyIoCContainer>(this);
+        }
+
+        #endregion
 
         #region Unregistration
 
@@ -1502,78 +1647,6 @@ namespace F002438.Entity
         }
 
         #region Internal Methods
-        private readonly object AutoRegisterLock = new object();
-        private void AutoRegisterInternal(IEnumerable<Assembly> assemblies, DuplicateImplementationActions duplicateAction, Func<Type, bool> registrationPredicate)
-        {
-            Type typeOfThis = this.GetType();
-            lock (AutoRegisterLock)
-            {
-                List<Type> types = assemblies.SelectMany(a => a.SafeGetTypes()).Where(t => !IsIgnoredType(t, registrationPredicate)).ToList();
-                List<Type> concreteTypes = types
-                    .Where(type => type.IsClass && (type.IsAbstract == false) && (type != typeOfThis && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition())) && !type.IsNestedPrivate())
-                    .ToList();
-
-                foreach (var type in concreteTypes)
-                {
-                    try
-                    {
-                        RegisterInternal(type, string.Empty, GetDefaultObjectFactory(type, type));
-                    }
-                    catch (MethodAccessException)
-
-                    {
-                    }
-                }
-
-                IEnumerable<Type> abstractInterfaceTypes = from type in types
-                                                           where ((type.IsInterface || type.IsAbstract) && (type.DeclaringType != typeOfThis) && (!type.IsGenericTypeDefinition))
-                                                           select type;
-
-                foreach (Type type in abstractInterfaceTypes)
-                {
-                    Type localType = type;
-                    IEnumerable<Type> implementations = from implementationType in concreteTypes
-                                                        where localType.IsAssignableFrom(implementationType)
-                                                        select implementationType;
-
-                    if (implementations.Skip(1).Any())
-                    {
-                        if (duplicateAction == DuplicateImplementationActions.Fail)
-                            throw new TinyIoCAutoRegistrationException(type, implementations);
-
-                        if (duplicateAction == DuplicateImplementationActions.RegisterMultiple)
-                        {
-                            RegisterMultiple(type, implementations);
-                        }
-                    }
-
-                    var firstImplementation = implementations.FirstOrDefault();
-                    if (firstImplementation != null)
-                    {
-                        try
-                        {
-                            RegisterInternal(type, string.Empty, GetDefaultObjectFactory(type, firstImplementation));
-                        }
-                        catch (MethodAccessException)
-                        {
-
-                        }
-                    }
-                }
-            }
-        }
-
-        private static readonly IReadOnlyList<Func<Assembly, bool>> ignoredAssemlies = new List<Func<Assembly, bool>>()
-        {
-            asm => asm.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("System.", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("System,", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("CR_ExtUnitTest", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("mscorlib,", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("CR_VSTest", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("DevExpress.CodeRush", StringComparison.Ordinal),
-            asm => asm.FullName.StartsWith("xunit.", StringComparison.Ordinal),
-        };
 
         private bool IsIgnoredAssembly(Assembly assembly)
         {
@@ -1586,27 +1659,6 @@ namespace F002438.Entity
             return false;
         }
 
-        private static readonly IReadOnlyList<Func<Type, bool>> ignoreChecks = new List<Func<Type, bool>>()
-        {
-            t => t.FullName.StartsWith("System.", StringComparison.Ordinal),
-            t => t.FullName.StartsWith("Microsoft.", StringComparison.Ordinal),
-            t => t.IsPrimitive,
-            t => t.IsGenericTypeDefinition,
-            t => (t.GetConstructors(BindingFlags.Instance | BindingFlags.Public).Length == 0) && !(t.IsInterface || t.IsAbstract),
-        };
-
-        private bool IsIgnoredType(Type type, Func<Type, bool> registrationPredicate)
-        {
-            if (ignoreChecks.Any(c => c(type)))
-                return true;
-
-            return registrationPredicate != null && !registrationPredicate(type);
-        }
-
-        private void RegisterDefaultTypes()
-        {
-            Register<TinyIoCContainer>(this);
-        }
 
         /// <summary>
         /// 从 SafeDictionary【TypeRegistration, ObjectFactoryBase】 RegisteredTypes
@@ -1641,6 +1693,10 @@ namespace F002438.Entity
             return RegisteredTypes.Remove(typeRegistration);
         }
 
+        /// <summary>
+        /// 创建封装  Type registerType 和 Type registerImplementation 的对象
+        /// 返回类型为 ObjectFactoryBase
+        /// </summary>
         private ObjectFactoryBase GetDefaultObjectFactory(Type registerType, Type registerImplementation)
         {
             if (registerType.IsInterface || registerType.IsAbstract)
