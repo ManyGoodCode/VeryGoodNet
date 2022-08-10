@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "vRy+7bw6l4h2G+3SniWnRbk7yUL2zNfC8+sr7r+mjrerscLhhAkRDZUYvNFvBhAV8MrH/E2bvOag0/TDjzxJmA==",
+  "success": true,
+  "projectFilePath": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\WebAPIContrib-master (1)\\Local\\F002434\\ConsoleApp1\\F002434.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\H474357\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\3.1.25\\microsoft.netcore.app.host.win-x64.3.1.25.nupkg.sha512"
+  ],
+  "logs": []
+}

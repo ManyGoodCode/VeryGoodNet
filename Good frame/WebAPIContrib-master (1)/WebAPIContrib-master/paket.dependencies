@@ -1,0 +1,16 @@
+source https://www.nuget.org/api/v2/
+
+nuget NUnit
+nuget NUnit.Runners
+nuget FAKE
+nuget SourceLink.Fake
+nuget Microsoft.AspNet.WebApi.Client >= 5.2.3
+nuget Microsoft.AspNet.WebApi.Core >= 5.2.3
+nuget Microsoft.AspNet.WebApi.SelfHost >= 5.2.3
+nuget Microsoft.AspNet.WebApi.WebHost >= 5.2.3
+nuget Newtonsoft.Json >= 6.0.5
+nuget RhinoMocks 3.6.1
+nuget Should 1.1.20
+nuget Microsoft.Owin 3.0.1
+
+github fsharp/FAKE modules/Octokit/Octokit.fsx
