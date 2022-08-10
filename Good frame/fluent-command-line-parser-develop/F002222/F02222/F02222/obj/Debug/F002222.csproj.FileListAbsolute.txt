@@ -1,0 +1,5 @@
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\fluent-command-line-parser-develop\F002222\F02222\F02222\bin\Debug\F002222.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\fluent-command-line-parser-develop\F002222\F02222\F02222\bin\Debug\F002222.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\fluent-command-line-parser-develop\F002222\F02222\F02222\obj\Debug\F002222.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\fluent-command-line-parser-develop\F002222\F02222\F02222\obj\Debug\F002222.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\fluent-command-line-parser-develop\F002222\F02222\F02222\obj\Debug\F002222.pdb
