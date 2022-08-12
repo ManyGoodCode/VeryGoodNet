@@ -1,83 +1,84 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Common.Exceptions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
-
-public class AuthorizationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IIdentityService _identityService;
 
-    public AuthorizationBehaviour(
-        ICurrentUserService currentUserService,
-        IIdentityService identityService)
+    public class AuthorizationBehaviour<TRequest, TResponse> :
+        IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        _currentUserService = currentUserService;
-        _identityService = identityService;
-    }
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IIdentityService _identityService;
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-    {
-        var authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
-
-        if (authorizeAttributes.Any())
+        public AuthorizationBehaviour(
+            ICurrentUserService currentUserService,
+            IIdentityService identityService)
         {
-            // Must be authenticated user
-            var userId = await _currentUserService.UserId();
-            if (string.IsNullOrEmpty(userId))
+            _currentUserService = currentUserService;
+            _identityService = identityService;
+        }
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
+        {
+            var authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
+
+            if (authorizeAttributes.Any())
             {
-                throw new UnauthorizedAccessException();
-            }
-
-            // Role-based authorization
-            var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
-
-            if (authorizeAttributesWithRoles.Any())
-            {
-                var authorized = false;
-
-                foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+                // Must be authenticated user
+                var userId = await _currentUserService.UserId();
+                if (string.IsNullOrEmpty(userId))
                 {
-                    foreach (var role in roles)
+                    throw new UnauthorizedAccessException();
+                }
+
+                // Role-based authorization
+                var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
+
+                if (authorizeAttributesWithRoles.Any())
+                {
+                    var authorized = false;
+
+                    foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
                     {
-                        var isInRole = await _identityService.IsInRoleAsync(userId, role.Trim());
-                        if (isInRole)
+                        foreach (var role in roles)
                         {
-                            authorized = true;
-                            break;
+                            var isInRole = await _identityService.IsInRoleAsync(userId, role.Trim());
+                            if (isInRole)
+                            {
+                                authorized = true;
+                                break;
+                            }
                         }
                     }
-                }
 
-                // Must be a member of at least one role in roles
-                if (!authorized)
-                {
-                    throw new ForbiddenAccessException("You are not authorized to access this resource.");
-                }
-            }
-
-            // Policy-based authorization
-            var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
-            if (authorizeAttributesWithPolicies.Any())
-            {
-                foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
-                {
-                    var authorized = await _identityService.AuthorizeAsync(userId, policy);
-
+                    // Must be a member of at least one role in roles
                     if (!authorized)
                     {
                         throw new ForbiddenAccessException("You are not authorized to access this resource.");
                     }
                 }
-            }
-        }
 
-        // User is authorized / authorization not required
-        return await next();
+                // Policy-based authorization
+                var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+                if (authorizeAttributesWithPolicies.Any())
+                {
+                    foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+                    {
+                        var authorized = await _identityService.AuthorizeAsync(userId, policy);
+
+                        if (!authorized)
+                        {
+                            throw new ForbiddenAccessException("You are not authorized to access this resource.");
+                        }
+                    }
+                }
+            }
+
+            // User is authorized / authorization not required
+            return await next();
+        }
     }
+
 }

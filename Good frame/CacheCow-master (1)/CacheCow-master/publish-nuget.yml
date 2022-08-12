@@ -1,0 +1,12 @@
+pool:
+  vmImage: 'windows-latest'
+trigger:
+  tags:
+    include:
+    - v*
+variables:
+- group: nuget_publish
+steps:
+- script: pack-push.bat $(nuget_api_key)
+  displayName: 'Pack and push'
+

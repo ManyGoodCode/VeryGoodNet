@@ -1,0 +1,6 @@
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\bin\Debug\F002222.CacheCow.Client.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\bin\Debug\F002222.CacheCow.Client.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\obj\Debug\F002222.CacheCow.Client.csproj.AssemblyReference.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\obj\Debug\F002222.CacheCow.Client.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\obj\Debug\F002222.CacheCow.Client.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\CacheCow-master (1)\F002222\F002222\F002222.CacheCow.Client\obj\Debug\F002222.CacheCow.Client.pdb

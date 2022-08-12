@@ -1,33 +1,32 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 
-namespace CleanArchitecture.Blazor.Application.Common.Behaviours;
-
-public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
+namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-    private readonly ILogger<TRequest> _logger;
-    private readonly ICurrentUserService _currentUserService;
 
-    public UnhandledExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
+    public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        _logger = logger;
-        _currentUserService = currentUserService;
-    }
+        private readonly ILogger<TRequest> _logger;
+        private readonly ICurrentUserService _currentUserService;
 
-    public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
-    {
-        try
+        public UnhandledExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
         {
-            return await next();
+            _logger = logger;
+            _currentUserService = currentUserService;
         }
-        catch (Exception ex)
+
+        public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var requestName = typeof(TRequest).Name;
-            var userName = await _currentUserService.UserName();
-            _logger.LogError(ex, "{Name}: {Exception} with {@Request} by {@UserName}", requestName, ex.Message, request, userName);
-            throw;
+            try
+            {
+                return await next();
+            }
+            catch (Exception ex)
+            {
+                var requestName = typeof(TRequest).Name;
+                var userName = await _currentUserService.UserName();
+                _logger.LogError(ex, "{Name}: {Exception} with {@Request} by {@UserName}", requestName, ex.Message, request, userName);
+                throw;
+            }
         }
     }
 }
