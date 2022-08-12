@@ -22,6 +22,7 @@ where TRequest : IRequest<TResponse>
             foreach (var validator in _validators)
                 validator.ValidateAndThrow(request);
         }
+
         return await next();
     }
 }
