@@ -6,10 +6,10 @@
 
 namespace ExampleBrowser
 {
+    using ExampleLibrary;
     using System.Drawing;
     using System.Windows.Forms;
 
-    using ExampleLibrary;
 
     public partial class MainForm : Form
     {

@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Conrec.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to create contours from a triangular mesh.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
 
@@ -61,10 +52,10 @@ namespace OxyPlot
             double y1 = 0.0;
             double y2 = 0.0;
 
-            var h = new double[5];
-            var sh = new int[5];
-            var xh = new double[5];
-            var yh = new double[5];
+            double[] h = new double[5];
+            int[] sh = new int[5];
+            double[] xh = new double[5];
+            double[] yh = new double[5];
 
             int ilb = d.GetLowerBound(0);
             int iub = d.GetUpperBound(0);

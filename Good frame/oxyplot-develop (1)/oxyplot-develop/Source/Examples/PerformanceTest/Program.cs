@@ -30,13 +30,17 @@ namespace PerformanceTest
         /// </summary>
         public static void Main()
         {
-            var testModels = new Dictionary<string, PlotModel>
+            ArrayBuilder.Evaluate((x, y) =>
+            {
+                return x * y;
+            }, new double[1] { 3 }, new double[2] { 1, 2 });
+            Dictionary<string, PlotModel> testModels = new Dictionary<string, PlotModel>
             {
                 { "LineSeries with 100000 points", CreateModel(100000) },
                 { "LineSeries with 100000 points in ItemsSource", CreateModel2(100000) }
             };
 
-            foreach (var kvp in testModels)
+            foreach (KeyValuePair<string, PlotModel> kvp in testModels)
             {
                 Console.WriteLine(kvp.Key);
                 TestModelUpdate(kvp.Value);
@@ -45,15 +49,15 @@ namespace PerformanceTest
             }
 
             Console.WriteLine("DrawReducedLine test:");
-            var t0 = TestDrawReducedLine(10000, 1000, false);
-            var t1 = TestDrawReducedLine(10000, 1000, true);
+            double t0 = TestDrawReducedLine(10000, 1000, false);
+            double t1 = TestDrawReducedLine(10000, 1000, true);
             Console.WriteLine("{0:P1}", (t0 - t1) / t0);
             Console.ReadKey();
         }
 
         public static double TestModelUpdate(PlotModel model, int m = 1000)
         {
-            var stopwatch = Stopwatch.StartNew();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             for (int i = 0; i < m; i++)
             {
                 ((IPlotModel)model).Update(true);
@@ -66,8 +70,8 @@ namespace PerformanceTest
 
         public static double TestModelRender(PlotModel model, int m = 100)
         {
-            var rc = new EmptyRenderContext();
-            var stopwatch = Stopwatch.StartNew();
+            EmptyRenderContext rc = new EmptyRenderContext();
+            Stopwatch stopwatch = Stopwatch.StartNew();
             for (int i = 0; i < m; i++)
             {
                 ((IPlotModel)model).Render(rc, new OxyRect(0, 0, 800, 600));
@@ -80,8 +84,8 @@ namespace PerformanceTest
 
         private static PlotModel CreateModel(int n)
         {
-            var model = new PlotModel();
-            var series = new LineSeries();
+            PlotModel model = new PlotModel();
+            LineSeries series = new LineSeries();
             for (int i = 0; i < n; i++)
             {
                 series.Points.Add(new DataPoint(i, Math.Sin(i)));
@@ -94,14 +98,14 @@ namespace PerformanceTest
 
         private static PlotModel CreateModel2(int n)
         {
-            var points = new List<DataPoint>();
+            List<DataPoint> points = new List<DataPoint>();
             for (int i = 0; i < n; i++)
             {
                 points.Add(new DataPoint(i, Math.Sin(i)));
             }
 
-            var model = new PlotModel();
-            var series = new LineSeries();
+            PlotModel model = new PlotModel();
+            LineSeries series = new LineSeries();
             series.ItemsSource = points;
 
             model.Series.Add(series);
@@ -118,15 +122,15 @@ namespace PerformanceTest
         /// <returns>The elapsed time in milliseconds.</returns>
         public static double TestDrawReducedLine(int n, int m, bool useOutputBuffer)
         {
-            var points = new ScreenPoint[n];
+            ScreenPoint[] points = new ScreenPoint[n];
             for (int i = 0; i < n; i++)
             {
                 points[i] = new ScreenPoint((double)i / n, Math.Sin(40d * i / n));
             }
 
-            var rc = new EmptyRenderContext();
-            var outputBuffer = useOutputBuffer ? new List<ScreenPoint>(n) : null;
-            var stopwatch = Stopwatch.StartNew();
+            EmptyRenderContext rc = new EmptyRenderContext();
+            List<ScreenPoint> outputBuffer = useOutputBuffer ? new List<ScreenPoint>(n) : null;
+            Stopwatch stopwatch = Stopwatch.StartNew();
             for (int i = 0; i < m; i++)
             {
                 rc.DrawReducedLine(
