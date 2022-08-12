@@ -1,28 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ArrayExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides useful extension methods for arrays.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides useful extension methods for arrays.
+    /// 提供数组的有用扩展方法
     /// </summary>
     public static class ArrayExtensions
     {
         /// <summary>
-        /// Finds the maximum value in the sequence, or returns a default value if the sequence is empty.
+        /// 查找二维数组的最大值
         /// </summary>
-        /// <param name="sequence">The sequence.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>The maximum value of the sequence, or the default value if the sequency is empty.</returns>
         public static double MaxOrDefault(this IEnumerable<double> sequence, double defaultValue)
         {
             if (sequence == null)
@@ -36,7 +24,7 @@ namespace OxyPlot
                 return defaultValue;
             }
 
-            var max = e.Current;
+            double max = e.Current;
             while (e.MoveNext())
             {
                 max = Math.Max(max, e.Current);
@@ -46,11 +34,8 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Finds the minimum value in the sequence, or returns a default value if the sequence is empty.
+        /// 查找数组中的最小值
         /// </summary>
-        /// <param name="sequence">The sequence.</param>
-        /// <param name="defaultValue">The default value.</param>
-        /// <returns>The minimum value of the sequence, or the default value if the sequency is empty.</returns>
         public static double MinOrDefault(this IEnumerable<double> sequence, double defaultValue)
         {
             if (sequence == null)
@@ -64,7 +49,7 @@ namespace OxyPlot
                 return defaultValue;
             }
 
-            var min = e.Current;
+            double min = e.Current;
             while (e.MoveNext())
             {
                 min = Math.Min(min, e.Current);
@@ -74,16 +59,14 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Finds the maximum value in the specified 2D array (NaN values not included).
+        /// 查找二维数组中的最大值
         /// </summary>
-        /// <param name="array">The array.</param>
-        /// <returns>The maximum value.</returns>
         public static double Max2D(this double[,] array)
         {
-            var max = double.MinValue;
-            for (var i = 0; i < array.GetLength(0); i++)
+            double max = double.MinValue;
+            for (int i = 0; i < array.GetLength(0); i++)
             {
-                for (var j = 0; j < array.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(1); j++)
                 {
                     if (array[i, j].CompareTo(max) > 0)
                     {
@@ -96,17 +79,14 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Finds the minimum value in the specified 2D array.
+        /// 查找二维数组中的最小值
         /// </summary>
-        /// <param name="array">The array.</param>
-        /// <param name="excludeNaN">Exclude NaN values if set to <c>true</c>.</param>
-        /// <returns>The minimum value.</returns>
         public static double Min2D(this double[,] array, bool excludeNaN = false)
         {
-            var min = double.MaxValue;
-            for (var i = 0; i < array.GetLength(0); i++)
+            double min = double.MaxValue;
+            for (int i = 0; i < array.GetLength(0); i++)
             {
-                for (var j = 0; j < array.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(1); j++)
                 {
                     if (excludeNaN && double.IsNaN(array[i, j]))
                     {
