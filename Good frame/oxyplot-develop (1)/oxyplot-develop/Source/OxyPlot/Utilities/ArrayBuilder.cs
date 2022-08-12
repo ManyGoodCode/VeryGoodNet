@@ -1,31 +1,19 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ArrayBuilder.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to build arrays.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
 
     /// <summary>
-    /// Provides functionality to build arrays.
+    /// 创建数组的提供器
     /// </summary>
     public static class ArrayBuilder
     {
         /// <summary>
-        /// Creates a vector.
+        /// 创建向量
+        /// 将X1和X0线段等分成n个点.例如 0 , 11.11111111 , 22.22222222 , 33.33333333 , 44.44444444
         /// </summary>
-        /// <param name="x0">The first value.</param>
-        /// <param name="x1">The last value.</param>
-        /// <param name="n">The number of steps.</param>
-        /// <returns>A vector.</returns>
         public static double[] CreateVector(double x0, double x1, int n)
         {
-            var result = new double[n];
+            double[] result = new double[n];
             for (int i = 0; i < n; i++)
             {
                 result[i] = Math.Round(x0 + ((x1 - x0) * i / (n - 1)), 8);
@@ -35,16 +23,13 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Creates a vector.
+        /// 创建向量
+        /// 将X1和X0线段等分成距离dx
         /// </summary>
-        /// <param name="x0">The first value.</param>
-        /// <param name="x1">The last value.</param>
-        /// <param name="dx">The step size.</param>
-        /// <returns>A vector.</returns>
         public static double[] CreateVector(double x0, double x1, double dx)
         {
-            var n = (int)Math.Round((x1 - x0) / dx);
-            var result = new double[n + 1];
+            int n = (int)Math.Round((x1 - x0) / dx);
+            double[] result = new double[n + 1];
             for (int i = 0; i <= n; i++)
             {
                 result[i] = Math.Round(x0 + (i * dx), 8);
@@ -54,17 +39,13 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Evaluates the specified function.
+        /// 数组 X[]中元素依次和Y[]中的元素做计算得到新的二维元素
         /// </summary>
-        /// <param name="f">The function.</param>
-        /// <param name="x">The x values.</param>
-        /// <param name="y">The y values.</param>
-        /// <returns>Array of evaluations. The value of f(x_i,y_j) will be placed at index [i, j].</returns>
         public static double[,] Evaluate(Func<double, double, double> f, double[] x, double[] y)
         {
             int m = x.Length;
             int n = y.Length;
-            var result = new double[m, n];
+            double[,] result = new double[m, n];
             for (int i = 0; i < m; i++)
             {
                 for (int j = 0; j < n; j++)
@@ -77,28 +58,24 @@ namespace OxyPlot
         }
 
         /// <summary>
-        /// Fills the array with the specified value.
+        /// 填充数组为某个值
         /// </summary>
-        /// <param name="array">The array to fill.</param>
-        /// <param name="value">The value.</param>
         public static void Fill(this double[] array, double value)
         {
-            for (var i = 0; i < array.Length; i++)
+            for (int i = 0; i < array.Length; i++)
             {
                 array[i] = value;
             }
         }
 
         /// <summary>
-        /// Fills the two-dimensional array with the specified value.
+        /// 填充二维数组为某个值 dimensional:二维
         /// </summary>
-        /// <param name="array">The two-dimensional array.</param>
-        /// <param name="value">The value.</param>
         public static void Fill2D(this double[,] array, double value)
         {
-            for (var i = 0; i < array.GetLength(0); i++)
+            for (int i = 0; i < array.GetLength(0); i++)
             {
-                for (var j = 0; j < array.GetLength(1); j++)
+                for (int j = 0; j < array.GetLength(1); j++)
                 {
                     array[i, j] = value;
                 }
