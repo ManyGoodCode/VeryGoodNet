@@ -1,31 +1,22 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AnnotationLayer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies the layer for an <see cref="Annotation" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Annotations
+﻿namespace OxyPlot.Annotations
 {
     /// <summary>
-    /// Specifies the layer for an <see cref="Annotation" />.
+    /// 注释层
     /// </summary>
     public enum AnnotationLayer
     {
         /// <summary>
-        /// Render the annotation below the gridlines of the axes.
+        /// 在轴的网格线下面呈现注释
         /// </summary>
         BelowAxes,
 
         /// <summary>
-        /// Render the annotation below the series.
+        /// 在series下面渲染注释
         /// </summary>
         BelowSeries,
 
         /// <summary>
-        /// Render the annotation above the series.
+        /// 在series上面渲染注释
         /// </summary>
         AboveSeries
     }

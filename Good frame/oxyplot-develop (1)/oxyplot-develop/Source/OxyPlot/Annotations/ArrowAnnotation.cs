@@ -1,33 +1,24 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ArrowAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an annotation that shows an arrow.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Annotations
+﻿namespace OxyPlot.Annotations
 {
     using System;
 
     /// <summary>
-    /// Represents an annotation that shows an arrow.
+    /// 表示显示箭头的注释
     /// </summary>
     public class ArrowAnnotation : TextualAnnotation
     {
         /// <summary>
-        /// The end point in screen coordinates.
+        /// 屏幕坐标中的终点
         /// </summary>
         private ScreenPoint screenEndPoint;
 
         /// <summary>
-        /// The start point in screen coordinates.
+        /// 屏幕坐标中的起点
         /// </summary>
         private ScreenPoint screenStartPoint;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="ArrowAnnotation" /> class.
+        /// Initializes a new instance of the class.
         /// </summary>
         public ArrowAnnotation()
         {
@@ -42,7 +33,6 @@ namespace OxyPlot.Annotations
         /// <summary>
         /// Gets or sets the arrow direction.
         /// </summary>
-        /// <remarks>Setting this property overrides the <see cref="StartPoint" /> property.</remarks>
         public ScreenVector ArrowDirection { get; set; }
 
         /// <summary>
@@ -58,46 +48,41 @@ namespace OxyPlot.Annotations
         /// <summary>
         /// Gets or sets the length of the head (relative to the stroke thickness) (the default value is 10).
         /// </summary>
-        /// <value>The length of the head.</value>
         public double HeadLength { get; set; }
 
         /// <summary>
         /// Gets or sets the width of the head (relative to the stroke thickness) (the default value is 3).
         /// </summary>
-        /// <value>The width of the head.</value>
         public double HeadWidth { get; set; }
 
         /// <summary>
         /// Gets or sets the line join type.
         /// </summary>
-        /// <value>The line join type.</value>
         public LineJoin LineJoin { get; set; }
 
         /// <summary>
         /// Gets or sets the line style.
         /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle { get; set; }
 
         /// <summary>
         /// Gets or sets the start point of the arrow.
         /// </summary>
-        /// <remarks>This property is overridden by the ArrowDirection property, if set.</remarks>
         public DataPoint StartPoint { get; set; }
 
         /// <summary>
         /// Gets or sets the stroke thickness (the default value is 2).
         /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
 
         /// <summary>
         /// Gets or sets the 'veeness' of the arrow head (relative to thickness) (the default value is 0).
         /// </summary>
-        /// <value>The 'veeness'.</value>
         public double Veeness { get; set; }
 
-        /// <inheritdoc/>
+        /// <summary>
+        /// 
+        /// </summary>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -113,18 +98,18 @@ namespace OxyPlot.Annotations
                 this.screenStartPoint = this.Transform(this.StartPoint);
             }
 
-            var d = this.screenEndPoint - this.screenStartPoint;
+            ScreenVector d = this.screenEndPoint - this.screenStartPoint;
             d.Normalize();
-            var n = new ScreenVector(d.Y, -d.X);
+            ScreenVector n = new ScreenVector(d.Y, -d.X);
 
-            var p1 = this.screenEndPoint - (d * this.HeadLength * this.StrokeThickness);
-            var p2 = p1 + (n * this.HeadWidth * this.StrokeThickness);
-            var p3 = p1 - (n * this.HeadWidth * this.StrokeThickness);
-            var p4 = p1 + (d * this.Veeness * this.StrokeThickness);
+            ScreenPoint p1 = this.screenEndPoint - (d * this.HeadLength * this.StrokeThickness);
+            ScreenPoint p2 = p1 + (n * this.HeadWidth * this.StrokeThickness);
+            ScreenPoint p3 = p1 - (n * this.HeadWidth * this.StrokeThickness);
+            ScreenPoint p4 = p1 + (d * this.Veeness * this.StrokeThickness);
 
             const double MinimumSegmentLength = 0;
 
-            var dashArray = this.LineStyle.GetDashArray();
+            double[] dashArray = this.LineStyle.GetDashArray();
 
             if (this.StrokeThickness > 0 && this.LineStyle != LineStyle.None)
             {
@@ -160,8 +145,8 @@ namespace OxyPlot.Annotations
             }
             else
             {
-                var angle = Math.Atan2(d.Y, d.X);
-                var piOver8 = Math.PI / 8;
+                double angle = Math.Atan2(d.Y, d.X);
+                double piOver8 = Math.PI / 8;
                 if (angle < 3 * piOver8 && angle > -3 * piOver8)
                 {
                     ha = HorizontalAlignment.Right;
@@ -189,7 +174,7 @@ namespace OxyPlot.Annotations
                 }
             }
 
-            var textPoint = this.GetActualTextPosition(() => this.screenStartPoint);
+            ScreenPoint textPoint = this.GetActualTextPosition(() => this.screenStartPoint);
             rc.DrawText(
                 textPoint,
                 this.Text,
@@ -205,10 +190,6 @@ namespace OxyPlot.Annotations
         /// <summary>
         /// When overridden in a derived class, tests if the plot element is hit by the specified point.
         /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if ((args.Point - this.screenStartPoint).Length < args.Tolerance)
@@ -221,7 +202,7 @@ namespace OxyPlot.Annotations
                 return new HitTestResult(this, this.screenEndPoint, null, 2);
             }
 
-            var p = ScreenPointHelper.FindPointOnLine(args.Point, this.screenStartPoint, this.screenEndPoint);
+            ScreenPoint p = ScreenPointHelper.FindPointOnLine(args.Point, this.screenStartPoint, this.screenEndPoint);
             if ((p - args.Point).Length < args.Tolerance)
             {
                 return new HitTestResult(this, p);

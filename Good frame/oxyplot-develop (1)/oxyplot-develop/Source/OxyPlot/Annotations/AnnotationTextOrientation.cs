@@ -1,31 +1,22 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AnnotationTextOrientation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies the orientation of the text in an annotation.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Annotations
+﻿namespace OxyPlot.Annotations
 {
     /// <summary>
-    /// Specifies the orientation of the text in an annotation.
+    /// 一个注释文本的方向
     /// </summary>
     public enum AnnotationTextOrientation
     {
         /// <summary>
-        /// Horizontal text.
+        /// 水平文字
         /// </summary>
         Horizontal,
 
         /// <summary>
-        /// Vertical text.
+        /// 垂直文字
         /// </summary>
         Vertical,
 
         /// <summary>
-        /// Oriented along the line.
+        /// 沿直线方向
         /// </summary>
         AlongLine
     }
