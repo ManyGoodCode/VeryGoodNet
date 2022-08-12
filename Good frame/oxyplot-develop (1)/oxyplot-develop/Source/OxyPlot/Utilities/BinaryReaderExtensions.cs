@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BinaryReaderExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides extension methods to the <see cref="BinaryReader" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.IO;
@@ -88,7 +79,7 @@ namespace OxyPlot
         /// <returns>The unsigned integer array.</returns>
         public static uint[] ReadUInt32Array(this BinaryReader r, int count, bool isLittleEndian)
         {
-            var result = new uint[count];
+            uint[] result = new uint[count];
             for (int i = 0; i < count; i++)
             {
                 result[i] = isLittleEndian ? r.ReadUInt32() : r.ReadBigEndianUInt32();

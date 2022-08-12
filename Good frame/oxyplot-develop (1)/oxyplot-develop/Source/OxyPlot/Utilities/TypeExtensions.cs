@@ -1,37 +1,27 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TypeExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides extension methods for types.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
     /// <summary>
-    /// Provides extension methods for types.
+    /// Type的扩展方法
     /// </summary>
     public static class TypeExtensions
     {
         /// <summary>
-        /// Retrieves an object that represents a specified property.
+        /// 查找Type的指定名称属性
         /// </summary>
-        /// <param name="type">The type that contains the property.</param>
-        /// <param name="name">The name of the property.</param>
-        /// <returns>An object that represents the specified property, or null if the property is not found.</returns>
         public static PropertyInfo GetRuntimeProperty(this Type type, string name)
         {
-            var typeInfo = type.GetTypeInfo();
-            var source = typeInfo.AsType().GetRuntimeProperties();
+            TypeInfo typeInfo = type.GetTypeInfo();
+            IEnumerable<PropertyInfo> sources = typeInfo.AsType().GetRuntimeProperties();
 
-            foreach (var x in source)
+            foreach (PropertyInfo x in sources)
             {
-                if (x.Name == name) return x;
+                if (x.Name == name) 
+                    return x;
             }
 
             return null;

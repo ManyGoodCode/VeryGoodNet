@@ -1,26 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StreamExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides useful extension methods for streams.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System.IO;
 
     /// <summary>
-    /// Provides useful extension methods for streams.
+    /// 流提供的有用扩展方法
     /// </summary>
     public static class StreamExtensions
     {
         /// <summary>
-        /// Copies to the specified stream.
+        /// 复制一个流
         /// </summary>
-        /// <param name="input">The input stream.</param>
-        /// <param name="output">The output stream.</param>
         public static void CopyTo(this Stream input, Stream output)
         {
             var buffer = new byte[32768];
