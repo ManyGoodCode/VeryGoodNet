@@ -4,43 +4,38 @@
     using System.Collections.Generic;
 
     /// <summary>
-    /// Provides functionality to create custom comparers.
+    /// 扩展比较器的方法
     /// </summary>
     public static class ComparerHelper
     {
         /// <summary>
-        /// Creates a <see cref="IComparer{T}"/> based on the specified comparison.
+        /// 创建一个比较器对象。返回比较器接口
         /// </summary>
-        /// <typeparam name="T">The type of the elements to compare.</typeparam>
-        /// <param name="comparison">The delegate used to compare elements.</param>
-        /// <returns>The created comparer.</returns>
         public static IComparer<T> CreateComparer<T>(Comparison<T> comparison)
         {
             return new ComparisonComparer<T>(comparison);
         }
 
         /// <summary>
-        /// A comparer that uses a delegate to compare elements.
+        /// 比较对象
         /// </summary>
-        /// <typeparam name="T">The type of the elements to compare.</typeparam>
         private class ComparisonComparer<T> : IComparer<T>
         {
             /// <summary>
-            /// The delegate used to compare elements.
+            /// 比较器
             /// </summary>
             private readonly Comparison<T> comparison;
 
             /// <summary>
-            /// Initializes a new instance of the <see cref="ComparisonComparer{T}" /> class.
+            /// 构造器注入一个比较器
             /// </summary>
-            /// <param name="comparison">The delegate used to compare elements.</param>
             public ComparisonComparer(Comparison<T> comparison)
             {
                 this.comparison = comparison;
             }
 
             /// <summary>
-            /// 比较两个元素
+            /// 实现接口比较方法
             /// </summary>
             public int Compare(T x, T y)
             {
