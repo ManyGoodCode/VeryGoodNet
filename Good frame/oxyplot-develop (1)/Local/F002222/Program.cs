@@ -23,6 +23,7 @@ namespace F002222
 
             string codeString1 = dataPoint1.ToCode();
             string codeString2 = dataPoint2.ToCode();
+            string indentString = new string('1', 8);
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);

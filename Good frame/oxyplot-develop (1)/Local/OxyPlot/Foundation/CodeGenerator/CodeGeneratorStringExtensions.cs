@@ -1,33 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CodeGeneratorStringExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides extension methods for code generation.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Globalization;
     using System.Text;
 
-    /// <summary>
-    /// Provides extension methods for code generation.
-    /// </summary>
     public static class CodeGeneratorStringExtensions
     {
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The instance.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this string value)
         {
-            StringBuilder sb = new StringBuilder(value.Length + 2);
+            StringBuilder sb = new StringBuilder(capacity: value.Length + 2);
             sb.Append("\"");
-            foreach (var c in value.Replace("\r\n", "\n"))
+            foreach (char c in value.Replace("\r\n", "\n"))
             {
                 switch (c)
                 {
@@ -43,45 +26,26 @@ namespace OxyPlot
                         sb.Append(c); break;
                 }
             }
+
             sb.Append("\"");
             return sb.ToString();
         }
 
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this bool value)
         {
             return value.ToString().ToLower();
         }
 
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The instance.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this int value)
         {
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The instance.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this Enum value)
         {
             return string.Format("{0}.{1}", value.GetType().Name, value);
         }
 
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The instance.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this double value)
         {
             if (double.IsNaN(value))
@@ -112,11 +76,6 @@ namespace OxyPlot
             return value.ToString(CultureInfo.InvariantCulture);
         }
 
-        /// <summary>
-        /// Converts the value of this instance to c# code.
-        /// </summary>
-        /// <param name="value">The instance.</param>
-        /// <returns>C# code.</returns>
         public static string ToCode(this object value)
         {
             if (value == null)
