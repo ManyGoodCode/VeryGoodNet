@@ -1,31 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PathAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides an abstract base class for all annotations that contain paths (lines, functions or polylines).
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Annotations
+﻿namespace OxyPlot.Annotations
 {
     using System;
     using System.Collections.Generic;
     using OxyPlot;
 
-    /// <summary>
-    /// Provides an abstract base class for all annotations that contain paths (lines, functions or polylines).
-    /// </summary>
     public abstract class PathAnnotation : TextualAnnotation
     {
-        /// <summary>
-        /// The points of the line, transformed to screen coordinates.
-        /// </summary>
         private IList<ScreenPoint> screenPoints;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PathAnnotation" /> class.
-        /// </summary>
         protected PathAnnotation()
         {
             this.MinimumX = double.MinValue;
@@ -45,109 +26,26 @@ namespace OxyPlot.Annotations
             this.MinimumSegmentLength = 2;
         }
 
-        /// <summary>
-        /// Gets or sets the color of the line.
-        /// </summary>
         public OxyColor Color { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line join.
-        /// </summary>
-        /// <value>The line join.</value>
         public LineJoin LineJoin { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line style.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum X coordinate for the line.
-        /// </summary>
         public double MaximumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum Y coordinate for the line.
-        /// </summary>
         public double MaximumY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum X coordinate for the line.
-        /// </summary>
         public double MinimumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum Y coordinate for the line.
-        /// </summary>
         public double MinimumY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke thickness.
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text margin (along the line).
-        /// </summary>
-        /// <value>The text margin.</value>
         public double TextMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text padding (in the direction of the text).
-        /// </summary>
-        /// <value>The text padding.</value>
         public double TextPadding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text orientation.
-        /// </summary>
-        /// <value>The text orientation.</value>
         public AnnotationTextOrientation TextOrientation { get; set; }
-
-        /// <summary>
-        /// Gets or sets the text position relative to the line.
-        /// </summary>
-        /// <value>The text position in the interval [0,1].</value>
-        /// <remarks>Positions smaller than 0.25 are left aligned at the start of the line
-        /// Positions larger than 0.75 are right aligned at the end of the line
-        /// Other positions are center aligned at the specified position</remarks>
         public double TextLinePosition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum length of the segment.
-        /// Increasing this number will increase performance,
-        /// but make curves less accurate. The default is <c>2</c>.
-        /// </summary>
-        /// <value>The minimum length of the segment.</value>
         public double MinimumSegmentLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual minimum value on the x axis.
-        /// </summary>
-        /// <value>The actual minimum value on the x axis.</value>
         protected double ActualMinimumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual minimum value on the y axis.
-        /// </summary>
-        /// <value>The actual minimum value on the y axis.</value>
         protected double ActualMinimumY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual maximum value on the x axis.
-        /// </summary>
-        /// <value>The actual maximum value on the x axis.</value>
         protected double ActualMaximumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual maximum value on the y axis.
-        /// </summary>
-        /// <value>The actual maximum value on the y axis.</value>
         protected double ActualMaximumY { get; set; }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -161,8 +59,8 @@ namespace OxyPlot.Annotations
 
             this.screenPoints = this.GetScreenPoints();
 
-            var clippedPoints = new List<ScreenPoint>();
-            var dashArray = this.LineStyle.GetDashArray();
+            List<ScreenPoint> clippedPoints = new List<ScreenPoint>();
+            double[] dashArray = this.LineStyle.GetDashArray();
 
             if (this.StrokeThickness > 0 && this.LineStyle != LineStyle.None)
             {
@@ -178,11 +76,10 @@ namespace OxyPlot.Annotations
                    clippedPoints.AddRange);
             }
 
-            var margin = this.TextMargin;
-
+            double margin = this.TextMargin;
             this.GetActualTextAlignment(out var ha, out var va);
 
-            var effectiveTextLinePosition = this.IsTransposed()
+            double effectiveTextLinePosition = this.IsTransposed()
                 ? (this.YAxis.IsReversed ? 1 - this.TextLinePosition : this.TextLinePosition)
                 : (this.XAxis.IsReversed ? 1 - this.TextLinePosition : this.TextLinePosition);
 
@@ -217,9 +114,8 @@ namespace OxyPlot.Annotations
                         break;
                 }
 
-                // Apply 'padding' to the position
-                var angleInRadians = angle / 180 * Math.PI;
-                var f = 1;
+                double angleInRadians = angle / 180 * Math.PI;
+                int f = 1;
 
                 if (ha == HorizontalAlignment.Right)
                 {
@@ -256,13 +152,6 @@ namespace OxyPlot.Annotations
             }
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if (this.screenPoints == null)
@@ -270,7 +159,7 @@ namespace OxyPlot.Annotations
                 return null;
             }
 
-            var nearestPoint = ScreenPointHelper.FindNearestPointOnPolyline(args.Point, this.screenPoints);
+            ScreenPoint nearestPoint = ScreenPointHelper.FindNearestPointOnPolyline(args.Point, this.screenPoints);
             double dist = (args.Point - nearestPoint).Length;
             if (dist < args.Tolerance)
             {
@@ -280,15 +169,8 @@ namespace OxyPlot.Annotations
             return null;
         }
 
-        /// <summary>
-        /// Gets the screen points.
-        /// </summary>
-        /// <returns>The list of points to display on screen for this path.</returns>
         protected abstract IList<ScreenPoint> GetScreenPoints();
 
-        /// <summary>
-        /// Calculates the actual minimums and maximums.
-        /// </summary>
         protected virtual void CalculateActualMinimumsMaximums()
         {
             this.ActualMinimumX = Math.Max(this.MinimumX, this.XAxis.ClipMinimum);
@@ -312,15 +194,6 @@ namespace OxyPlot.Annotations
             }
         }
 
-        /// <summary>
-        /// Gets the point on a curve at the specified relative distance along the curve.
-        /// </summary>
-        /// <param name="pts">The curve points.</param>
-        /// <param name="p">The relative distance along the curve.</param>
-        /// <param name="margin">The margins.</param>
-        /// <param name="position">The position.</param>
-        /// <param name="angle">The angle.</param>
-        /// <returns>True if a position was found.</returns>
         private static bool GetPointAtRelativeDistance(
             IList<ScreenPoint> pts, double p, double margin, out ScreenPoint position, out double angle)
         {

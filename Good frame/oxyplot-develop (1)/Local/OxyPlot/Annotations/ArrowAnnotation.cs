@@ -16,10 +16,6 @@
         /// 屏幕坐标中的起点
         /// </summary>
         private ScreenPoint screenStartPoint;
-
-        /// <summary>
-        /// Initializes a new instance of the class.
-        /// </summary>
         public ArrowAnnotation()
         {
             this.HeadLength = 10;
@@ -30,59 +26,17 @@
             this.LineJoin = LineJoin.Miter;
         }
 
-        /// <summary>
-        /// Gets or sets the arrow direction.
-        /// </summary>
         public ScreenVector ArrowDirection { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the arrow.
-        /// </summary>
         public OxyColor Color { get; set; }
-
-        /// <summary>
-        /// Gets or sets the end point of the arrow.
-        /// </summary>
         public DataPoint EndPoint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the length of the head (relative to the stroke thickness) (the default value is 10).
-        /// </summary>
         public double HeadLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the width of the head (relative to the stroke thickness) (the default value is 3).
-        /// </summary>
         public double HeadWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line join type.
-        /// </summary>
         public LineJoin LineJoin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style.
-        /// </summary>
         public LineStyle LineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the start point of the arrow.
-        /// </summary>
         public DataPoint StartPoint { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke thickness (the default value is 2).
-        /// </summary>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the 'veeness' of the arrow head (relative to thickness) (the default value is 0).
-        /// </summary>
         public double Veeness { get; set; }
 
-        /// <summary>
-        /// 
-        /// </summary>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -187,9 +141,6 @@
                 va);
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if ((args.Point - this.screenStartPoint).Length < args.Tolerance)

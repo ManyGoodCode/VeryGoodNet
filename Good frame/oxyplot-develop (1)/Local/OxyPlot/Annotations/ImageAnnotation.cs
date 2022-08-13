@@ -1,29 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ImageAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an annotation that shows an image.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Annotations
+﻿namespace OxyPlot.Annotations
 {
     using System;
 
-    /// <summary>
-    /// Represents an annotation that shows an image.
-    /// </summary>
     public class ImageAnnotation : TransposableAnnotation
     {
-        /// <summary>
-        /// The actual bounds of the rendered image.
-        /// </summary>
         private OxyRect actualBounds;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ImageAnnotation" /> class.
-        /// </summary>
         public ImageAnnotation()
         {
             this.X = new PlotLength(0.5, PlotLengthUnit.RelativeToPlotArea);
@@ -38,73 +20,28 @@ namespace OxyPlot.Annotations
             this.VerticalAlignment = VerticalAlignment.Middle;
         }
 
-        /// <summary>
-        /// Gets or sets the image source.
-        /// </summary>
-        /// <value>The image source.</value>
         public OxyImage ImageSource { get; set; }
 
-        /// <summary>
-        /// Gets or sets the horizontal alignment.
-        /// </summary>
-        /// <value>The horizontal alignment.</value>
         public HorizontalAlignment HorizontalAlignment { get; set; }
 
-        /// <summary>
-        /// Gets or sets the X position of the image.
-        /// </summary>
-        /// <value>The X.</value>
         public PlotLength X { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Y position of the image.
-        /// </summary>
-        /// <value>The Y.</value>
         public PlotLength Y { get; set; }
 
-        /// <summary>
-        /// Gets or sets the X offset.
-        /// </summary>
-        /// <value>The offset X.</value>
         public PlotLength OffsetX { get; set; }
 
-        /// <summary>
-        /// Gets or sets the Y offset.
-        /// </summary>
-        /// <value>The offset Y.</value>
         public PlotLength OffsetY { get; set; }
 
-        /// <summary>
-        /// Gets or sets the width.
-        /// </summary>
-        /// <value>The width.</value>
         public PlotLength Width { get; set; }
 
-        /// <summary>
-        /// Gets or sets the height.
-        /// </summary>
-        /// <value>The height.</value>
         public PlotLength Height { get; set; }
 
-        /// <summary>
-        /// Gets or sets the opacity (0-1).
-        /// </summary>
-        /// <value>The opacity value.</value>
         public double Opacity { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to apply smooth interpolation to the image.
-        /// </summary>
-        /// <value><c>true</c> if the image should be interpolated (using a high-quality bi-cubic interpolation); <c>false</c> if the nearest neighbor should be used.</value>
         public bool Interpolate { get; set; }
 
-        /// <summary>
-        /// Gets or sets the vertical alignment.
-        /// </summary>
-        /// <value>The vertical alignment.</value>
         public VerticalAlignment VerticalAlignment { get; set; }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -166,13 +103,6 @@ namespace OxyPlot.Annotations
             rc.DrawImage(this.ImageSource, x, y, width, height, this.Opacity, this.Interpolate);
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if (this.actualBounds.Contains(args.Point))
@@ -183,17 +113,10 @@ namespace OxyPlot.Annotations
             return null;
         }
 
-        /// <summary>
-        /// Gets the point.
-        /// </summary>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="model">The model.</param>
-        /// <returns>The point in screen coordinates.</returns>
         protected ScreenPoint GetPoint(PlotLength x, PlotLength y, PlotModel model)
         {
-            var xd = double.NaN;
-            var yd = double.NaN;
+            double xd = double.NaN;
+            double yd = double.NaN;
 
             if (x.Unit == PlotLengthUnit.Data || y.Unit == PlotLengthUnit.Data)
             {
@@ -241,13 +164,6 @@ namespace OxyPlot.Annotations
             return new ScreenPoint(xd, yd);
         }
 
-        /// <summary>
-        /// Gets the vector.
-        /// </summary>
-        /// <param name="x">The x component.</param>
-        /// <param name="y">The y component.</param>
-        /// <param name="model">The model.</param>
-        /// <returns>The vector in screen coordinates.</returns>
         protected ScreenVector GetVector(PlotLength x, PlotLength y, PlotModel model)
         {
             var xd = double.NaN;
@@ -299,7 +215,6 @@ namespace OxyPlot.Annotations
             return new ScreenVector(xd, yd);
         }
 
-        /// <inheritdoc/>
         public override OxyRect GetClippingRect()
         {
             if (this.X.Unit == PlotLengthUnit.Data || this.Y.Unit == PlotLengthUnit.Data)
