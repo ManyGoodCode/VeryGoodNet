@@ -28,7 +28,6 @@
         /// </summary>
         private int indents;
 
-
         public CodeGenerator(PlotModel model)
         {
             this.variables = new Dictionary<string, bool>();
@@ -50,15 +49,9 @@
             this.AppendLine("}");
         }
 
-        /// <summary>
-        /// Gets or sets the number of indents.
-        /// </summary>
         private int Indents
         {
-            get
-            {
-                return this.indents;
-            }
+            get { return this.indents; }
 
             set
             {
@@ -68,11 +61,8 @@
         }
 
         /// <summary>
-        /// Formats the code.
+        /// 格式化代码
         /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="values">The values.</param>
-        /// <returns>The format code.</returns>
         public static string FormatCode(string format, params object[] values)
         {
             object[] encodedValues = new object[values.Length];
@@ -85,43 +75,34 @@
         }
 
         /// <summary>
-        /// Formats a constructor.
+        /// 格式化构造器
         /// </summary>
-        /// <param name="type">The type.</param>
-        /// <param name="format">The format of the constructor arguments.</param>
-        /// <param name="values">The argument values.</param>
-        /// <returns>The format constructor.</returns>
         public static string FormatConstructor(Type type, string format, params object[] values)
         {
             return string.Format("new {0}({1})", type.Name, FormatCode(format, values));
         }
 
         /// <summary>
-        /// Returns the c# code for this model.
+        /// 返回此模型的C#代码
         /// </summary>
-        /// <returns>C# code.</returns>
         public string ToCode()
         {
             return this.sb.ToString();
         }
 
-        /// <summary>
-        /// Adds the specified object to the generated code.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns>The variable name.</returns>
         private string Add(object obj)
         {
-            var type = obj.GetType();
-
-            var hasParameterLessCtor = type.GetTypeInfo().DeclaredConstructors.Any(ci => ci.GetParameters().Length == 0);
+            Type type = obj.GetType();
+            bool hasParameterLessCtor = type.GetTypeInfo()
+                .DeclaredConstructors
+                .Any(ci => ci.GetParameters().Length == 0);
 
             if (!hasParameterLessCtor)
             {
                 return string.Format("/* Cannot generate code for {0} constructor */", type.Name);
             }
 
-            var defaultInstance = Activator.CreateInstance(type);
+            object defaultInstance = Activator.CreateInstance(type);
             var varName = this.GetNewVariableName(type);
             this.variables.Add(varName, true);
             this.AppendLine("var {0} = new {1}();", varName, type.Name);
