@@ -1,26 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PlotModel.cs" company="OxyPlot">
-//   Copyright (c) 2019 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies part of the Legend implementation.
-// </summary>
-// --
-namespace OxyPlot.Legends
+﻿namespace OxyPlot.Legends
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a Legend.
-    /// </summary>
     public partial class Legend : LegendBase
     {
         private OxyRect legendBox;
-        /// <summary>
-        /// Initializes a new insance of the Legend class.
-        /// </summary>
+
         public Legend()
         {
             this.IsLegendVisible = true;
@@ -70,11 +57,6 @@ namespace OxyPlot.Legends
             this.SelectionMode = SelectionMode.Single;
         }
 
-        /// <summary>
-        /// Override for legend hit test.
-        /// </summary>
-        /// <param name="args">Arguments passe to the hit test</param>
-        /// <returns>The hit test results.</returns>
         protected override HitTestResult LegendHitTest(HitTestArguments args)
         {
             ScreenPoint point = args.Point;
@@ -100,45 +82,14 @@ namespace OxyPlot.Legends
             return null;
         }
 
-        /// <summary>
-        /// Gets or sets the group name font.
-        /// </summary>
-        public string GroupNameFont
-        {
-            get;
-            set;
-        }
+        public string GroupNameFont { get; set; }
 
-        /// <summary>
-        /// Gets or sets the group name font size.
-        /// </summary>
-        public double GroupNameFontSize
-        {
-            get;
-            set;
-        }
+        public double GroupNameFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the group name font weight.
-        /// </summary>
-        public double GroupNameFontWeight
-        {
-            get;
-            set;
-        }
+        public double GroupNameFontWeight { get; set; }
 
         private Dictionary<Series.Series, OxyRect> SeriesPosMap { get; set; }
-
-        /// <summary>
-        /// Gets or sets the textcolor of invisible series.
-        /// </summary>
         public OxyColor SeriesInvisibleTextColor { get; set; }
-
-        /// <summary>
-        /// Checks if a screen point is within the legend boundaries.
-        /// </summary>
-        /// <param name="point">A screen point.</param>
-        /// <returns>A value indicating whether the point is inside legend boundaries or not.</returns>
         public bool IsPointInLegend(ScreenPoint point)
         {
             return this.legendBox.Contains(point);

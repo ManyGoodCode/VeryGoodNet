@@ -15,15 +15,7 @@ namespace F002222
         [STAThread]
         static void Main()
         {
-            DataPoint dataPoint1 = new DataPoint(1,2);
-            DataPoint dataPoint2 = new DataPoint(double.NaN, 2);
-
-            bool result1 = dataPoint1.IsDefined();
-            bool result2 = dataPoint2.IsDefined();
-
-            string codeString1 = dataPoint1.ToCode();
-            string codeString2 = dataPoint2.ToCode();
-            string indentString = new string('1', 8);
+            Test.Part1();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
