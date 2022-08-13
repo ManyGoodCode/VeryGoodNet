@@ -1,47 +1,27 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="BmpEncoder.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Implements support for encoding bmp images.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.IO;
 
-    /// <summary>
-    /// Implements support for encoding bmp images.
-    /// </summary>
     public class BmpEncoder : IImageEncoder
     {
-        /// <summary>
-        /// The options
-        /// </summary>
         private readonly BmpEncoderOptions options;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="BmpEncoder" /> class.
-        /// </summary>
-        /// <param name="options">The options.</param>
         public BmpEncoder(BmpEncoderOptions options)
         {
             this.options = options;
         }
 
         /// <summary>
-        /// Encodes the specified image data to png.
+        /// 将指定的图像数据编码为png格式
         /// </summary>
-        /// <param name="pixels">The pixel data (bottom line first).</param>
+        /// <param name="pixels">像素数据(首先是底线)。</param>
         /// <returns>The png image data.</returns>
         public byte[] Encode(OxyColor[,] pixels)
         {
             int width = pixels.GetLength(0);
             int height = pixels.GetLength(1);
 
-            var bytes = new byte[width * height * 4];
+            byte[] bytes = new byte[width * height * 4];
             int k = 0;
             for (int y = 0; y < height; y++)
             {
@@ -54,11 +34,11 @@ namespace OxyPlot
                 }
             }
 
-            var ms = new MemoryStream();
-            var w = new BinaryWriter(ms);
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter w = new BinaryWriter(ms);
 
             const int OffBits = 14 + 40;
-            var size = OffBits + bytes.Length;
+            int size = OffBits + bytes.Length;
 
             // Bitmap file header (14 bytes)
             w.Write((byte)'B');
@@ -76,7 +56,6 @@ namespace OxyPlot
 
             // Pixel array (from bottom-left corner)
             w.Write(bytes);
-
             return ms.ToArray();
         }
 
