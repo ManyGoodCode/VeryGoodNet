@@ -1,0 +1,42 @@
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.GeneratedMSBuildEditorConfig.editorconfig
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfoInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfo.cs
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.deps.json
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.xml
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\oxyplot-develop\Source\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.pdb
+C:\Users\H474357\Desktop\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.deps.json
+C:\Users\H474357\Desktop\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.dll
+C:\Users\H474357\Desktop\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.pdb
+C:\Users\H474357\Desktop\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.xml
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.AssemblyReference.cache
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfoInputs.cache
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfo.cs
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.CoreCompileInputs.cache
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.dll
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.xml
+C:\Users\H474357\Desktop\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.pdb
+C:\Users\H474357\Desktop\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.deps.json
+C:\Users\H474357\Desktop\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.dll
+C:\Users\H474357\Desktop\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.pdb
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfoInputs.cache
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfo.cs
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.CoreCompileInputs.cache
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.dll
+C:\Users\H474357\Desktop\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.deps.json
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\bin\Debug\netstandard2.0\OxyPlot.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.AssemblyReference.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.GeneratedMSBuildEditorConfig.editorconfig
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfoInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.AssemblyInfo.cs
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.dll
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\oxyplot-develop (1)\Local\OxyPlot\obj\Debug\netstandard2.0\OxyPlot.pdb
