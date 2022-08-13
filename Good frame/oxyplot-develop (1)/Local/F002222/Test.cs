@@ -26,7 +26,16 @@ namespace F002222
         public static void Part2()
         {
             Legend legend = new Legend();
-            legend.HitTest(new HitTestArguments(point:new ScreenPoint(10,20),40)) ;
+            legend.HitTest(new HitTestArguments(point: new ScreenPoint(10, 20), 40));
         }
+
+        public static void Part3()
+        {
+            OxyKeyGesture oxyKeyGesture1 = new OxyKeyGesture(key: OxyKey.A, modifiers: OxyModifierKeys.Alt);
+            OxyKeyGesture oxyKeyGesture2 = new OxyKeyGesture(key: OxyKey.A, modifiers: OxyModifierKeys.Alt);
+            bool isEqual = oxyKeyGesture1.Equals(oxyKeyGesture2);
+            bool isSame = oxyKeyGesture1 == oxyKeyGesture2;
+        }
+
     }
 }

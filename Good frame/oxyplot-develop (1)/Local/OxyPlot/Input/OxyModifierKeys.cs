@@ -1,45 +1,23 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OxyModifierKeys.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Defines the set of modifier keys.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
 
-    /// <summary>
-    /// Defines the set of modifier keys.
-    /// </summary>
     [Flags]
     public enum OxyModifierKeys
     {
-        /// <summary>
-        /// No modifiers are pressed.
-        /// </summary>
+        // No modifiers are pressed.
         None = 0,
 
-        /// <summary>
-        /// The Control key.
-        /// </summary>
+        // The Control key.
         Control = 1,
 
-        /// <summary>
-        /// The Alt/Menu key.
-        /// </summary>
+        // The Alt/Menu key.
         Alt = 2,
 
-        /// <summary>
-        /// The Shift key.
-        /// </summary>
+        // The Shift key.
         Shift = 4,
 
-        /// <summary>
-        /// The Windows key.
-        /// </summary>
+        // The Windows key.
         Windows = 8
     }
 }
