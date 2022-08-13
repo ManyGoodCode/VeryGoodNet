@@ -35,12 +35,13 @@
         }
 
         /// <summary>
-        /// Returns C# code that generates this instance.
+        /// 返回C#语言创建该实例的代码
+        /// 例如:new DataPoint(1,2) ; new DataPoint(double.NaN,2)
         /// </summary>
-        /// <returns>The to code.</returns>
         public string ToCode()
         {
-            return CodeGenerator.FormatConstructor(this.GetType(), "{0},{1}", this.x, this.y);
+            string codeString = CodeGenerator.FormatConstructor(this.GetType(), "{0},{1}", this.x, this.y); ;
+            return codeString;
         }
 
         public bool Equals(DataPoint other)

@@ -1,23 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ICodeGenerating.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to generate C# code of an object.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Provides functionality to generate C# code of an object.
-    /// </summary>
     public interface ICodeGenerating
     {
         /// <summary>
-        /// Returns C# code that generates this instance.
+        /// 返回C#语言创建该实例的代码
+        /// 例如:new DataPoint(1,2) ; new DataPoint(double.NaN,2)
         /// </summary>
-        /// <returns>The C# code.</returns>
         string ToCode();
     }
 }

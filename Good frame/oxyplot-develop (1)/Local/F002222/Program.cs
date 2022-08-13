@@ -21,6 +21,9 @@ namespace F002222
             bool result1 = dataPoint1.IsDefined();
             bool result2 = dataPoint2.IsDefined();
 
+            string codeString1 = dataPoint1.ToCode();
+            string codeString2 = dataPoint2.ToCode();
+
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
             Application.Run(new Form1());

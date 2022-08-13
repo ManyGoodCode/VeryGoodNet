@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CodeGenerator.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to generate C# code for the specified <see cref="PlotModel" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections;
@@ -18,41 +9,26 @@ namespace OxyPlot
     using System.Text;
     using System.Text.RegularExpressions;
 
-    /// <summary>
-    /// Provides functionality to generate C# code for the specified <see cref="PlotModel" />.
-    /// </summary>
-    /// <remarks>This is useful for creating examples or unit tests. Press Ctrl+Alt+C in a plot to copy code to the clipboard.
-    /// Usage:
-    /// <code>
-    /// var cg = new CodeGenerator(myPlotModel);
-    /// Clipboard.SetText(cg.ToCode());
-    /// </code></remarks>
     public class CodeGenerator
     {
-        /// <summary>
-        /// The string builder.
-        /// </summary>
         private readonly StringBuilder sb;
 
         /// <summary>
-        /// The variables.
+        /// 变量
         /// </summary>
         private readonly Dictionary<string, bool> variables;
 
         /// <summary>
-        /// The indent string.
+        /// 缩进字符串
         /// </summary>
         private string indentString;
 
         /// <summary>
-        /// The current number of indents.
+        /// 当前缩进数
         /// </summary>
         private int indents;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CodeGenerator" /> class.
-        /// </summary>
-        /// <param name="model">The model.</param>
+
         public CodeGenerator(PlotModel model)
         {
             this.variables = new Dictionary<string, bool>();
@@ -99,7 +75,7 @@ namespace OxyPlot
         /// <returns>The format code.</returns>
         public static string FormatCode(string format, params object[] values)
         {
-            var encodedValues = new object[values.Length];
+            object[] encodedValues = new object[values.Length];
             for (int i = 0; i < values.Length; i++)
             {
                 encodedValues[i] = values[i].ToCode();
