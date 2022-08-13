@@ -1,4 +1,5 @@
 ﻿using OxyPlot;
+using OxyPlot.Legends;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,6 +21,12 @@ namespace F002222
             string codeString1 = dataPoint1.ToCode();
             string codeString2 = dataPoint2.ToCode();
             string indentString = new string('1', 8);
+        }
+
+        public static void Part2()
+        {
+            Legend legend = new Legend();
+            legend.HitTest(new HitTestArguments(point:new ScreenPoint(10,20),40)) ;
         }
     }
 }

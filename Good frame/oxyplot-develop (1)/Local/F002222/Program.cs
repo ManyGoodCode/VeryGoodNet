@@ -15,7 +15,7 @@ namespace F002222
         [STAThread]
         static void Main()
         {
-            Test.Part1();
+            Test.Part2();
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
