@@ -154,16 +154,19 @@
 
         private static ImageFormat GetImageFormat(byte[] bytes)
         {
+            // Jpeg: 0xff 0xDB
             if (bytes.Length >= 2 && bytes[0] == 0xFF && bytes[1] == 0xD8)
             {
                 return ImageFormat.Jpeg;
             }
 
+            // BMP:0x42 0x4D
             if (bytes.Length >= 2 && bytes[0] == 0x42 && bytes[1] == 0x4D)
             {
                 return ImageFormat.Bmp;
             }
 
+            //Png:0x89 0x50 0x4E 0x47
             if (bytes.Length >= 4 && bytes[0] == 0x89 && bytes[1] == 0x50 && bytes[2] == 0x4E && bytes[3] == 0x47)
             {
                 return ImageFormat.Png;
@@ -174,7 +177,7 @@
 
         private static byte[] GetBytes(Stream s)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new MemoryStream())
             {
                 s.CopyTo(ms);
                 return ms.ToArray();
@@ -188,7 +191,6 @@
         {
             IImageDecoder decoder = GetDecoder(this.Format);
             OxyImageInfo info = decoder.GetImageInfo(this.data);
-
             if (info != null)
             {
                 this.Width = info.Width;
