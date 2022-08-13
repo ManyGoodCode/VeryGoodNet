@@ -1,31 +1,20 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IImageDecoder.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies functionality to decode an image.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     /// <summary>
-    /// Specifies functionality to decode an image.
+    /// 解码图像的功能
     /// </summary>
     public interface IImageDecoder
     {
         /// <summary>
-        /// Gets information about the image in the specified byte array.
+        /// 获取有关指定字节数组中图像的信息
         /// </summary>
-        /// <param name="bytes">The image data.</param>
-        /// <returns>An <see cref="OxyImageInfo" /> structure.</returns>
         OxyImageInfo GetImageInfo(byte[] bytes);
 
         /// <summary>
-        /// Decodes an image from the specified byte array.
+        /// 从指定的字节数组中解码图像
         /// </summary>
-        /// <param name="bytes">The image data.</param>
-        /// <returns>The 32-bit pixel data. The indexing is [x,y] where [0,0] is top-left.</returns>
+        /// <param name="bytes">图像数据</param>
+        /// <returns>32位像素数据。 索引是[x,y]，其中[0,0]是左上角。 </returns>
         OxyColor[,] Decode(byte[] bytes);
     }
 }

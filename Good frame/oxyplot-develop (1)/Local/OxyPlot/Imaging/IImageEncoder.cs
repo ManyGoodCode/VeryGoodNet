@@ -1,32 +1,23 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IImageEncoder.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies functionality to encode an image.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     /// <summary>
-    /// Specifies functionality to encode an image.
+    /// 对图像进行编码的功能
     /// </summary>
     public interface IImageEncoder
     {
         /// <summary>
-        /// Encodes the specified pixels.
+        /// 对指定像素进行编码
         /// </summary>
-        /// <param name="pixels">The pixel data. The indexing is [x,y] where [0,0] is top-left.</param>
-        /// <returns>The image data.</returns>
+        /// <param name="pixels">像素数据。 索引是[x,y]，其中[0,0]是左上角。 </param>
+        /// <returns>图像数据</returns>
         byte[] Encode(OxyColor[,] pixels);
 
         /// <summary>
-        /// Encodes the specified 8-bit indexed pixels.
+        /// 对指定的8位索引像素进行编码
         /// </summary>
-        /// <param name="pixels">The indexed pixel data. The indexing is [x,y] where [0,0] is top-left.</param>
-        /// <param name="palette">The palette.</param>
-        /// <returns>The image data.</returns>
+        /// <param name="pixels">索引的像素数据。 索引是[x,y]，其中[0,0]是左上角。 </param>
+        /// <param name="palette">调色板</param>
+        /// <returns>图像数据</returns>
         byte[] Encode(byte[,] pixels, OxyColor[] palette);
     }
 }
