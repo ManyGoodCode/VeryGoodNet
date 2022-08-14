@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IPlotView.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies functionality for the plot views.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     /// <summary>
     /// Specifies functionality for the plot views.
@@ -15,7 +6,7 @@ namespace OxyPlot
     public interface IPlotView : IView
     {
         /// <summary>
-        /// Gets the actual <see cref="PlotModel" /> of the control.
+        /// Gets the actual  of the control.
         /// </summary>
         new PlotModel ActualModel { get; }
 
@@ -27,19 +18,16 @@ namespace OxyPlot
         /// <summary>
         /// Invalidates the plot (not blocking the UI thread)
         /// </summary>
-        /// <param name="updateData">if set to <c>true</c>, all data bindings will be updated.</param>
         void InvalidatePlot(bool updateData = true);
 
         /// <summary>
-        /// Shows the tracker.
+        /// 展示了跟踪器
         /// </summary>
-        /// <param name="trackerHitResult">The tracker data.</param>
         void ShowTracker(TrackerHitResult trackerHitResult);
 
         /// <summary>
-        /// Stores text on the clipboard.
+        /// 将文本存储在剪贴板上
         /// </summary>
-        /// <param name="text">The text.</param>
         void SetClipboardText(string text);
     }
 }

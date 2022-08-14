@@ -25,7 +25,10 @@
 
         public void Export(IPlotModel model, Stream stream)
         {
-            PdfRenderContext rc = new PdfRenderContext(this.Width, this.Height, model.Background);
+            PdfRenderContext rc = new PdfRenderContext(
+                this.Width, 
+                this.Height, 
+                model.Background);
             model.Update(true);
             model.Render(rc, new OxyRect(0, 0, this.Width, this.Height));
             rc.Save(stream);
