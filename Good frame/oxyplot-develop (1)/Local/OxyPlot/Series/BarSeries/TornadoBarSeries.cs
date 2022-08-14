@@ -1,41 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TornadoBarSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series that can be used to create tornado plots.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a series that can be used to create tornado plots.
-    /// </summary>
-    /// <remarks>See http://en.wikipedia.org/wiki/Tornado_diagram.</remarks>
     public class TornadoBarSeries : BarSeriesBase<TornadoBarItem>
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2}\n{3}: {4}";
-
-        /// <summary>
-        /// The default fill color.
-        /// </summary>
         private OxyColor defaultMaximumFillColor;
-
-        /// <summary>
-        /// The default minimum fill color.
-        /// </summary>
         private OxyColor defaultMinimumFillColor;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TornadoBarSeries" /> class.
-        /// </summary>
         public TornadoBarSeries()
         {
             this.MaximumFillColor = OxyColor.FromRgb(216, 82, 85);
@@ -51,93 +23,25 @@ namespace OxyPlot.Series
             this.MinimumLabelFormatString = "{0}";
             this.MaximumLabelFormatString = "{0}";
         }
-
-        /// <summary>
-        /// Gets the actual fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualMaximumFillColor => this.MaximumFillColor.GetActualColor(this.defaultMaximumFillColor);
-
-        /// <summary>
-        /// Gets the actual minimum fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualMinimumFillColor => this.MinimumFillColor.GetActualColor(this.defaultMinimumFillColor);
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string BaseField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the base value.
-        /// </summary>
-        /// <value>The base value.</value>
         public double BaseValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label color.
-        /// </summary>
         public OxyColor LabelColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label margins.
-        /// </summary>
         public double LabelMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string MaximumColorField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string MaximumField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the interior of the Maximum bars.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor MaximumFillColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format string for the maximum labels.
-        /// </summary>
         public string MaximumLabelFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string MinimumColorField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string MinimumField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default color of the interior of the Minimum bars.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor MinimumFillColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format string for the minimum labels.
-        /// </summary>
         public string MinimumLabelFormatString { get; set; }
 
-        /// <summary>
-        /// Gets or sets the actual rectangles for the maximum bars.
-        /// </summary>
         protected internal IList<OxyRect> ActualMaximumBarRectangles { get; set; }
 
-        /// <summary>
-        /// Gets or sets the actual rectangles for the minimum bars.
-        /// </summary>
         protected internal IList<OxyRect> ActualMinimumBarRectangles { get; set; }
 
-        /// <inheritdoc/>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             for (var i = 0; i < this.ActualMinimumBarRectangles.Count; i++)
@@ -175,7 +79,6 @@ namespace OxyPlot.Series
             return null;
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             this.ActualMinimumBarRectangles = new List<OxyRect>();
@@ -277,7 +180,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             var xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -298,7 +200,6 @@ namespace OxyPlot.Series
                 this.EdgeRenderingMode);
         }
 
-        /// <inheritdoc/>
         protected internal override void SetDefaultValues()
         {
             if (this.MaximumFillColor.IsAutomatic())
@@ -312,7 +213,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -335,13 +235,11 @@ namespace OxyPlot.Series
             this.MaxX = maxValue;
         }
 
-        /// <inheritdoc/>
         protected override bool IsValid(TornadoBarItem item)
         {
             return this.XAxis.IsValidValue(item.Minimum) && this.XAxis.IsValidValue(item.Maximum);
         }
 
-        /// <inheritdoc/>
         protected override bool UpdateFromDataFields()
         {
             if (this.MinimumField == null || this.MaximumField == null)

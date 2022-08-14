@@ -1,33 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ErrorBarItem.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an item used in the ErrorColumnSeries.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
-    /// <summary>
-    /// Represents an item used in the ErrorColumnSeries.
-    /// </summary>
     public class ErrorBarItem : BarItem
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorBarItem" /> class.
-        /// </summary>
         public ErrorBarItem()
         {
             this.Color = OxyColors.Automatic;
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorBarItem" /> class.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="error">The error.</param>
-        /// <param name="categoryIndex">Index of the category.</param>
         public ErrorBarItem(double value, double error, int categoryIndex = -1)
             : this()
         {
@@ -36,15 +15,9 @@ namespace OxyPlot.Series
             this.CategoryIndex = categoryIndex;
         }
 
-        /// <summary>
-        /// Gets or sets the error of the item.
-        /// </summary>
+
         public double Error { get; set; }
 
-        /// <summary>
-        /// Returns c# code that generates this instance.
-        /// </summary>
-        /// <returns>C# code.</returns>
         public override string ToCode()
         {
             if (!this.Color.IsUndefined())

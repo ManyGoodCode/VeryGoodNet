@@ -1,35 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="IntervalBarSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for bar charts defined by to/from values.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a series for bar charts defined by to/from values.
-    /// </summary>
     public class IntervalBarSeries : BarSeriesBase<IntervalBarItem>, IStackableSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2}\n{3}: {4}";
 
-        /// <summary>
-        /// The default fill color.
-        /// </summary>
         private OxyColor defaultFillColor;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="IntervalBarSeries" /> class.
-        /// </summary>
         public IntervalBarSeries()
         {
             this.LabelColor = OxyColors.Automatic;
@@ -42,63 +21,27 @@ namespace OxyPlot.Series
             this.LabelFormatString = "{2}"; // title
         }
 
-        /// <summary>
-        /// Gets the actual fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualFillColor => this.FillColor.GetActualColor(this.defaultFillColor);
 
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string ColorField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string EndField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default color of the interior of the Maximum bars.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor FillColor { get; set; }
 
-        /// <inheritdoc/>
         public bool IsStacked => true;
 
-        /// <inheritdoc/>
         public bool OverlapsStack => true;
 
-        /// <summary>
-        /// Gets or sets the label color.
-        /// </summary>
         public OxyColor LabelColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the format string for the maximum labels.
-        /// </summary>
         public string LabelFormatString { get; set; }
 
-        /// <summary>
-        /// Gets or sets the label margins.
-        /// </summary>
         public double LabelMargin { get; set; }
 
-        /// <inheritdoc/>
         public string StackGroup => string.Empty;
 
-        /// <summary>
-        /// Gets or sets the color field.
-        /// </summary>
         public string StartField { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual rectangles for the maximum bars.
-        /// </summary>
         protected internal IList<OxyRect> ActualBarRectangles { get; set; }
 
-        /// <inheritdoc/>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             for (var i = 0; i < this.ActualBarRectangles.Count; i++)
@@ -137,7 +80,6 @@ namespace OxyPlot.Series
             return null;
         }
 
-        /// <inheritdoc/>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             var xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -152,7 +94,6 @@ namespace OxyPlot.Series
                 this.EdgeRenderingMode);
         }
 
-        /// <inheritdoc/>
         protected internal override void SetDefaultValues()
         {
             if (this.FillColor.IsAutomatic())
@@ -161,7 +102,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -186,13 +126,11 @@ namespace OxyPlot.Series
             this.MaxX = maxValue;
         }
 
-        /// <inheritdoc/>
         protected override bool IsValid(IntervalBarItem item)
         {
             return this.XAxis.IsValidValue(item.Start) && this.XAxis.IsValidValue(item.End);
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             this.ActualBarRectangles = new List<OxyRect>();
@@ -247,7 +185,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         protected override bool UpdateFromDataFields()
         {
             if (this.StartField == null || this.EndField == null)

@@ -2,49 +2,10 @@
 {
     using System;
 
-    /// <summary>
-    /// Provides functionality to create contours from a triangular mesh.
-    /// </summary>
-    /// <remarks><para>
-    /// Ported from C / Fortran code by Paul Bourke.
-    /// See <a href="http://paulbourke.net/papers/conrec/">Conrec</a> for
-    /// full description of code and the original source.
-    /// </para>
-    /// <para>
-    /// Contouring aids in visualizing three dimensional surfaces on a two dimensional
-    /// medium (on paper or in this case a computer graphics screen). Two most common
-    /// applications are displaying topological features of an area on a map or the air
-    /// pressure on a weather map. In all cases some parameter is plotted as a function
-    /// of two variables, the longitude and latitude or x and y axis. One problem with
-    /// computer contouring is the process is usually CPU intensive and the algorithms
-    /// often use advanced mathematical techniques making them susceptible to error.
-    /// </para></remarks>
     public static class Conrec
     {
-        /// <summary>
-        /// Renderer delegate
-        /// </summary>
-        /// <param name="x1">Start point x-coordinate</param>
-        /// <param name="y1">Start point y-coordinate</param>
-        /// <param name="x2">End point x-coordinate</param>
-        /// <param name="y2">End point y-coordinate</param>
-        /// <param name="z">Contour level</param>
         public delegate void RendererDelegate(double x1, double y1, double x2, double y2, double z);
 
-        /// <summary>
-        /// Contour is a contouring subroutine for rectangularily spaced data
-        /// It emits calls to a line drawing subroutine supplied by the user
-        /// which draws a contour map corresponding to data on a randomly
-        /// spaced rectangular grid. The coordinates emitted are in the same
-        /// units given in the x() and y() arrays.
-        /// Any number of contour levels may be specified but they must be
-        /// in order of increasing value.
-        /// </summary>
-        /// <param name="d">Matrix of data to contour.</param>
-        /// <param name="x">Data matrix column coordinates.</param>
-        /// <param name="y">Data matrix row coordinates.</param>
-        /// <param name="z">Contour levels in increasing order.</param>
-        /// <param name="renderer">The renderer.</param>
         public static void Contour(double[,] d, double[] x, double[] y, double[] z, RendererDelegate renderer)
         {
             double x1 = 0.0;
@@ -63,14 +24,9 @@
             int jub = d.GetUpperBound(1);
             int nc = z.Length;
 
-            // The indexing of im and jm should be noted as it has to start from zero
-            // unlike the fortran counter part
             int[] im = { 0, 1, 1, 0 };
             int[] jm = { 0, 0, 1, 1 };
 
-            // Note that castab is arranged differently from the FORTRAN code because
-            // Fortran and C/C++ arrays are transposed of each other, in this case
-            // it is more tricky as castab is in 3 dimension
             int[,,] castab =
                             {
                                  { { 0, 0, 8 }, { 0, 2, 5 }, { 7, 6, 9 } }, { { 0, 3, 4 }, { 1, 3, 1 }, { 4, 3, 0 } },

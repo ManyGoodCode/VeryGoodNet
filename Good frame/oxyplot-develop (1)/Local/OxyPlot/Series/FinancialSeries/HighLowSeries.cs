@@ -1,43 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HighLowSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for high-low plots.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
     using OxyPlot.Axes;
 
-    /// <summary>
-    /// Represents a series for high-low plots.
-    /// </summary>
-    /// <remarks>See <a href="http://www.mathworks.com/help/toolbox/finance/highlowfts.html">link</a></remarks>
     public class HighLowSeries : XYAxisSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2}\nHigh: {3:0.###}\nLow: {4:0.###}\nOpen: {5:0.###}\nClose: {6:0.###}";
-
-        /// <summary>
-        /// High/low items
-        /// </summary>
         private readonly List<HighLowItem> items = new List<HighLowItem>();
-
-        /// <summary>
-        /// The default color.
-        /// </summary>
         private OxyColor defaultColor;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "HighLowSeries" /> class.
-        /// </summary>
         public HighLowSeries()
         {
             this.Color = OxyColors.Automatic;
@@ -46,31 +18,15 @@ namespace OxyPlot.Series
             this.TrackerFormatString = DefaultTrackerFormatString;
         }
 
-        /// <summary>
-        /// Gets or sets the color of the item.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor Color { get; set; }
 
-        /// <summary>
-        /// Gets the actual color of the item.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualColor
         {
             get { return this.Color.GetActualColor(this.defaultColor); }
         }
 
-        /// <summary>
-        /// Gets or sets the dashes array.
-        /// If this is not <c>null</c> it overrides the LineStyle property.
-        /// </summary>
-        /// <value>The dashes.</value>
         public double[] Dashes { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data field for the Close value.
-        /// </summary>
         public string DataFieldClose { get; set; }
 
         /// <summary>

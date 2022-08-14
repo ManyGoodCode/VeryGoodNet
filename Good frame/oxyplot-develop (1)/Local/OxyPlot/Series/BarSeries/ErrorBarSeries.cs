@@ -1,31 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ErrorBarSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for clustered or stacked column charts with an error value.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a series for clustered or stacked column charts with an error value.
-    /// </summary>
     public class ErrorBarSeries : BarSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2}, Error: {Error:0.###}";
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ErrorBarSeries" /> class.
-        /// </summary>
         public ErrorBarSeries()
         {
             this.ErrorWidth = 0.4;
@@ -33,26 +14,12 @@ namespace OxyPlot.Series
             this.TrackerFormatString = DefaultTrackerFormatString;
         }
 
-        /// <summary>
-        /// Gets or sets the stroke thickness of the error line.
-        /// </summary>
-        /// <value>The stroke thickness of the error line.</value>
         public double ErrorStrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the width of the error end lines.
-        /// </summary>
-        /// <value>The width of the error end lines.</value>
         public double ErrorWidth { get; set; }
-
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
 
-            //// Todo: refactor (lots of duplicate code here)
             if (this.ValidItems.Count == 0)
             {
                 return;
@@ -114,7 +81,6 @@ namespace OxyPlot.Series
             this.MaxX = maxValue;
         }
 
-        /// <inheritdoc/>
         protected override void RenderItem(
             IRenderContext rc,
             double barValue,

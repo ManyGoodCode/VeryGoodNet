@@ -1,12 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CandleStickAndVolumeSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a dual view (candlestick + volume) series for OHLCV bars
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+﻿
 namespace OxyPlot.Series
 {
     using System;
@@ -14,41 +6,15 @@ namespace OxyPlot.Series
     using System.Linq;
     using OxyPlot.Axes;
 
-    /// <summary>
-    /// Represents a dual view (candlestick + volume) series for OHLCV bars
-    /// <para/>
-    /// Note that to use this series, one *must* define two y-axes, one named "Bars" and the other named
-    /// "Volume".  Typically would set up the volume on StartPosition =0, EndPosition = fraction and for
-    /// the bar axis StartPosition = fraction + delta, EndPosition = 1.0.
-    /// </summary>
-    /// <remarks>See <a href="http://www.mathworks.com/help/toolbox/finance/highlowfts.html">link</a></remarks>
     [Obsolete("Use separate candlestick and volume series instead.")]
     public class CandleStickAndVolumeSeries : XYAxisSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString =
             "Time: {0}\nHigh: {1}\nLow: {2}\nOpen: {3}\nClose: {4}\nBuy Volume: {5}\nSell Volume: {6}";
-
-        /// <summary>
-        /// The data series
-        /// </summary>
         private List<OhlcvItem> data;
 
-        /// <summary>
-        /// The minimum X gap between successive data items
-        /// </summary>
         private double minDx;
-
-        /// <summary>
-        /// The index of the data item at the start of visible window
-        /// </summary>
         private int winIndex;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "CandleStickAndVolumeSeries" /> class.
-        /// </summary>
         public CandleStickAndVolumeSeries()
         {
             this.PositiveColor = OxyColors.DarkGreen;
@@ -68,10 +34,6 @@ namespace OxyPlot.Series
             this.TrackerFormatString = DefaultTrackerFormatString;
         }
 
-        /// <summary>
-        /// Gets or sets the items of the series.
-        /// </summary>
-        /// <value>The items.</value>
         public List<OhlcvItem> Items
         {
             get
@@ -85,9 +47,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the portion of the Y axis associated with bars
-        /// </summary>
         public LinearAxis BarAxis
         {
             get
@@ -96,102 +55,24 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the portion of the Y axis associated with volume
-        /// </summary>
         public LinearAxis VolumeAxis { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the volume axis key (defaults to "Volume")
-        /// </summary>
         public string VolumeAxisKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bar axis key (defaults to null, as is the primary axis).
-        /// </summary>
         public string BarAxisKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the style of volume rendering (defaults to Combined)
-        /// </summary>
         public VolumeStyle VolumeStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the bar lines
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke intensity scale (used to generate stroke color from positive or negative color).
-        /// For example, 1.0 = same color and 0.5 is 1/2 of the intensity of the source fill color.
-        /// </summary>
         public double StrokeIntensity { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the volume / bar separator
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double SeparatorStrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style for the volume / bar separator
-        /// </summary>
         public LineStyle SeparatorLineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color used when the closing value is greater than opening value or
-        /// for buying volume.
-        /// </summary>
         public OxyColor PositiveColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fill color used when the closing value is less than opening value or
-        /// for selling volume
-        /// </summary>
         public OxyColor NegativeColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the separator line
-        /// </summary>
         public OxyColor SeparatorColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether positive bars are shown as filled (false) or hollow (true) candlesticks
-        /// </summary>
         public bool PositiveHollow { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether negative bars are shown as filled (false) or hollow (true) candlesticks
-        /// </summary>
         public bool NegativeHollow { get; set; }
-
-        /// <summary>
-        /// Gets or sets the bar width in data units (for example if the X axis is date-time based, then should
-        /// use the difference of DateTimeAxis.ToDouble(date) to indicate the width).  By default candlestick
-        /// series will use 0.80 x the minimum difference in data points.
-        /// </summary>
         public double CandleWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum volume seen in the data series.
-        /// </summary>
         public double MinimumVolume { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the maximum volume seen in the data series.
-        /// </summary>
         public double MaximumVolume { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the average volume seen in the data series.
-        /// </summary>
         public double AverageVolume { get; protected set; }
 
-        /// <summary>
-        /// Append a bar to the series (must be in X order)
-        /// </summary>
-        /// <param name="bar">Bar object.</param>
         public void Append(OhlcvItem bar)
         {
             if (this.data == null)
@@ -207,12 +88,6 @@ namespace OxyPlot.Series
             this.data.Add(bar);
         }
 
-        /// <summary>
-        /// Fast index of bar where max(bar[i].X) &lt;= x 
-        /// </summary>
-        /// <returns>The index of the bar closest to X, where max(bar[i].X) &lt;= x.</returns>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="startingIndex">starting index</param> 
         public int FindByX(double x, int startingIndex = -1)
         {
             if (startingIndex < 0)
@@ -448,11 +323,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol for the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -488,12 +358,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the point on the series that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate the series if this flag is set to <c>true</c>.</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.XAxis == null || this.YAxis == null || interpolate || this.data.Count == 0)
@@ -550,9 +414,6 @@ namespace OxyPlot.Series
             };
         }
 
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             base.UpdateData();
@@ -578,9 +439,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Ensures that the axes of the series is defined.
-        /// </summary>
         protected internal override void EnsureAxes()
         {
             // find volume axis
@@ -591,9 +449,6 @@ namespace OxyPlot.Series
             base.EnsureAxes();
         }
 
-        /// <summary>
-        /// Updates the axes to include the max and min of this series.
-        /// </summary>
         protected internal override void UpdateAxisMaxMin()
         {
             this.XAxis.Include(this.MinX);
@@ -601,7 +456,6 @@ namespace OxyPlot.Series
             this.YAxis.Include(this.MinY);
             this.YAxis.Include(this.MaxY);
 
-            // we may not have a volume axis, if so, skip adjustments
             if (this.VolumeAxis == null)
             {
                 return;
@@ -635,9 +489,6 @@ namespace OxyPlot.Series
             this.VolumeAxis.Include(ymax);
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -690,11 +541,6 @@ namespace OxyPlot.Series
             this.AverageVolume = cumvol / nvol;
         }
 
-        /// <summary>
-        /// Gets the clipping rectangle for the given combination of existing X-Axis and specific Y-Axis
-        /// </summary>
-        /// <returns>The clipping rectangle.</returns>
-        /// <param name="yaxis">Y axis.</param>
         protected OxyRect GetClippingRect(Axis yaxis)
         {
             if (yaxis == null)
@@ -710,10 +556,6 @@ namespace OxyPlot.Series
             return new OxyRect(minX, minY, maxX - minX, maxY - minY);
         }
 
-        /// <summary>
-        /// Gets the clipping rectangle between plots
-        /// </summary>
-        /// <returns>The clipping rectangle.</returns>
         protected OxyRect GetSeparationClippingRect()
         {
             if (this.VolumeAxis == null)

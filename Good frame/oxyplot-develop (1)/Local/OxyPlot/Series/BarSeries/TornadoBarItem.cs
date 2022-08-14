@@ -1,22 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TornadoBarItem.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an item for the TornadoBarSeries.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
-    /// <summary>
-    /// Represents an item for the TornadoBarSeries.
-    /// </summary>
     public class TornadoBarItem : BarItemBase, ICodeGenerating
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TornadoBarItem" /> class.
-        /// </summary>
         public TornadoBarItem()
         {
             this.Minimum = double.NaN;
@@ -26,35 +11,12 @@ namespace OxyPlot.Series
             this.MaximumColor = OxyColors.Automatic;
         }
 
-        /// <summary>
-        /// Gets or sets the base value.
-        /// </summary>
+
         public double BaseValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value.
-        /// </summary>
         public double Maximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color for the maximum bar.
-        /// </summary>
         public OxyColor MaximumColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value.
-        /// </summary>
         public double Minimum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color for the minimum bar.
-        /// </summary>
         public OxyColor MinimumColor { get; set; }
-
-        /// <summary>
-        /// Returns c# code that generates this instance.
-        /// </summary>
-        /// <returns>C# code.</returns>
         public string ToCode()
         {
             if (!this.MaximumColor.IsUndefined())

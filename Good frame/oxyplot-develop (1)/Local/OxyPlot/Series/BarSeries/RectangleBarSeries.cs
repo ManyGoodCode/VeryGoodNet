@@ -1,35 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RectangleBarSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for bar charts where the bars are defined by rectangles.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a series for bar charts where the bars are defined by rectangles.
-    /// </summary>
     public class RectangleBarSeries : XYAxisSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2} {3}\n{4}: {5} {6}";
 
-        /// <summary>
-        /// The default fill color.
-        /// </summary>
         private OxyColor defaultFillColor;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RectangleBarSeries" /> class.
-        /// </summary>
         public RectangleBarSeries()
         {
             this.Items = new List<RectangleBarItem>();
@@ -42,68 +20,22 @@ namespace OxyPlot.Series
             this.TrackerFormatString = DefaultTrackerFormatString;
 
             this.LabelFormatString = "{4}"; // title
-
-            // this.LabelFormatString = "{0}-{1},{2}-{3}"; // X0-X1,Y0-Y1
         }
 
 
-        /// <summary>
-        /// Gets or sets the default color of the interior of the rectangles.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor FillColor { get; set; }
-
-        /// <summary>
-        /// Gets the actual fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualFillColor
         {
             get { return this.FillColor.GetActualColor(this.defaultFillColor); }
         }
 
-        /// <summary>
-        /// Gets the rectangle bar items.
-        /// </summary>
         public IList<RectangleBarItem> Items { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the label color.
-        /// </summary>
         public OxyColor LabelColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format string for the labels.
-        /// </summary>
         public string LabelFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the border around the rectangles.
-        /// </summary>
-        /// <value>The color of the stroke.</value>
         public OxyColor StrokeColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the border around the rectangles.
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual rectangles for the rectangles.
-        /// </summary>
         internal IList<OxyRect> ActualBarRectangles { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual rectangle bar items.
-        /// </summary>
         internal IList<RectangleBarItem> ActualItems { get; set; }
-        /// <summary>
-        /// Gets the point in the dataset that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Specifies whether to interpolate or not.</param>
-        /// <returns>A <see cref="TrackerHitResult" /> for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.ActualBarRectangles == null)
@@ -146,7 +78,6 @@ namespace OxyPlot.Series
             return null;
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             if (this.Items.Count == 0)
@@ -228,11 +159,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The legend rectangle.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -247,9 +173,6 @@ namespace OxyPlot.Series
                 this.EdgeRenderingMode);
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             if (this.FillColor.IsAutomatic())
@@ -258,9 +181,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             if (this.ItemsSource == null)
@@ -269,19 +189,9 @@ namespace OxyPlot.Series
             }
 
             this.Items.Clear();
-
-            // ReflectionExtensions.AddRange(
-            // this.ItemsSource,
-            // this.Items,
-            // new[] { this.MinimumField, this.MaximumField },
-            // (item, value) => item.Minimum = Convert.ToDouble(value),
-            // (item, value) => item.Maximum = Convert.ToDouble(value));
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -322,11 +232,6 @@ namespace OxyPlot.Series
             this.MaxY = maxValueY;
         }
 
-        /// <summary>
-        /// Checks if the specified value is valid.
-        /// </summary>
-        /// <param name="v">The value.</param>
-        /// <returns>True if the value is valid.</returns>
         protected virtual bool IsValid(double v)
         {
             return !double.IsNaN(v) && !double.IsInfinity(v);

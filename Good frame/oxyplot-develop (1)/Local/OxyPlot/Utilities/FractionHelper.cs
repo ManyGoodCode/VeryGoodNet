@@ -1,33 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="FractionHelper.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to generate fraction strings from double values.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Globalization;
 
-    /// <summary>
-    /// Provides functionality to generate fraction strings from double values.
-    /// </summary>
-    /// <remarks>Examples: "3/4", "PI/2"</remarks>
     public static class FractionHelper
     {
-        /// <summary>
-        /// Converts a double to a fraction string.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <param name="unit">The unit.</param>
-        /// <param name="unitSymbol">The unit symbol.</param>
-        /// <param name="eps">The tolerance.</param>
-        /// <param name="formatProvider">The format Provider.</param>
-        /// <param name="formatString">The format string.</param>
-        /// <returns>The convert to fraction string.</returns>
         public static string ConvertToFractionString(
             double value,
             double unit = 1,
@@ -41,13 +18,7 @@ namespace OxyPlot
                 return "0";
             }
 
-            // ½, ⅝, ¾
             value /= unit;
-
-            // int whole = (int)(value - (int) value);
-            // int N = 10000;
-            // int frac = (int) ((value - whole)*N);
-            // var d = GCF(N,frac);
             for (int d = 1; d <= 64; d++)
             {
                 double n = value * d;
