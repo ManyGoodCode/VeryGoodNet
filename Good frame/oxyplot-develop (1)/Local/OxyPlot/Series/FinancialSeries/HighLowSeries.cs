@@ -29,30 +29,12 @@
 
         public string DataFieldClose { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data field for the High value.
-        /// </summary>
         public string DataFieldHigh { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data field for the Low value.
-        /// </summary>
         public string DataFieldLow { get; set; }
 
-        /// <summary>
-        /// Gets or sets the data field for the Open value.
-        /// </summary>
         public string DataFieldOpen { get; set; }
-
-        /// <summary>
-        /// Gets or sets the x data field (time).
-        /// </summary>
         public string DataFieldX { get; set; }
-
-        /// <summary>
-        /// Gets the items of the series.
-        /// </summary>
-        /// <value>The items.</value>
         public List<HighLowItem> Items
         {
             get
@@ -61,43 +43,15 @@
             }
         }
 
-        /// <summary>
-        /// Gets or sets the line join.
-        /// </summary>
-        /// <value>The line join.</value>
         public LineJoin LineJoin { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line style.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the mapping delegate.
-        /// </summary>
-        /// <value>The mapping.</value>
-        /// <remarks>Example: series1.Mapping = item => new HighLowItem(((MyType)item).Time,((MyType)item).Value);</remarks>
         public Func<object, HighLowItem> Mapping { get; set; }
 
-        /// <summary>
-        /// Gets or sets the thickness of the curve.
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the length of the open/close ticks (screen coordinates).
-        /// </summary>
-        /// <value>The length of the open/close ticks.</value>
         public double TickLength { get; set; }
 
-        /// <summary>
-        /// Gets the point on the series that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate the series if this flag is set to <c>true</c>.</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.XAxis == null || this.YAxis == null)
@@ -163,20 +117,12 @@
             return null;
         }
 
-        /// <summary>
-        /// Determines whether the point is valid.
-        /// </summary>
-        /// <param name="pt">The point.</param>
-        /// <param name="xaxis">The x axis.</param>
-        /// <param name="yaxis">The y axis.</param>
-        /// <returns><c>true</c> if the specified point is valid; otherwise, <c>false</c>.</returns>
         public virtual bool IsValidItem(HighLowItem pt, Axis xaxis, Axis yaxis)
         {
             return !double.IsNaN(pt.X) && !double.IsInfinity(pt.X) && !double.IsNaN(pt.High)
                    && !double.IsInfinity(pt.High) && !double.IsNaN(pt.Low) && !double.IsInfinity(pt.Low);
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             if (this.items.Count == 0)
@@ -238,11 +184,6 @@
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol for the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -277,9 +218,6 @@
             }
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             if (this.Color.IsAutomatic())
@@ -289,9 +227,6 @@
             }
         }
 
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             if (this.ItemsSource == null)
@@ -301,7 +236,6 @@
 
             this.items.Clear();
 
-            // Use the mapping to generate the points
             if (this.Mapping != null)
             {
                 foreach (var item in this.ItemsSource)
@@ -328,9 +262,6 @@
             filler.FillT(this.items, this.ItemsSource, args => new HighLowItem(Axis.ToDouble(args[0]), Convert.ToDouble(args[1]), Convert.ToDouble(args[2]), Convert.ToDouble(args[3]), Convert.ToDouble(args[4])));
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();

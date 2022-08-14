@@ -1,40 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AreaSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an area series that fills the polygon defined by two sets of points or one set of points and a constant.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents an area series that fills the polygon defined by two sets of points or one set of points and a constant.
-    /// </summary>
     public class AreaSeries : LineSeries
     {
-        /// <summary>
-        /// The second list of points.
-        /// </summary>
         private readonly List<DataPoint> points2 = new List<DataPoint>();
-
-        /// <summary>
-        /// The secondary data points from the <see cref="P:ItemsSource" /> collection.
-        /// </summary>
         private readonly List<DataPoint> itemsSourcePoints2 = new List<DataPoint>();
-
-        /// <summary>
-        /// The secondary data points from the <see cref="P:Points2" /> list.
-        /// </summary>
         private List<DataPoint> actualPoints2;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "AreaSeries" /> class.
-        /// </summary>
         public AreaSeries()
         {
             this.Reverse2 = true;
@@ -42,38 +15,10 @@ namespace OxyPlot.Series
             this.Fill = OxyColors.Automatic;
         }
 
-        /// <summary>
-        /// Gets or sets a constant value for the area definition.
-        /// This is used if DataFieldBase and BaselineValues are <c>null</c>.
-        /// </summary>
-        /// <value>The baseline.</value>
-        /// <remarks><see cref="P:ConstantY2" /> is used if <see cref="P:ItemsSource" /> is set 
-        /// and <see cref="P:DataFieldX2" /> or <see cref="P:DataFieldY2" /> are <c>null</c>, 
-        /// or if <see cref="P:ItemsSource" /> is <c>null</c> and <see cref="P:Points2" /> is empty.</remarks>
         public double ConstantY2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data field to use for the X-coordinates of the second data set.
-        /// </summary>
-        /// <remarks>This property is used if <see cref="P:ItemsSource" /> is set.</remarks>
         public string DataFieldX2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data field to use for the Y-coordinates of the second data set.
-        /// </summary>
-        /// <remarks>This property is used if <see cref="P:ItemsSource" /> is set.</remarks>
         public string DataFieldY2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the line for the second data set.
-        /// </summary>
-        /// <value>The color.</value>
         public OxyColor Color2 { get; set; }
-
-        /// <summary>
-        /// Gets the actual color of the line for the second data set.
-        /// </summary>
-        /// <value>The actual color.</value>
         public virtual OxyColor ActualColor2
         {
             get
@@ -82,16 +27,7 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets the fill color of the area.
-        /// </summary>
-        /// <value>The fill color.</value>
         public OxyColor Fill { get; set; }
-
-        /// <summary>
-        /// Gets the actual fill color of the area.
-        /// </summary>
-        /// <value>The actual fill color.</value>
         public OxyColor ActualFill
         {
             get
@@ -100,11 +36,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the second list of points.
-        /// </summary>
-        /// <value>The second list of points.</value>
-        /// <remarks>This property is not used if <see cref="P:ItemsSource" /> is set.</remarks>
         public List<DataPoint> Points2
         {
             get
@@ -113,19 +44,7 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the second data collection should be reversed.
-        /// </summary>
-        /// <value><c>true</c> if the second data set should be reversed; otherwise, <c>false</c>.</value>
-        /// <remarks>The first dataset is not reversed, and normally
-        /// the second dataset should be reversed to get a
-        /// closed polygon.</remarks>
         public bool Reverse2 { get; set; }
-
-        /// <summary>
-        /// Gets the actual points of the second data set.
-        /// </summary>
-        /// <value>A list of data points.</value>
         protected List<DataPoint> ActualPoints2
         {
             get
@@ -134,22 +53,9 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets the last visible window start position in second data points collection.
-        /// </summary>
         protected int WindowStartIndex2 { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether Points2 collection was defined by user.
-        /// </summary>
         protected bool IsPoints2Defined { get; private set; }
 
-        /// <summary>
-        /// Gets the nearest point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">interpolate if set to <c>true</c> .</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             var xy = this.InverseTransform(point);
@@ -201,10 +107,6 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Renders the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
         public override void Render(IRenderContext rc)
         {
             this.VerifyAxes();
@@ -265,7 +167,6 @@ namespace OxyPlot.Series
                 return;
             }
 
-            // Draw the fill
             for (int chunkIndex = 0; chunkIndex < chunksOfPoints.Count; chunkIndex++)
             {
                 var pts = chunksOfPoints[chunkIndex];
@@ -309,12 +210,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol for the line series on the
-        /// specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double y0 = (legendBox.Top * 0.2) + (legendBox.Bottom * 0.8);
@@ -335,9 +230,6 @@ namespace OxyPlot.Series
             rc.DrawPolygon(pts, this.GetSelectableFillColor(this.ActualFill), OxyColors.Undefined, 0, this.EdgeRenderingMode);
         }
 
-        /// <summary>
-        /// The update data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             base.UpdateData();
@@ -377,20 +269,12 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
             this.InternalUpdateMaxMin(this.ActualPoints2);
         }
 
-        /// <summary>
-        /// Renders data points skipping NaN values.
-        /// </summary>
-        /// <param name="context">Area rendering context.</param>
-        /// <returns>The list of chunks.</returns>
         protected List<List<ScreenPoint>> RenderChunkedPoints(AreaRenderContext context)
         {
             var result = new List<List<ScreenPoint>>();
@@ -434,12 +318,6 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Renders a chunk of points on the screen.
-        /// </summary>
-        /// <param name="context">Render context.</param>
-        /// <param name="points">Screen points.</param>
-        /// <returns>The list of resampled points.</returns>
         protected virtual List<ScreenPoint> RenderScreenPoints(AreaRenderContext context, List<ScreenPoint> points)
         {
             var final = points;
@@ -467,20 +345,11 @@ namespace OxyPlot.Series
             return final;
         }
 
-        /// <summary>
-        /// Gets the x coordinate of a DataPoint.
-        /// </summary>
-        /// <param name="point">Data point.</param>
-        /// <returns>X coordinate.</returns>
         protected double GetPointX(DataPoint point)
         {
             return point.x;
         }
 
-        /// <summary>
-        /// Gets the points when <see cref="P:ConstantY2" /> is used.
-        /// </summary>
-        /// <returns>A sequence of <see cref="T:DataPoint"/>.</returns>
         private IEnumerable<DataPoint> GetConstantPoints2()
         {
             var actualPoints = this.ActualPoints;
@@ -494,49 +363,15 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Holds parameters for point rendering.
-        /// </summary>
         protected class AreaRenderContext
         {
-            /// <summary>
-            /// Gets or sets source data points.
-            /// </summary>
             public List<DataPoint> Points { get; set; }
-
-            /// <summary>
-            /// Gets or sets start index of a visible window.
-            /// </summary>
             public int WindowStartIndex { get; set; }
-
-            /// <summary>
-            /// Gets or sets maximum visible X coordinate.
-            /// </summary>
             public double XMax { get; set; }
-
-            /// <summary>
-            /// Gets or sets render context.
-            /// </summary>
             public IRenderContext RenderContext { get; set; }
-
-            /// <summary>
-            /// Gets or sets minimum squared distance between points.
-            /// </summary>
             public double MinDistSquared { get; set; }
-
-            /// <summary>
-            /// Gets or sets a value indicating whether to reverse the points.
-            /// </summary>
             public bool Reverse { get; set; }
-
-            /// <summary>
-            /// Gets or sets line color.
-            /// </summary>
             public OxyColor Color { get; set; }
-
-            /// <summary>
-            /// Gets or sets line dash array.
-            /// </summary>
             public double[] DashArray { get; set; }
         }
     }

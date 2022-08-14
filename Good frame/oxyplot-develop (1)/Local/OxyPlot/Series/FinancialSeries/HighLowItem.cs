@@ -4,9 +4,6 @@
     {
         public static readonly HighLowItem Undefined = new HighLowItem(double.NaN, double.NaN, double.NaN);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HighLowItem" /> class.
-        /// </summary>
         public HighLowItem()
         {
         }

@@ -1,27 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OldCandleStickSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for candlestick charts.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
 
-    /// <summary>
-    /// Represents a series for candlestick charts.
-    /// </summary>
-    /// <remarks>See also <a href="http://en.wikipedia.org/wiki/Candlestick_chart">Wikipedia</a> and
-    /// <a href="http://www.mathworks.com/help/toolbox/finance/candle.html">Matlab documentation</a>.</remarks>
     [Obsolete("use replacement CandleStickSeries instead")]
     public class OldCandleStickSeries : HighLowSeries
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "OldCandleStickSeries" /> class.
-        /// </summary>
         public OldCandleStickSeries()
         {
             this.CandleWidth = 10;
@@ -31,36 +14,11 @@ namespace OxyPlot.Series
             this.ShadowEndLength = 1.0;
         }
 
-        /// <summary>
-        /// Gets or sets the width of the candle (in screen space units).
-        /// </summary>
         public double CandleWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color used when the closing value is greater than opening value.
-        /// </summary>
         public OxyColor IncreasingFill { get; set; }
-
-        /// <summary>
-        /// Gets or sets the fill color used when the closing value is less than opening value.
-        /// </summary>
         public OxyColor DecreasingFill { get; set; }
-
-        /// <summary>
-        /// Gets or sets the end color of the shadow.
-        /// </summary>
-        /// <value>The end color of the shadow.</value>
         public OxyColor ShadowEndColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the lengths of the shadow ends.
-        /// </summary>
-        /// <value>The length relative to the width of the candle.</value>
         public double ShadowEndLength { get; set; }
-
-        /// <summary>
-        /// Gets the actual increasing fill color.
-        /// </summary>
         public OxyColor ActualIncreasingFill
         {
             get
@@ -69,7 +27,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             if (this.IsTransposed())
@@ -176,11 +133,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol for the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double xmid = (legendBox.Left + legendBox.Right) / 2;

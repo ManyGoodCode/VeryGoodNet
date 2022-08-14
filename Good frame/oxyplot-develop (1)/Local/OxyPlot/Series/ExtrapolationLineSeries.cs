@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ExtrapolationLineSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a line series with extrapolated or interpolated intervals.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
