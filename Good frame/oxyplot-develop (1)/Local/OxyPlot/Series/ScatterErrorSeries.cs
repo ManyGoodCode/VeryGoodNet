@@ -1,26 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScatterErrorSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for scatter plots with the possibility to display error bars.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a series for scatter plots with the possibility to display error bars.
-    /// </summary>
     public class ScatterErrorSeries : ScatterSeries<ScatterErrorPoint>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ScatterErrorSeries" /> class.
-        /// </summary>
         public ScatterErrorSeries()
         {
             this.ErrorBarColor = OxyColors.Black;
@@ -29,60 +14,12 @@ namespace OxyPlot.Series
             this.MinimumErrorSize = 0;
         }
 
-        /// <summary>
-        /// Gets or sets the data field for the X error property.
-        /// </summary>
-        /// <value>
-        /// The data field.
-        /// </value>
         public string DataFieldErrorX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data field for the Y error property.
-        /// </summary>
-        /// <value>
-        /// The data field.
-        /// </value>
         public string DataFieldErrorY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the error bar.
-        /// </summary>
-        /// <value>
-        /// The color of the error bar.
-        /// </value>
         public OxyColor ErrorBarColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the width of the error bar stop.
-        /// </summary>
-        /// <value>
-        /// The width of the error bar stop.
-        /// </value>
         public double ErrorBarStopWidth { get; set; }
-
-        /// <summary>
-        /// Gets or sets the error bar stroke thickness.
-        /// </summary>
-        /// <value>
-        /// The error bar stroke thickness.
-        /// </value>
         public double ErrorBarStrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum size (relative to <see cref="ScatterSeries{T}.MarkerSize" />) of the error bars to be shown.
-        /// </summary>
-        /// <value>
-        /// The minimum size of the error.
-        /// </value>
         public double MinimumErrorSize { get; set; }
-
-        /// <summary>
-        /// Renders the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">
-        /// The rendering context.
-        /// </param>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -146,12 +83,7 @@ namespace OxyPlot.Series
                 LineJoin.Bevel);
         }
 
-        /// <summary>
-        /// Selects all points for which the passed function returns true.
-        /// </summary>
-        /// <param name="func">
-        /// The function.
-        /// </param>
+
         public void SelectAll(Func<ScatterErrorPoint, bool> func)
         {
             foreach (var dataPoint in this.Points.Where(func))
@@ -160,9 +92,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates from data fields.
-        /// </summary>
         protected override void UpdateFromDataFields()
         {
             var filler = new ListBuilder<ScatterErrorPoint>();

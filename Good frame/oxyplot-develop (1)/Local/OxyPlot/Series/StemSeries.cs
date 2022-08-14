@@ -1,42 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StemSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series that plots discrete data in a stem plot.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a series that plots discrete data in a stem plot.
-    /// </summary>
-    /// <remarks>See <a href="http://en.wikipedia.org/wiki/Stemplot">Stem plot</a> and
-    /// <a href="http://www.mathworks.com/help/techdoc/ref/stem.html">stem</a>.</remarks>
     public class StemSeries : LineSeries
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "StemSeries" /> class.
-        /// </summary>
         public StemSeries()
         {
             this.Base = 0;
         }
 
-        /// <summary>
-        /// Gets or sets Base.
-        /// </summary>
         public double Base { get; set; }
-
-        /// <summary>
-        /// Gets the point on the series that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate the series if this flag is set to <c>true</c>.</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.XAxis == null || this.YAxis == null)
@@ -51,7 +24,6 @@ namespace OxyPlot.Series
 
             TrackerHitResult result = null;
 
-            // http://paulbourke.net/geometry/pointlineplane/
             double minimumDistance = double.MaxValue;
             var points = this.ActualPoints;
 
@@ -104,10 +76,7 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Renders the LineSeries on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
+
         public override void Render(IRenderContext rc)
         {
             if (this.ActualPoints.Count == 0)

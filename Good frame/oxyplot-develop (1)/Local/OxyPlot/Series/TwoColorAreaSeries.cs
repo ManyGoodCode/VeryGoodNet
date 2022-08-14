@@ -1,45 +1,14 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TwoColorAreaSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a two-color area series.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a two-color area series.
-    /// </summary>
     public class TwoColorAreaSeries : AreaSeries
     {
-        /// <summary>
-        /// The default second color.
-        /// </summary>
         private OxyColor defaultColor2;
-
-        /// <summary>
-        /// The collection of points above the limit.
-        /// </summary>
         private List<DataPoint> abovePoints;
-
-        /// <summary>
-        /// The collection of points below the limit.
-        /// </summary>
         private List<DataPoint> belowPoints;
-
-        /// <summary>
-        /// Start index of a visible rendering window for markers.
-        /// </summary>
         private int markerStartIndex;
-        
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "TwoColorAreaSeries" /> class.
-        /// </summary>
         public TwoColorAreaSeries()
         {
             this.Color2 = OxyColors.Blue;
@@ -52,16 +21,7 @@ namespace OxyPlot.Series
             this.LineStyle2 = LineStyle.Solid;
         }
 
-        /// <summary>
-        /// Gets or sets the area fill color below the limit line.
-        /// </summary>
-        /// <value>The fill below the limit line.</value>
         public OxyColor Fill2 { get; set; }
-
-        /// <summary>
-        /// Gets the actual fill color below the limit line.
-        /// </summary>
-        /// <value>The actual fill below the limit line.</value>
         public OxyColor ActualFill2
         {
             get
@@ -70,32 +30,13 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual second color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public override OxyColor ActualColor2
         {
             get { return this.Color2.GetActualColor(this.defaultColor2); }
         }
 
-        /// <summary>
-        /// Gets or sets the dash array for the rendered line that is below the limit (overrides <see cref="LineStyle" />).
-        /// </summary>
-        /// <value>The dash array.</value>
-        /// <remarks>If this is not <c>null</c> it overrides the <see cref="LineStyle" /> property.</remarks>
         public double[] Dashes2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle2 { get; set; }
-
-        /// <summary>
-        /// Gets the actual line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle ActualLineStyle2
         {
             get
@@ -104,9 +45,7 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual dash array for the line that is below the limit.
-        /// </summary>
+
         public double[] ActualDashArray2
         {
             get
@@ -115,29 +54,9 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets the marker fill color which is below the limit line. The default is <see cref="OxyColors.Automatic" />.
-        /// </summary>
-        /// <value>The marker fill.</value>
         public OxyColor MarkerFill2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the marker stroke which is below the limit line. The default is <c>OxyColors.Automatic</c>.
-        /// </summary>
-        /// <value>The marker stroke.</value>
         public OxyColor MarkerStroke2 { get; set; }
-
-        /// <summary>
-        /// Gets or sets a baseline for the series.
-        /// </summary>
         public double Limit { get; set; }
-
-        /// <summary>
-        /// Gets the nearest point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate if set to <c>true</c> .</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             TrackerHitResult result;
@@ -167,10 +86,8 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
-            // determine render range
             var xmin = this.XAxis.ClipMinimum;
             var xmax = this.XAxis.ClipMaximum;
             this.WindowStartIndex = this.UpdateWindowStartIndex(this.abovePoints, this.GetPointX, xmin, this.WindowStartIndex);
@@ -256,9 +173,7 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
+
         protected internal override void SetDefaultValues()
         {
             base.SetDefaultValues();
@@ -274,9 +189,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// The update data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             base.UpdateData();
@@ -292,12 +204,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders a chunk of points on the screen.
-        /// </summary>
-        /// <param name="context">Render context.</param>
-        /// <param name="points">Screen points.</param>
-        /// <returns>The list of resampled points.</returns>
         protected override List<ScreenPoint> RenderScreenPoints(AreaRenderContext context, List<ScreenPoint> points)
         {
             var result = base.RenderScreenPoints(context, points);
@@ -335,10 +241,6 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Splits a collection of points into two collections based on their Y value.
-        /// </summary>
-        /// <param name="source">A collection of points to split.</param>
         private void SplitPoints(List<DataPoint> source)
         {
             var nan = new DataPoint(double.NaN, double.NaN);
@@ -369,12 +271,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the screen points when baseline is used.
-        /// </summary>
-        /// <param name="source">The list of polygon screen points.</param>
-        /// <param name="baseline">Baseline Y value for the polygon.</param>
-        /// <returns>A sequence of <see cref="T:DataPoint"/>.</returns>
         private List<ScreenPoint> GetConstantScreenPoints2(List<ScreenPoint> source, double baseline)
         {
             var result = new List<ScreenPoint>();
@@ -400,42 +296,16 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Gets interpolated X coordinate for given Y on a straight line
-        /// between two points.
-        /// </summary>
-        /// <param name="a">First point.</param>
-        /// <param name="b">Second point.</param>
-        /// <param name="y">Y coordinate.</param>
-        /// <returns>Corresponding X coordinate.</returns>
         private double GetInterpolatedX(DataPoint a, DataPoint b, double y)
         {
             return (((y - a.y) / (b.y - a.y)) * (b.x - a.x)) + a.x;
         }
 
-        /// <summary>
-        /// Render context for two color area plot.
-        /// </summary>
         protected class TwoColorAreaRenderContext : AreaRenderContext
         {
-            /// <summary>
-            /// Gets or sets area baseline value.
-            /// </summary>
             public double Baseline { get; set; }
-
-            /// <summary>
-            /// Gets or sets polygon fill color.
-            /// </summary>
             public OxyColor Fill { get; set; }
-
-            /// <summary>
-            /// Gets or sets marker fill color.
-            /// </summary>
             public OxyColor MarkerFill { get; set; }
-
-            /// <summary>
-            /// Gets or sets marker stroke color.
-            /// </summary>
             public OxyColor MarkerStroke { get; set; }
         }
     }

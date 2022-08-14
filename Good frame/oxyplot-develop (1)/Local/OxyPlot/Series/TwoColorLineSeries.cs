@@ -1,30 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TwoColorLineSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a two-color line series.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a two-color line series.
-    /// </summary>
     public class TwoColorLineSeries : LineSeries
     {
-        /// <summary>
-        /// The default second color.
-        /// </summary>
         private OxyColor defaultColor2;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "TwoColorLineSeries" /> class.
-        /// </summary>
         public TwoColorLineSeries()
         {
             this.Limit = 0.0;
@@ -32,44 +13,19 @@ namespace OxyPlot.Series
             this.LineStyle2 = LineStyle.Solid;
         }
 
-        /// <summary>
-        /// Gets or sets the color for the part of the line that is below the limit.
-        /// </summary>
         public OxyColor Color2 { get; set; }
 
-        /// <summary>
-        /// Gets the actual second color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualColor2
         {
             get { return this.Color2.GetActualColor(this.defaultColor2); }
         }
 
-        /// <summary>
-        /// Gets or sets the limit.
-        /// </summary>
-        /// <remarks>The parts of the line that is below this limit will be rendered with Color2.
-        /// The parts of the line that is above the limit will be rendered with Color.</remarks>
         public double Limit { get; set; }
 
-        /// <summary>
-        /// Gets or sets the dash array for the rendered line that is below the limit (overrides <see cref="LineStyle" />).
-        /// </summary>
-        /// <value>The dash array.</value>
-        /// <remarks>If this is not <c>null</c> it overrides the <see cref="LineStyle" /> property.</remarks>
         public double[] Dashes2 { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle2 { get; set; }
 
-        /// <summary>
-        /// Gets the actual line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle ActualLineStyle2
         {
             get
@@ -78,9 +34,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual dash array for the line that is below the limit.
-        /// </summary>
         protected double[] ActualDashArray2
         {
             get
@@ -89,9 +42,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             base.SetDefaultValues();
@@ -107,7 +57,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         protected override void RenderLine(IRenderContext rc, IList<ScreenPoint> pointsToRender)
         {
             var clippingRect = this.GetClippingRect();

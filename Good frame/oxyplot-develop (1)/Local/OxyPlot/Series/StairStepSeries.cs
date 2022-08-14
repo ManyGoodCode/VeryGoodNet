@@ -1,51 +1,21 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StairStepSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series for stair step graphs.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a series for stair step graphs.
-    /// </summary>
+
     public class StairStepSeries : LineSeries
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "StairStepSeries" /> class.
-        /// </summary>
         public StairStepSeries()
         {
             this.VerticalStrokeThickness = double.NaN;
             this.VerticalLineStyle = this.LineStyle;
         }
 
-        /// <summary>
-        /// Gets or sets the stroke thickness of the vertical line segments.
-        /// </summary>
-        /// <value>The vertical stroke thickness.</value>
-        /// <remarks>Set the value to NaN to use the StrokeThickness property for both horizontal and vertical segments.
-        /// Using the VerticalStrokeThickness property will have a small performance hit.</remarks>
         public double VerticalStrokeThickness { get; set; }
 
-        /// <summary>
-        /// Gets or sets the line style of the vertical line segments.
-        /// </summary>
-        /// <value>The vertical line style.</value>
         public LineStyle VerticalLineStyle { get; set; }
 
-        /// <summary>
-        /// Gets the nearest point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">interpolate if set to <c>true</c> .</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.XAxis == null || this.YAxis == null)
@@ -53,15 +23,13 @@ namespace OxyPlot.Series
                 return null;
             }
 
-            // http://paulbourke.net/geometry/pointlineplane/
             double minimumDistanceSquared = 16 * 16;
 
-            // snap to the nearest point
             var result = this.GetNearestPointInternal(this.ActualPoints, point);
             if (!interpolate && result != null && result.Position.DistanceToSquared(point) < minimumDistanceSquared)
             {
                 result.Text = StringHelper.Format(
-                    this.ActualCulture, 
+                    this.ActualCulture,
                     this.TrackerFormatString,
                     result.Item,
                     this.Title,
@@ -74,7 +42,6 @@ namespace OxyPlot.Series
 
             result = null;
 
-            // find the nearest point on the horizontal line segments
             int n = this.ActualPoints.Count;
             for (int i = 0; i < n; i++)
             {
@@ -91,7 +58,6 @@ namespace OxyPlot.Series
 
                 if (ds < 4)
                 {
-                    // if the points are very close, we can get numerical problems, just use the first point...
                     u1 = 0;
                     u2 = 1;
                 }
@@ -135,10 +101,6 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <summary>
-        /// Renders the LineSeries on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
         public override void Render(IRenderContext rc)
         {
             if (this.ActualPoints == null || this.ActualPoints.Count == 0)
@@ -216,8 +178,6 @@ namespace OxyPlot.Series
                     }
                 };
 
-            // Transform all points to screen coordinates
-            // Render the line when invalid points occur
             var linePoints = new List<ScreenPoint>();
             var markerPoints = new List<ScreenPoint>();
             double previousY = double.NaN;
@@ -248,7 +208,6 @@ namespace OxyPlot.Series
 
             if (this.LabelFormatString != null)
             {
-                // render point labels (not optimized for performance)
                 this.RenderPointLabels(rc);
             }
         }

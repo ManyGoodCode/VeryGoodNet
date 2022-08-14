@@ -1,35 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ThreeColorLineSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a three-color line series.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents a two-color line series.
-    /// </summary>
     public class ThreeColorLineSeries : LineSeries
     {
-        /// <summary>
-        /// The default low color.
-        /// </summary>
         private OxyColor defaultColorLo;
-
-        /// <summary>
-        /// The default hi color.
-        /// </summary>
         private OxyColor defaultColorHi;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "ThreeColorLineSeries" /> class.
-        /// </summary>
         public ThreeColorLineSeries()
         {
             this.LimitLo = -5.0;
@@ -40,78 +17,26 @@ namespace OxyPlot.Series
             this.LineStyleHi = LineStyle.Solid;
         }
 
-        /// <summary>
-        /// Gets or sets the color for the part of the line that is below the limit.
-        /// </summary>
+
         public OxyColor ColorLo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color for the part of the line that is above the limit.
-        /// </summary>
         public OxyColor ColorHi { get; set; }
-
-        /// <summary>
-        /// Gets the actual hi color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualColorLo
         {
             get { return this.ColorLo.GetActualColor(this.defaultColorLo); }
         }
 
-        /// <summary>
-        /// Gets the actual low color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualColorHi
         {
             get { return this.ColorHi.GetActualColor(this.defaultColorHi); }
         }
 
-        /// <summary>
-        /// Gets or sets the high limit.
-        /// </summary>
-        /// <remarks>The parts of the line that is below this limit will be rendered with ColorHi.
-        /// The parts of the line that is above the limit will be rendered with Color.</remarks>
+
         public double LimitHi { get; set; }
-
-        /// <summary>
-        /// Gets or sets the low limit.
-        /// </summary>
-        /// <remarks>The parts of the line that is below this limit will be rendered with ColorLo.
-        /// The parts of the line that is above the limit will be rendered with Color.</remarks>
         public double LimitLo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the dash array for the rendered line that is above the limit (overrides <see cref="LineStyle" />).
-        /// </summary>
-        /// <value>The dash array.</value>
-        /// <remarks>If this is not <c>null</c> it overrides the <see cref="LineStyle" /> property.</remarks>
         public double[] DashesHi { get; set; }
-
-        /// <summary>
-        /// Gets or sets the dash array for the rendered line that is below the limit (overrides <see cref="LineStyle" />).
-        /// </summary>
-        /// <value>The dash array.</value>
-        /// <remarks>If this is not <c>null</c> it overrides the <see cref="LineStyle" /> property.</remarks>
         public double[] DashesLo { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style for the part of the line that is above the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyleHi { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyleLo { get; set; }
-
-        /// <summary>
-        /// Gets the actual line style for the part of the line that is above the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle ActualLineStyleHi
         {
             get
@@ -120,10 +45,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual line style for the part of the line that is below the limit.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle ActualLineStyleLo
         {
             get
@@ -132,9 +53,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual dash array for the line that is above the limit.
-        /// </summary>
         protected double[] ActualDashArrayHi
         {
             get
@@ -143,9 +61,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the actual dash array for the line that is below the limit.
-        /// </summary>
         protected double[] ActualDashArrayLo
         {
             get
@@ -154,9 +69,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             base.SetDefaultValues();
@@ -182,7 +94,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <inheritdoc/>
         protected override void RenderLine(IRenderContext rc, IList<ScreenPoint> pointsToRender)
         {
             var clippingRect = this.GetClippingRect();

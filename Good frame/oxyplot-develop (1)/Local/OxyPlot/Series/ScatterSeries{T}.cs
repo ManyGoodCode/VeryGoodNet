@@ -1,43 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScatterSeries{T}.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides a base class for scatter series.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
 
     using OxyPlot.Axes;
 
-    /// <summary>
-    /// Provides a base class for scatter series.
-    /// </summary>
-    /// <typeparam name="T">The type of the data points.</typeparam>
     public abstract class ScatterSeries<T> : XYAxisSeries where T : ScatterPoint
     {
-        /// <summary>
-        /// The default color-axis title
-        /// </summary>
         private const string DefaultColorAxisTitle = "Value";
-
-        /// <summary>
-        /// The list of data points.
-        /// </summary>
         private readonly List<T> points = new List<T>();
-
-        /// <summary>
-        /// The default fill color.
-        /// </summary>
         private OxyColor defaultMarkerFillColor;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ScatterSeries{T}"/> class.
-        /// </summary>
         protected ScatterSeries()
         {
             this.MarkerFill = OxyColors.Automatic;
@@ -48,11 +20,6 @@ namespace OxyPlot.Series
             this.LabelMargin = 6;
         }
 
-        /// <summary>
-        /// Gets the list of points.
-        /// </summary>
-        /// <value>A list of <see cref="ScatterPoint" />.</value>
-        /// <remarks>If the <see cref="ItemsSeries.ItemsSource" /> is specified, this list will not be used.</remarks>
         public List<T> Points
         {
             get
@@ -61,143 +28,30 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets the label format string. The default is <c>null</c> (no labels).
-        /// </summary>
-        /// <value>The label format string.</value>
         public string LabelFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label margins. The default is <c>6</c>.
-        /// </summary>
         public double LabelMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets a function that maps from elements in the <see cref="ItemsSeries.ItemsSource" /> to <see cref="ScatterPoint" /> points to be rendered.
-        /// </summary>
-        /// <value>The mapping function. The default is <c>null</c>.</value>
-        /// <remarks>Example: series1.Mapping = item => new DataPoint(((MyType)item).Time,((MyType)item).Value);
-        /// </remarks>
         public Func<object, T> Mapping { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the 'binning' feature. 
-        /// If this number is greater than 1, bins of the specified is created for both x and y directions. Only one point will be drawn in each bin.
-        /// </summary>
-        /// <value>
-        /// The size of the bins. The default is <c>0</c> - no binning.
-        /// </value>
         public int BinSize { get; set; }
-
-        /// <summary>
-        /// Gets the actual color axis.
-        /// </summary>
-        /// <value>A <see cref="IColorAxis" />.</value>
-        /// <remarks>This is used to map scatter point values to colors. Use the <see cref="ColorAxisKey" /> to specify a color axis. 
-        /// If the <see cref="ColorAxisKey" /> is not specified, the first <see cref="IColorAxis" /> of the <see cref="PlotModel" /> will be used.</remarks>
         public IColorAxis ColorAxis { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the color axis key.
-        /// </summary>
-        /// <value>The color axis key. The default is <c>null</c>.</value>
-        /// <remarks>If set to <c>null</c>, the first <see cref="IColorAxis" /> of the <see cref="PlotModel" /> will be used. 
-        /// Make sure that the points contains values.
-        /// If your <see cref="PlotModel" /> contains a <see cref="IColorAxis" />, but you don't want to use a color axis, set the value to <c>string.Empty</c> or some other key that is not in use.</remarks>
         public string ColorAxisKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the property that specifies X coordinates in the <see cref="ItemsSeries.ItemsSource" /> elements.
-        /// </summary>
-        /// <value>The name of the property. The default is <c>null</c>.</value>
         public string DataFieldX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the property that specifies Y coordinates in the <see cref="ItemsSeries.ItemsSource" /> elements.
-        /// </summary>
-        /// <value>The name of the property. The default is <c>null</c>.</value>
         public string DataFieldY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the property that specifies the size in the <see cref="ItemsSeries.ItemsSource" /> elements.
-        /// </summary>
-        /// <value>The name of the property. The default is <c>null</c>.</value>
         public string DataFieldSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the property that specifies the tag in the <see cref="ItemsSeries.ItemsSource" /> elements.
-        /// </summary>
-        /// <value>The name of the property. The default is <c>null</c>.</value>
         public string DataFieldTag { get; set; }
-
-        /// <summary>
-        /// Gets or sets the name of the property that specifies the color value in the <see cref="ItemsSeries.ItemsSource" /> elements.
-        /// </summary>
-        /// <value>The name of the property. The default is <c>null</c>.</value>
         public string DataFieldValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the marker fill color. If <c>null</c>, this color will be automatically set.
-        /// </summary>
-        /// <value>The fill color of the markers. The default is <see cref="OxyColors.Automatic" />.</value>
         public OxyColor MarkerFill { get; set; }
-
-        /// <summary>
-        /// Gets the actual fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualMarkerFillColor
         {
             get { return this.MarkerFill.GetActualColor(this.defaultMarkerFillColor); }
         }
 
-        /// <summary>
-        /// Gets or sets the custom marker outline polygon. Set <see cref="MarkerType" /> to <see cref="T:MarkerType.Custom" /> to use this.
-        /// </summary>
-        /// <value>A polyline. The default is <c>null</c>.</value>
         public ScreenPoint[] MarkerOutline { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the marker (same size for all items).
-        /// </summary>
-        /// <value>The size of the markers. The default is <c>5</c>.</value>
         public double MarkerSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the marker stroke.
-        /// </summary>
-        /// <value>The marker stroke. The default is <see cref="OxyColors.Automatic" />.</value>
         public OxyColor MarkerStroke { get; set; }
-
-        /// <summary>
-        /// Gets or sets thickness of the the marker strokes.
-        /// </summary>
-        /// <value>The thickness. The default is <c>1</c>.</value>
         public double MarkerStrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the type of the marker.
-        /// </summary>
-        /// <value>The type of the marker. The default is <see cref="T:MarkerType.Square" />.</value>
-        /// <remarks>If <see cref="T:MarkerType.Custom" /> is used, the <see cref="MarkerOutline" /> property must be specified.</remarks>
         public MarkerType MarkerType { get; set; }
-
-        /// <summary>
-        /// Gets the maximum value of the points.
-        /// </summary>
         public double MaxValue { get; private set; }
-
-        /// <summary>
-        /// Gets the minimum value of the points.
-        /// </summary>
         public double MinValue { get; private set; }
-
-        /// <summary>
-        /// Gets the actual points.
-        /// </summary>
-        /// <value>
-        /// A read-only list of points.
-        /// </value>
         public System.Collections.ObjectModel.ReadOnlyCollection<T> ActualPoints
         {
             get
@@ -206,10 +60,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the list of points that should be rendered.
-        /// </summary>
-        /// <value>A list of <see cref="DataPoint" />.</value>
         protected List<T> ActualPointsList
         {
             get
@@ -218,22 +68,8 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets or sets the data points from the items source.
-        /// </summary>
         protected List<T> ItemsSourcePoints { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the <see cref="ItemsSourcePoints" /> list can be modified.
-        /// </summary>
         protected bool OwnsItemsSourcePoints { get; set; }
-
-        /// <summary>
-        /// Gets the nearest point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">interpolate if set to <c>true</c> .</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (this.XAxis == null || this.YAxis == null)
@@ -318,7 +154,6 @@ namespace OxyPlot.Series
             return result;
         }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             var actualPoints = this.ActualPointsList;
@@ -338,10 +173,7 @@ namespace OxyPlot.Series
             var groupPoints = new Dictionary<int, IList<ScreenPoint>>();
             var groupSizes = new Dictionary<int, IList<double>>();
 
-            // check if any item of the series is selected
             bool isSelected = this.IsSelected();
-
-            // Transform all points to screen coordinates
             for (int i = 0; i < n; i++)
             {
                 var dp = new DataPoint(actualPoints[i].X, actualPoints[i].Y);
@@ -367,7 +199,6 @@ namespace OxyPlot.Series
                     size = this.MarkerSize;
                 }
 
-                // Transform from data to screen coordinates
                 var screenPoint = this.Transform(dp.X, dp.Y);
 
                 if (isSelected && this.IsItemSelected(i))
@@ -381,7 +212,6 @@ namespace OxyPlot.Series
                 {
                     if (double.IsNaN(value))
                     {
-                        // The value is not defined, skip this point.
                         continue;
                     }
 
@@ -402,7 +232,6 @@ namespace OxyPlot.Series
                 }
             }
 
-            // Offset of the bins
             var binOffset = this.Transform(this.MinX, this.MaxY);
 
             if (this.ColorAxis != null)
@@ -426,7 +255,6 @@ namespace OxyPlot.Series
                 }
             }
 
-            // Draw unselected markers
             rc.DrawMarkers(
                 allPoints,
                 this.MarkerType,
@@ -439,7 +267,6 @@ namespace OxyPlot.Series
                 this.BinSize,
                 binOffset);
 
-            // Draw the selected markers
             rc.DrawMarkers(
                 selectedPoints,
                 this.MarkerType,
@@ -459,11 +286,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the legend symbol for the line series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The bounding rectangle of the legend box.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             double xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -482,9 +304,6 @@ namespace OxyPlot.Series
                 this.EdgeRenderingMode);
         }
 
-        /// <summary>
-        /// Ensures that the axes of the series is defined.
-        /// </summary>
         protected internal override void EnsureAxes()
         {
             base.EnsureAxes();
@@ -494,9 +313,6 @@ namespace OxyPlot.Series
                              this.PlotModel.DefaultColorAxis as IColorAxis;
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             if (this.MarkerFill.IsAutomatic())
@@ -505,9 +321,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             if (this.ItemsSource == null)
@@ -518,20 +331,12 @@ namespace OxyPlot.Series
             this.UpdateItemsSourcePoints();
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
             this.InternalUpdateMaxMinValue(this.ActualPointsList);
         }
 
-        /// <summary>
-        /// Renders the point labels.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="clippingRect">The clipping rectangle.</param>
         protected void RenderPointLabels(IRenderContext rc, OxyRect clippingRect)
         {
             var actualPoints = this.ActualPointsList;
@@ -561,28 +366,6 @@ namespace OxyPlot.Series
                 var item = this.GetItem(index);
                 var s = StringHelper.Format(this.ActualCulture, this.LabelFormatString, item, point.X, point.Y);
 
-#if SUPPORTLABELPLACEMENT
-                    switch (this.LabelPlacement)
-                    {
-                        case LabelPlacement.Inside:
-                            pt = new ScreenPoint(rect.Right - this.LabelMargin, (rect.Top + rect.Bottom) / 2);
-                            ha = HorizontalAlignment.Right;
-                            break;
-                        case LabelPlacement.Middle:
-                            pt = new ScreenPoint((rect.Left + rect.Right) / 2, (rect.Top + rect.Bottom) / 2);
-                            ha = HorizontalAlignment.Center;
-                            break;
-                        case LabelPlacement.Base:
-                            pt = new ScreenPoint(rect.Left + this.LabelMargin, (rect.Top + rect.Bottom) / 2);
-                            ha = HorizontalAlignment.Left;
-                            break;
-                        default: // Outside
-                            pt = new ScreenPoint(rect.Right + this.LabelMargin, (rect.Top + rect.Bottom) / 2);
-                            ha = HorizontalAlignment.Left;
-                            break;
-                    }
-#endif
-
                 rc.DrawText(
                     pt,
                     s,
@@ -596,10 +379,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the Max/Min limits from the values in the specified point list.
-        /// </summary>
-        /// <param name="pts">The points.</param>
         protected void InternalUpdateMaxMinValue(List<T> pts)
         {
             if (pts == null || pts.Count == 0)
@@ -649,14 +428,8 @@ namespace OxyPlot.Series
                 double x = pt.X;
                 double y = pt.Y;
 
-                // Check if the point is defined (the code below is faster than double.IsNaN)
 #pragma warning disable 1718
-                // ReSharper disable EqualExpressionComparison
-                // ReSharper disable CompareOfFloatsByEqualityOperator
                 if (x != x || y != y)
-                // ReSharper restore CompareOfFloatsByEqualityOperator
-                // ReSharper restore EqualExpressionComparison
-#pragma warning restore 1718
                 {
                     continue;
                 }
@@ -732,10 +505,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the Max/Min limits from the values in the specified point list.
-        /// </summary>
-        /// <param name="pts">The points.</param>
         protected void InternalUpdateMaxMinValue(IList<ScatterPoint> pts)
         {
             if (pts == null || pts.Count == 0)
@@ -772,9 +541,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Clears or creates the <see cref="ItemsSourcePoints"/> list.
-        /// </summary>
         protected void ClearItemsSourcePoints()
         {
             if (!this.OwnsItemsSourcePoints || this.ItemsSourcePoints == null)
@@ -789,17 +555,10 @@ namespace OxyPlot.Series
             this.OwnsItemsSourcePoints = true;
         }
 
-        /// <summary>
-        /// Updates the <see cref="F:ItemsSourcePoints" /> from the <see cref="P:ItemsSource" /> and data fields.
-        /// </summary>
-        protected abstract void UpdateFromDataFields();
 
-        /// <summary>
-        /// Updates the points from the <see cref="ItemsSeries.ItemsSource" />.
-        /// </summary>
+        protected abstract void UpdateFromDataFields();
         private void UpdateItemsSourcePoints()
         {
-            // Use the Mapping property to generate the points
             if (this.Mapping != null)
             {
                 this.ClearItemsSourcePoints();
@@ -828,7 +587,6 @@ namespace OxyPlot.Series
                 return;
             }
 
-            // If DataFieldX or DataFieldY is not set, try to get the points from the ItemsSource
             if (this.DataFieldX == null || this.DataFieldY == null)
             {
                 foreach (var item in this.ItemsSource)
@@ -849,7 +607,6 @@ namespace OxyPlot.Series
                 return;
             }
 
-            // Use reflection to add scatter points
             this.UpdateFromDataFields();
         }
     }
