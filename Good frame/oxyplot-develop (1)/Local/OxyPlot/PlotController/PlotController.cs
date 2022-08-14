@@ -1,22 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PlotController.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides an <see cref="IPlotController" /> with a default set of plot bindings.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Provides an <see cref="IPlotController" /> with a default set of plot bindings.
-    /// </summary>
     public class PlotController : ControllerBase, IPlotController
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PlotController" /> class.
-        /// </summary>
         public PlotController()
         {
             // Zoom rectangle bindings: MMB / control RMB / control+alt LMB

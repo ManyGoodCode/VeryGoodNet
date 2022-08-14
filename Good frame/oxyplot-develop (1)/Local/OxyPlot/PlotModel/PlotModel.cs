@@ -1,12 +1,4 @@
 ﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PlotModel.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies the coordinate system type.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace OxyPlot
 {
     using System;
@@ -19,79 +11,28 @@ namespace OxyPlot
     using OxyPlot.Legends;
     using OxyPlot.Series;
 
-    /// <summary>
-    /// Specifies the coordinate system type.
-    /// </summary>
     public enum PlotType
     {
-        /// <summary>
-        /// XY coordinate system - two perpendicular axes
-        /// </summary>
         XY,
-
-        /// <summary>
-        /// Cartesian coordinate system - perpendicular axes with the same scaling.
-        /// </summary>
-        /// <remarks>See http://en.wikipedia.org/wiki/Cartesian_coordinate_system</remarks>
         Cartesian,
-
-        /// <summary>
-        /// Polar coordinate system - with radial and angular axes
-        /// </summary>
-        /// <remarks>See http://en.wikipedia.org/wiki/Polar_coordinate_system</remarks>
         Polar
     }
 
-    /// <summary>
-    /// Specifies the horizontal alignment of the titles.
-    /// </summary>
     public enum TitleHorizontalAlignment
     {
-        /// <summary>
-        /// Centered within the plot area.
-        /// </summary>
         CenteredWithinPlotArea,
-
-        /// <summary>
-        /// Centered within the client view (excluding padding defined in <see cref="PlotModel.Padding" />).
-        /// </summary>
         CenteredWithinView
     }
 
-    /// <summary>
-    /// Represents a plot.
-    /// </summary>
+
     public partial class PlotModel : Model, IPlotModel
     {
-        /// <summary>
-        /// The bar series managers.
-        /// </summary>
         private readonly List<BarSeriesManager> barSeriesManagers = new List<BarSeriesManager>();
 
-        /// <summary>
-        /// The plot view that renders this plot.
-        /// </summary>
         private WeakReference plotViewReference;
-
-        /// <summary>
-        /// The current color index.
-        /// </summary>
         private int currentColorIndex;
-
-        /// <summary>
-        /// Flags if the data has been updated.
-        /// </summary>
         private bool isDataUpdated;
-
-        /// <summary>
-        /// The last update exception.
-        /// </summary>
-        /// <value>The exception or <c>null</c> if there was no exceptions during the last update.</value>
         private Exception lastPlotException;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PlotModel" /> class.
-        /// </summary>
         public PlotModel()
         {
             this.Axes = new ElementCollection<Axis>(this);
@@ -149,40 +90,18 @@ namespace OxyPlot
             this.AxisTierDistance = 4.0;
         }
 
-        /// <summary>
-        /// Occurs when the tracker has been changed.
-        /// </summary>
         [Obsolete("May be removed in v4.0 (#111)")]
         public event EventHandler<TrackerEventArgs> TrackerChanged;
 
-        /// <summary>
-        /// Occurs when the plot has been updated.
-        /// </summary>
         [Obsolete("May be removed in v4.0 (#111)")]
         public event EventHandler Updated;
 
-        /// <summary>
-        /// Occurs when the plot is about to be updated.
-        /// </summary>
         [Obsolete("May be removed in v4.0 (#111)")]
         public event EventHandler Updating;
 
-        /// <summary>
-        /// Gets or sets the default font.
-        /// </summary>
-        /// <value>The default font.</value>
-        /// <remarks>This font is used for text on axes, series, legends and plot titles unless other fonts are specified.</remarks>
         public string DefaultFont { get; set; }
-
-        /// <summary>
-        /// Gets or sets the default size of the fonts.
-        /// </summary>
-        /// <value>The default size of the font.</value>
         public double DefaultFontSize { get; set; }
 
-        /// <summary>
-        /// Gets the actual culture.
-        /// </summary>
         public CultureInfo ActualCulture
         {
             get
@@ -191,17 +110,8 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Gets the actual plot margins.
-        /// </summary>
-        /// <value>The actual plot margins.</value>
         public OxyThickness ActualPlotMargins { get; private set; }
 
-        /// <summary>
-        /// Gets the plot view that renders this plot.
-        /// </summary>
-        /// <value>The plot view.</value>
-        /// <remarks>Only one view can render the plot at the same time.</remarks>
         public IPlotView PlotView
         {
             get
@@ -210,276 +120,95 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Gets the annotations.
-        /// </summary>
-        /// <value>The annotations.</value>
         public ElementCollection<Annotation> Annotations { get; private set; }
 
-        /// <summary>
-        /// Gets the axes.
-        /// </summary>
-        /// <value>The axes.</value>
         public ElementCollection<Axis> Axes { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the legends.
-        /// </summary>
-        /// <value>The legends.</value>
         public ElementCollection<LegendBase> Legends { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the background of the plot.
-        /// </summary>
-        /// <value>The color. The default is <see cref="OxyColors.Undefined" />.</value>
-        /// <remarks>If the background color is set to <see cref="OxyColors.Undefined" /> or is otherwise invisible then the background will be determined by the plot view or exporter.</remarks>
         public OxyColor Background { get; set; }
 
-        /// <summary>
-        /// Gets or sets the culture.
-        /// </summary>
-        /// <value>The culture.</value>
         public CultureInfo Culture { get; set; }
 
-        /// <summary>
-        /// Gets or sets the default colors.
-        /// </summary>
-        /// <value>The default colors.</value>
         public IList<OxyColor> DefaultColors { get; set; }
 
-        /// <summary>
-        /// Gets or sets the edge rendering mode that is used for rendering the plot bounds and backgrounds.
-        /// </summary>
-        /// <value>The edge rendering mode. The default is <see cref="OxyPlot.EdgeRenderingMode.Automatic"/>.</value>
         public EdgeRenderingMode EdgeRenderingMode { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether invisible series should be assigned automatic colors.
-        /// </summary>
         public bool AssignColorsToInvisibleSeries { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the legend is visible. The titles of the series must be set to use the legend.
-        /// </summary>
         public bool IsLegendVisible { get; set; }
 
-        /// <summary>
-        /// Gets or sets the padding around the plot.
-        /// </summary>
-        /// <value>The padding.</value>
         public OxyThickness Padding { get; set; }
 
-        /// <summary>
-        /// Gets the PlotBounds of the plot (in device units).
-        /// </summary>
         public OxyRect PlotBounds { get; private set; }
 
-        /// <summary>
-        /// Gets the total width of the plot (in device units).
-        /// </summary>
         public double Width => this.PlotBounds.Width;
 
-        /// <summary>
-        /// Gets the total height of the plot (in device units).
-        /// </summary>
         public double Height => this.PlotBounds.Height;
-
-        /// <summary>
-        /// Gets the area including both the plot and the axes. Outside legends are rendered outside this rectangle.
-        /// </summary>
-        /// <value>The plot and axis area.</value>
         public OxyRect PlotAndAxisArea { get; private set; }
 
-        /// <summary>
-        /// Gets the plot area. This area is used to draw the series (not including axes or legends).
-        /// </summary>
-        /// <value>The plot area.</value>
         public OxyRect PlotArea { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the distance between two neighborhood tiers of the same AxisPosition.
-        /// </summary>
         public double AxisTierDistance { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the background of the plot area.
-        /// </summary>
         public OxyColor PlotAreaBackground { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the border around the plot area.
-        /// </summary>
-        /// <value>The color of the box.</value>
         public OxyColor PlotAreaBorderColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the thickness of the border around the plot area.
-        /// </summary>
-        /// <value>The box thickness.</value>
         public OxyThickness PlotAreaBorderThickness { get; set; }
 
-        /// <summary>
-        /// Gets or sets the margins around the plot (this should be large enough to fit the axes).
-        /// If any of the values is set to <c>double.NaN</c>, the margin is adjusted to the value required by the axes.
-        /// </summary>
         public OxyThickness PlotMargins { get; set; }
 
-        /// <summary>
-        /// Gets or sets the type of the coordinate system.
-        /// </summary>
-        /// <value>The type of the plot.</value>
         public PlotType PlotType { get; set; }
 
-        /// <summary>
-        /// Gets the series.
-        /// </summary>
-        /// <value>The series.</value>
         public ElementCollection<Series.Series> Series { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the rendering decorator.
-        /// </summary>
-        /// <value>
-        /// The rendering decorator.
-        /// </value>
         public Func<IRenderContext, IRenderContext> RenderingDecorator { get; set; }
 
-        /// <summary>
-        /// Gets or sets the subtitle.
-        /// </summary>
-        /// <value>The subtitle.</value>
         public string Subtitle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the subtitle font. If this property is <c>null</c>, the Title font will be used.
-        /// </summary>
-        /// <value>The subtitle font.</value>
         public string SubtitleFont { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the subtitle font.
-        /// </summary>
-        /// <value>The size of the subtitle font.</value>
         public double SubtitleFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the subtitle font weight.
-        /// </summary>
-        /// <value>The subtitle font weight.</value>
         public double SubtitleFontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the default color of the text in the plot (titles, legends, annotations, axes).
-        /// </summary>
-        /// <value>The color of the text.</value>
         public OxyColor TextColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the title.
-        /// </summary>
-        /// <value>The title.</value>
         public string Title { get; set; }
 
-        /// <summary>
-        /// Gets or sets the title tool tip.
-        /// </summary>
-        /// <value>The title tool tip.</value>
         public string TitleToolTip { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the title.
-        /// </summary>
-        /// <value>The color of the title.</value>
-        /// <remarks>If the value is <c>null</c>, the TextColor will be used.</remarks>
         public OxyColor TitleColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to clip the title. The default value is <c>true</c>.
-        /// </summary>
         public bool ClipTitle { get; set; }
 
-        /// <summary>
-        /// Gets or sets the length of the title clipping rectangle (fraction of the available length of the title area). The default value is <c>0.9</c>.
-        /// </summary>
         public double TitleClippingLength { get; set; }
 
-        /// <summary>
-        /// Gets or sets the color of the subtitle.
-        /// </summary>
-        /// <value>The color of the subtitle.</value>
         public OxyColor SubtitleColor { get; set; }
 
-        /// <summary>
-        /// Gets or sets the horizontal alignment of the title and subtitle.
-        /// </summary>
-        /// <value>
-        /// The alignment.
-        /// </value>
         public TitleHorizontalAlignment TitleHorizontalAlignment { get; set; }
 
-        /// <summary>
-        /// Gets the title area.
-        /// </summary>
-        /// <value>The title area.</value>
         public OxyRect TitleArea { get; private set; }
 
-        /// <summary>
-        /// Gets or sets the title font.
-        /// </summary>
-        /// <value>The title font.</value>
         public string TitleFont { get; set; }
 
-        /// <summary>
-        /// Gets or sets the size of the title font.
-        /// </summary>
-        /// <value>The size of the title font.</value>
         public double TitleFontSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the title font weight.
-        /// </summary>
-        /// <value>The title font weight.</value>
         public double TitleFontWeight { get; set; }
 
-        /// <summary>
-        /// Gets or sets the padding around the title.
-        /// </summary>
-        /// <value>The title padding.</value>
         public double TitlePadding { get; set; }
 
-        /// <summary>
-        /// Gets the default angle axis.
-        /// </summary>
-        /// <value>The default angle axis.</value>
         public AngleAxis DefaultAngleAxis { get; private set; }
 
-        /// <summary>
-        /// Gets the default magnitude axis.
-        /// </summary>
-        /// <value>The default magnitude axis.</value>
         public MagnitudeAxis DefaultMagnitudeAxis { get; private set; }
 
-        /// <summary>
-        /// Gets the default X axis.
-        /// </summary>
-        /// <value>The default X axis.</value>
         public Axis DefaultXAxis { get; private set; }
 
-        /// <summary>
-        /// Gets the default Y axis.
-        /// </summary>
-        /// <value>The default Y axis.</value>
         public Axis DefaultYAxis { get; private set; }
 
-        /// <summary>
-        /// Gets the default color axis.
-        /// </summary>
-        /// <value>The default color axis.</value>
         public IColorAxis DefaultColorAxis { get; private set; }
 
-        /// <summary>
-        /// Gets the actual title font.
-        /// </summary>
         protected string ActualTitleFont
         {
             get
@@ -488,9 +217,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Gets the actual subtitle font.
-        /// </summary>
         protected string ActualSubtitleFont
         {
             get
@@ -499,15 +225,9 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Attaches this model to the specified plot view.
-        /// </summary>
-        /// <param name="plotView">The plot view.</param>
-        /// <remarks>Only one plot view can be attached to the plot model.
-        /// The plot model contains data (e.g. axis scaling) that is only relevant to the current plot view.</remarks>
         void IPlotModel.AttachPlotView(IPlotView plotView)
         {
-            var currentPlotView = this.PlotView;
+            IPlotView currentPlotView = this.PlotView;
             if (!object.ReferenceEquals(currentPlotView, null) &&
                 !object.ReferenceEquals(plotView, null) &&
                 !object.ReferenceEquals(currentPlotView, plotView))
@@ -519,13 +239,10 @@ namespace OxyPlot
             this.plotViewReference = (plotView == null) ? null : new WeakReference(plotView);
         }
 
-        /// <summary>
-        /// Invalidates the plot.
-        /// </summary>
-        /// <param name="updateData">Updates all data sources if set to <c>true</c>.</param>
+
         public void InvalidatePlot(bool updateData)
         {
-            var plotView = this.PlotView;
+            IPlotView plotView = this.PlotView;
             if (plotView == null)
             {
                 return;
@@ -534,17 +251,10 @@ namespace OxyPlot
             plotView.InvalidatePlot(updateData);
         }
 
-        /// <summary>
-        /// Gets the first axes that covers the area of the specified point.
-        /// </summary>
-        /// <param name="pt">The point.</param>
-        /// <param name="xaxis">The x-axis.</param>
-        /// <param name="yaxis">The y-axis.</param>
         public void GetAxesFromPoint(ScreenPoint pt, out Axis xaxis, out Axis yaxis)
         {
             xaxis = yaxis = null;
 
-            // Get the axis position of the given point. Using null if the point is inside the plot area.
             AxisPosition? position = null;
             double plotAreaValue = 0;
             if (pt.X < this.PlotArea.Left)
@@ -571,7 +281,7 @@ namespace OxyPlot
                 plotAreaValue = this.PlotArea.Bottom;
             }
 
-            foreach (var axis in this.Axes)
+            foreach (Axis axis in this.Axes)
             {
                 if (!axis.IsAxisVisible)
                 {
@@ -627,7 +337,6 @@ namespace OxyPlot
                     }
                     else if (position == axis.Position)
                     {
-                        // Choose right tier
                         double positionTierMinShift = axis.PositionTierMinShift;
                         double positionTierMaxShift = axis.PositionTierMaxShift;
 

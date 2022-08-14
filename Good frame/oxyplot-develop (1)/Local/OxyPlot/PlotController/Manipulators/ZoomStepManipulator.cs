@@ -1,47 +1,21 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ZoomStepManipulator.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides a plot view manipulator for stepwise zoom functionality.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Provides a plot view manipulator for stepwise zoom functionality.
-    /// </summary>
     public class ZoomStepManipulator : MouseManipulator
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ZoomStepManipulator" /> class.
-        /// </summary>
-        /// <param name="plotView">The plot view.</param>
         public ZoomStepManipulator(IPlotView plotView)
             : base(plotView)
         {
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether FineControl.
-        /// </summary>
         public bool FineControl { get; set; }
 
-        /// <summary>
-        /// Gets or sets Step.
-        /// </summary>
         public double Step { get; set; }
 
-        /// <summary>
-        /// Occurs when an input device begins a manipulation on the plot.
-        /// </summary>
-        /// <param name="e">The <see cref="OxyInputEventArgs" /> instance containing the event data.</param>
         public override void Started(OxyMouseEventArgs e)
         {
             base.Started(e);
 
-            var isZoomEnabled = (this.XAxis != null && this.XAxis.IsZoomEnabled)
+            bool isZoomEnabled = (this.XAxis != null && this.XAxis.IsZoomEnabled)
                                 || (this.YAxis != null && this.YAxis.IsZoomEnabled);
 
             if (!isZoomEnabled)
@@ -49,9 +23,9 @@ namespace OxyPlot
                 return;
             }
 
-            var current = this.InverseTransform(e.Position.X, e.Position.Y);
+            DataPoint current = this.InverseTransform(e.Position.X, e.Position.Y);
 
-            var scale = this.Step;
+            double scale = this.Step;
             if (this.FineControl)
             {
                 scale *= 3;
