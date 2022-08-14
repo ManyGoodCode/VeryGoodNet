@@ -1,89 +1,18 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RenderingExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides extension methods for <see cref="IRenderContext" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Provides extension methods for <see cref="IRenderContext" />.
-    /// </summary>
     public static class RenderingExtensions
     {
-        /* Length constants used to draw triangles and stars
-                             ___
-         /\                   |
-         /  \                 |
-         /    \               | M2
-         /      \             |
-         /        \           |
-         /     +    \        ---
-         /            \       |
-         /              \     | M1
-         /________________\  _|_
-         |--------|-------|
-              1       1
-
-                  |
-            \     |     /     ---
-              \   |   /        | M3
-                \ | /          |
-         ---------+--------   ---
-                / | \          | M3
-              /   |   \        |
-            /     |     \     ---
-                  |
-            |-----|-----|
-               M3    M3
-        */
-
-        /// <summary>
-        /// The vertical distance to the bottom points of the triangles.
-        /// </summary>
         private static readonly double M1 = Math.Tan(Math.PI / 6);
-
-        /// <summary>
-        /// The vertical distance to the top points of the triangles .
-        /// </summary>
         private static readonly double M2 = Math.Sqrt(1 + (M1 * M1));
-
-        /// <summary>
-        /// The horizontal/vertical distance to the end points of the stars.
-        /// </summary>
         private static readonly double M3 = Math.Tan(Math.PI / 4);
-
-        /// <summary>
-        /// Gets the actual edge rendering mode.
-        /// </summary>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
-        /// <param name="defaultValue">The default value that is used if edgeRenderingMode is <see cref="EdgeRenderingMode.Automatic"/>.</param>
-        /// <returns>The value of edgeRenderingMode if it is not <see cref="EdgeRenderingMode.Automatic"/>; the <paramref name="defaultValue"/> otherwise.</returns>
         public static EdgeRenderingMode GetActual(this EdgeRenderingMode edgeRenderingMode, EdgeRenderingMode defaultValue)
         {
             return edgeRenderingMode == EdgeRenderingMode.Automatic ? defaultValue : edgeRenderingMode;
         }
-
-        /// <summary>
-        /// Draws a clipped polyline through the specified points.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="points">The points.</param>
-        /// <param name="minDistSquared">The minimum line segment length (squared).</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="strokeThickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
-        /// <param name="dashArray">The dash array (in device independent units, 1/96 inch).</param>
-        /// <param name="lineJoin">The line join.</param>
-        /// <param name="outputBuffer">The output buffer.</param>
-        /// <param name="pointsRendered">The points rendered callback.</param>
         public static void DrawReducedLine(
             this IRenderContext rc,
             IList<ScreenPoint> points,
@@ -96,7 +25,7 @@ namespace OxyPlot
             List<ScreenPoint> outputBuffer = null,
             Action<IList<ScreenPoint>> pointsRendered = null)
         {
-            var n = points.Count;
+            int n = points.Count;
             if (n == 0)
             {
                 return;
@@ -124,18 +53,6 @@ namespace OxyPlot
             pointsRendered?.Invoke(outputBuffer);
         }
 
-        /// <summary>
-        /// Draws the polygon within the specified clipping rectangle.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="points">The points.</param>
-        /// <param name="minDistSquared">The squared minimum distance between points.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="strokeThickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
-        /// <param name="lineStyle">The line style.</param>
-        /// <param name="lineJoin">The line join.</param>
         public static void DrawReducedPolygon(
             this IRenderContext rc,
             IList<ScreenPoint> points,
@@ -147,7 +64,7 @@ namespace OxyPlot
             LineStyle lineStyle = LineStyle.Solid,
             LineJoin lineJoin = LineJoin.Miter)
         {
-            var n = points.Count;
+            int n = points.Count;
             if (n == 0)
             {
                 return;
@@ -164,17 +81,6 @@ namespace OxyPlot
             rc.DrawPolygon(outputBuffer, fill, stroke, strokeThickness, edgeRenderingMode, lineStyle.GetDashArray(), lineJoin);
         }
 
-        /// <summary>
-        /// Draws the specified image.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="image">The image.</param>
-        /// <param name="x">The destination X position.</param>
-        /// <param name="y">The destination Y position.</param>
-        /// <param name="w">The width.</param>
-        /// <param name="h">The height.</param>
-        /// <param name="opacity">The opacity.</param>
-        /// <param name="interpolate">Interpolate the image if set to <c>true</c>.</param>
         public static void DrawImage(
             this IRenderContext rc,
             OxyImage image,
@@ -188,17 +94,6 @@ namespace OxyPlot
             rc.DrawImage(image, 0, 0, image.Width, image.Height, x, y, w, h, opacity, interpolate);
         }
 
-        /// <summary>
-        /// Draws multi-line text at the specified point.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="point">The point.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="color">The text color.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="dy">The line spacing.</param>
         public static void DrawMultilineText(this IRenderContext rc, ScreenPoint point, string text, OxyColor color, string fontFamily = null, double fontSize = 10, double fontWeight = FontWeights.Normal, double dy = 12)
         {
             var lines = StringHelper.SplitLines(text);
@@ -213,16 +108,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws a line specified by coordinates.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="x0">The x0.</param>
-        /// <param name="y0">The y0.</param>
-        /// <param name="x1">The x1.</param>
-        /// <param name="y1">The y1.</param>
-        /// <param name="pen">The pen.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawLine(
             this IRenderContext rc, double x0, double y0, double x1, double y1, OxyPen pen, EdgeRenderingMode edgeRenderingMode)
         {
@@ -240,13 +125,6 @@ namespace OxyPlot
                 pen.LineJoin);
         }
 
-        /// <summary>
-        /// Draws the line segments.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="points">The points.</param>
-        /// <param name="pen">The pen.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawLineSegments(
             this IRenderContext rc, IList<ScreenPoint> points, OxyPen pen, EdgeRenderingMode edgeRenderingMode)
         {
@@ -258,18 +136,6 @@ namespace OxyPlot
             rc.DrawLineSegments(points, pen.Color, pen.Thickness, edgeRenderingMode, pen.ActualDashArray, pen.LineJoin);
         }
 
-        /// <summary>
-        /// Renders the marker.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="p">The center point of the marker.</param>
-        /// <param name="type">The marker type.</param>
-        /// <param name="outline">The outline.</param>
-        /// <param name="size">The size of the marker.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="strokeThickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawMarker(
             this IRenderContext rc,
             ScreenPoint p,
@@ -284,20 +150,6 @@ namespace OxyPlot
             rc.DrawMarkers(new[] { p }, type, outline, new[] { size }, fill, stroke, strokeThickness, edgeRenderingMode);
         }
 
-        /// <summary>
-        /// Draws a list of markers.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="markerPoints">The marker points.</param>
-        /// <param name="markerType">Type of the marker.</param>
-        /// <param name="markerOutline">The marker outline.</param>
-        /// <param name="markerSize">Size of the marker.</param>
-        /// <param name="markerFill">The marker fill.</param>
-        /// <param name="markerStroke">The marker stroke.</param>
-        /// <param name="markerStrokeThickness">The marker stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
-        /// <param name="resolution">The resolution.</param>
-        /// <param name="binOffset">The bin Offset.</param>
         public static void DrawMarkers(
             this IRenderContext rc,
             IList<ScreenPoint> markerPoints,
@@ -325,20 +177,6 @@ namespace OxyPlot
                 binOffset);
         }
 
-        /// <summary>
-        /// Draws a list of markers.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="markerPoints">The marker points.</param>
-        /// <param name="markerType">Type of the marker.</param>
-        /// <param name="markerOutline">The marker outline.</param>
-        /// <param name="markerSize">Size of the markers.</param>
-        /// <param name="markerFill">The marker fill.</param>
-        /// <param name="markerStroke">The marker stroke.</param>
-        /// <param name="markerStrokeThickness">The marker stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
-        /// <param name="resolution">The resolution.</param>
-        /// <param name="binOffset">The bin Offset.</param>
         public static void DrawMarkers(
             this IRenderContext rc,
             IList<ScreenPoint> markerPoints,
@@ -415,70 +253,26 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws a circle at the specified position.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="x">The center x-coordinate.</param>
-        /// <param name="y">The center y-coordinate.</param>
-        /// <param name="r">The radius.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawCircle(this IRenderContext rc, double x, double y, double r, OxyColor fill, OxyColor stroke, double thickness, EdgeRenderingMode edgeRenderingMode)
         {
             rc.DrawEllipse(new OxyRect(x - r, y - r, r * 2, r * 2), fill, stroke, thickness, edgeRenderingMode);
         }
 
-        /// <summary>
-        /// Draws a circle at the specified position.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="center">The center.</param>
-        /// <param name="r">The radius.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawCircle(this IRenderContext rc, ScreenPoint center, double r, OxyColor fill, OxyColor stroke, double thickness, EdgeRenderingMode edgeRenderingMode)
         {
             DrawCircle(rc, center.X, center.Y, r, fill, stroke, thickness, edgeRenderingMode);
         }
 
-        /// <summary>
-        /// Fills a circle at the specified position.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="center">The center.</param>
-        /// <param name="r">The radius.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void FillCircle(this IRenderContext rc, ScreenPoint center, double r, OxyColor fill, EdgeRenderingMode edgeRenderingMode)
         {
             DrawCircle(rc, center.X, center.Y, r, fill, OxyColors.Undefined, 0d, edgeRenderingMode);
         }
 
-        /// <summary>
-        /// Fills a rectangle at the specified position.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="rectangle">The rectangle.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void FillRectangle(this IRenderContext rc, OxyRect rectangle, OxyColor fill, EdgeRenderingMode edgeRenderingMode)
         {
             rc.DrawRectangle(rectangle, fill, OxyColors.Undefined, 0d, edgeRenderingMode);
         }
 
-        /// <summary>
-        /// Draws the outline of a rectangle with individual stroke thickness for each side.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="rect">The rectangle.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode.</param>
         public static void DrawRectangle(this IRenderContext rc, OxyRect rect, OxyColor stroke, OxyThickness thickness, EdgeRenderingMode edgeRenderingMode)
         {
             if (thickness.Left.Equals(thickness.Right) && thickness.Left.Equals(thickness.Top) && thickness.Left.Equals(thickness.Bottom))
@@ -503,44 +297,17 @@ namespace OxyPlot
             rc.DrawLine(pointsLeft, stroke, thickness.Left, edgeRenderingMode, null, LineJoin.Miter);
         }
 
-        /// <summary>
-        /// Measures the size of the specified text.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">Size of the font (in device independent units, 1/96 inch).</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="angle">The angle of measured text (degrees).</param>
-        /// <returns>The size of the text (in device independent units, 1/96 inch).</returns>
         public static OxySize MeasureText(this IRenderContext rc, string text, string fontFamily, double fontSize, double fontWeight, double angle)
         {
             var bounds = rc.MeasureText(text, fontFamily, fontSize, fontWeight);
             return MeasureRotatedRectangleBound(bounds, angle);
         }
 
-        /// <summary>
-        /// Applies the specified clipping rectangle the the render context and returns a reset token. The clipping is reset once this token is disposed.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="clippingRectangle">The clipping rectangle.</param>
-        /// <returns>The reset token. Clipping is reset once this is disposed.</returns>
         public static IDisposable AutoResetClip(this IRenderContext rc, OxyRect clippingRectangle)
         {
             return new AutoResetClipToken(rc, clippingRectangle);
         }
 
-        /// <summary>
-        /// Adds a marker geometry to the specified collections.
-        /// </summary>
-        /// <param name="p">The position of the marker.</param>
-        /// <param name="type">The marker type.</param>
-        /// <param name="outline">The custom outline, if <paramref name="type" /> is <see cref="MarkerType.Custom" />.</param>
-        /// <param name="size">The size of the marker.</param>
-        /// <param name="ellipses">The output ellipse collection.</param>
-        /// <param name="rects">The output rectangle collection.</param>
-        /// <param name="polygons">The output polygon collection.</param>
-        /// <param name="lines">The output line collection.</param>
         private static void AddMarkerGeometry(
             ScreenPoint p,
             MarkerType type,
@@ -624,25 +391,12 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Calculates the bounds with respect to rotation angle and horizontal/vertical alignment.
-        /// </summary>
-        /// <param name="bounds">The size of the object to calculate bounds for.</param>
-        /// <param name="angle">The rotation angle (degrees).</param>
-        /// <returns>A minimum bounding rectangle.</returns>
         private static OxySize MeasureRotatedRectangleBound(OxySize bounds, double angle)
         {
             var oxyRect = bounds.GetBounds(angle, HorizontalAlignment.Center, VerticalAlignment.Middle);
             return new OxySize(oxyRect.Width, oxyRect.Height);
         }
 
-        /// <summary>
-        /// Reduces the specified list of points by the specified minimum squared distance. 
-        /// </summary>
-        /// <param name="points">The points that should be evaluated.</param>
-        /// <param name="minDistSquared">The minimum line segment length (squared).</param>
-        /// <param name="outputBuffer">The output buffer. Cannot be <c>null</c>.</param>
-        /// <remarks>Points that are closer than the specified distance will not be included in the output buffer.</remarks>
         private static void ReducePoints(IList<ScreenPoint> points, double minDistSquared, List<ScreenPoint> outputBuffer)
         {
             var n = points.Count;
@@ -657,7 +411,6 @@ namespace OxyPlot
             {
                 var sc1 = points[i];
 
-                // length calculation (inlined for performance)
                 var dx = sc1.X - points[lastPointIndex].X;
                 var dy = sc1.Y - points[lastPointIndex].Y;
 
@@ -669,9 +422,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Represents the token that is used to automatically reset the clipping in the <see cref="AutoResetClip(IRenderContext, OxyRect)"/> method.
-        /// </summary>
         private class AutoResetClipToken : IDisposable
         {
             private readonly IRenderContext renderContext;

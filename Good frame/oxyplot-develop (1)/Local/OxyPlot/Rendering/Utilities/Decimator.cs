@@ -1,27 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Decimator.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to decimate lines.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Provides functionality to decimate lines.
-    /// </summary>
     public class Decimator
     {
-        /// <summary>
-        /// Decimates lines by reducing all points that have the same integer x value to a maximum of 4 points (first, min, max, last).
-        /// </summary>
-        /// <param name="input">The input points.</param>
-        /// <param name="output">The decimated points.</param>
         public static void Decimate(List<ScreenPoint> input, List<ScreenPoint> output)
         {
             if (input == null || input.Count == 0)
@@ -30,17 +13,16 @@ namespace OxyPlot
             }
 
             var point = input[0];
-            var currentX = Math.Round(point.X);
-            var currentMinY = Math.Round(point.Y);
-            var currentMaxY = currentMinY;
-            var currentFirstY = currentMinY;
-            var currentLastY = currentMinY;
+            double currentX = Math.Round(point.X);
+            double currentMinY = Math.Round(point.Y);
+            double currentMaxY = currentMinY;
+            double currentFirstY = currentMinY;
+            double currentLastY = currentMinY;
             for (var i = 1; i < input.Count; ++i)
             {
                 point = input[i];
-                var newX = Math.Round(point.X);
-                var newY = Math.Round(point.Y);
-                // ReSharper disable once CompareOfFloatsByEqualityOperator
+                double newX = Math.Round(point.X);
+                double newY = Math.Round(point.Y);
                 if (newX != currentX)
                 {
                     AddVerticalPoints(output, currentX, currentFirstY, currentLastY, currentMinY, currentMaxY);
@@ -62,25 +44,13 @@ namespace OxyPlot
                 currentLastY = newY;
             }
 
-            // Keep from adding an extra point for last
-            // ReSharper disable once CompareOfFloatsByEqualityOperator
             currentLastY = currentFirstY == currentMinY ? currentMaxY : currentMinY;
             AddVerticalPoints(output, currentX, currentFirstY, currentLastY, currentMinY, currentMaxY);
         }
 
-        /// <summary>
-        /// Adds vertical points to the <paramref name="result" /> list.
-        /// </summary>
-        /// <param name="result">The result.</param>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="firstY">The first y.</param>
-        /// <param name="lastY">The last y.</param>
-        /// <param name="minY">The minimum y.</param>
-        /// <param name="maxY">The maximum y.</param>
+
         private static void AddVerticalPoints(
-            // ReSharper disable SuggestBaseTypeForParameter
             List<ScreenPoint> result,
-            // ReSharper restore SuggestBaseTypeForParameter
             double x,
             double firstY,
             double lastY,
@@ -88,7 +58,6 @@ namespace OxyPlot
             double maxY)
         {
             result.Add(new ScreenPoint(x, firstY));
-            // ReSharper disable CompareOfFloatsByEqualityOperator
             if (firstY == minY)
             {
                 if (minY != maxY)
@@ -138,7 +107,7 @@ namespace OxyPlot
                 result.Add(new ScreenPoint(x, minY));
                 result.Add(new ScreenPoint(x, maxY));
             }
-            // ReSharper restore CompareOfFloatsByEqualityOperator
+
             result.Add(new ScreenPoint(x, lastY));
         }
     }

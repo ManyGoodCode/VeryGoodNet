@@ -1,24 +1,9 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MathRenderingExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render mathematical expressions.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
 
-    /// <summary>
-    /// Provides functionality to render mathematical expressions.
-    /// </summary>
     public static class MathRenderingExtensions
     {
-        /// <summary>
-        /// Initializes static members of the <see cref = "MathRenderingExtensions" /> class.
-        /// </summary>
         static MathRenderingExtensions()
         {
             SubAlignment = 0.6;
@@ -27,45 +12,14 @@ namespace OxyPlot
             SuperSize = 0.62;
         }
 
-        /// <summary>
-        /// Gets or sets the subscript alignment.
-        /// </summary>
         private static double SubAlignment { get; set; }
 
-        /// <summary>
-        /// Gets or sets the subscript size.
-        /// </summary>
         private static double SubSize { get; set; }
 
-        /// <summary>
-        /// Gets or sets the superscript alignment.
-        /// </summary>
         private static double SuperAlignment { get; set; }
 
-        /// <summary>
-        /// Gets or sets the superscript size.
-        /// </summary>
         private static double SuperSize { get; set; }
 
-        /// <summary>
-        /// Draws or measures text containing sub- and superscript.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="pt">The point.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="textColor">Color of the text.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="angle">The angle.</param>
-        /// <param name="ha">The horizontal alignment.</param>
-        /// <param name="va">The vertical alignment.</param>
-        /// <param name="maxSize">The maximum size of the text.</param>
-        /// <param name="measure">Measure the size of the text if set to <c>true</c>.</param>
-        /// <returns>The size of the text.</returns>
-        /// <example>Subscript: H_{2}O
-        /// Superscript: E=mc^{2}
-        /// Both: A^{2}_{i,j}</example>
         public static OxySize DrawMathText(
             this IRenderContext rc,
             ScreenPoint pt,
@@ -129,23 +83,6 @@ namespace OxyPlot
             return OxySize.Empty;
         }
 
-        /// <summary>
-        /// Draws text containing sub- and superscript.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="pt">The point.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="textColor">Color of the text.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="angle">The angle.</param>
-        /// <param name="ha">The horizontal alignment.</param>
-        /// <param name="va">The vertical alignment.</param>
-        /// <param name="maxSize">The maximum size of the text.</param>
-        /// <example>Subscript: H_{2}O
-        /// Superscript: E=mc^{2}
-        /// Both: A^{2}_{i,j}</example>
         public static void DrawMathText(
             this IRenderContext rc,
             ScreenPoint pt,
@@ -162,15 +99,6 @@ namespace OxyPlot
             DrawMathText(rc, pt, text, textColor, fontFamily, fontSize, fontWeight, angle, ha, va, maxSize, false);
         }
 
-        /// <summary>
-        /// The measure math text.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <returns>The size of the text.</returns>
         public static OxySize MeasureMathText(
             this IRenderContext rc, string text, string fontFamily, double fontSize, double fontWeight)
         {
@@ -182,22 +110,6 @@ namespace OxyPlot
             return rc.MeasureText(text, fontFamily, fontSize, fontWeight);
         }
 
-        /// <summary>
-        /// Draws text with sub- and superscript items.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="x">The x.</param>
-        /// <param name="y">The y.</param>
-        /// <param name="dx">The x offset (in rotated coordinates).</param>
-        /// <param name="dy">The y offset (in rotated coordinates).</param>
-        /// <param name="s">The s.</param>
-        /// <param name="textColor">The text color.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">The font size.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="measureOnly">Only measure if set to <c>true</c>.</param>
-        /// <param name="angle">The angle of the text (degrees).</param>
-        /// <returns>The size of the text.</returns>
         private static OxySize InternalDrawMathText(
             IRenderContext rc,
             double x,

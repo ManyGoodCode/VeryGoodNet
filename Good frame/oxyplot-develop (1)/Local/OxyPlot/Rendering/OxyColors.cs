@@ -1,77 +1,18 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OxyColors.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Implements a set of predefined colors.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Implements a set of predefined colors.
-    /// </summary>
     public static class OxyColors
     {
-        /// <summary>
-        /// The undefined color.
-        /// </summary>
         public static readonly OxyColor Undefined = OxyColor.FromUInt32(0x00000000);
-
-        /// <summary>
-        /// The automatic color.
-        /// </summary>
         public static readonly OxyColor Automatic = OxyColor.FromUInt32(0x00000001);
-
-        /// <summary>
-        /// The alice blue.
-        /// </summary>
         public static readonly OxyColor AliceBlue = OxyColor.FromUInt32(0xFFF0F8FF);
-
-        /// <summary>
-        /// The antique white.
-        /// </summary>
         public static readonly OxyColor AntiqueWhite = OxyColor.FromUInt32(0xFFFAEBD7);
-
-        /// <summary>
-        /// The aqua.
-        /// </summary>
         public static readonly OxyColor Aqua = OxyColor.FromUInt32(0xFF00FFFF);
-
-        /// <summary>
-        /// The aquamarine.
-        /// </summary>
         public static readonly OxyColor Aquamarine = OxyColor.FromUInt32(0xFF7FFFD4);
-
-        /// <summary>
-        /// The azure.
-        /// </summary>
         public static readonly OxyColor Azure = OxyColor.FromUInt32(0xFFF0FFFF);
-
-        /// <summary>
-        /// The beige.
-        /// </summary>
         public static readonly OxyColor Beige = OxyColor.FromUInt32(0xFFF5F5DC);
-
-        /// <summary>
-        /// The bisque.
-        /// </summary>
         public static readonly OxyColor Bisque = OxyColor.FromUInt32(0xFFFFE4C4);
-
-        /// <summary>
-        /// The black.
-        /// </summary>
         public static readonly OxyColor Black = OxyColor.FromUInt32(0xFF000000);
-
-        /// <summary>
-        /// The blanched almond.
-        /// </summary>
         public static readonly OxyColor BlanchedAlmond = OxyColor.FromUInt32(0xFFFFEBCD);
-
-        /// <summary>
-        /// The blue.
-        /// </summary>
         public static readonly OxyColor Blue = OxyColor.FromUInt32(0xFF0000FF);
 
         /// <summary>

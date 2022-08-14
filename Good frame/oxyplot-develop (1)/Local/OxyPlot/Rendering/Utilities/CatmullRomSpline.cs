@@ -1,78 +1,31 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="CatmullRomSplineHelper.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to interpolate a list of points by a canonical spline.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Provides functionality to interpolate a list of points by a Centripetal Catmull–Rom spline.
-    /// </summary>
-    /// <remarks>Based on CanonicalSplineHelper.cs (c) 2009 by Charles Petzold (WPF and Silverlight)
-    /// See also <a href="http://www.charlespetzold.com/blog/2009/01/Canonical-Splines-in-WPF-and-Silverlight.html">blog post</a>.</remarks>
     public class CatmullRomSpline : IInterpolationAlgorithm
     {
-        /// <summary>
-        /// Gets the alpha value.
-        /// </summary>
         public double Alpha { get; }
-        
-        /// <summary>
-        /// Gets or sets the maximum number of segments.
-        /// </summary>
+      
         public int MaxSegments { get; set; }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "CatmullRomSpline" /> class.
-        /// </summary>
-        /// <param name="alpha">The alpha.</param>
         public CatmullRomSpline(double alpha)
         {
             this.Alpha = alpha;
             this.MaxSegments = 100;
         }
 
-        /// <summary>
-        /// Creates a spline of data points.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="isClosed">True if the spline is closed.</param>
-        /// <param name="tolerance">The tolerance.</param>
-        /// <returns>A list of data points.</returns>
         public List<DataPoint> CreateSpline(List<DataPoint> points, bool isClosed, double tolerance)
         {
             return CreateSpline(points, this.Alpha, isClosed, tolerance, MaxSegments);
         }
 
-        /// <summary>
-        /// Creates a spline of screen points.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="isClosed">True if the spline is closed.</param>
-        /// <param name="tolerance">The tolerance.</param>
-        /// <returns>A list of screen points.</returns>
         public List<ScreenPoint> CreateSpline(IList<ScreenPoint> points, bool isClosed, double tolerance)
         {
             return CreateSpline(points, this.Alpha, isClosed, tolerance, MaxSegments);
         }
 
-        /// <summary>
-        /// Creates a spline of data points.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="alpha">The alpha.</param>
-        /// <param name="isClosed">True if the spline is closed.</param>
-        /// <param name="tolerance">The tolerance.</param>
-        /// <param name="maxSegments">The maximum number of segments.</param>
-        /// <returns>A list of data points.</returns>
         internal static List<DataPoint> CreateSpline(List<DataPoint> points, double alpha, bool isClosed, double tolerance, int maxSegments)
         {
             var screenPoints = points.Select(p => new ScreenPoint(p.X, p.Y)).ToList();
@@ -87,15 +40,6 @@ namespace OxyPlot
             return interpolatedDataPoints;
         }
 
-        /// <summary>
-        /// Creates a spline of screen points.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="alpha">The alpha.</param>
-        /// <param name="isClosed">True if the spline is closed.</param>
-        /// <param name="tolerance">The tolerance.</param>
-        /// <param name="maxSegments">The maximum number of segments.</param>
-        /// <returns>A list of screen points.</returns>
         internal static List<ScreenPoint> CreateSpline(
             IList<ScreenPoint> points, double alpha, bool isClosed, double tolerance, int maxSegments)
         {
@@ -174,17 +118,6 @@ namespace OxyPlot
             return result;
         }
 
-        /// <summary>
-        /// The segment.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="pt0">The pt 0.</param>
-        /// <param name="pt1">The pt 1.</param>
-        /// <param name="pt2">The pt 2.</param>
-        /// <param name="pt3">The pt 3.</param>
-        /// <param name="alpha">The alpha.</param>
-        /// <param name="tolerance">The tolerance.</param>
-        /// <param name="maxSegments">The maximum number of segments.</param>
         private static void Segment(
             IList<ScreenPoint> points,
             ScreenPoint pt0,
@@ -218,9 +151,7 @@ namespace OxyPlot
 
 
             int iterations = (int)((Math.Abs(pt1.X - pt2.X) + Math.Abs(pt1.Y - pt2.Y)) / tolerance);
-            //Make sure it is positive (negative means an integer overflow)
             iterations = Math.Max(0, iterations);
-            //Never more iterations than maxSegments
             iterations = Math.Min(maxSegments, iterations);
             for (double t = t1; t < t2; t += (t2 - t1) / iterations)
             {

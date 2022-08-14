@@ -1,31 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OxySizeExtensions.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides extension methods for <see cref="OxySize" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Provides extension methods for <see cref="OxySize"/>
-    /// </summary>
-    /// <remarks>These are pure methods. They could also be placed in the <see cref="OxySize" /> type with a PureAttribute.</remarks>
+
     public static class OxySizeExtensions
     {
-        /// <summary>
-        /// Calculates the bounds with respect to rotation angle and horizontal/vertical alignment.
-        /// </summary>
-        /// <param name="bounds">The size of the object to calculate bounds for.</param>
-        /// <param name="angle">The rotation angle (degrees).</param>
-        /// <param name="horizontalAlignment">The horizontal alignment.</param>
-        /// <param name="verticalAlignment">The vertical alignment.</param>
-        /// <returns>A minimum bounding rectangle.</returns>
         public static OxyRect GetBounds(this OxySize bounds, double angle, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             var u = horizontalAlignment == HorizontalAlignment.Left ? 0 : horizontalAlignment == HorizontalAlignment.Center ? 0.5 : 1;
@@ -62,15 +42,6 @@ namespace OxyPlot
             return new OxyRect(x, y, w, h);
         }
 
-        /// <summary>
-        /// Gets the polygon outline of the specified rotated and aligned box.
-        /// </summary>
-        /// <param name="size">The size of the  box.</param>
-        /// <param name="origin">The origin of the box.</param>
-        /// <param name="angle">The rotation angle of the box.</param>
-        /// <param name="horizontalAlignment">The horizontal alignment of the box.</param>
-        /// <param name="verticalAlignment">The vertical alignment of the box.</param>
-        /// <returns>A sequence of points defining the polygon outline of the box.</returns>
         public static IEnumerable<ScreenPoint> GetPolygon(this OxySize size, ScreenPoint origin, double angle, HorizontalAlignment horizontalAlignment, VerticalAlignment verticalAlignment)
         {
             var u = horizontalAlignment == HorizontalAlignment.Left ? 0 : horizontalAlignment == HorizontalAlignment.Center ? 0.5 : 1;

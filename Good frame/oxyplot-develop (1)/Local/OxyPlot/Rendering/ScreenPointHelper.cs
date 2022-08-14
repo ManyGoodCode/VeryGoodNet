@@ -1,29 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScreenPointHelper.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides algorithms for polygons and lines of <see cref="ScreenPoint" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
+﻿
 namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Provides algorithms for polygons and lines of <see cref="ScreenPoint" />.
-    /// </summary>
+
     public static class ScreenPointHelper
     {
-        /// <summary>
-        /// Finds the nearest point on the specified polyline.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="points">The points.</param>
-        /// <returns>The nearest point.</returns>
-        /// <exception cref="ArgumentNullException">The <paramref name="points"/> is <c>null</c>.</exception>
         public static ScreenPoint FindNearestPointOnPolyline(ScreenPoint point, IList<ScreenPoint> points)
         {
             if (points == null)
@@ -43,7 +26,6 @@ namespace OxyPlot
                     continue;
                 }
 
-                // Find the nearest point on the line segment.
                 var nearestPointOnSegment = FindPointOnLine(point, p1, p2);
 
                 if (ScreenPoint.IsUndefined(nearestPointOnSegment))
@@ -63,14 +45,6 @@ namespace OxyPlot
             return nearestPoint;
         }
 
-        /// <summary>
-        /// Finds the point on line.
-        /// </summary>
-        /// <param name="p">The point.</param>
-        /// <param name="p1">The first point on the line.</param>
-        /// <param name="p2">The second point on the line.</param>
-        /// <returns>The nearest point on the line.</returns>
-        /// <remarks>See <a href="http://paulbourke.net/geometry/pointlineplane/">Bourke</a>.</remarks>
         public static ScreenPoint FindPointOnLine(ScreenPoint p, ScreenPoint p1, ScreenPoint p2)
         {
             double dx = p2.x - p1.x;
@@ -95,14 +69,6 @@ namespace OxyPlot
             return new ScreenPoint(p1.x + (u * dx), p1.y + (u * dy));
         }
 
-        /// <summary>
-        /// Finds the nearest point on line.
-        /// </summary>
-        /// <param name="p">The point.</param>
-        /// <param name="p1">The start point on the line.</param>
-        /// <param name="p2">The end point on the line.</param>
-        /// <returns>The relative position of the nearest point.</returns>
-        /// <remarks>See <a href="http://paulbourke.net/geometry/pointlineplane/">Bourke</a>.</remarks>
         public static double FindPositionOnLine(ScreenPoint p, ScreenPoint p1, ScreenPoint p2)
         {
             double dx = p2.x - p1.x;
@@ -118,12 +84,6 @@ namespace OxyPlot
             return u1 / u2;
         }
 
-        /// <summary>
-        /// Determines whether the specified point is in the specified polygon.
-        /// </summary>
-        /// <param name="p">The point.</param>
-        /// <param name="pts">The polygon points.</param>
-        /// <returns><c>true</c> if the point is in the polygon; otherwise, <c>false</c>.</returns>
         public static bool IsPointInPolygon(ScreenPoint p, IList<ScreenPoint> pts)
         {
             if (pts == null)
@@ -145,12 +105,6 @@ namespace OxyPlot
             return c;
         }
 
-        /// <summary>
-        /// Resamples the points with the specified point distance limit.
-        /// </summary>
-        /// <param name="allPoints">All points.</param>
-        /// <param name="minimumDistance">The minimum squared distance.</param>
-        /// <returns>List of resampled points.</returns>
         public static IList<ScreenPoint> ResamplePoints(IList<ScreenPoint> allPoints, double minimumDistance)
         {
             double minimumSquaredDistance = minimumDistance * minimumDistance;
@@ -176,11 +130,6 @@ namespace OxyPlot
             return result;
         }
 
-        /// <summary>
-        /// Gets the centroid of the specified polygon.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <returns>The centroid.</returns>
         public static ScreenPoint GetCentroid(IList<ScreenPoint> points)
         {
             double cx = 0;

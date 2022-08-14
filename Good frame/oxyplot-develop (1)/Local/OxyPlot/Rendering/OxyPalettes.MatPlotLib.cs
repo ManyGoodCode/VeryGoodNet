@@ -1,66 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="OxyPalettes.MatPlotLib.cs" company="OxyPlot">
-//   Copyright (c) 2020 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides a selection of color palettes from the matplotlib library.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-/*
-Colormaps Inferno, Magma, Plasma and Viridis were orignally created by Nathaniel J. Smith, Stefan van der Walt and Eric Firing.
-Original source: https://github.com/BIDS/colormap/blob/master/colormaps.py
-Released under the CC0 license (public domain).
-*/
-
-/*
-Colormap Cividis was originally created by Jamie R.Nuñez, Christopher R. Anderton and Ryan S. Renslow.
-Original source: https://github.com/pnnl/cmaputil/blob/master/colormaps/cividis.txt
-License:
-
-Copyright(c) 2017, Battelle Memorial Institute
-
-1.  Battelle Memorial Institute(hereinafter Battelle) hereby grants
-permission to any person or entity lawfully obtaining a copy of this software
-and associated documentation files (hereinafter “the Software”) to
-redistribute and use the Software in source and binary forms, with or without
-modification. Such person or entity may use, copy, modify, merge, publish,
-distribute, sublicense, and/or sell copies of the Software, and may permit
-others to do so, subject to the following conditions:
-
-+ Redistributions of source code must retain the above copyright notice, this
-list of conditions and the following disclaimers.
-
-+ Redistributions in binary form must reproduce the above copyright notice,
-this list of conditions and the following disclaimer in the documentation
-and/or other materials provided with the distribution.
-
-+ Other than as used herein, neither the name Battelle Memorial Institute or
-Battelle may be used in any form whatsoever without the express written
-consent of Battelle.
-
-2.  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
-"AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO,
-THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
-ARE DISCLAIMED. IN NO EVENT SHALL BATTELLE OR CONTRIBUTORS BE LIABLE FOR ANY
-DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
-(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
-LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
-ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
-(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
-SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-*/
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Provides predefined palettes.
-    /// </summary>
     public static partial class OxyPalettes
     {
-        /// <summary>
-        /// The color sequence of the cividis palette.
-        /// </summary>
         private static readonly OxyColor[] cividisColors = new[]
         {
             OxyColor.FromRgb(0, 32, 77),
@@ -847,9 +788,6 @@ namespace OxyPlot
             OxyColor.FromRgb(252, 253, 191)
         };
 
-        /// <summary>
-        /// The color sequence of the plasma palette.
-        /// </summary>
         private static readonly OxyColor[] plasmaColors = new[]
         {
             OxyColor.FromRgb(13, 8, 135),
@@ -1373,9 +1311,6 @@ namespace OxyPlot
             OxyColor.FromRgb(253, 231, 37)
         };
 
-        /// <summary>
-        /// Gets the cividis palette.
-        /// </summary>
         public static OxyPalette Cividis(int numberOfColors = 256)
         {
             if (numberOfColors == cividisColors.Length)
@@ -1386,9 +1321,6 @@ namespace OxyPlot
             return OxyPalette.Interpolate(numberOfColors, cividisColors);
         }
 
-        /// <summary>
-        /// Gets the inferno palette.
-        /// </summary>
         public static OxyPalette Inferno(int numberOfColors = 256)
         {
             if (numberOfColors == infernoColors.Length)
@@ -1399,9 +1331,6 @@ namespace OxyPlot
             return OxyPalette.Interpolate(numberOfColors, infernoColors);
         }
 
-        /// <summary>
-        /// Gets the magma palette.
-        /// </summary>
         public static OxyPalette Magma(int numberOfColors = 256)
         {
             if (numberOfColors == magmaColors.Length)
@@ -1412,9 +1341,6 @@ namespace OxyPlot
             return OxyPalette.Interpolate(numberOfColors, magmaColors);
         }
 
-        /// <summary>
-        /// Gets the plasma palette.
-        /// </summary>
         public static OxyPalette Plasma(int numberOfColors = 256)
         {
             if (numberOfColors == plasmaColors.Length)
@@ -1425,9 +1351,6 @@ namespace OxyPlot
             return OxyPalette.Interpolate(numberOfColors, plasmaColors);
         }
 
-        /// <summary>
-        /// Gets the viridis palette.
-        /// </summary>
         public static OxyPalette Viridis(int numberOfColors = 256)
         {
             if (numberOfColors == viridisColors.Length)
