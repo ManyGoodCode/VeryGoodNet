@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainWindowViewModel.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace ExampleBrowser
+﻿namespace ExampleBrowser
 {
     using System.ComponentModel;
     using System.Collections.Generic;
@@ -45,7 +39,7 @@ namespace ExampleBrowser
 
         protected void RaisePropertyChanged(string property)
         {
-            var handler = this.PropertyChanged;
+            PropertyChangedEventHandler handler = this.PropertyChanged;
             if (handler != null)
             {
                 handler(this, new PropertyChangedEventArgs(property));

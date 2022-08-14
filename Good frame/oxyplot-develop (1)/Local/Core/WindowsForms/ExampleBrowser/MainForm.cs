@@ -1,10 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MainForm.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace ExampleBrowser
+﻿namespace ExampleBrowser
 {
     using ExampleLibrary;
     using System.Drawing;
@@ -25,7 +19,7 @@ namespace ExampleBrowser
         private void InitTree()
         {
             TreeNode node = null;
-            foreach (var ex in this.vm.Examples)
+            foreach (ExampleInfo ex in this.vm.Examples)
             {
                 if (node == null || node.Text != ex.Category)
                 {
@@ -33,7 +27,11 @@ namespace ExampleBrowser
                     this.treeView1.Nodes.Add(node);
                 }
 
-                var exNode = new TreeNode(ex.Title) { Tag = ex };
+                TreeNode exNode = new TreeNode(ex.Title) 
+                { 
+                    Tag = ex 
+                };
+
                 node.Nodes.Add(exNode);
                 if (ex == this.vm.SelectedExample)
                 {
@@ -61,7 +59,7 @@ namespace ExampleBrowser
             }
             else
             {
-                var flags = ExampleInfo.PrepareFlags(
+                ExampleFlags flags = ExampleInfo.PrepareFlags(
                     this.transposedCheck.Enabled && this.transposedCheck.Checked,
                     this.reversedCheck.Enabled && this.reversedCheck.Checked);
 
