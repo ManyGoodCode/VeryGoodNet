@@ -1,34 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="JpegDecoder.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Implements support for decoding jpeg images.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.IO;
 
-    /// <summary>
-    /// Implements support for decoding jpeg images.
-    /// </summary>
+
     public class JpegDecoder : IImageDecoder
     {
-        // http://en.wikipedia.org/wiki/Exchangeable_image_file_format
-        // http://www.exif.org/Exif2-2.PDF
-        // http://gvsoft.homedns.org/exif/exif-explanation.html
-        // http://www.codeproject.com/Articles/43665/ExifLibrary-for-NET
-        // http://www.codeproject.com/Articles/36342/ExifLib-A-Fast-Exif-Data-Extractor-for-NET-2-0
-        // http://www.codeproject.com/Articles/27242/ExifTagCollection-An-EXIF-metadata-extraction-libr
-        // http://www.codeproject.com/Articles/47486/Understanding-and-Reading-Exif-Data
-        // https://drewnoakes.com/code/exif/
-
-        /// <summary>
-        /// Defines the EXIF tags.
-        /// </summary>
         public enum ExifTags
         {
             // IFD0 items
@@ -157,154 +134,10 @@ namespace OxyPlot
 #pragma warning restore 1591
         }
 
-        /// <summary>
-        /// Gets information about the image in the specified byte array.
-        /// </summary>
-        /// <param name="bytes">The image data.</param>
-        /// <returns>An <see cref="OxyImageInfo" /> structure.</returns>
-        /// <exception cref="System.FormatException">Invalid SOI
-        /// or
-        /// Invalid APP0 marker
-        /// or
-        /// Invalid marker
-        /// or
-        /// Invalid Exif identifier
-        /// or
-        /// Invalid TIFF identifier</exception>
         public OxyImageInfo GetImageInfo(byte[] bytes)
         {
-            throw new NotImplementedException(); 
-            /*
-            int width = -1;
-            int height = -1;
-            double dpix = double.NaN;
-            double dpiy = double.NaN;
-            int bitDepth = -1;
-
-            // TODO: This code is not yet working.
-            var ms = new MemoryStream(bytes);
-            var inputReader = new BinaryReader(ms);
-            var soi = inputReader.ReadBytes(2); // FFD8
-            if (soi[0] != 0xFF || soi[1] != 0xD8)
-            {
-                throw new FormatException("Invalid SOI");
-            }
-
-            // APP0 marker
-            var app0 = inputReader.ReadBytes(2); // FFE0
-            if (app0[0] != 0xFF || app0[1] != 0xE0)
-            {
-                throw new FormatException("Invalid APP0 marker");
-            }
-
-            var length0 = inputReader.ReadUInt16();
-            var identifier = inputReader.ReadString(4);
-            var zero = inputReader.ReadByte();
-            var version = inputReader.ReadBytes(2);
-
-            var densityUnits = inputReader.ReadByte();
-            var xdensity = inputReader.ReadUInt16();
-            var ydensity = inputReader.ReadUInt16();
-
-            // thumbnail
-            var tw = inputReader.ReadByte();
-            var th = inputReader.ReadByte();
-            var td = inputReader.ReadBytes(3 * tw * th);
-
-            while (true)
-            {
-                var ff = inputReader.ReadByte();
-                if (ff != 0xFF)
-                {
-                    throw new FormatException("Invalid marker");
-                }
-
-                var marker = inputReader.ReadByte();
-                var length = inputReader.ReadUInt16();
-                switch (marker)
-                {
-                    case 0xE1: // APP1
-                        var id = inputReader.ReadString(4); // Exif
-                        if (id != "Exif")
-                        {
-                            throw new FormatException("Invalid Exif identifier");
-                        }
-
-                        var zeros = inputReader.ReadBytes(2);
-
-                        // TIFF HEADER
-                        var baseOffset = ms.Position;
-                        var byteOrder = inputReader.ReadBytes(2);
-                        var isLittleEndian = byteOrder[0] == 0x49 && byteOrder[1] == 0x49; // Intel
-                        var tiffId = inputReader.ReadBytes(2); // 002A
-                        if (tiffId[0] != 0x00 || tiffId[1] != 0x2A)
-                        {
-                            throw new FormatException("Invalid TIFF identifier");
-                        }
-
-                        uint exifIfdOffset = 0;
-
-                        var offset = inputReader.ReadUInt32(isLittleEndian);
-                        ms.Seek(offset - 8, SeekOrigin.Current);
-                        var fieldCount = inputReader.ReadUInt16(isLittleEndian);
-                        for (int i = 0; i < fieldCount; i++)
-                        {
-                            var tag = (ExifTags)inputReader.ReadUInt16(isLittleEndian);
-                            var fieldType = inputReader.ReadUInt16(isLittleEndian);
-                            var count = (int)inputReader.ReadUInt32(isLittleEndian);
-
-                            var current = ms.Position;
-                            var value = ReadValue(inputReader, ms, isLittleEndian, fieldType, count, baseOffset);
-
-                            if ((uint)tag == 0x8769)
-                            {
-                                exifIfdOffset = (uint)value;
-                            }
-
-                            System.Diagnostics.Debug.WriteLine(tag + ":" + value);
-                            ms.Position = current + 4;
-                        }
-
-                        ms.Position = baseOffset + exifIfdOffset;
-                        fieldCount = inputReader.ReadUInt16(isLittleEndian);
-                        for (int i = 0; i < fieldCount; i++)
-                        {
-                            var tag = (ExifTags)inputReader.ReadUInt16(isLittleEndian);
-                            var fieldType = inputReader.ReadUInt16(isLittleEndian);
-                            var count = (int)inputReader.ReadUInt32(isLittleEndian);
-
-                            var current = ms.Position;
-                            var value = ReadValue(inputReader, ms, isLittleEndian, fieldType, count, baseOffset);
-
-                            if ((uint)tag == 0x8769)
-                            {
-                                exifIfdOffset = (uint)value;
-                            }
-
-                            System.Diagnostics.Debug.WriteLine(tag + ":" + value);
-                            ms.Position = current + 4;
-                        }
-
-                        break;
-                    default:
-                        ms.Seek(length - 2, SeekOrigin.Current);
-                        break;
-                }
-            }
-
-#pragma warning disable CS0162 // Unreachable code detected
-            // Analyzer isn't properly detecting break in infinite loop and therefore shows a warning.
-            return new OxyImageInfo
-            {
-                Width = width,
-                Height = height,
-                DpiX = dpix,
-                DpiY = dpiy,
-                BitsPerPixel = bitDepth
-            };
-            */
+            throw new NotImplementedException();
         }
-#pragma warning restore CS0162 // Unreachable code detected
 
         private static object ReadValue(
             BinaryReader inputReader,
@@ -422,11 +255,7 @@ namespace OxyPlot
             throw new NotImplementedException();
         }
 
-        /// <summary>
-        /// Decodes an image from the specified stream.
-        /// </summary>
-        /// <param name="bytes">The data to decode.</param>
-        /// <returns>The 32-bit pixel data.</returns>
+
         public OxyColor[,] Decode(byte[] bytes)
         {
             throw new NotImplementedException();

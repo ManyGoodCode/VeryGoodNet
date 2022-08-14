@@ -51,20 +51,10 @@
             // Bitmap info header (40 bytes)
             WriteBitmapInfoHeader(w, width, height, 32, bytes.Length, this.options.DpiX, this.options.DpiY);
 
-            // Bitmap info V4 header (108 bytes)
-            //// WriteBitmapV4Header(w, width, height, 32, bytes.Length, this.options.DpiX, this.options.DpiY);
-
-            // Pixel array (from bottom-left corner)
             w.Write(bytes);
             return ms.ToArray();
         }
 
-        /// <summary>
-        /// Encodes the specified 8-bit indexed pixels.
-        /// </summary>
-        /// <param name="pixels">The pixels.</param>
-        /// <param name="palette">The palette.</param>
-        /// <returns>The image data.</returns>
         public byte[] Encode(byte[,] pixels, OxyColor[] palette)
         {
             if (palette.Length == 0)
@@ -79,13 +69,13 @@
 
             int width = pixels.GetLength(0);
             int height = pixels.GetLength(1);
-            var length = width * height;
+            int length = width * height;
 
-            var ms = new MemoryStream();
-            var w = new BinaryWriter(ms);
+            MemoryStream ms = new MemoryStream();
+            BinaryWriter w = new BinaryWriter(ms);
 
-            var offBits = 14 + 40 + (4 * palette.Length);
-            var size = offBits + length;
+            int offBits = 14 + 40 + (4 * palette.Length);
+            int size = offBits + length;
 
             // Bitmap file header (14 bytes)
             w.Write((byte)'B');
@@ -99,7 +89,7 @@
             WriteBitmapInfoHeader(w, width, height, 8, length, this.options.DpiX, this.options.DpiY, palette.Length);
 
             // Color table
-            foreach (var color in palette)
+            foreach (OxyColor color in palette)
             {
                 w.Write(color.B);
                 w.Write(color.G);
@@ -107,13 +97,6 @@
                 w.Write(color.A);
             }
 
-            // Pixel array (from bottom-left corner)
-
-            // The bits representing the bitmap pixels are packed in rows. The size of each row is rounded up to a
-            // multiple of 4 bytes (a 32-bit DWORD) by padding.
-            // For images with height > 1, multiple padded rows are stored consecutively, forming a Pixel Array.
-
-            // ReSharper disable once PossibleLossOfFraction
             int rowSize = (int)Math.Floor((double)((8 * width) + 31) / 32) * 4;
 
             for (int y = 0; y < height; y++)
@@ -133,17 +116,6 @@
             return ms.ToArray();
         }
 
-        /// <summary>
-        /// Writes the bitmap info header.
-        /// </summary>
-        /// <param name="w">The writer.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="bitsPerPixel">The number of bits per pixel.</param>
-        /// <param name="length">The length of the pixel data.</param>
-        /// <param name="dpix">The horizontal resolution (dpi).</param>
-        /// <param name="dpiy">The vertical resolution (dpi).</param>
-        /// <param name="colors">The number of colors.</param>
         private static void WriteBitmapInfoHeader(BinaryWriter w, int width, int height, int bitsPerPixel, int length, double dpix, double dpiy, int colors = 0)
         {
             w.Write((uint)40);
@@ -162,16 +134,6 @@
             w.Write((uint)colors);
         }
 
-        /// <summary>
-        /// Writes the bitmap V4 header.
-        /// </summary>
-        /// <param name="w">The writer.</param>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="bitsPerPixel">The number of bits per pixel.</param>
-        /// <param name="length">The length.</param>
-        /// <param name="dpi">The resolution.</param>
-        /// <param name="colors">The number of colors.</param>
         private static void WriteBitmapV4Header(BinaryWriter w, int width, int height, int bitsPerPixel, int length, int dpi, int colors = 0)
         {
             // Convert resolution to pixels per meter
