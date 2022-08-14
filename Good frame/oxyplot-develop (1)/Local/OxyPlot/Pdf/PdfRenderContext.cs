@@ -1,40 +1,17 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PdfRenderContext.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Implements an <see cref="IRenderContext" /> producing PDF documents by <see cref="PortableDocument" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
 
-    /// <summary>
-    /// Implements an <see cref="IRenderContext" /> producing PDF documents by <see cref="PortableDocument" />.
-    /// </summary>
     public class PdfRenderContext : ClippingRenderContext
     {
-        /// <summary>
-        /// The current document.
-        /// </summary>
         private readonly PortableDocument doc;
 
-        /// <summary>
-        /// The image cache.
-        /// </summary>
-        private readonly Dictionary<OxyImage, PortableDocumentImage> images = new Dictionary<OxyImage, PortableDocumentImage>();
+        private readonly Dictionary<OxyImage, PortableDocumentImage> images
+            = new Dictionary<OxyImage, PortableDocumentImage>();
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PdfRenderContext" /> class.
-        /// </summary>
-        /// <param name="width">The width.</param>
-        /// <param name="height">The height.</param>
-        /// <param name="background">The background.</param>
         public PdfRenderContext(double width, double height, OxyColor background)
         {
             this.doc = new PortableDocument();
@@ -48,27 +25,20 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Saves the output to the specified stream.
-        /// </summary>
-        /// <param name="s">The stream.</param>
         public void Save(Stream s)
         {
             this.doc.Save(s);
         }
 
-        /// <summary>
-        /// Draws an ellipse.
-        /// </summary>
-        /// <param name="rect">The rectangle.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode. This is not supported and will be ignored.</param>
-        public override void DrawEllipse(OxyRect rect, OxyColor fill, OxyColor stroke, double thickness, EdgeRenderingMode edgeRenderingMode)
+        public override void DrawEllipse(
+            OxyRect rect,
+            OxyColor fill,
+            OxyColor stroke,
+            double thickness,
+            EdgeRenderingMode edgeRenderingMode)
         {
-            var isStroked = stroke.IsVisible() && thickness > 0;
-            var isFilled = fill.IsVisible();
+            bool isStroked = stroke.IsVisible() && thickness > 0;
+            bool isFilled = fill.IsVisible();
             if (!isStroked && !isFilled)
             {
                 return;
@@ -96,15 +66,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws a polyline.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode. This is not supported and will be ignored.</param>
-        /// <param name="dashArray">The dash array.</param>
-        /// <param name="lineJoin">The line join type.</param>
         public override void DrawLine(
             IList<ScreenPoint> points,
             OxyColor stroke,
@@ -121,7 +82,7 @@ namespace OxyPlot
             }
 
             this.doc.SetLineJoin(Convert(lineJoin));
-            var h = this.doc.PageHeight;
+            double h = this.doc.PageHeight;
             this.doc.MoveTo(points[0].X, h - points[0].Y);
             for (int i = 1; i < points.Count; i++)
             {
@@ -135,16 +96,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws a polygon. The polygon can have stroke and/or fill.
-        /// </summary>
-        /// <param name="points">The points.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode. This is not supported and will be ignored.</param>
-        /// <param name="dashArray">The dash array.</param>
-        /// <param name="lineJoin">The line join type.</param>
         public override void DrawPolygon(
             IList<ScreenPoint> points,
             OxyColor fill,
@@ -154,14 +105,14 @@ namespace OxyPlot
             double[] dashArray,
             LineJoin lineJoin)
         {
-            var isStroked = stroke.IsVisible() && thickness > 0;
-            var isFilled = fill.IsVisible();
+            bool isStroked = stroke.IsVisible() && thickness > 0;
+            bool isFilled = fill.IsVisible();
             if (!isStroked && !isFilled)
             {
                 return;
             }
 
-            var h = this.doc.PageHeight;
+            double h = this.doc.PageHeight;
             this.doc.MoveTo(points[0].X, h - points[0].Y);
             for (int i = 1; i < points.Count; i++)
             {
@@ -200,18 +151,16 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws a rectangle.
-        /// </summary>
-        /// <param name="rect">The rectangle.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="stroke">The stroke color.</param>
-        /// <param name="thickness">The stroke thickness.</param>
-        /// <param name="edgeRenderingMode">The edge rendering mode. This is not supported and will be ignored.</param>
-        public override void DrawRectangle(OxyRect rect, OxyColor fill, OxyColor stroke, double thickness, EdgeRenderingMode edgeRenderingMode)
+
+        public override void DrawRectangle(
+            OxyRect rect,
+            OxyColor fill,
+            OxyColor stroke,
+            double thickness,
+            EdgeRenderingMode edgeRenderingMode)
         {
-            var isStroked = stroke.IsVisible() && thickness > 0;
-            var isFilled = fill.IsVisible();
+            bool isStroked = stroke.IsVisible() && thickness > 0;
+            bool isFilled = fill.IsVisible();
             if (!isStroked && !isFilled)
             {
                 return;
@@ -239,19 +188,6 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Draws the text.
-        /// </summary>
-        /// <param name="p">The position of the text.</param>
-        /// <param name="text">The text.</param>
-        /// <param name="fill">The fill color.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <param name="rotate">The rotation angle.</param>
-        /// <param name="halign">The horizontal alignment.</param>
-        /// <param name="valign">The vertical alignment.</param>
-        /// <param name="maxSize">The maximum size of the text.</param>
         public override void DrawText(
             ScreenPoint p,
             string text,
@@ -316,20 +252,11 @@ namespace OxyPlot
 
             this.doc.Translate(dx, dy);
 
-            // this.doc.DrawRectangle(0, 0, width, height);
             this.doc.SetClippingRectangle(0, 0, width, height);
             this.doc.DrawText(0, 0, text);
             this.doc.RestoreState();
         }
 
-        /// <summary>
-        /// Measures the text.
-        /// </summary>
-        /// <param name="text">The text.</param>
-        /// <param name="fontFamily">The font family.</param>
-        /// <param name="fontSize">Size of the font.</param>
-        /// <param name="fontWeight">The font weight.</param>
-        /// <returns>The text size.</returns>
         public override OxySize MeasureText(string text, string fontFamily, double fontSize, double fontWeight)
         {
             this.doc.SetFont(fontFamily, fontSize / 96 * 72, fontWeight > 500);
@@ -338,20 +265,6 @@ namespace OxyPlot
             return new OxySize(width, height);
         }
 
-        /// <summary>
-        /// Draws the specified portion of the specified <see cref="OxyImage" /> at the specified location and with the specified size.
-        /// </summary>
-        /// <param name="source">The source.</param>
-        /// <param name="srcX">The x-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcY">The y-coordinate of the upper-left corner of the portion of the source image to draw.</param>
-        /// <param name="srcWidth">Width of the portion of the source image to draw.</param>
-        /// <param name="srcHeight">Height of the portion of the source image to draw.</param>
-        /// <param name="destX">The x-coordinate of the upper-left corner of drawn image.</param>
-        /// <param name="destY">The y-coordinate of the upper-left corner of drawn image.</param>
-        /// <param name="destWidth">The width of the drawn image.</param>
-        /// <param name="destHeight">The height of the drawn image.</param>
-        /// <param name="opacity">The opacity.</param>
-        /// <param name="interpolate">Interpolate if set to <c>true</c>.</param>
         public override void DrawImage(
             OxyImage source,
             double srcX,
@@ -371,7 +284,6 @@ namespace OxyPlot
                 image = PortableDocumentImageUtilities.Convert(source, interpolate);
                 if (image == null)
                 {
-                    // TODO: remove this when image decoding is working
                     return;
                 }
 
@@ -390,24 +302,17 @@ namespace OxyPlot
             this.doc.RestoreState();
         }
 
-        /// <inheritdoc/>
         protected override void SetClip(OxyRect clippingRectangle)
         {
             this.doc.SaveState();
             this.doc.SetClippingRectangle(clippingRectangle.Left, clippingRectangle.Bottom, clippingRectangle.Width, clippingRectangle.Height);
         }
 
-        /// <inheritdoc/>
         protected override void ResetClip()
         {
             this.doc.RestoreState();
         }
 
-        /// <summary>
-        /// Converts the specified <see cref="OxyPlot.LineJoin" /> to a <see cref="OxyPlot.LineJoin" />.
-        /// </summary>
-        /// <param name="lineJoin">The value to convert.</param>
-        /// <returns>The converted value.</returns>
         private static LineJoin Convert(LineJoin lineJoin)
         {
             switch (lineJoin)
@@ -421,24 +326,17 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Sets the width of the line.
-        /// </summary>
-        /// <param name="thickness">The thickness (in 1/96 inch units).</param>
         private void SetLineWidth(double thickness)
         {
-            // Convert from 1/96 inch to points
             this.doc.SetLineWidth(thickness / 96 * 72);
         }
 
-        /// <summary>
-        /// Sets the line dash pattern.
-        /// </summary>
-        /// <param name="dashArray">The dash array (in 1/96 inch units).</param>
-        /// <param name="dashPhase">The dash phase (in 1/96 inch units).</param>
+
         private void SetLineDashPattern(double[] dashArray, double dashPhase)
         {
-            this.doc.SetLineDashPattern(dashArray.Select(d => d / 96 * 72).ToArray(), dashPhase / 96 * 72);
+            this.doc.SetLineDashPattern(
+                dashArray.Select(d => d / 96 * 72).ToArray(),
+                dashPhase / 96 * 72);
         }
     }
 }

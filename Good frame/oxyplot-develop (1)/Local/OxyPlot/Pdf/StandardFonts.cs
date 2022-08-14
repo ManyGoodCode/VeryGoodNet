@@ -1,27 +1,15 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="StandardFonts.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Defines the standard fonts that can be used in a <see cref="PortableDocument" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
-    /// <summary>
-    /// Defines the standard fonts that can be used in a <see cref="PortableDocument" />.
-    /// </summary>
     public static class StandardFonts
     {
-        /// <summary>
-        /// Initializes static members of the <see cref="StandardFonts" /> class.
-        /// </summary>
+        public static PortableDocumentFontFamily Helvetica { get; private set; }
+        public static PortableDocumentFontFamily Times { get; private set; }
+        public static PortableDocumentFontFamily Courier { get; private set; }
+
         static StandardFonts()
         {
-            //// TODO: Change to Type 1 fonts?
 
-            var arialRegular = new PortableDocumentFont
+            PortableDocumentFont arialRegular = new PortableDocumentFont
                         {
                             Ascent = 905,
                             CapHeight = 716,
@@ -59,7 +47,7 @@ namespace OxyPlot
                                              548, 610, 556, 556, 556, 556, 500, 556, 500
                                          }
                         };
-            var arialItalic = new PortableDocumentFont
+            PortableDocumentFont arialItalic = new PortableDocumentFont
                               {
                                   Ascent = 905,
                                   CapHeight = 716,
@@ -98,7 +86,7 @@ namespace OxyPlot
                                               556, 500, 556, 500
                                           }
                               };
-            var arialBold = new PortableDocumentFont
+            PortableDocumentFont arialBold = new PortableDocumentFont
                             {
                                 Ascent = 905,
                                 CapHeight = 716,
@@ -136,7 +124,7 @@ namespace OxyPlot
                                             556, 610, 556
                                         }
                             };
-            var arialBoldItalic = new PortableDocumentFont
+            PortableDocumentFont arialBoldItalic = new PortableDocumentFont
                                   {
                                       Ascent = 905,
                                       CapHeight = 716,
@@ -184,7 +172,7 @@ namespace OxyPlot
                 BoldItalicFont = arialBoldItalic
             };
 
-            var timesRegular  = new PortableDocumentFont
+            PortableDocumentFont timesRegular  = new PortableDocumentFont
             {
                 Ascent = 891,
                 CapHeight = 662,
@@ -218,7 +206,7 @@ namespace OxyPlot
                         500, 500, 500, 500, 500, 500, 500, 500
                     }
             };
-            var timesItalic = new PortableDocumentFont
+            PortableDocumentFont timesItalic = new PortableDocumentFont
             {
                 Ascent = 891,
                 CapHeight = 662,
@@ -252,7 +240,7 @@ namespace OxyPlot
                         500, 500, 500, 500, 500, 443, 500, 443
                     }
             };
-            var timesBold = new PortableDocumentFont
+            PortableDocumentFont timesBold = new PortableDocumentFont
             {
                 Ascent = 891,
                 CapHeight = 662,
@@ -286,7 +274,7 @@ namespace OxyPlot
                         500, 556, 556, 556, 556, 500, 556, 500
                     }
             };
-            var timesBoldItalic = new PortableDocumentFont
+            PortableDocumentFont timesBoldItalic = new PortableDocumentFont
             {
                 Ascent = 891,
                 CapHeight = 662,
@@ -328,7 +316,7 @@ namespace OxyPlot
                 BoldItalicFont = timesBoldItalic
             };
 
-            var courierRegular = new PortableDocumentFont
+            PortableDocumentFont courierRegular = new PortableDocumentFont
             {
                 Ascent = 833,
                 CapHeight = 571,
@@ -362,7 +350,7 @@ namespace OxyPlot
                         600, 600, 600, 600, 600, 600, 600, 600
                     }
             };
-            var courierItalic = new PortableDocumentFont
+            PortableDocumentFont courierItalic = new PortableDocumentFont
             {
                 Ascent = 833,
                 CapHeight = 571,
@@ -396,7 +384,7 @@ namespace OxyPlot
                         600, 600, 600, 600, 600, 600, 600, 600
                     }
             };
-            var courierBold = new PortableDocumentFont
+            PortableDocumentFont courierBold = new PortableDocumentFont
             {
                 Ascent = 833,
                 CapHeight = 592,
@@ -430,7 +418,7 @@ namespace OxyPlot
                         600, 600, 600, 600, 600, 600, 600, 600
                     }
             };
-            var courierBoldItalic = new PortableDocumentFont
+            PortableDocumentFont courierBoldItalic = new PortableDocumentFont
             {
                 Ascent = 833,
                 CapHeight = 592,
@@ -472,20 +460,5 @@ namespace OxyPlot
                 BoldItalicFont = courierBoldItalic
             };
         }
-
-        /// <summary>
-        /// Gets the Arial font family.
-        /// </summary>
-        public static PortableDocumentFontFamily Helvetica { get; private set; }
-
-        /// <summary>
-        /// Gets the Times font family.
-        /// </summary>
-        public static PortableDocumentFontFamily Times { get; private set; }
-
-        /// <summary>
-        /// Gets the Courier font family.
-        /// </summary>
-        public static PortableDocumentFontFamily Courier { get; private set; }
     }
 }

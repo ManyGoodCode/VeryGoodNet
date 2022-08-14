@@ -1,13 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PortableDocument.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a document that can be output to PDF.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot
+﻿namespace OxyPlot
 {
     using System;
     using System.Collections.Generic;
@@ -15,94 +6,37 @@ namespace OxyPlot
     using System.IO;
     using System.Text;
 
-    /// <summary>
-    /// Represents a document that can be output to PDF.
-    /// </summary>
     public class PortableDocument
     {
-        /// <summary>
-        /// The objects.
-        /// </summary>
-        private readonly List<PortableDocumentObject> objects = new List<PortableDocumentObject>();
+        private readonly List<PortableDocumentObject> objects
+            = new List<PortableDocumentObject>();
 
-        /// <summary>
-        /// The stroke alpha cache.
-        /// </summary>
-        private readonly Dictionary<double, string> strokeAlphaCache = new Dictionary<double, string>();
+        private readonly Dictionary<double, string> strokeAlphaCache
+            = new Dictionary<double, string>();
 
-        /// <summary>
-        /// The fill alpha cache.
-        /// </summary>
-        private readonly Dictionary<double, string> fillAlphaCache = new Dictionary<double, string>();
+        private readonly Dictionary<double, string> fillAlphaCache
+            = new Dictionary<double, string>();
 
-        /// <summary>
-        /// The font cache.
-        /// </summary>
-        private readonly Dictionary<PortableDocumentFont, string> fontCache = new Dictionary<PortableDocumentFont, string>();
+        private readonly Dictionary<PortableDocumentFont, string> fontCache
+            = new Dictionary<PortableDocumentFont, string>();
 
-        /// <summary>
-        /// The image cache.
-        /// </summary>
-        private readonly Dictionary<PortableDocumentImage, string> imageCache = new Dictionary<PortableDocumentImage, string>();
+        private readonly Dictionary<PortableDocumentImage, string> imageCache
+            = new Dictionary<PortableDocumentImage, string>();
 
-        /// <summary>
-        /// The catalog object.
-        /// </summary>
         private readonly PortableDocumentObject catalog;
-
-        /// <summary>
-        /// The pages object.
-        /// </summary>
         private readonly PortableDocumentObject pages;
-
-        /// <summary>
-        /// The metadata object.
-        /// </summary>
         private readonly PortableDocumentObject metadata;
-
-        /// <summary>
-        /// The resources object.
-        /// </summary>
         private readonly PortableDocumentObject resources;
-
-        /// <summary>
-        /// The fonts dictionary.
-        /// </summary>
         private readonly Dictionary<string, object> fonts;
-
-        /// <summary>
-        /// The x objects dictionary.
-        /// </summary>
         private readonly Dictionary<string, object> xobjects;
-
-        /// <summary>
-        /// The ext g state dictionary.
-        /// </summary>
         private readonly Dictionary<string, object> extgstate;
 
-        /// <summary>
-        /// The page reference objects.
-        /// </summary>
-        private readonly IList<PortableDocumentObject> pageReferences = new List<PortableDocumentObject>();
+        private readonly IList<PortableDocumentObject> pageReferences
+            = new List<PortableDocumentObject>();
 
-        /// <summary>
-        /// The current page contents
-        /// </summary>
         private PortableDocumentObject currentPageContents;
-
-        /// <summary>
-        /// The current font
-        /// </summary>
         private PortableDocumentFont currentFont;
-
-        /// <summary>
-        /// The current font size
-        /// </summary>
         private double currentFontSize;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PortableDocument" /> class.
-        /// </summary>
         public PortableDocument()
         {
             this.metadata = this.AddObject();
@@ -117,7 +51,6 @@ namespace OxyPlot
             this.extgstate = new Dictionary<string, object>();
             this.resources = this.AddObject();
 
-            // See chapter 10.1 - ProcSet is obsolete from version 1.4?
             this.resources["/ProcSet"] = new[] { "/PDF", "/Text", "/ImageB", "/ImageC", "/ImageI" };
 
             this.resources["/Font"] = this.fonts;
@@ -128,21 +61,8 @@ namespace OxyPlot
             this.currentFontSize = 12;
         }
 
-        /// <summary>
-        /// Gets the width of the current page.
-        /// </summary>
-        /// <value>The width measured in points (1/72 inch).</value>
         public double PageWidth { get; private set; }
-
-        /// <summary>
-        /// Gets the height of the current page.
-        /// </summary>
-        /// <value>The height measured in points (1/72 inch).</value>
         public double PageHeight { get; private set; }
-
-        /// <summary>
-        /// Sets the title property.
-        /// </summary>
         public string Title
         {
             set
@@ -151,37 +71,21 @@ namespace OxyPlot
             }
         }
 
-        /// <summary>
-        /// Sets the author property.
-        /// </summary>
         public string Author
         {
-            set
-            {
-                this.metadata["/Author"] = EscapeString(value);
-            }
+            set { this.metadata["/Author"] = EscapeString(value); }
         }
 
-        /// <summary>
-        /// Sets the subject property.
-        /// </summary>
+
         public string Subject
         {
-            set
-            {
-                this.metadata["/Subject"] = EscapeString(value);
-            }
+            set { this.metadata["/Subject"] = EscapeString(value); }
         }
 
-        /// <summary>
-        /// Sets the keywords property.
-        /// </summary>
+
         public string Keywords
         {
-            set
-            {
-                this.metadata["/Keywords"] = EscapeString(value);
-            }
+            set { this.metadata["/Keywords"] = EscapeString(value); }
         }
 
         /// <summary>
