@@ -1,83 +1,29 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HeatMapSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Specifies how the heat map coordinates are defined.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
 
     using OxyPlot.Axes;
 
-    /// <summary>
-    /// Specifies how the heat map coordinates are defined.
-    /// </summary>
     public enum HeatMapCoordinateDefinition
     {
-        /// <summary>
-        /// The coordinates defines the center of the cells
-        /// </summary>
         Center,
-
-        /// <summary>
-        /// The coordinates defines the edge of the cells
-        /// </summary>
         Edge
     }
 
-    /// <summary>
-    /// Specifies how the heat map coordinates are defined.
-    /// </summary>
+
     public enum HeatMapRenderMethod
     {
-        /// <summary>
-        /// The heat map is rendered as a bitmap
-        /// </summary>
         Bitmap,
-
-        /// <summary>
-        /// The heat map is rendered as a collection of discrete rectangles
-        /// </summary>
         Rectangles
     }
 
-    /// <summary>
-    /// Represents a heat map.
-    /// </summary>
     public class HeatMapSeries : XYAxisSeries
     {
-        /// <summary>
-        /// The default tracker format string
-        /// </summary>
         public new const string DefaultTrackerFormatString = "{0}\n{1}: {2}\n{3}: {4}\n{5}: {6}";
-
-        /// <summary>
-        /// The default color-axis title
-        /// </summary>
         private const string DefaultColorAxisTitle = "Value";
-
-        /// <summary>
-        /// The hash code of the data when the image was updated.
-        /// </summary>
         private int dataHash;
-
-        /// <summary>
-        /// The hash code of the color axis when the image was updated.
-        /// </summary>
         private int colorAxisHash;
-
-        /// <summary>
-        /// The image
-        /// </summary>
         private OxyImage image;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HeatMapSeries" /> class.
-        /// </summary>
         public HeatMapSeries()
         {
             this.TrackerFormatString = DefaultTrackerFormatString;
@@ -86,117 +32,25 @@ namespace OxyPlot.Series
             this.LabelFontSize = 0;
         }
 
-        /// <summary>
-        /// Gets or sets the x-coordinate of the elements at index [0,*] in the data set.
-        /// </summary>
-        /// <value>
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Center"/>, the value defines the mid point of the element at index [0,*] in the data set.
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Edge"/>, the value defines the coordinate of the left edge of the element at index [0,*] in the data set.
-        /// </value>
         public double X0 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the x-coordinate of the mid point for the elements at index [m-1,*] in the data set.
-        /// </summary>
-        /// <value>
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Center"/>, the value defines the mid point of the element at index [m-1,*] in the data set.
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Edge"/>, the value defines the coordinate of the right edge of the element at index [m-1,*] in the data set.
-        /// </value>
         public double X1 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the y-coordinate of the mid point for the elements at index [*,0] in the data set.
-        /// </summary>
-        /// <value>
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Center"/>, the value defines the mid point of the element at index [*,0] in the data set.
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Edge"/>, the value defines the coordinate of the bottom edge of the element at index [*,0] in the data set.
-        /// </value>
         public double Y0 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the y-coordinate of the mid point for the elements at index [*,n-1] in the data set.
-        /// </summary>
-        /// <value>
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Center"/>, the value defines the mid point of the element at index [*,n-1] in the data set.
-        /// If <see cref="CoordinateDefinition" /> equals <see cref="HeatMapCoordinateDefinition.Edge"/>, the value defines the coordinate of the top edge of the element at index [*,n-1] in the data set.
-        /// </value>
         public double Y1 { get; set; }
-
-        /// <summary>
-        /// Gets or sets the data array.
-        /// </summary>
-        /// <remarks>Note that the indices of the data array refer to [x,y].
-        /// The first dimension is along the x-axis.
-        /// The second dimension is along the y-axis.
-        /// Remember to call the <see cref="Invalidate" /> method if the contents of the <see cref="Data" /> array is changed.</remarks>
         public double[,] Data { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to interpolate when rendering. The default value is <c>true</c>.
-        /// </summary>
-        /// <remarks>This property is not supported on all platforms. Ignored (off) if <see cref="RenderMethod" /> is <see cref="HeatMapRenderMethod.Rectangles" />.</remarks>
         public bool Interpolate { get; set; }
-
-        /// <summary>
-        /// Gets the minimum value of the dataset.
-        /// </summary>
         public double MinValue { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum value of the dataset.
-        /// </summary>
         public double MaxValue { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the color axis.
-        /// </summary>
-        /// <value>The color axis.</value>
         public IColorAxis ColorAxis { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the color axis key.
-        /// </summary>
-        /// <value>The color axis key.</value>
         public string ColorAxisKey { get; set; }
-
-        /// <summary>
-        /// Gets or sets the coordinate definition. The default value is <see cref="HeatMapCoordinateDefinition.Center" />.
-        /// </summary>
-        /// <value>The coordinate definition.</value>
         public HeatMapCoordinateDefinition CoordinateDefinition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the render method. The default value is <see cref="HeatMapRenderMethod.Bitmap" />.
-        /// </summary>
-        /// <value>The render method.</value>
         public HeatMapRenderMethod RenderMethod { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format string for the cell labels. The default value is <c>0.00</c>.
-        /// </summary>
-        /// <value>The format string.</value>
-        /// <remarks>The label format string is only used when <see cref="LabelFontSize" /> is greater than 0.</remarks>
         public string LabelFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the font size of the labels. The default value is <c>0</c> (labels not visible).
-        /// </summary>
-        /// <value>The font size relative to the cell height.</value>
         public double LabelFontSize { get; set; }
-
-        /// <summary>
-        /// Invalidates the image that renders the heat map. The image will be regenerated the next time the <see cref="HeatMapSeries" /> is rendered.
-        /// </summary>
-        /// <remarks>Call <see cref="PlotModel.InvalidatePlot" /> to refresh the view.</remarks>
         public void Invalidate()
         {
             this.image = null;
         }
 
-        /// <summary>
-        /// Renders the series on the specified render context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
         public override void Render(IRenderContext rc)
         {
             if (this.Data == null)
@@ -303,12 +157,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the point on the series that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate the series if this flag is set to <c>true</c>.</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             if (!this.Interpolate)
@@ -414,9 +262,6 @@ namespace OxyPlot.Series
             };
         }
 
-        /// <summary>
-        /// Ensures that the axes of the series is defined.
-        /// </summary>
         protected internal override void EnsureAxes()
         {
             base.EnsureAxes();
@@ -426,9 +271,6 @@ namespace OxyPlot.Series
                              this.PlotModel.DefaultColorAxis as IColorAxis;
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series for the x and y dimensions only.
-        /// </summary>
         protected internal void UpdateMaxMinXY()
         {
             int m = this.Data.GetLength(0);
@@ -470,9 +312,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -483,9 +322,6 @@ namespace OxyPlot.Series
             this.MaxValue = this.Data.Max2D();
         }
 
-        /// <summary>
-        /// Updates the axes to include the max and min of this series.
-        /// </summary>
         protected internal override void UpdateAxisMaxMin()
         {
             base.UpdateAxisMaxMin();
@@ -497,11 +333,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Renders the labels.
-        /// </summary>
-        /// <param name="rc">The <see cref="IRenderContext" /></param>
-        /// <param name="rect">The bounding rectangle for the data.</param>
         protected virtual void RenderLabels(IRenderContext rc, OxyRect rect)
         {
             int m = this.Data.GetLength(0);
@@ -543,29 +374,13 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the label for the specified cell.
-        /// </summary>
-        /// <param name="v">The value of the cell.</param>
-        /// <param name="i">The first index.</param>
-        /// <param name="j">The second index.</param>
-        /// <returns>The label string.</returns>
         protected virtual string GetLabel(double v, int i, int j)
         {
             return v.ToString(this.LabelFormatString, this.ActualCulture);
         }
 
-        /// <summary>
-        /// Gets the interpolated value at the specified position in the data array (by bilinear interpolation).
-        /// Where interpolation is impossible, return NaN, rather than a calculated nonsense value.
-        /// </summary>
-        /// <param name="data">The data.</param>
-        /// <param name="i">The first index.</param>
-        /// <param name="j">The second index.</param>
-        /// <returns>The interpolated value.</returns>
         private static double GetValue(double[,] data, double i, double j)
         {
-            //// Note data[0, 0] is displayed in quadrant 1, not exactly at the origin, and that implies the invoker can produce negative coordinates.
             i = Math.Max(i, 0);
             j = Math.Max(j, 0);
 
@@ -585,8 +400,6 @@ namespace OxyPlot.Series
 
             if ((i != i0) && (j == j0))
             {
-                //// interpolate only by i
-
                 if (double.IsNaN(data[i0, j0]) || double.IsNaN(data[i1, j0]))
                 {
                     return double.NaN;
@@ -603,8 +416,6 @@ namespace OxyPlot.Series
 
             if ((i == i0) && (j != j0))
             {
-                //// interpolate only by j
-
                 if (double.IsNaN(data[i0, j0]) || double.IsNaN(data[i0, j1]))
                 {
                     return double.NaN;
@@ -649,11 +460,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Tests if a <see cref="DataPoint" /> is inside the heat map
-        /// </summary>
-        /// <param name="p">The <see cref="DataPoint" /> to test.</param>
-        /// <returns><c>True</c> if the point is inside the heat map.</returns>
         private bool IsPointInRange(DataPoint p)
         {
             this.UpdateMaxMinXY();
@@ -661,18 +467,11 @@ namespace OxyPlot.Series
             return p.X >= this.MinX && p.X <= this.MaxX && p.Y >= this.MinY && p.Y <= this.MaxY;
         }
 
-        /// <summary>
-        /// Updates the image.
-        /// </summary>
         private void UpdateImage()
         {
-            // determine if the provided data should be reversed in x-direction
             var reverseX = this.XAxis.Transform(this.X0) > this.XAxis.Transform(this.X1);
-
-            // determine if the provided data should be reversed in y-direction
             var reverseY = this.YAxis.Transform(this.Y0) > this.YAxis.Transform(this.Y1);
 
-            // determine if the data should be transposed
             var swapXY = this.IsTransposed();
 
             int m = this.Data.GetLength(0);

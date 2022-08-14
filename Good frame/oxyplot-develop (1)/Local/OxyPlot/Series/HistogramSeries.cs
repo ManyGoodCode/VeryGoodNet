@@ -1,46 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HistogramSeries.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a series that can be bound to a collection of HistogramItems representing bins from a Histogram.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
-namespace OxyPlot.Series
+﻿namespace OxyPlot.Series
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents a series that can be bound to a collection of <see cref="HistogramItem"/>.
-    /// </summary>
+
     public class HistogramSeries : XYAxisSeries
     {
-        /// <summary>
-        /// The default tracker format string.
-        /// </summary>
         public new const string DefaultTrackerFormatString = "Start: {5}\nEnd: {6}\nValue: {7}\nArea: {8}\nCount: {9}";
-
-        /// <summary>
-        /// The default fill color.
-        /// </summary>
         private OxyColor defaultFillColor;
-
-        /// <summary>
-        /// The items originating from the items source.
-        /// </summary>
         private List<HistogramItem> actualItems;
-
-        /// <summary>
-        /// Specifies if the <see cref="actualItems" /> list can be modified.
-        /// </summary>
         private bool ownsActualItems;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HistogramSeries" /> class.
-        /// </summary>
         public HistogramSeries()
         {
             this.FillColor = OxyColors.Automatic;
@@ -52,96 +22,26 @@ namespace OxyPlot.Series
             this.ColorMapping = this.GetDefaultColor;
         }
 
-        /// <summary>
-        /// Gets or sets the color of the interior of the bars.
-        /// </summary>
-        /// <value>The color.</value>
+
         public OxyColor FillColor { get; set; }
-
-        /// <summary>
-        /// Gets the actual fill color.
-        /// </summary>
-        /// <value>The actual color.</value>
         public OxyColor ActualFillColor => this.FillColor.GetActualColor(this.defaultFillColor);
-
-        /// <summary>
-        /// Gets or sets the color of the border around the bars.
-        /// </summary>
-        /// <value>The color of the stroke.</value>
         public OxyColor StrokeColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the bar border strokes.
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <summary>
-        /// Gets the minimum value of the dataset.
-        /// </summary>
         public double MinValue { get; private set; }
-
-        /// <summary>
-        /// Gets the maximum value of the dataset.
-        /// </summary>
         public double MaxValue { get; private set; }
-
-        /// <summary>
-        /// Gets or sets the format string for the cell labels. The default value is <c>0.00</c>.
-        /// </summary>
-        /// <value>The format string.</value>
         public string LabelFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the label margins.
-        /// </summary>
         public double LabelMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets label placements.
-        /// </summary>
         public LabelPlacement LabelPlacement { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delegate used to map from histogram item to color.
-        /// </summary>
         public Func<HistogramItem, OxyColor> ColorMapping { get; set; }
-
-        /// <summary>
-        /// Gets or sets the delegate used to map from <see cref="ItemsSeries.ItemsSource" /> to <see cref="HistogramSeries" />. The default is <c>null</c>.
-        /// </summary>
-        /// <value>The mapping.</value>
-        /// <remarks>Example: series1.Mapping = item => new HistogramItem((double)item.BinStart, (double)item.BinStart + item.BinWidth, (double)item.Count / totalCount, item.Count).</remarks>
         public Func<object, HistogramItem> Mapping { get; set; }
-
-        /// <summary>
-        /// Gets the list of <see cref="HistogramItem" />.
-        /// </summary>
-        /// <value>A list of <see cref="HistogramItem" />. This list is used if <see cref="ItemsSeries.ItemsSource" /> is not set.</value>
         public List<HistogramItem> Items { get; } = new List<HistogramItem>();
-
-        /// <summary>
-        /// Gets the list of <see cref="HistogramItem" /> that should be rendered.
-        /// </summary>
-        /// <value>A list of <see cref="HistogramItem" />.</value>
         protected List<HistogramItem> ActualItems => this.ItemsSource != null ? this.actualItems : this.Items;
-
-        /// <summary>
-        /// Renders the series on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
         public override void Render(IRenderContext rc)
         {
             this.VerifyAxes();
             this.RenderBins(rc, this.ActualItems);
         }
 
-        /// <summary>
-        /// Gets the point on the series that is nearest the specified point.
-        /// </summary>
-        /// <param name="point">The point.</param>
-        /// <param name="interpolate">Interpolate the series if this flag is set to <c>true</c>.</param>
-        /// <returns>A TrackerHitResult for the current hit.</returns>
         public override TrackerHitResult GetNearestPoint(ScreenPoint point, bool interpolate)
         {
             var p = this.InverseTransform(point);
@@ -156,7 +56,6 @@ namespace OxyPlot.Series
                 return null;
             }
 
-            // iterate through the HistogramItems and return the first one that contains the point
             for (var i = 0; i < this.ActualItems.Count; i++)
             {
                 var item = this.ActualItems[i];
@@ -188,15 +87,9 @@ namespace OxyPlot.Series
                 }
             }
 
-            // if no HistogramItems contain the point, return null
             return null;
         }
 
-        /// <summary>
-        /// Renders the legend symbol on the specified rendering context.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="legendBox">The legend rectangle.</param>
         public override void RenderLegend(IRenderContext rc, OxyRect legendBox)
         {
             var xmid = (legendBox.Left + legendBox.Right) / 2;
@@ -211,9 +104,6 @@ namespace OxyPlot.Series
                 this.EdgeRenderingMode);
         }
 
-        /// <summary>
-        /// Updates the data.
-        /// </summary>
         protected internal override void UpdateData()
         {
             if (this.ItemsSource == null)
@@ -224,9 +114,6 @@ namespace OxyPlot.Series
             this.UpdateActualItems();
         }
 
-        /// <summary>
-        /// Sets the default values.
-        /// </summary>
         protected internal override void SetDefaultValues()
         {
             if (this.FillColor.IsAutomatic())
@@ -235,9 +122,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series for the x and y dimensions only.
-        /// </summary>
         protected internal void UpdateMaxMinXY()
         {
             if (this.ActualItems != null && this.ActualItems.Count > 0)
@@ -249,9 +133,6 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Updates the maximum and minimum values of the series.
-        /// </summary>
         protected internal override void UpdateMaxMin()
         {
             base.UpdateMaxMin();
@@ -270,11 +151,7 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the item at the specified index.
-        /// </summary>
-        /// <param name="i">The index of the item.</param>
-        /// <returns>The item of the index.</returns>
+
         protected override object GetItem(int i)
         {
             var items = this.ActualItems;
@@ -286,11 +163,6 @@ namespace OxyPlot.Series
             return base.GetItem(i);
         }
 
-        /// <summary>
-        /// Renders the points as line, broken line and markers.
-        /// </summary>
-        /// <param name="rc">The rendering context.</param>
-        /// <param name="items">The Items to render.</param>
         protected void RenderBins(IRenderContext rc, ICollection<HistogramItem> items)
         {
             foreach (var item in items)
@@ -317,22 +189,11 @@ namespace OxyPlot.Series
             }
         }
 
-        /// <summary>
-        /// Gets the fill color of the given <see cref="HistogramItem"/>.
-        /// </summary>
-        /// <param name="item">The item.</param>
-        /// <returns>The fill color of the item.</returns>
         protected OxyColor GetItemFillColor(HistogramItem item)
         {
             return item.Color.IsAutomatic() ? this.ColorMapping(item) : item.Color;
         }
 
-        /// <summary>
-        /// Draws the label.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="rect">The column rectangle.</param>
-        /// <param name="item">The item.</param>
         protected void RenderLabel(IRenderContext rc, OxyRect rect, HistogramItem item)
         {
             var s = StringHelper.Format(this.ActualCulture, this.LabelFormatString, item, item.Value, item.RangeStart, item.RangeEnd, item.Area, item.Count);
@@ -385,11 +246,6 @@ namespace OxyPlot.Series
                 va);
         }
 
-        /// <summary>
-        /// Tests if a <see cref="DataPoint" /> is inside the histogram.
-        /// </summary>
-        /// <param name="p">The <see cref="DataPoint" /> to test.</param>
-        /// <returns><c>True</c> if the point is inside the heat map.</returns>
         private bool IsPointInRange(DataPoint p)
         {
             this.UpdateMaxMinXY();
@@ -397,9 +253,6 @@ namespace OxyPlot.Series
             return p.X >= this.MinX && p.X <= this.MaxX && p.Y >= this.MinY && p.Y <= this.MaxY;
         }
 
-        /// <summary>
-        /// Clears or creates the <see cref="actualItems"/> list.
-        /// </summary>
         private void ClearActualItems()
         {
             if (!this.ownsActualItems || this.actualItems == null)
@@ -414,21 +267,13 @@ namespace OxyPlot.Series
             this.ownsActualItems = true;
         }
 
-        /// <summary>
-        /// Gets the default color for a HistogramItem.
-        /// </summary>
-        /// <returns>The default color.</returns>
         private OxyColor GetDefaultColor(HistogramItem item)
         {
             return this.ActualFillColor;
         }
 
-        /// <summary>
-        /// Updates the points from the <see cref="ItemsSeries.ItemsSource" />.
-        /// </summary>
         private void UpdateActualItems()
         {
-            // Use the Mapping property to generate the points
             if (this.Mapping != null)
             {
                 this.ClearActualItems();
