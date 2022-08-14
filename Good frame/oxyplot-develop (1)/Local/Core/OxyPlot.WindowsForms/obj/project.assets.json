@@ -1,0 +1,133 @@
+{
+  "version": 3,
+  "targets": {
+    ".NETCoreApp,Version=v3.1": {
+      "OxyPlot.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETStandard,Version=v2.0",
+        "compile": {
+          "bin/placeholder/OxyPlot.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OxyPlot.Core.dll": {}
+        }
+      }
+    },
+    ".NETFramework,Version=v4.5.2": {
+      "OxyPlot.Core/1.0.0": {
+        "type": "project",
+        "framework": ".NETFramework,Version=v4.5.2",
+        "compile": {
+          "bin/placeholder/OxyPlot.Core.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/OxyPlot.Core.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "OxyPlot.Core/1.0.0": {
+      "type": "project",
+      "path": "../../OxyPlot/OxyPlot.csproj",
+      "msbuildProject": "../../OxyPlot/OxyPlot.csproj"
+    }
+  },
+  "projectFileDependencyGroups": {
+    ".NETCoreApp,Version=v3.1": [
+      "OxyPlot.Core >= 1.0.0"
+    ],
+    ".NETFramework,Version=v4.5.2": [
+      "OxyPlot.Core >= 1.0.0"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\H474357\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
+    "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\": {},
+    "C:\\PROGRAM FILES\\DOTNET\\sdk\\NuGetFallbackFolder": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\Core\\OxyPlot.WindowsForms\\OxyPlot.WindowsForms.csproj",
+      "projectName": "OxyPlot.WindowsForms",
+      "projectPath": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\Core\\OxyPlot.WindowsForms\\OxyPlot.WindowsForms.csproj",
+      "packagesPath": "C:\\Users\\H474357\\.nuget\\packages\\",
+      "outputPath": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\Core\\OxyPlot.WindowsForms\\obj\\",
+      "projectStyle": "PackageReference",
+      "crossTargeting": true,
+      "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
+        "C:\\Program Files (x86)\\Microsoft\\Xamarin\\NuGet\\",
+        "C:\\PROGRAM FILES\\DOTNET\\sdk\\NuGetFallbackFolder"
+      ],
+      "configFilePaths": [
+        "C:\\Users\\H474357\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net452",
+        "netcoreapp3.1"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "http://api.nuget.org/v3/index.json": {},
+        "https://www.nuget.org/api/v2/": {}
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "targetAlias": "netcoreapp3.1",
+          "projectReferences": {
+            "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\OxyPlot\\OxyPlot.csproj": {
+              "projectPath": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\OxyPlot\\OxyPlot.csproj"
+            }
+          }
+        },
+        "net452": {
+          "targetAlias": "net452",
+          "projectReferences": {
+            "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\OxyPlot\\OxyPlot.csproj": {
+              "projectPath": "C:\\WORK\\Code\\Company Project\\Hub\\VeryGoodNet\\Good frame\\oxyplot-develop (1)\\Local\\OxyPlot\\OxyPlot.csproj"
+            }
+          }
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "netcoreapp3.1": {
+        "targetAlias": "netcoreapp3.1",
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WindowsForms": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\PROGRAM FILES\\DOTNET\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+      },
+      "net452": {
+        "targetAlias": "net452",
+        "runtimeIdentifierGraphPath": "C:\\PROGRAM FILES\\DOTNET\\sdk\\5.0.408\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}
