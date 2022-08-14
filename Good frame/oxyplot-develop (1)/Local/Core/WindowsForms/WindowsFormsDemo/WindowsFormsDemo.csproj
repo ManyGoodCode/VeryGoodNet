@@ -5,10 +5,6 @@
     <OutputType>WinExe</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\OxyPlot.WindowsForms\OxyPlot.WindowsForms.csproj" />
-    <ProjectReference Include="..\..\..\OxyPlot\OxyPlot.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Compile Update="Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -16,5 +12,9 @@
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
     <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\OxyPlot\OxyPlot.csproj" />
+    <ProjectReference Include="..\..\OxyPlot.WindowsForms\OxyPlot.WindowsForms.csproj" />
   </ItemGroup>
 </Project>
