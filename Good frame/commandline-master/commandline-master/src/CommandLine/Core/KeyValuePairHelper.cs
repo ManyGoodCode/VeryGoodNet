@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using CommandLine.Infrastructure;
+﻿using CommandLine.Infrastructure;
 using CSharpx;
 using System.Collections.Generic;
 using System.Linq;

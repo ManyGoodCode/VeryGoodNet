@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Text;
 
 namespace CommandLine.Infrastructure
@@ -10,9 +8,8 @@ namespace CommandLine.Infrastructure
         public static StringBuilder AppendWhen(this StringBuilder builder, bool condition, params string[] values)
         {
             if (condition)
-                foreach (var value in values)
+                foreach (string value in values)
                     builder.Append(value);
-
             return builder;
         }
 

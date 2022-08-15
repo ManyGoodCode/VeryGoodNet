@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CSharpx;
@@ -16,16 +14,22 @@ namespace CommandLine.Core
 
     static class NameLookup
     {
-        public static NameLookupResult Contains(string name, IEnumerable<OptionSpecification> specifications, StringComparer comparer)
+        public static NameLookupResult Contains(
+            string name, 
+            IEnumerable<OptionSpecification> specifications, 
+            StringComparer comparer)
         {
-            var option = specifications.FirstOrDefault(a => name.MatchName(a.ShortName, a.LongName, comparer));
-            if (option == null) return NameLookupResult.NoOptionFound;
+            OptionSpecification option = specifications.FirstOrDefault(a => name.MatchName(a.ShortName, a.LongName, comparer));
+            if (option == null) 
+                return NameLookupResult.NoOptionFound;
             return option.ConversionType == typeof(bool) || (option.ConversionType == typeof(int) && option.FlagCounter)
                 ? NameLookupResult.BooleanOptionFound
                 : NameLookupResult.OtherOptionFound;
         }
 
-        public static Maybe<char> HavingSeparator(string name, IEnumerable<OptionSpecification> specifications,
+        public static Maybe<char> HavingSeparator(
+            string name, 
+            IEnumerable<OptionSpecification> specifications,
             StringComparer comparer)
         {
             return specifications.SingleOrDefault(

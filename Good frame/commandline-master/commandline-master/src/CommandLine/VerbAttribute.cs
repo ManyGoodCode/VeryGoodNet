@@ -33,8 +33,8 @@ namespace CommandLine
 
         public VerbAttribute(string name, bool isDefault = false, string[] aliases = null)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("name");
-
+            if (string.IsNullOrWhiteSpace(name)) 
+                throw new ArgumentException("name");
             Name = name;
             IsDefault = isDefault;
             helpText = new Infrastructure.LocalizableAttributeProperty(nameof(HelpText));

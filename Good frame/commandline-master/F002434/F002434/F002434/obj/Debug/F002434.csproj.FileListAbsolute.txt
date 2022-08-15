@@ -1,0 +1,9 @@
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\bin\Debug\F002434.exe.config
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\bin\Debug\F002434.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\bin\Debug\F002434.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.Properties.Resources.resources
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.csproj.GenerateResource.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.csproj.CoreCompileInputs.cache
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.exe
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.pdb
+C:\WORK\Code\Company Project\Hub\VeryGoodNet\Good frame\commandline-master\F002434\F002434\F002434\obj\Debug\F002434.csproj.AssemblyReference.cache

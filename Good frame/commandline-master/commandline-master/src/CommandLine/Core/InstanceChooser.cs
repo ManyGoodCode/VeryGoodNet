@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -13,7 +11,9 @@ namespace CommandLine.Core
     static class InstanceChooser
     {
         public static ParserResult<object> Choose(
-            Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
+            Func<IEnumerable<string>, 
+            IEnumerable<OptionSpecification>,
+            Result<IEnumerable<Token>, Error>> tokenizer,
             IEnumerable<Type> types,
             IEnumerable<string> arguments,
             StringComparer nameComparer,
@@ -37,7 +37,9 @@ namespace CommandLine.Core
         }
 
         public static ParserResult<object> Choose(
-            Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
+            Func<IEnumerable<string>, 
+            IEnumerable<OptionSpecification>,
+            Result<IEnumerable<Token>, Error>> tokenizer,
             IEnumerable<Type> types,
             IEnumerable<string> arguments,
             StringComparer nameComparer,
@@ -48,19 +50,16 @@ namespace CommandLine.Core
             bool allowMultiInstance,
             IEnumerable<ErrorType> nonFatalErrors)
         {
-            var verbs = Verb.SelectFromTypes(types);
-            var defaultVerbs = verbs.Where(t => t.Item1.IsDefault);
-
+            IEnumerable<Tuple<Verb, Type>> verbs = Verb.SelectFromTypes(types);
+            IEnumerable<Tuple<Verb, Type>> defaultVerbs = verbs.Where(t => t.Item1.IsDefault);
             int defaultVerbCount = defaultVerbs.Count();
             if (defaultVerbCount > 1)
                 return MakeNotParsed(types, new MultipleDefaultVerbsError());
 
-            var defaultVerb = defaultVerbCount == 1 ? defaultVerbs.First() : null;
-
+            Tuple<Verb, Type> defaultVerb = defaultVerbCount == 1 ? defaultVerbs.First() : null;
             ParserResult<object> choose()
             {
-                var firstArg = arguments.First();
-
+                string firstArg = arguments.First();
                 bool preprocCompare(string command) =>
                         nameComparer.Equals(command, firstArg) ||
                         nameComparer.Equals(string.Concat("--", command), firstArg);
@@ -82,7 +81,9 @@ namespace CommandLine.Core
         }
 
         private static ParserResult<object> MatchDefaultVerb(
-            Func<IEnumerable<string>, IEnumerable<OptionSpecification>, Result<IEnumerable<Token>, Error>> tokenizer,
+            Func<IEnumerable<string>,
+            IEnumerable<OptionSpecification>,
+            Result<IEnumerable<Token>, Error>> tokenizer,
             IEnumerable<Tuple<Verb, Type>> verbs,
             Tuple<Verb, Type> defaultVerb,
             IEnumerable<string> arguments,
@@ -121,8 +122,7 @@ namespace CommandLine.Core
             IEnumerable<ErrorType> nonFatalErrors)
         {
             string firstArg = arguments.First();
-
-            var verbUsed = verbs.FirstOrDefault(vt =>
+            Tuple<Verb, Type> verbUsed = verbs.FirstOrDefault(vt =>
                     nameComparer.Equals(vt.Item1.Name, firstArg)
                     || vt.Item1.Aliases.Any(alias => nameComparer.Equals(alias, firstArg))
             );
@@ -141,7 +141,7 @@ namespace CommandLine.Core
                 parsingCulture,
                 autoHelp,
                 autoVersion,
-                allowMultiInstance,                
+                allowMultiInstance,
                 nonFatalErrors);
         }
 

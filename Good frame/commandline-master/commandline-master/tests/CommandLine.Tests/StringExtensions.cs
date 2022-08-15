@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -10,12 +8,21 @@ namespace CommandLine.Tests
     {
         public static string[] ToNotEmptyLines(this string value)
         {
-            return value.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            return value.Split(new[] 
+            { 
+                Environment.NewLine 
+            },
+            StringSplitOptions.RemoveEmptyEntries);
         }
 
         public static string[] ToLines(this string value)
         {
-            return value.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
+            return value.Split(new[] 
+            { 
+                Environment.NewLine
+            }, 
+
+            StringSplitOptions.None);
         }
 
         public static string[] TrimStringArray(this IEnumerable<string> array)
