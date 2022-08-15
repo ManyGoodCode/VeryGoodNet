@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine.Infrastructure;
@@ -63,14 +61,13 @@ namespace CommandLine.Core
             var tokens = tokenizerResult.SucceededWith().Memoize();
 
             var exploded = new List<Token>(tokens is ICollection<Token> coll ? coll.Count : tokens.Count());
-            var nothing = Maybe.Nothing<char>();  // Re-use same Nothing instance for efficiency
+            var nothing = Maybe.Nothing<char>();  
             var separator = nothing;
             foreach (var token in tokens) {
                 if (token.IsName()) {
                     separator = optionSequenceWithSeparatorLookup(token.Text);
                     exploded.Add(token);
                 } else {
-                    // Forced values are never considered option values, so they should not be split
                     if (separator.MatchJust(out char sep) && sep != '\0' && !token.IsValueForced()) {
                         if (token.Text.Contains(sep)) {
                             exploded.AddRange(token.Text.Split(sep).Select(Token.ValueFromSeparator));
@@ -80,16 +77,12 @@ namespace CommandLine.Core
                     } else {
                         exploded.Add(token);
                     }
-                    separator = nothing;  // Only first value after a separator can possibly be split
+                    separator = nothing;  
                 }
             }
             return Result.Succeed(exploded as IEnumerable<Token>, tokenizerResult.SuccessMessages());
         }
 
-        /// <summary>
-        /// Normalizes the given <paramref name="tokens"/>.
-        /// </summary>
-        /// <returns>The given <paramref name="tokens"/> minus all names, and their value if one was present, that are not found using <paramref name="nameLookup"/>.</returns>
         public static IEnumerable<Token> Normalize(
             IEnumerable<Token> tokens, Func<string, bool> nameLookup)
         {
@@ -147,7 +140,6 @@ namespace CommandLine.Core
             string value,
             Func<string, NameLookupResult> nameLookup)
         {
-            //Allow single dash as a value
             if (value.Length == 1 && value[0] == '-')
             {
                 yield return Token.Value(value);
@@ -174,11 +166,9 @@ namespace CommandLine.Core
                 {
                     var n = new string(c, 1);
                     var r = nameLookup(n);
-                    // Assume first char is an option
                     if (i > 0 && r == NameLookupResult.NoOptionFound) break;
                     i++;
                     yield return Token.Name(n);
-                    // If option expects a value (other than a boolean), assume following chars are that value
                     if (r == NameLookupResult.OtherOptionFound) break;
                 }
 

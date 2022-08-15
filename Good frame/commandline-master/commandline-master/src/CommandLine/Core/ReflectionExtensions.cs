@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
@@ -128,9 +126,7 @@ namespace CommandLine.Core
             if(type == typeof(object))
                 return true;
 
-            // Find all inherited defined properties and fields on the type
             var inheritedTypes = type.GetTypeInfo().FlattenHierarchy().Select(i => i.GetTypeInfo());
-
             foreach (var inheritedType in inheritedTypes) 
             {
                 if (

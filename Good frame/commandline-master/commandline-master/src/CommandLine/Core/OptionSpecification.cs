@@ -1,5 +1,3 @@
-// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -82,9 +80,6 @@ namespace CommandLine.Core
             get { return group; }
         }
 
-        /// <summary>
-        /// Whether this is an int option that counts how many times a flag was set rather than taking a value on the command line
-        /// </summary>
         public bool FlagCounter
         {
             get { return flagCounter; }

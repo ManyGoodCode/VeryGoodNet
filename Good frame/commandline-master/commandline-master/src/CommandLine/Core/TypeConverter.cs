@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -43,8 +41,8 @@ namespace CommandLine.Core
         private static Maybe<object> ChangeTypeScalar(string value, Type conversionType, CultureInfo conversionCulture, bool ignoreValueCase)
         {
             var result = ChangeTypeScalarImpl(value, conversionType, conversionCulture, ignoreValueCase);
-            result.Match((_,__) => { }, e => e.First().RethrowWhenAbsentIn(
-                new[] { typeof(InvalidCastException), typeof(FormatException), typeof(OverflowException) }));
+            result.Match((_, __) => { }, e => e.First().RethrowWhenAbsentIn(
+                 new[] { typeof(InvalidCastException), typeof(FormatException), typeof(OverflowException) }));
             return result.ToMaybe();
         }
 
@@ -64,7 +62,6 @@ namespace CommandLine.Core
             }
             catch (InvalidCastException)
             {
-                // Required for converting from string to TimeSpan because Convert.ChangeType can't
                 return System.ComponentModel.TypeDescriptor.GetConverter(type).ConvertFrom(null, conversionCulture, value);
             }
         }
@@ -79,26 +76,14 @@ namespace CommandLine.Core
 
                     Func<Type> getUnderlyingType =
                         () =>
-#if !SKIP_FSHARP
-                            isFsOption
-                                ? FSharpOptionHelper.GetUnderlyingType(conversionType) :
-#endif
                                 Nullable.GetUnderlyingType(conversionType);
 
                     var type = getUnderlyingType() ?? conversionType;
 
                     Func<object> withValue =
                         () =>
-#if !SKIP_FSHARP
-                            isFsOption
-                                ? FSharpOptionHelper.Some(type, ConvertString(value, type, conversionCulture)) :
-#endif
                                 ConvertString(value, type, conversionCulture);
-#if !SKIP_FSHARP
-                    Func<object> empty = () => isFsOption ? FSharpOptionHelper.None(type) : null;
-#else
                     Func<object> empty = () => null;
-#endif
 
                     return (value == null) ? empty() : withValue();
                 };

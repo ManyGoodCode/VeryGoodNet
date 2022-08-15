@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using CommandLine.Infrastructure;
@@ -116,7 +114,6 @@ namespace CommandLine.Core
                             if (sequences.TryGetValue(nameToken, out var sequence)) {
                                 if (max[nameToken].MatchJust(out int m) && count[nameToken] >= m)
                                 {
-                                    // This sequence is completed, so this and any further values are non-option values
                                     nameToken = null;
                                     nonOptionTokens.Add(token);
                                     state = SequenceState.TokenSearch;
@@ -129,7 +126,6 @@ namespace CommandLine.Core
                                 }
                                 else if (separatorSeen)
                                 {
-                                    // Previous token came from a separator but this one didn't: sequence is completed
                                     separatorSeen = false;
                                     nameToken = null;
                                     nonOptionTokens.Add(token);
@@ -143,7 +139,6 @@ namespace CommandLine.Core
                             }
                             else
                             {
-                                // Should never get here, but just in case:
                                 separatorSeen = false;
                                 sequences[nameToken] = new List<Token>(new[] { token });
                                 count[nameToken] = 0;

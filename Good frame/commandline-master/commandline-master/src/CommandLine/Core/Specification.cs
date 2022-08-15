@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -33,7 +31,6 @@ namespace CommandLine.Core
         private readonly string helpText;
         private readonly string metaValue;
         private readonly IEnumerable<string> enumValues;
-        /// This information is denormalized to decouple Specification from PropertyInfo.
         private readonly Type conversionType;
         private readonly TargetType targetType;
 
