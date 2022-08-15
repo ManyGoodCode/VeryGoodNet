@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -34,13 +32,6 @@ namespace CommandLine.Infrastructure
             return !source.Any();
         }
 
-        /// <summary>
-        /// Breaks a collection into groups of a specified size.
-        /// </summary>
-        /// <param name="source">A collection of <typeparam name="T"/>.</param>
-        /// <param name="groupSize">The number of items each group shall contain.</param>
-        /// <returns>An enumeration of T[].</returns>
-        /// <remarks>An incomplete group at the end of the source collection will be silently dropped.</remarks>
         public static IEnumerable<T[]> Group<T>(this IEnumerable<T> source, int groupSize)
         {
             if (groupSize < 1)

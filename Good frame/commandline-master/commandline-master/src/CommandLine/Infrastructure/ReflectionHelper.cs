@@ -1,6 +1,4 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -11,22 +9,7 @@ namespace CommandLine.Infrastructure
 {
     static class ReflectionHelper
     {
-        /// <summary>
-        /// Per thread assembly attribute overrides for testing.
-        /// </summary>
         [ThreadStatic] private static IDictionary<Type, Attribute> _overrides;
-
-        /// <summary>
-        /// Assembly attribute overrides for testing.
-        /// </summary>
-        /// <remarks>
-        /// The implementation will fail if two or more attributes of the same type
-        /// are included in <paramref name="overrides"/>.
-        /// </remarks>
-        /// <param name="overrides">
-        /// Attributes that replace the existing assembly attributes or null,
-        /// to clear any testing attributes.
-        /// </param>
         public static void SetAttributeOverride(IEnumerable<Attribute> overrides)
         {
             if (overrides != null)
@@ -103,8 +86,6 @@ namespace CommandLine.Infrastructure
 
         private static Assembly GetExecutingOrEntryAssembly()
         {
-            //resolve issues of null EntryAssembly in Xunit Test #392,424,389
-            //return Assembly.GetEntryAssembly();
             return Assembly.GetEntryAssembly() ?? Assembly.GetCallingAssembly();
         }
 

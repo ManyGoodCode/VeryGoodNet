@@ -1,5 +1,3 @@
-// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
 using CommandLine.Core;
 using CommandLine.Infrastructure;
 
@@ -15,13 +13,6 @@ using System.Text;
 
 namespace CommandLine.Text
 {
-    /// <summary>
-    /// Provides means to format an help screen.
-    /// You can assign it in place of a <see cref="System.String"/> instance.
-    /// </summary>
-
-
-
     public struct ComparableOption
     {
         public bool Required;
@@ -34,9 +25,6 @@ namespace CommandLine.Text
 
     public class HelpText
     {
-
-        #region ordering
-
         ComparableOption ToComparableOption(Specification spec, int index)
         {
             OptionSpecification option = spec as OptionSpecification;
@@ -83,21 +71,11 @@ namespace CommandLine.Text
            }
        };
 
-        #endregion
 
         private const int BuilderCapacity = 128;
-        private const int DefaultMaximumLength = 80; // default console width
-        /// <summary>
-        /// The number of spaces between an option and its associated help text
-        /// </summary>
+        private const int DefaultMaximumLength = 80; 
         private const int OptionToHelpTextSeparatorWidth = 4;
-        /// <summary>
-        /// The width of the option prefix (either "--" or "  "
-        /// </summary>
         private const int OptionPrefixWidth = 2;
-        /// <summary>
-        /// The total amount of extra space that needs to accounted for when indenting Option help text
-        /// </summary>
         private const int TotalOptionPadding = OptionToHelpTextSeparatorWidth + OptionPrefixWidth;
         private readonly StringBuilder preOptionsHelp;
         private readonly StringBuilder postOptionsHelp;
@@ -113,68 +91,32 @@ namespace CommandLine.Text
         private bool autoVersion;
         private bool addNewLineBetweenHelpSections;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class.
-        /// </summary>
         public HelpText()
             : this(SentenceBuilder.Create(), string.Empty, string.Empty)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class 
-        /// specifying the sentence builder.
-        /// </summary>
-        /// <param name="sentenceBuilder">
-        /// A <see cref="SentenceBuilder"/> instance.
-        /// </param>
         public HelpText(SentenceBuilder sentenceBuilder)
             : this(sentenceBuilder, string.Empty, string.Empty)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class
-        /// specifying heading string.
-        /// </summary>
-        /// <param name="heading">An heading string or an instance of <see cref="CommandLine.Text.HeadingInfo"/>.</param>
-        /// <exception cref="System.ArgumentException">Thrown when parameter <paramref name="heading"/> is null or empty string.</exception>
         public HelpText(string heading)
             : this(SentenceBuilder.Create(), heading, string.Empty)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class
-        /// specifying the sentence builder and heading string.
-        /// </summary>
-        /// <param name="sentenceBuilder">A <see cref="SentenceBuilder"/> instance.</param>
-        /// <param name="heading">A string with heading or an instance of <see cref="CommandLine.Text.HeadingInfo"/>.</param>
+
         public HelpText(SentenceBuilder sentenceBuilder, string heading)
             : this(sentenceBuilder, heading, string.Empty)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class
-        /// specifying heading and copyright strings.
-        /// </summary>
-        /// <param name="heading">A string with heading or an instance of <see cref="CommandLine.Text.HeadingInfo"/>.</param>
-        /// <param name="copyright">A string with copyright or an instance of <see cref="CommandLine.Text.CopyrightInfo"/>.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when one or more parameters are null or empty strings.</exception>
         public HelpText(string heading, string copyright)
             : this(SentenceBuilder.Create(), heading, copyright)
         {
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="CommandLine.Text.HelpText"/> class
-        /// specifying heading and copyright strings.
-        /// </summary>
-        /// <param name="sentenceBuilder">A <see cref="SentenceBuilder"/> instance.</param>
-        /// <param name="heading">A string with heading or an instance of <see cref="CommandLine.Text.HeadingInfo"/>.</param>
-        /// <param name="copyright">A string with copyright or an instance of <see cref="CommandLine.Text.CopyrightInfo"/>.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when one or more parameters are null or empty strings.</exception>
         public HelpText(SentenceBuilder sentenceBuilder, string heading, string copyright)
         {
             if (sentenceBuilder == null) throw new ArgumentNullException("sentenceBuilder");
@@ -202,25 +144,16 @@ namespace CommandLine.Text
             this.autoVersion = true;
         }
 
-        /// <summary>
-        /// Gets or sets the heading string.
-        /// You can directly assign a <see cref="CommandLine.Text.HeadingInfo"/> instance.
-        /// </summary>
         public string Heading
         {
             get { return heading; }
             set
             {
                 if (value == null) throw new ArgumentNullException("value");
-
                 heading = value;
             }
         }
 
-        /// <summary>
-        /// Gets or sets the copyright string.
-        /// You can directly assign a <see cref="CommandLine.Text.CopyrightInfo"/> instance.
-        /// </summary>
         public string Copyright
         {
             get { return copyright; }
@@ -232,91 +165,53 @@ namespace CommandLine.Text
             }
         }
 
-        /// <summary>
-        /// Gets or sets the maximum width of the display.  This determines word wrap when displaying the text.
-        /// </summary>
-        /// <value>The maximum width of the display.</value>
         public int MaximumDisplayWidth
         {
             get { return maximumDisplayWidth; }
             set { maximumDisplayWidth = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the format of options should contain dashes.
-        /// It modifies behavior of <see cref="AddOptions{T}(ParserResult{T})"/> method.
-        /// </summary>
         public bool AddDashesToOption
         {
             get { return addDashesToOption; }
             set { addDashesToOption = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to add an additional line after the description of the specification.
-        /// </summary>
         public bool AdditionalNewLineAfterOption
         {
             get { return additionalNewLineAfterOption; }
             set { additionalNewLineAfterOption = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to add newlines between help sections.
-        /// </summary>
         public bool AddNewLineBetweenHelpSections
         {
             get { return addNewLineBetweenHelpSections; }
             set { addNewLineBetweenHelpSections = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether to add the values of an enum after the description of the specification.
-        /// </summary>
         public bool AddEnumValuesToHelpText
         {
             get { return addEnumValuesToHelpText; }
             set { addEnumValuesToHelpText = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether implicit option or verb 'help' should be supported.
-        /// </summary>
         public bool AutoHelp
         {
             get { return autoHelp; }
             set { autoHelp = value; }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether implicit option or verb 'version' should be supported.
-        /// </summary>
         public bool AutoVersion
         {
             get { return autoVersion; }
             set { autoVersion = value; }
         }
 
-        /// <summary>
-        /// Gets the <see cref="SentenceBuilder"/> instance specified in constructor.
-        /// </summary>
         public SentenceBuilder SentenceBuilder
         {
             get { return sentenceBuilder; }
         }
 
-        /// <summary>
-        /// Creates a new instance of the <see cref="CommandLine.Text.HelpText"/> class using common defaults.
-        /// </summary>
-        /// <returns>
-        /// An instance of <see cref="CommandLine.Text.HelpText"/> class.
-        /// </returns>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        /// <param name='onError'>A delegate used to customize the text block of reporting parsing errors text block.</param>
-        /// <param name='onExample'>A delegate used to customize <see cref="CommandLine.Text.Example"/> model used to render text block of usage examples.</param>
-        /// <param name="verbsIndex">If true the output style is consistent with verb commands (no dashes), otherwise it outputs options.</param>
-        /// <param name="maxDisplayWidth">The maximum width of the display.</param>
-        /// <remarks>The parameter <paramref name="verbsIndex"/> is not ontly a metter of formatting, it controls whether to handle verbs or options.</remarks>
         public static HelpText AutoBuild<T>(
             ParserResult<T> parserResult,
             Func<HelpText, HelpText> onError,
@@ -344,8 +239,6 @@ namespace CommandLine.Text
             }
 
             var errors = Enumerable.Empty<Error>();
-
-
             if (onError != null && parserResult.Tag == ParserResultType.NotParsed)
             {
                 errors = ((NotParsed<T>)parserResult).Errors;
@@ -388,34 +281,11 @@ namespace CommandLine.Text
             return auto;
         }
 
-        /// <summary>
-        /// Creates a default instance of the <see cref="CommandLine.Text.HelpText"/> class,
-        /// automatically handling verbs or options scenario.
-        /// </summary>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        /// <param name="maxDisplayWidth">The maximum width of the display.</param>
-        /// <returns>
-        /// An instance of <see cref="CommandLine.Text.HelpText"/> class.
-        /// </returns>
-        /// <remarks>This feature is meant to be invoked automatically by the parser, setting the HelpWriter property
-        /// of <see cref="CommandLine.ParserSettings"/>.</remarks>
         public static HelpText AutoBuild<T>(ParserResult<T> parserResult, int maxDisplayWidth = DefaultMaximumLength)
         {
             return AutoBuild<T>(parserResult, h => h, maxDisplayWidth);
         }
 
-        /// <summary>
-        /// Creates a custom instance of the <see cref="CommandLine.Text.HelpText"/> class,
-        /// automatically handling verbs or options scenario.
-        /// </summary>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        ///  <param name='onError'>A delegate used to customize the text block of reporting parsing errors text block.</param>
-        /// <param name="maxDisplayWidth">The maximum width of the display.</param>
-        /// <returns>
-        /// An instance of <see cref="CommandLine.Text.HelpText"/> class.
-        /// </returns>
-        /// <remarks>This feature is meant to be invoked automatically by the parser, setting the HelpWriter property
-        /// of <see cref="CommandLine.ParserSettings"/>.</remarks>
         public static HelpText AutoBuild<T>(ParserResult<T> parserResult, Func<HelpText, HelpText> onError, int maxDisplayWidth = DefaultMaximumLength)
         {
             if (parserResult.Tag != ParserResultType.NotParsed)
@@ -448,11 +318,6 @@ namespace CommandLine.Text
                 }, e => e, true, maxDisplayWidth);
         }
 
-        /// <summary>
-        /// Supplies a default parsing error handler implementation.
-        /// </summary>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        /// <param name="current">The <see cref="CommandLine.Text.HelpText"/> instance.</param>
         public static HelpText DefaultParsingErrorsHandler<T>(ParserResult<T> parserResult, HelpText current)
         {
             if (parserResult == null) throw new ArgumentNullException("parserResult");
@@ -473,65 +338,33 @@ namespace CommandLine.Text
                 .AddPreOptionsLines(errors);
         }
 
-        /// <summary>
-        /// Converts the help instance to a <see cref="System.String"/>.
-        /// </summary>
-        /// <param name="info">This <see cref="CommandLine.Text.HelpText"/> instance.</param>
-        /// <returns>The <see cref="System.String"/> that contains the help screen.</returns>
         public static implicit operator string(HelpText info)
         {
             return info.ToString();
         }
 
-        /// <summary>
-        /// Adds a text line after copyright and before options usage strings.
-        /// </summary>
-        /// <param name="value">A <see cref="System.String"/> instance.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="value"/> is null or empty string.</exception>
         public HelpText AddPreOptionsLine(string value)
         {
             return AddPreOptionsLine(value, MaximumDisplayWidth);
         }
 
-        /// <summary>
-        /// Adds a text line at the bottom, after options usage string.
-        /// </summary>
-        /// <param name="value">A <see cref="System.String"/> instance.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="value"/> is null or empty string.</exception>
         public HelpText AddPostOptionsLine(string value)
         {
             return AddLine(postOptionsHelp, value);
         }
 
-        /// <summary>
-        /// Adds text lines after copyright and before options usage strings.
-        /// </summary>
-        /// <param name="lines">A <see cref="System.String"/> sequence of line to add.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
         public HelpText AddPreOptionsLines(IEnumerable<string> lines)
         {
             lines.ForEach(line => AddPreOptionsLine(line));
             return this;
         }
 
-        /// <summary>
-        /// Adds text lines at the bottom, after options usage string.
-        /// </summary>
-        /// <param name="lines">A <see cref="System.String"/> sequence of line to add.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
         public HelpText AddPostOptionsLines(IEnumerable<string> lines)
         {
             lines.ForEach(line => AddPostOptionsLine(line));
             return this;
         }
 
-        /// <summary>
-        /// Adds a text block of lines after copyright and before options usage strings.
-        /// </summary>
-        /// <param name="text">A <see cref="System.String"/> text block.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
         public HelpText AddPreOptionsText(string text)
         {
             var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -539,11 +372,6 @@ namespace CommandLine.Text
             return this;
         }
 
-        /// <summary>
-        /// Adds a text block of lines at the bottom, after options usage string.
-        /// </summary>
-        /// <param name="text">A <see cref="System.String"/> text block.</param>
-        /// <returns>Updated <see cref="CommandLine.Text.HelpText"/> instance.</returns>
         public HelpText AddPostOptionsText(string text)
         {
             var lines = text.Split(new[] { Environment.NewLine }, StringSplitOptions.None);
@@ -551,11 +379,6 @@ namespace CommandLine.Text
             return this;
         }
 
-        /// <summary>
-        /// Adds a text block with options usage string.
-        /// </summary>
-        /// <param name="result">A parsing computation result.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="result"/> is null.</exception>
         public HelpText AddOptions<T>(ParserResult<T> result)
         {
             if (result == null) throw new ArgumentNullException("result");
@@ -567,12 +390,6 @@ namespace CommandLine.Text
                 MaximumDisplayWidth);
         }
 
-        /// <summary>
-        /// Adds a text block with verbs usage string.
-        /// </summary>
-        /// <param name="types">The array of <see cref="System.Type"/> with verb commands.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="types"/> is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="types"/> array is empty.</exception>
         public HelpText AddVerbs(params Type[] types)
         {
             if (types == null) throw new ArgumentNullException("types");
@@ -584,13 +401,7 @@ namespace CommandLine.Text
                 SentenceBuilder.OptionGroupWord(),
                 MaximumDisplayWidth);
         }
-
-        /// <summary>
-        /// Adds a text block with options usage string.
-        /// </summary>
-        /// <param name="maximumLength">The maximum length of the help screen.</param>
-        /// <param name="result">A parsing computation result.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="result"/> is null.</exception>    
+   
         public HelpText AddOptions<T>(int maximumLength, ParserResult<T> result)
         {
             if (result == null) throw new ArgumentNullException("result");
@@ -602,13 +413,6 @@ namespace CommandLine.Text
                 maximumLength);
         }
 
-        /// <summary>
-        /// Adds a text block with verbs usage string.
-        /// </summary>
-        /// <param name="maximumLength">The maximum length of the help screen.</param>
-        /// <param name="types">The array of <see cref="System.Type"/> with verb commands.</param>
-        /// <exception cref="System.ArgumentNullException">Thrown when parameter <paramref name="types"/> is null.</exception>
-        /// <exception cref="System.ArgumentOutOfRangeException">Thrown if <paramref name="types"/> array is empty.</exception>
         public HelpText AddVerbs(int maximumLength, params Type[] types)
         {
             if (types == null) throw new ArgumentNullException("types");
@@ -621,14 +425,6 @@ namespace CommandLine.Text
                 maximumLength);
         }
 
-        /// <summary>
-        /// Builds a string that contains a parsing error message.
-        /// </summary>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        /// <param name="formatError">The error formatting delegate.</param>
-        /// <param name="formatMutuallyExclusiveSetErrors">The specialized <see cref="CommandLine.MutuallyExclusiveSetError"/> sequence formatting delegate.</param>
-        /// <param name="indent">Number of spaces used to indent text.</param>
-        /// <returns>The <see cref="System.String"/> that contains the parsing error message.</returns>
         public static string RenderParsingErrorsText<T>(
             ParserResult<T> parserResult,
             Func<Error, string> formatError,
@@ -640,14 +436,6 @@ namespace CommandLine.Text
                 RenderParsingErrorsTextAsLines(parserResult, formatError, formatMutuallyExclusiveSetErrors, indent));
         }
 
-        /// <summary>
-        /// Builds a sequence of string that contains a parsing error message.
-        /// </summary>
-        /// <param name='parserResult'>The <see cref="CommandLine.ParserResult{T}"/> containing the instance that collected command line arguments parsed with <see cref="CommandLine.Parser"/> class.</param>
-        /// <param name="formatError">The error formatting delegate.</param>
-        /// <param name="formatMutuallyExclusiveSetErrors">The specialized <see cref="CommandLine.MutuallyExclusiveSetError"/> sequence formatting delegate.</param>
-        /// <param name="indent">Number of spaces used to indent text.</param>
-        /// <returns>A sequence of <see cref="System.String"/> that contains the parsing error message.</returns>
         public static IEnumerable<string> RenderParsingErrorsTextAsLines<T>(
             ParserResult<T> parserResult,
             Func<Error, string> formatError,
@@ -681,36 +469,16 @@ namespace CommandLine.Text
             }
         }
 
-        /// <summary>
-        /// Builds a string with usage text block created using <see cref="CommandLine.Text.UsageAttribute"/> data and metadata.
-        /// </summary>
-        /// <typeparam name="T">Type of parsing computation result.</typeparam>
-        /// <param name="parserResult">A parsing computation result.</param>
-        /// <returns>Resulting formatted text.</returns>
         public static string RenderUsageText<T>(ParserResult<T> parserResult)
         {
             return RenderUsageText(parserResult, example => example);
         }
 
-        /// <summary>
-        /// Builds a string with usage text block created using <see cref="CommandLine.Text.UsageAttribute"/> data and metadata.
-        /// </summary>
-        /// <typeparam name="T">Type of parsing computation result.</typeparam>
-        /// <param name="parserResult">A parsing computation result.</param>
-        /// <param name="mapperFunc">A mapping lambda normally used to translate text in other languages.</param>
-        /// <returns>Resulting formatted text.</returns>
         public static string RenderUsageText<T>(ParserResult<T> parserResult, Func<Example, Example> mapperFunc)
         {
             return string.Join(Environment.NewLine, RenderUsageTextAsLines(parserResult, mapperFunc));
         }
 
-        /// <summary>
-        /// Builds a string sequence with usage text block created using <see cref="CommandLine.Text.UsageAttribute"/> data and metadata.
-        /// </summary>
-        /// <typeparam name="T">Type of parsing computation result.</typeparam>
-        /// <param name="parserResult">A parsing computation result.</param>
-        /// <param name="mapperFunc">A mapping lambda normally used to translate text in other languages.</param>
-        /// <returns>Resulting formatted text.</returns>
         public static IEnumerable<string> RenderUsageTextAsLines<T>(ParserResult<T> parserResult, Func<Example, Example> mapperFunc)
         {
             if (parserResult == null) throw new ArgumentNullException("parserResult");
@@ -748,10 +516,6 @@ namespace CommandLine.Text
             }
         }
 
-        /// <summary>
-        /// Returns the help screen as a <see cref="System.String"/>.
-        /// </summary>
-        /// <returns>The <see cref="System.String"/> that contains the help screen.</returns>
         public override string ToString()
         {
             const int ExtraLength = 10;
@@ -984,8 +748,6 @@ namespace CommandLine.Text
                 optionHelpText = "({0}: {1}) ".FormatInvariant(optionGroupWord, optionGroupSpecification.Group) + optionHelpText;
             }
 
-            //note that we need to indent trim the start of the string because it's going to be 
-            //appended to an existing line that is as long as the indent-level
             var indented = TextWrapper.WrapAndIndentText(optionHelpText, maxLength + TotalOptionPadding, widthOfHelpText).TrimStart();
 
             optionsHelp
@@ -1128,8 +890,5 @@ namespace CommandLine.Text
                 ? builder.ToString(0, builder.Length - 1)
                 : string.Empty;
         }
-
-
-
     }
 }
