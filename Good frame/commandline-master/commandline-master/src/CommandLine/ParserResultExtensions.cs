@@ -1,23 +1,10 @@
-﻿// Copyright 2005-2015 Giacomo Stelluti Scala & Contributors. All rights reserved. See License.md in the project root for license information.
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
 namespace CommandLine
 {
-    /// <summary>
-    /// Provides convenience extension methods for <see cref="CommandLine.ParserResult{T}"/>.
-    /// </summary>
     public static partial class ParserResultExtensions
     {
-        /// <summary>
-        /// Executes <paramref name="action"/> if <see cref="CommandLine.ParserResult{T}"/> contains
-        /// parsed values.
-        /// </summary>
-        /// <typeparam name="T">Type of the target instance built with parsed value.</typeparam>
-        /// <param name="result">An <see cref="CommandLine.ParserResult{T}"/> instance.</param>
-        /// <param name="action">The <see cref="Action{T}"/> to execute.</param>
-        /// <returns>The same <paramref name="result"/> instance.</returns>
         public static ParserResult<T> WithParsed<T>(this ParserResult<T> result, Action<T> action)
         {
             var parsed = result as Parsed<T>;
@@ -28,13 +15,7 @@ namespace CommandLine
             return result;
         }
 
-        /// <summary>
-        /// Executes <paramref name="action"/> if parsed values are of <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">Type of the target instance built with parsed value.</typeparam>
-        /// <param name="result">An verb result instance.</param>
-        /// <param name="action">The <see cref="Action{T}"/> to execute.</param>
-        /// <returns>The same <paramref name="result"/> instance.</returns>
+
         public static ParserResult<object> WithParsed<T>(this ParserResult<object> result, Action<T> action)
         {
             var parsed = result as Parsed<object>;
@@ -48,14 +29,6 @@ namespace CommandLine
             return result;
         }
 
-        /// <summary>
-        /// Executes <paramref name="action"/> if <see cref="CommandLine.ParserResult{T}"/> lacks
-        /// parsed values and contains errors.
-        /// </summary>
-        /// <typeparam name="T">Type of the target instance built with parsed value.</typeparam>
-        /// <param name="result">An <see cref="CommandLine.ParserResult{T}"/> instance.</param>
-        /// <param name="action">The <see cref="System.Action"/> delegate to execute.</param>
-        /// <returns>The same <paramref name="result"/> instance.</returns>
         public static ParserResult<T> WithNotParsed<T>(this ParserResult<T> result, Action<IEnumerable<Error>> action)
         {
             var notParsed = result as NotParsed<T>;
@@ -66,15 +39,6 @@ namespace CommandLine
             return result;
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="TSource">Type of the target instance built with parsed value.</typeparam>
-        /// <typeparam name="TResult">The type of the new value.</typeparam>
-        /// <param name="result">An <see cref="CommandLine.ParserResult{T}"/> instance.</param>
-        /// <param name="parsedFunc">Lambda executed on successful parsing.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<TSource, TResult>(this ParserResult<TSource> result,
             Func<TSource, TResult> parsedFunc,
             Func<IEnumerable<Error>, TResult> notParsedFunc)
@@ -87,15 +51,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<TSource>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<IEnumerable<Error>, TResult> notParsedFunc)
@@ -112,17 +67,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -144,19 +88,7 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
+
         public static TResult MapResult<T1, T2, T3, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -183,21 +115,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -229,23 +146,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -282,25 +182,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -342,27 +223,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -409,29 +269,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -483,31 +320,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -564,33 +376,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -652,35 +437,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -747,37 +503,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="T12">Twelfth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="parsedFunc12">Lambda executed on successful parsing of <typeparamref name="T12"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -849,39 +574,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="T12">Twelfth verb type.</typeparam>
-        /// <typeparam name="T13">Thirteenth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="parsedFunc12">Lambda executed on successful parsing of <typeparamref name="T12"/>.</param>
-        /// <param name="parsedFunc13">Lambda executed on successful parsing of <typeparamref name="T13"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -958,41 +650,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="T12">Twelfth verb type.</typeparam>
-        /// <typeparam name="T13">Thirteenth verb type.</typeparam>
-        /// <typeparam name="T14">Fourteenth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="parsedFunc12">Lambda executed on successful parsing of <typeparamref name="T12"/>.</param>
-        /// <param name="parsedFunc13">Lambda executed on successful parsing of <typeparamref name="T13"/>.</param>
-        /// <param name="parsedFunc14">Lambda executed on successful parsing of <typeparamref name="T14"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -1074,43 +731,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="T12">Twelfth verb type.</typeparam>
-        /// <typeparam name="T13">Thirteenth verb type.</typeparam>
-        /// <typeparam name="T14">Fourteenth verb type.</typeparam>
-        /// <typeparam name="T15">Fifteenth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="parsedFunc12">Lambda executed on successful parsing of <typeparamref name="T12"/>.</param>
-        /// <param name="parsedFunc13">Lambda executed on successful parsing of <typeparamref name="T13"/>.</param>
-        /// <param name="parsedFunc14">Lambda executed on successful parsing of <typeparamref name="T14"/>.</param>
-        /// <param name="parsedFunc15">Lambda executed on successful parsing of <typeparamref name="T15"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
@@ -1197,45 +817,6 @@ namespace CommandLine
             return notParsedFunc(((NotParsed<object>)result).Errors);
         }
 
-        /// <summary>
-        /// Provides a way to transform result data into another value.
-        /// </summary>
-        /// <typeparam name="T1">First verb type.</typeparam>
-        /// <typeparam name="T2">Second verb type.</typeparam>
-        /// <typeparam name="T3">Third verb type.</typeparam>
-        /// <typeparam name="T4">Fourth verb type.</typeparam>
-        /// <typeparam name="T5">Fifth verb type.</typeparam>
-        /// <typeparam name="T6">Sixth verb type.</typeparam>
-        /// <typeparam name="T7">Seventh verb type.</typeparam>
-        /// <typeparam name="T8">Eighth verb type.</typeparam>
-        /// <typeparam name="T9">Ninth verb type.</typeparam>
-        /// <typeparam name="T10">Tenth verb type.</typeparam>
-        /// <typeparam name="T11">Eleventh verb type.</typeparam>
-        /// <typeparam name="T12">Twelfth verb type.</typeparam>
-        /// <typeparam name="T13">Thirteenth verb type.</typeparam>
-        /// <typeparam name="T14">Fourteenth verb type.</typeparam>
-        /// <typeparam name="T15">Fifteenth verb type.</typeparam>
-        /// <typeparam name="T16">Sixteenth verb type.</typeparam>
-        /// <typeparam name="TResult"></typeparam>
-        /// <param name="result">The result in verb scenario.</param>
-        /// <param name="parsedFunc1">Lambda executed on successful parsing of <typeparamref name="T1"/>.</param>
-        /// <param name="parsedFunc2">Lambda executed on successful parsing of <typeparamref name="T2"/>.</param>
-        /// <param name="parsedFunc3">Lambda executed on successful parsing of <typeparamref name="T3"/>.</param>
-        /// <param name="parsedFunc4">Lambda executed on successful parsing of <typeparamref name="T4"/>.</param>
-        /// <param name="parsedFunc5">Lambda executed on successful parsing of <typeparamref name="T5"/>.</param>
-        /// <param name="parsedFunc6">Lambda executed on successful parsing of <typeparamref name="T6"/>.</param>
-        /// <param name="parsedFunc7">Lambda executed on successful parsing of <typeparamref name="T7"/>.</param>
-        /// <param name="parsedFunc8">Lambda executed on successful parsing of <typeparamref name="T8"/>.</param>
-        /// <param name="parsedFunc9">Lambda executed on successful parsing of <typeparamref name="T9"/>.</param>
-        /// <param name="parsedFunc10">Lambda executed on successful parsing of <typeparamref name="T10"/>.</param>
-        /// <param name="parsedFunc11">Lambda executed on successful parsing of <typeparamref name="T11"/>.</param>
-        /// <param name="parsedFunc12">Lambda executed on successful parsing of <typeparamref name="T12"/>.</param>
-        /// <param name="parsedFunc13">Lambda executed on successful parsing of <typeparamref name="T13"/>.</param>
-        /// <param name="parsedFunc14">Lambda executed on successful parsing of <typeparamref name="T14"/>.</param>
-        /// <param name="parsedFunc15">Lambda executed on successful parsing of <typeparamref name="T15"/>.</param>
-        /// <param name="parsedFunc16">Lambda executed on successful parsing of <typeparamref name="T16"/>.</param>
-        /// <param name="notParsedFunc">Lambda executed on failed parsing.</param>
-        /// <returns>The new value.</returns>
         public static TResult MapResult<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this ParserResult<object> result,
             Func<T1, TResult> parsedFunc1,
             Func<T2, TResult> parsedFunc2,
