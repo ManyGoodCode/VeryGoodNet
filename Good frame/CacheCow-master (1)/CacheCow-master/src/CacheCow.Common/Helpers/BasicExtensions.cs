@@ -19,7 +19,7 @@ namespace CacheCow.Common.Helpers
 		{
 			return () =>
 			{
-				foreach (var action in actions)
+				foreach (Action action in actions)
 					action();
 			};
 		}
@@ -28,7 +28,7 @@ namespace CacheCow.Common.Helpers
         {
             return async () =>
             {
-                foreach (var action in actions)
+                foreach (Func<Task> action in actions)
                     await action().ConfigureAwait(false);
             };
         }
@@ -49,7 +49,5 @@ namespace CacheCow.Common.Helpers
                 bytes[i / 2] = Convert.ToByte(hex.Substring(i, 2), 16);
             return bytes;
         }
-
 	}
-
 }

@@ -8,11 +8,6 @@ namespace CacheCow.Client.Headers
 {
 	public class CacheCowHeader
 	{
-		// NOTE: public const has problems such as 
-		// if changed, all dependent libraries have to be recompiled
-		// but it has the advantage of using at compile-time
-		// so conscious decision to use const instead of static readonly
-
 		public const string Name = "x-cachecow-client";
 
 		public static class ExtensionNames
@@ -38,7 +33,7 @@ namespace CacheCow.Client.Headers
 
 		public override string ToString()
 		{
-			var sb = new StringBuilder();
+            StringBuilder sb = new StringBuilder();
 			sb.Append(Version);
 			AddToStringBuilder(sb, WasStale, ExtensionNames.WasStale);
 			AddToStringBuilder(sb, NotCacheable, ExtensionNames.NotCacheable);

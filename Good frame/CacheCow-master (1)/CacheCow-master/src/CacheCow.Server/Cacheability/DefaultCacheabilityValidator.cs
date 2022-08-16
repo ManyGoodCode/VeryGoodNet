@@ -11,9 +11,6 @@ using CacheCow.Common.Helpers;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// Default implementation according to typical use cases
-    /// </summary>
     public class DefaultCacheabilityValidator : ICacheabilityValidator
     {
 #if NET452

@@ -17,17 +17,10 @@ namespace CacheCow.Common
 
 		private const string CacheKeyFormat = "{0}-{1}";
 
-		/// <summary>
-		/// constructor for CacheKey
-		/// </summary>
-		/// <param name="resourceUri">URI of the resource</param>
-		/// <param name="headerValues">value of the headers as in the request. Only those values whose named defined in VaryByHeader
-		/// must be passed
-		/// </param>
 		public CacheKey(string resourceUri, IEnumerable<string> headerValues = null)
 		{
 			_toString = string.Format(CacheKeyFormat, resourceUri, string.Join("-", headerValues));
-			using (var sha1 = new SHA1CryptoServiceProvider())
+			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
 			{
 				_hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(_toString));
 			}
@@ -61,7 +54,7 @@ namespace CacheCow.Common
 		{
 			if (obj == null)
 				return false;
-			var eTagKey = obj as CacheKey;
+            CacheKey eTagKey = obj as CacheKey;
 			if (eTagKey == null)
 				return false;
 			return ToString() == eTagKey.ToString();
@@ -71,6 +64,5 @@ namespace CacheCow.Common
 		{
 			return _toString.GetHashCode();
 		}
-
 	}
 }

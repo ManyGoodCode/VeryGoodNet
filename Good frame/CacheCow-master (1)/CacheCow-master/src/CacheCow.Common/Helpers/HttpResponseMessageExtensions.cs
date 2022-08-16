@@ -11,7 +11,7 @@ namespace CacheCow.Common.Helpers
 	{
 		public static Task<HttpResponseMessage> ToTask(this HttpResponseMessage responseMessage)
 		{
-			var taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
+            TaskCompletionSource<HttpResponseMessage> taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
 			taskCompletionSource.SetResult(responseMessage);
 			return taskCompletionSource.Task;
 		}
@@ -38,7 +38,7 @@ namespace CacheCow.Common.Helpers
                 }
                 else
                 {
-                    var error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+                    string error = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                     throw new HttpRequestException($"Status: {response.StatusCode}\r\n Error: {error}");
                 }
             }

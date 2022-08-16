@@ -25,8 +25,5 @@ namespace CacheCow.Common.Http
 		    this.Headers.CacheControl = cacheControlHeaderValue;
 			this.RequestMessage = request;
 		}
-
 	}
-
-	
 }

@@ -10,10 +10,6 @@ using System.Text;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// Main interface for providing Cache headers for a resource. 
-    /// Use generic interface if you can.
-    /// </summary>
     public interface ICacheDirectiveProvider : ITimedETagExtractor, ITimedETagQueryProvider
     {
 #if NET452
