@@ -1,51 +1,53 @@
 using Microsoft.AspNetCore.Components;
 using Microsoft.AspNetCore.Components.Forms;
 
-namespace Blazor.Server.UI.Components.Common;
-
-// See https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-6.0#server-validation-with-a-validator-component
-public class CustomModelValidation : ComponentBase
+namespace Blazor.Server.UI.Components.Common
 {
-    private ValidationMessageStore? _messageStore;
 
-    [CascadingParameter]
-    private EditContext? CurrentEditContext { get; set; }
-
-    protected override void OnInitialized()
+    // See https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-6.0#server-validation-with-a-validator-component
+    public class CustomModelValidation : ComponentBase
     {
-        if (CurrentEditContext is null)
+        private ValidationMessageStore? _messageStore;
+
+        [CascadingParameter]
+        private EditContext? CurrentEditContext { get; set; }
+
+        protected override void OnInitialized()
         {
-            throw new InvalidOperationException(
-                $"{nameof(CustomModelValidation)} requires a cascading " +
-                $"parameter of type {nameof(EditContext)}. " +
-                $"For example, you can use {nameof(CustomModelValidation)} " +
-                $"inside an {nameof(EditForm)}.");
-        }
-
-        _messageStore = new(CurrentEditContext);
-
-        CurrentEditContext.OnValidationRequested += (s, e) =>
-            _messageStore?.Clear();
-        CurrentEditContext.OnFieldChanged += (s, e) =>
-            _messageStore?.Clear(e.FieldIdentifier);
-    }
-
-    public void DisplayErrors(IDictionary<string, ICollection<string>> errors)
-    {
-        if (CurrentEditContext is not null && errors is not null)
-        {
-            foreach (var err in errors)
+            if (CurrentEditContext is null)
             {
-                _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
+                throw new InvalidOperationException(
+                    $"{nameof(CustomModelValidation)} requires a cascading " +
+                    $"parameter of type {nameof(EditContext)}. " +
+                    $"For example, you can use {nameof(CustomModelValidation)} " +
+                    $"inside an {nameof(EditForm)}.");
             }
 
-            CurrentEditContext.NotifyValidationStateChanged();
-        }
-    }
+            _messageStore = new(CurrentEditContext);
 
-    public void ClearErrors()
-    {
-        _messageStore?.Clear();
-        CurrentEditContext?.NotifyValidationStateChanged();
+            CurrentEditContext.OnValidationRequested += (s, e) =>
+                _messageStore?.Clear();
+            CurrentEditContext.OnFieldChanged += (s, e) =>
+                _messageStore?.Clear(e.FieldIdentifier);
+        }
+
+        public void DisplayErrors(IDictionary<string, ICollection<string>> errors)
+        {
+            if (CurrentEditContext is not null && errors is not null)
+            {
+                foreach (var err in errors)
+                {
+                    _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
+                }
+
+                CurrentEditContext.NotifyValidationStateChanged();
+            }
+        }
+
+        public void ClearErrors()
+        {
+            _messageStore?.Clear();
+            CurrentEditContext?.NotifyValidationStateChanged();
+        }
     }
 }

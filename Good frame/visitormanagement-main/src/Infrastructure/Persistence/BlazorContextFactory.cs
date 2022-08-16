@@ -5,24 +5,26 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Persistence;
-public class BlazorContextFactory<TContext> : IDbContextFactory<TContext> where TContext : DbContext
+namespace CleanArchitecture.Blazor.Infrastructure.Persistence
 {
-    private readonly IServiceProvider provider;
-
-    public BlazorContextFactory(IServiceProvider provider)
+    public class BlazorContextFactory<TContext> : IDbContextFactory<TContext> where TContext : DbContext
     {
-        this.provider = provider;
-    }
+        private readonly IServiceProvider provider;
 
-    public TContext CreateDbContext()
-    {
-        if (provider == null)
+        public BlazorContextFactory(IServiceProvider provider)
         {
-            throw new InvalidOperationException(
-                $"You must configure an instance of IServiceProvider");
+            this.provider = provider;
         }
 
-        return ActivatorUtilities.CreateInstance<TContext>(provider);
+        public TContext CreateDbContext()
+        {
+            if (provider == null)
+            {
+                throw new InvalidOperationException(
+                    $"You must configure an instance of IServiceProvider");
+            }
+
+            return ActivatorUtilities.CreateInstance<TContext>(provider);
+        }
     }
 }

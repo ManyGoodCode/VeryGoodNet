@@ -1,13 +1,10 @@
-﻿namespace Blazor.Server.UI.Models.Localization;
-
-public record LanguageCode(string Code, string DisplayName, bool IsRTL = false);
-
-
-
-public static class LocalizationConstants
+namespace Blazor.Server.UI.Models.Localization
 {
-    public static readonly LanguageCode[] SupportedLanguages =
+    public record LanguageCode(string Code, string DisplayName, bool IsRTL = false);
+    public static class LocalizationConstants
     {
+        public static readonly LanguageCode[] SupportedLanguages =
+        {
         new("en-US", "English"),
         new("fr-FR", "French"),
         new("de-DE", "German"),
@@ -16,5 +13,6 @@ public static class LocalizationConstants
         new("ru-RU", "Russian"),
         new("zh-CN", "Simplified Chinese")
     };
+    }
 }
 

@@ -2,7 +2,6 @@ using LazyCache;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
     public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
           where TRequest : IRequest<TResponse>, ICacheInvalidator
     {

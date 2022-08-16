@@ -5,17 +5,19 @@ using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
-public class CustomException : Exception
+namespace CleanArchitecture.Blazor.Application.Common.Exceptions
 {
-    public List<string>? ErrorMessages { get; }
-
-    public HttpStatusCode StatusCode { get; }
-
-    public CustomException(string message, List<string>? errors = default, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
-        : base(message)
+    public class CustomException : Exception
     {
-        ErrorMessages = errors;
-        StatusCode = statusCode;
+        public List<string>? ErrorMessages { get; }
+
+        public HttpStatusCode StatusCode { get; }
+
+        public CustomException(string message, List<string>? errors = default, HttpStatusCode statusCode = HttpStatusCode.InternalServerError)
+            : base(message)
+        {
+            ErrorMessages = errors;
+            StatusCode = statusCode;
+        }
     }
 }

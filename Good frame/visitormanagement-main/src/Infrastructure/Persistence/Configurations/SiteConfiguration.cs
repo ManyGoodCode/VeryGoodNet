@@ -1,16 +1,15 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace CleanArchitecture.Infrastructure.Persistence.Configurations;
-
-public class SiteConfiguration : IEntityTypeConfiguration<Site>
+namespace CleanArchitecture.Infrastructure.Persistence.Configurations
 {
-    public void Configure(EntityTypeBuilder<Site> builder)
+
+    public class SiteConfiguration : IEntityTypeConfiguration<Site>
     {
-        builder.Ignore(e => e.DomainEvents);
+        public void Configure(EntityTypeBuilder<Site> builder)
+        {
+            builder.Ignore(e => e.DomainEvents);
+        }
     }
 }

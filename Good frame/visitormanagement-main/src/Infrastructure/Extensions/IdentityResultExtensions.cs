@@ -1,16 +1,14 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using Microsoft.AspNetCore.Identity;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Extensions;
-
-public static class IdentityResultExtensions
+namespace CleanArchitecture.Blazor.Infrastructure.Extensions
 {
-    public static Result ToApplicationResult(this IdentityResult result)
+    public static class IdentityResultExtensions
     {
-        return result.Succeeded
-            ? Result.Success()
-            : Result.Failure(result.Errors.Select(e => e.Description));
+        public static Result ToApplicationResult(this IdentityResult result)
+        {
+            return result.Succeeded
+                ? Result.Success()
+                : Result.Failure(result.Errors.Select(e => e.Description));
+        }
     }
 }

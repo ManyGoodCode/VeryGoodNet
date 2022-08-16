@@ -1,8 +1,10 @@
-namespace CleanArchitecture.Blazor.Application.Common.Exceptions;
-public class ConflictException : CustomException
+namespace CleanArchitecture.Blazor.Application.Common.Exceptions
 {
-    public ConflictException(string message)
-        : base(message, null, System.Net.HttpStatusCode.Conflict)
+    public class ConflictException : CustomException
     {
+        public ConflictException(string message)
+            : base(message, null, System.Net.HttpStatusCode.Conflict)
+        {
+        }
     }
 }

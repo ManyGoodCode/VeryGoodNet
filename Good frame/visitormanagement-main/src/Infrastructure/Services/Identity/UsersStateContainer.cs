@@ -5,21 +5,23 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity;
-public class UsersStateContainer : IUsersStateContainer
+namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity
 {
-    public ConcurrentDictionary<string, string?> UsersByConnectionId { get; } = new ConcurrentDictionary<string, string?>();
+    public class UsersStateContainer : IUsersStateContainer
+    {
+        public ConcurrentDictionary<string, string?> UsersByConnectionId { get; } = new ConcurrentDictionary<string, string?>();
 
-    public event Action? OnChange;
-    public void Update(string connectionId, string? name)
-    {
-        UsersByConnectionId.AddOrUpdate(connectionId, name, (key, oldValue) => name);
-        NotifyStateChanged();
+        public event Action? OnChange;
+        public void Update(string connectionId, string? name)
+        {
+            UsersByConnectionId.AddOrUpdate(connectionId, name, (key, oldValue) => name);
+            NotifyStateChanged();
+        }
+        public void Remove(string connectionId)
+        {
+            UsersByConnectionId.TryRemove(connectionId, out var _);
+            NotifyStateChanged();
+        }
+        private void NotifyStateChanged() => OnChange?.Invoke();
     }
-    public void Remove(string connectionId)
-    {
-        UsersByConnectionId.TryRemove(connectionId, out var _);
-        NotifyStateChanged();
-    }
-    private void NotifyStateChanged() => OnChange?.Invoke();
 }

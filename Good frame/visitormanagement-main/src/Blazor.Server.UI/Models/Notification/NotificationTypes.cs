@@ -1,11 +1,12 @@
-namespace Blazor.Server.UI.Models.Notification;
-
-public enum NotificationTypes
+namespace Blazor.Server.UI.Models.Notification
 {
-    NewMessage,
-    NewEmail,
-    CommentLiked,
-    CommentAnswered,
-    OrderPlaced,
-    OrderReceived,
+    public enum NotificationTypes
+    {
+        NewMessage,
+        NewEmail,
+        CommentLiked,
+        CommentAnswered,
+        OrderPlaced,
+        OrderReceived,
+    }
 }

@@ -1,32 +1,30 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Domain.Common;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Services;
-
-public class DomainEventService : IDomainEventService
+namespace CleanArchitecture.Blazor.Infrastructure.Services
 {
-    private readonly ILogger<DomainEventService> _logger;
-    private readonly IPublisher _mediator;
-
-    public DomainEventService(ILogger<DomainEventService> logger, IPublisher mediator)
+    public class DomainEventService : IDomainEventService
     {
-        _logger = logger;
-        _mediator = mediator;
-    }
+        private readonly ILogger<DomainEventService> _logger;
+        private readonly IPublisher _mediator;
 
-    public async Task Publish(DomainEvent domainEvent)
-    {
-        _logger.LogInformation("Publishing domain event. Event - {event}", nameof(domainEvent));
-        await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
-    }
+        public DomainEventService(ILogger<DomainEventService> logger, IPublisher mediator)
+        {
+            _logger = logger;
+            _mediator = mediator;
+        }
 
-    private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
-    {
-        return (INotification)Activator.CreateInstance(
-            typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent)!;
+        public async Task Publish(DomainEvent domainEvent)
+        {
+            _logger.LogInformation("Publishing domain event. Event - {event}", nameof(domainEvent));
+            await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
+        }
+
+        private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
+        {
+            return (INotification)Activator.CreateInstance(
+                typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent)!;
+        }
     }
 }

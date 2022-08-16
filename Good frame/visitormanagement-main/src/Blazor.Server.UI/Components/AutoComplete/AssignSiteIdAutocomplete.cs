@@ -4,57 +4,57 @@ using MediatR;
 using Microsoft.AspNetCore.Components;
 using MudBlazor;
 
-namespace Blazor.Server.UI.Components.AutoComplete;
-
-public class AssignSiteIdAutocomplete : MudAutocomplete<int?>
+namespace Blazor.Server.UI.Components.AutoComplete
 {
-
-    [Inject]
-    private ISender _mediator { get; set; } = default!;
-    private List<SiteDto> _sites = new();
-
-    // supply default parameters, but leave the possibility to override them
-    public override Task SetParametersAsync(ParameterView parameters)
+    public class AssignSiteIdAutocomplete : MudAutocomplete<int?>
     {
-        Dense = true;
-        SearchFunc = Search;
-        ToStringFunc = GetName;
-        return base.SetParametersAsync(parameters);
-    }
+        [Inject]
+        private ISender _mediator { get; set; } = default!;
+        private List<SiteDto> _sites = new();
 
-    // when the value parameter is set, we have to load that one brand to be able to show the name
-    // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
+        // supply default parameters, but leave the possibility to override them
+        public override Task SetParametersAsync(ParameterView parameters)
         {
-            _sites = (await _mediator.Send(new GetAllSitesQuery())).ToList();
-            ForceRender(true);
+            Dense = true;
+            SearchFunc = Search;
+            ToStringFunc = GetName;
+            return base.SetParametersAsync(parameters);
         }
-    }
-    
-    private Task<IEnumerable<int?>> Search(string value)
-    {
-        if (string.IsNullOrEmpty(value))
-        {
-            return Task.FromResult(_sites.Select(x => new int?(x.Id)).ToList().AsEnumerable());
-        }
-        else
-        {
-            var result = _sites.Where(x => x.Name.StartsWith(value)).Select(x => new int?(x.Id)).ToList();
-            return Task.FromResult(result.AsEnumerable());
-        }
-    }
 
-    private string GetName(int? id)
-    {
-        if (id is null || id<=0)
+        // when the value parameter is set, we have to load that one brand to be able to show the name
+        // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
+        protected override async Task OnAfterRenderAsync(bool firstRender)
         {
-            return String.Empty;
+            if (firstRender)
+            {
+                _sites = (await _mediator.Send(new GetAllSitesQuery())).ToList();
+                ForceRender(true);
+            }
         }
-        else
+
+        private Task<IEnumerable<int?>> Search(string value)
         {
-              return _sites.Find(b => b.Id == id)?.Name;
+            if (string.IsNullOrEmpty(value))
+            {
+                return Task.FromResult(_sites.Select(x => new int?(x.Id)).ToList().AsEnumerable());
+            }
+            else
+            {
+                var result = _sites.Where(x => x.Name.StartsWith(value)).Select(x => new int?(x.Id)).ToList();
+                return Task.FromResult(result.AsEnumerable());
+            }
+        }
+
+        private string GetName(int? id)
+        {
+            if (id is null || id <= 0)
+            {
+                return String.Empty;
+            }
+            else
+            {
+                return _sites.Find(b => b.Id == id)?.Name;
+            }
         }
     }
 }

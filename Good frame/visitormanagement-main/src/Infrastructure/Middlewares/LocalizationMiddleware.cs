@@ -1,28 +1,29 @@
 using System.Globalization;
 using Microsoft.AspNetCore.Http;
 
-namespace CleanArchitecture.Blazor.Infrastructure.Middlewares;
-
-public class LocalizationMiddleware : IMiddleware
+namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 {
-    public async Task InvokeAsync(HttpContext context, RequestDelegate next)
+    public class LocalizationMiddleware : IMiddleware
     {
-        var cultureKey = context.Request.Headers["Accept-Language"];
-        if (!string.IsNullOrEmpty(cultureKey))
+        public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            if (DoesCultureExist(cultureKey))
+            var cultureKey = context.Request.Headers["Accept-Language"];
+            if (!string.IsNullOrEmpty(cultureKey))
             {
-                var culture = new CultureInfo(cultureKey);
-                Thread.CurrentThread.CurrentCulture = culture;
-                Thread.CurrentThread.CurrentUICulture = culture;
+                if (DoesCultureExist(cultureKey))
+                {
+                    var culture = new CultureInfo(cultureKey);
+                    Thread.CurrentThread.CurrentCulture = culture;
+                    Thread.CurrentThread.CurrentUICulture = culture;
+                }
             }
+
+            await next(context);
         }
 
-        await next(context);
-    }
-
-    private static bool DoesCultureExist(string cultureName)
-    {
-        return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, cultureName, StringComparison.CurrentCultureIgnoreCase));
+        private static bool DoesCultureExist(string cultureName)
+        {
+            return CultureInfo.GetCultures(CultureTypes.AllCultures).Any(culture => string.Equals(culture.Name, cultureName, StringComparison.CurrentCultureIgnoreCase));
+        }
     }
 }
