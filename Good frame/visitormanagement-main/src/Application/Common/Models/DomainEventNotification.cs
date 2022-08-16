@@ -1,16 +1,14 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Domain.Common;
 
-namespace CleanArchitecture.Blazor.Application.Common.Models;
-
-public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
+namespace CleanArchitecture.Blazor.Application.Common.Models
 {
-    public DomainEventNotification(TDomainEvent domainEvent)
+    public class DomainEventNotification<TDomainEvent> : INotification where TDomainEvent : DomainEvent
     {
-        DomainEvent = domainEvent;
-    }
+        public DomainEventNotification(TDomainEvent domainEvent)
+        {
+            DomainEvent = domainEvent;
+        }
 
-    public TDomainEvent DomainEvent { get; }
+        public TDomainEvent DomainEvent { get; }
+    }
 }
