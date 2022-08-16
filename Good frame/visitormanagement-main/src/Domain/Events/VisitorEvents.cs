@@ -4,14 +4,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Domain.Events;
-public class VisitorCreatedEvent : DomainEvent
+namespace CleanArchitecture.Blazor.Domain.Events
 {
-    public VisitorCreatedEvent(Visitor item)
+    public class VisitorCreatedEvent : DomainEvent
     {
-        Item = item;
+        public VisitorCreatedEvent(Visitor item)
+        {
+            Item = item;
+        }
+        public Visitor Item { get; }
     }
-    public Visitor Item { get; }
 }
 
 public class VisitorUpdatedEvent : DomainEvent

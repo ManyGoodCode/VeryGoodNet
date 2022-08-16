@@ -4,9 +4,11 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Domain.Entities.Tenant;
-public interface IMustHaveTenant
+namespace CleanArchitecture.Blazor.Domain.Entities.Tenant
 {
-    int? SiteId { get; set; }
-    Site? Site { get; set; }
+    public interface IMustHaveTenant
+    {
+        int? SiteId { get; set; }
+        Site? Site { get; set; }
+    }
 }

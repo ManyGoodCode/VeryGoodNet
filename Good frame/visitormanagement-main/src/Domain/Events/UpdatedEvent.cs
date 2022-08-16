@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Domain.Events;
-public class UpdatedEvent<T> : DomainEvent
+namespace CleanArchitecture.Blazor.Domain.Events
 {
-    public UpdatedEvent(T entity)
+    public class UpdatedEvent<T> : DomainEvent
     {
-        Entity = entity;
-    }
+        public UpdatedEvent(T entity)
+        {
+            Entity = entity;
+        }
 
-    public T Entity { get; }
+        public T Entity { get; }
+    }
 }

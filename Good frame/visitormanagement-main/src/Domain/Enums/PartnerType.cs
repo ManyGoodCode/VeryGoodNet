@@ -1,10 +1,8 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace CleanArchitecture.Blazor.Domain;
-
-public enum PartnerType
+namespace CleanArchitecture.Blazor.Domain
 {
-    TP,
-    IC
+    public enum PartnerType
+    {
+        TP,
+        IC
+    }
 }

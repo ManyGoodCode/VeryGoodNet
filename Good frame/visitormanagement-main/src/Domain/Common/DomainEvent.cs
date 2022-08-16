@@ -1,19 +1,17 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-namespace CleanArchitecture.Blazor.Domain.Common;
-
-public interface IHasDomainEvent
+namespace CleanArchitecture.Blazor.Domain.Common
 {
-    List<DomainEvent> DomainEvents { get; set; }
-}
-
-public abstract class DomainEvent
-{
-    protected DomainEvent()
+    public interface IHasDomainEvent
     {
-        DateOccurred = DateTimeOffset.UtcNow;
+        List<DomainEvent> DomainEvents { get; set; }
     }
-    public bool IsPublished { get; set; }
-    public DateTimeOffset DateOccurred { get; protected set; } = DateTime.UtcNow;
+
+    public abstract class DomainEvent
+    {
+        protected DomainEvent()
+        {
+            DateOccurred = DateTimeOffset.UtcNow;
+        }
+        public bool IsPublished { get; set; }
+        public DateTimeOffset DateOccurred { get; protected set; } = DateTime.UtcNow;
+    }
 }
