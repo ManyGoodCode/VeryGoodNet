@@ -23,6 +23,5 @@ namespace CommandLine
                 .Where(e => !(e.Tag == ErrorType.UnknownOptionError
                     && ((UnknownOptionError)e).Token.EqualsOrdinalIgnoreCase("help")));
         }
-       
     }
 }
