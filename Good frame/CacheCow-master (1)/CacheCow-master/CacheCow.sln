@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B1901128-F84A-46CE-B8FD-E863465F94C2}"
 EndProject
@@ -39,7 +39,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheCow.Client.FileCacheSt
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheCow.Client.FileCacheStore.Tests", "test\CacheCow.Client.FileCacheStore.Tests\CacheCow.Client.FileCacheStore.Tests.csproj", "{987F672D-C556-4682-BDF0-C629DD967926}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheCow.Server.WebApi.Tests", "test\CacheCow.Server.WebApi.Tests\CacheCow.Server.WebApi.Tests.csproj", "{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheCow.Server.WebApi.Tests", "test\CacheCow.Server.WebApi.Tests\CacheCow.Server.WebApi.Tests.csproj", "{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheCow.Client.Application", "CacheCow.Client.Application\CacheCow.Client.Application.csproj", "{AECCF8D0-9F14-42F2-BF2A-576437B17B0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AECCF8D0-9F14-42F2-BF2A-576437B17B0A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AECCF8D0-9F14-42F2-BF2A-576437B17B0A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AECCF8D0-9F14-42F2-BF2A-576437B17B0A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AECCF8D0-9F14-42F2-BF2A-576437B17B0A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -117,6 +123,7 @@ Global
 		{7AE96261-713B-42E7-96A2-9837FAF3A26C} = {B1901128-F84A-46CE-B8FD-E863465F94C2}
 		{987F672D-C556-4682-BDF0-C629DD967926} = {141CEBF7-F872-4181-8B16-1E0FAE517D59}
 		{BFCD9177-AAED-4523-8F49-BBAFCEFD55E3} = {141CEBF7-F872-4181-8B16-1E0FAE517D59}
+		{AECCF8D0-9F14-42F2-BF2A-576437B17B0A} = {141CEBF7-F872-4181-8B16-1E0FAE517D59}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4EFCA3E6-84FB-4520-8C47-62D010919E88}

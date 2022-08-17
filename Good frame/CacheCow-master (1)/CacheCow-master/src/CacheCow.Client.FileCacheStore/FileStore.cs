@@ -40,46 +40,55 @@ namespace CacheCow.Client.FileCacheStore
 
         public async Task<HttpResponseMessage> GetValueAsync(CacheKey key)
         {
-            if (!File.Exists(_pathFor(key)))
+            if (!File.Exists(PathFor(key)))
             {
                 return null;
             }
 
-            using (var fs = File.OpenRead(_pathFor(key)))
+            using (FileStream fs = File.OpenRead(PathFor(key)))
             {
                 return await _serializer.DeserializeToResponseAsync(fs);
             }
         }
 
+        /// <summary>
+        /// 通过CacheKey加密生成文件名 记录请求信息到本地文件
+        /// 例如:cache/C4TsCs8GI8zAVxFA78HKWZFZS
+        /// </summary>
         public async Task AddOrUpdateAsync(CacheKey key, HttpResponseMessage response)
         {
-            using (var fs = File.OpenWrite(_pathFor(key)))
+            using (FileStream fs = File.OpenWrite(PathFor(key)))
             {
                 await _serializer.SerializeAsync(response, fs);
             }
         }
 
+        /// <summary>
+        /// 删除CacheKey加密生成的本地日志
+        /// </summary>
         public async Task<bool> TryRemoveAsync(CacheKey key)
         {
-            if (!File.Exists(_pathFor(key)))
+            if (!File.Exists(PathFor(key)))
             {
                 return false;
             }
 
-            File.Delete(_pathFor(key));
+            File.Delete(PathFor(key));
             return true;
         }
 
-
+        /// <summary>
+        /// 删除Cache下的所有日志
+        /// </summary>
         public async Task ClearAsync()
         {
-            foreach (var f in Directory.GetFiles(_cacheRoot))
+            foreach (string f in Directory.GetFiles(_cacheRoot))
             {
                 File.Delete(f);
             }
         }
 
-        private string _pathFor(CacheKey key)
+        private string PathFor(CacheKey key)
         {
             return _cacheRoot + "/" + key.HashBase64.Replace('/', '!');
         }
