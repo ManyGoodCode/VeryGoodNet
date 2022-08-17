@@ -1,5 +1,8 @@
 ﻿namespace CacheCow.Common
 {
+    /// <summary>
+    /// 字符串常量:添加到Heads的集合中
+    /// </summary>
     public class HttpHeaderNames
     {
         public const string Accept = "Accept";
