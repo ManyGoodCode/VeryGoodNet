@@ -6,47 +6,48 @@ using System.Text;
 
 namespace CacheCow.Common
 {
+    /// <summary>
+    /// 通过 resourceUri 和 headerValues 生成字符串【相等性判断】。再将字符串通过SHA加密生成新的字符串
+    /// </summary>
 	public class CacheKey
 	{
-		private readonly string _resourceUri;
-		private readonly string _toString;
-		private readonly string _routePattern;
-		private readonly byte[] _hash;
-		private readonly string _hashBase64;
-		private string _domain = null;
+		private readonly string resourceUri;
+		private readonly string toString;
+		private readonly byte[] hash;
+		private readonly string hashBase64;
 
 		private const string CacheKeyFormat = "{0}-{1}";
 
 		public CacheKey(string resourceUri, IEnumerable<string> headerValues = null)
 		{
-			_toString = string.Format(CacheKeyFormat, resourceUri, string.Join("-", headerValues));
+			toString = string.Format(CacheKeyFormat, resourceUri, string.Join("-", headerValues));
 			using (SHA1CryptoServiceProvider sha1 = new SHA1CryptoServiceProvider())
 			{
-				_hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(_toString));
+				hash = sha1.ComputeHash(Encoding.UTF8.GetBytes(toString));
 			}
 
-			_hashBase64 = Convert.ToBase64String(_hash);
-            _resourceUri = resourceUri;
+			hashBase64 = Convert.ToBase64String(hash);
+            this.resourceUri = resourceUri;
 		}
 
         public string ResourceUri
 		{
-			get { return _resourceUri; }
+			get { return resourceUri; }
 		}
 
 		public byte[] Hash
 		{
-			get { return _hash; }
+			get { return hash; }
 		}
 
 		public string HashBase64
 		{
-			get { return _hashBase64; }
+			get { return hashBase64; }
 		}
 
 		public override string ToString()
 		{
-			return _toString;
+			return toString;
 		}
 
 
@@ -62,7 +63,7 @@ namespace CacheCow.Common
 
 		public override int GetHashCode()
 		{
-			return _toString.GetHashCode();
+			return toString.GetHashCode();
 		}
 	}
 }

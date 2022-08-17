@@ -9,15 +9,23 @@ using System.Text;
 
 namespace CacheCow.Common.Http
 {
+    /// <summary>
+    /// NotModifiedResponse 继承 HttpResponseMessage。构造器设置属性 HttpRequestMessage，CacheControlHeaderValue
+    /// </summary>
 	public class NotModifiedResponse : HttpResponseMessage
 	{
-        public NotModifiedResponse(HttpRequestMessage request, CacheControlHeaderValue cacheControlHeaderValue)
+        public NotModifiedResponse(
+            HttpRequestMessage request,
+            CacheControlHeaderValue cacheControlHeaderValue)
 			: this(request, cacheControlHeaderValue, null)
 		{
 		}
 
 
-		public NotModifiedResponse(HttpRequestMessage request, CacheControlHeaderValue cacheControlHeaderValue, EntityTagHeaderValue etag)
+		public NotModifiedResponse(
+            HttpRequestMessage request,
+            CacheControlHeaderValue cacheControlHeaderValue,
+            EntityTagHeaderValue etag)
 			: base(HttpStatusCode.NotModified)
 		{
 			if(etag!=null)
