@@ -3,10 +3,6 @@
 #if NET452
 
     using System.Configuration;
-
-    /// <summary>
-    ///
-    /// </summary>
     public class ConfigurationValueProvider : IConfigurationValueProvider
     {
         /// <inheritdoc />
