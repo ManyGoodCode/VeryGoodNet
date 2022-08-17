@@ -7,22 +7,11 @@ using CacheCow.Common;
 
 namespace CacheCow.Client.FileCacheStore
 {
-    /// <summary>
-    /// A simple 'cache-to-file' storage with persistanty over multiple runs.
-    /// </summary>
     public class FileStore : ICacheStore
     {
         private readonly MessageContentHttpMessageSerializer _serializer = new MessageContentHttpMessageSerializer();
-
-        /// <summary>
-        /// The directory location of the cache
-        /// </summary>
         private readonly string _cacheRoot;
 
-        /// <summary>
-        /// Minimum expiry of items. Default is 6 hours.
-        /// Bear in mind, even expired items can be used if we do a cache validation request and get back 304
-        /// </summary>
         public TimeSpan MinExpiry { get; set; }
 
         private static readonly List<string> ForbiddenDirectories =
@@ -34,13 +23,6 @@ namespace CacheCow.Client.FileCacheStore
                 ".."
             };
 
-        /// <summary>
-        /// Create a new Cachestore within the given directory. Responses will be saved in this directory.
-        /// The directory should not be "/", ".", "" or null.
-        /// Note that _all_ contents of this directory can be cleared.
-        /// </summary>
-        /// <param name="cacheRoot">The directory containing the cache</param>
-        /// <exception cref="ArgumentException">When the passed directory is "/", ".", ".." or ""</exception>
         public FileStore(string cacheRoot)
         {
             if (cacheRoot is null || ForbiddenDirectories.Contains(cacheRoot))
@@ -56,7 +38,6 @@ namespace CacheCow.Client.FileCacheStore
             }
         }
 
-        /// <inheritdoc />
         public async Task<HttpResponseMessage> GetValueAsync(CacheKey key)
         {
             if (!File.Exists(_pathFor(key)))
@@ -70,7 +51,6 @@ namespace CacheCow.Client.FileCacheStore
             }
         }
 
-        /// <inheritdoc />
         public async Task AddOrUpdateAsync(CacheKey key, HttpResponseMessage response)
         {
             using (var fs = File.OpenWrite(_pathFor(key)))
@@ -79,7 +59,6 @@ namespace CacheCow.Client.FileCacheStore
             }
         }
 
-        /// <inheritdoc />
         public async Task<bool> TryRemoveAsync(CacheKey key)
         {
             if (!File.Exists(_pathFor(key)))
@@ -92,7 +71,6 @@ namespace CacheCow.Client.FileCacheStore
         }
 
 
-        /// <inheritdoc />
         public async Task ClearAsync()
         {
             foreach (var f in Directory.GetFiles(_cacheRoot))
@@ -103,20 +81,13 @@ namespace CacheCow.Client.FileCacheStore
 
         private string _pathFor(CacheKey key)
         {
-            // Base64 might return "/" as character. This breaks files; so we replace the '/' with '!'
             return _cacheRoot + "/" + key.HashBase64.Replace('/', '!');
         }
 
-        /// <inheritdoc />
         public void Dispose()
         {
-            // Nothing to do here
         }
 
-        /// <summary>
-        /// Checks if the cache is empty
-        /// </summary>
-        /// <returns>True if no files are in the current cache</returns>
         public bool IsEmpty()
         {
             return Directory.GetFiles(_cacheRoot).Length == 0;
