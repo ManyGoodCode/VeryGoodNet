@@ -8,6 +8,9 @@ namespace CacheCow.Common.Helpers
 {
 	public static class HttpHeadersExtensions
 	{
+        /// <summary>
+        /// 判断HttpHeads是否添加了(name,value)的头
+        /// </summary>
 		public static void Parse(this HttpHeaders httpHeaders, string headers)
 		{
 			if (httpHeaders == null)
@@ -27,7 +30,9 @@ namespace CacheCow.Common.Helpers
 			}
 		}
 
-
+        /// <summary>
+        /// 提取HttpRequestHeads中名称包含在headNames中的项
+        /// </summary>
         public static IEnumerable<KeyValuePair<string, IEnumerable<string>>> ExtractHeadersValues(
             this HttpRequestHeaders headers, 
             params string[] headerNames)
