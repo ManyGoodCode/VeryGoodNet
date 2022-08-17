@@ -29,5 +29,12 @@ namespace CacheCow.Client.Application
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
         }
+
+        static Task<int> Add()
+        {
+            TaskCompletionSource<int> taskCompletionSource = new TaskCompletionSource<int>();
+            taskCompletionSource.SetResult(1);
+            return taskCompletionSource.Task;
+        }
     }
 }

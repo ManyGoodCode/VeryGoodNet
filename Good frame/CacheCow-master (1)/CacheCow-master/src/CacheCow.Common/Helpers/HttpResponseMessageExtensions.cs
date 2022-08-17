@@ -9,13 +9,19 @@ namespace CacheCow.Common.Helpers
 {
 	public static class HttpResponseMessageExtensions
 	{
+        /// <summary>
+        /// 将HttpResponseMessage实例用TaskCompletionSource封装直接返回
+        /// </summary>
 		public static Task<HttpResponseMessage> ToTask(this HttpResponseMessage responseMessage)
 		{
             TaskCompletionSource<HttpResponseMessage> taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
 			taskCompletionSource.SetResult(responseMessage);
 			return taskCompletionSource.Task;
 		}
-		
+
+        /// <summary>
+        /// 获取HttpResponseMessage的过期时间
+        /// </summary>
 		public static DateTimeOffset? GetExpiry(this HttpResponseMessage response)
 		{      
 			if (response.Headers.CacheControl != null && response.Headers.CacheControl.MaxAge.HasValue)
