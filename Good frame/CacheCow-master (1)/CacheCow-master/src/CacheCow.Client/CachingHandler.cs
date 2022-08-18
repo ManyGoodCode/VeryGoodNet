@@ -22,7 +22,7 @@ namespace CacheCow.Client
 
         public IVaryHeaderStore VaryHeaderStore { get; set; }
         public string[] DefaultVaryHeaders { get; set; }
-        public string[] StarVaryHeaders { get; set; } // TODO: populate and use
+        public string[] StarVaryHeaders { get; set; }
         public bool UseConditionalPutPatchDelete { get; set; }
         public bool MustRevalidateByDefault { get; set; }
         public Func<HttpResponseMessage, ResponseValidationResult> ResponseValidator { get; set; }
@@ -299,7 +299,7 @@ namespace CacheCow.Client
                 return cachedResponse;
             }
 
-            var validationResult = ResponseValidator(serverResponse);
+            ResponseValidationResult validationResult = ResponseValidator(serverResponse);
             switch (validationResult)
             {
                 case ResponseValidationResult.MustRevalidate:
