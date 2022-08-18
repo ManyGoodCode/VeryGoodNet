@@ -81,6 +81,10 @@
       <Project>{7AE96261-713B-42E7-96A2-9837FAF3A26C}</Project>
       <Name>CacheCow.Client.FileCacheStore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\src\CacheCow.Client\CacheCow.Client.csproj">
+      <Project>{943325CB-7189-42FE-9DA4-E513DB3E0E87}</Project>
+      <Name>CacheCow.Client</Name>
+    </ProjectReference>
     <ProjectReference Include="..\src\CacheCow.Common\CacheCow.Common.csproj">
       <Project>{88E170E4-B857-42FE-963C-0505502B548C}</Project>
       <Name>CacheCow.Common</Name>

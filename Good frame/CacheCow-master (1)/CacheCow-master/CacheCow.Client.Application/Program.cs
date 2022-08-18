@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using CacheCow.Client.FileCacheStore;
+using CacheCow.Client.Headers;
 using CacheCow.Common;
 using CacheCow.Common.Helpers;
 
@@ -25,6 +26,17 @@ namespace CacheCow.Client.Application
             byte[] datas = new byte[3] { 0x11, 0x22, 0x34 };
             string hexString = datas.ToHex();
             byte[] datas1 = hexString.FromHex();
+
+            CacheCowHeader head = new CacheCowHeader();
+            head.WasStale = true;
+            head.DidNotExist = true;
+            head.NotCacheable = false;
+            head.CacheValidationApplied = false;
+            head.RetrievedFromCache = true;
+            string str = head.ToString();
+
+            CacheCowHeader head2;
+            CacheCowHeader.TryParse(str,out head2);
             //Application.EnableVisualStyles();
             //Application.SetCompatibleTextRenderingDefault(false);
             //Application.Run(new Form1());
