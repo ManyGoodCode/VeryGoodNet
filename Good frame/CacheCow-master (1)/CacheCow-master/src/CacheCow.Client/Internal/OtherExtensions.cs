@@ -23,6 +23,9 @@ namespace CacheCow.Client.Internal
                 method.Method.ToUpper() == "PATCH";
         }
 
+        /// <summary>
+        /// 判断  HttpMethod 是否可以忽略缓存。HttpMethod.Delete/ HttpMethod.Put/HttpMethod.Get 不可以忽略
+        /// </summary>
         public static bool IsCacheIgnorable(this HttpMethod method)
         {
             return !method.IsPutPatchOrDelete() && method != HttpMethod.Get;
