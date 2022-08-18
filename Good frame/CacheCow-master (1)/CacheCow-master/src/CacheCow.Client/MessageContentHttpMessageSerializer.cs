@@ -37,10 +37,9 @@ namespace CacheCow.Client
         {
             if (response.Content != null)
             {
-                TraceWriter.WriteLine("SerializeAsync - before load",
-                    TraceLevel.Verbose);
+                TraceWriter.WriteLine("SerializeAsync - before load", TraceLevel.Verbose);
                 // this will prevent serialisation without ContentLength which barfs for chunked encoding - issue #267
-                var contentLength = response.Content.Headers.ContentLength;
+                long? contentLength = response.Content.Headers.ContentLength;
 
                 if (_bufferContent)
                     await response.Content.LoadIntoBufferAsync().ConfigureAwait(false);
