@@ -14,22 +14,14 @@ using System.Runtime.CompilerServices;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// Extensions for ASP.NET Core
-    /// </summary>
     public static class CoreExtensions
     {
         private const string RequestHeadersKey = "###__request_headers__###";
         private const string ResponseHeadersKey = "###__response_headers__###";
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns>Cache Validation Status</returns>
         public static CacheValidationStatus GetCacheValidationStatus(this HttpRequest request)
         {
-            var typedHeaders = request.GetTypedHeadersWithCaching();
+            RequestHeaders typedHeaders = request.GetTypedHeadersWithCaching();
             if (HttpMethods.IsGet(request.Method))
             {
                 if (typedHeaders.IfModifiedSince.HasValue)
@@ -49,11 +41,6 @@ namespace CacheCow.Server
             return CacheValidationStatus.None;
         }
 
-        /// <summary>
-        /// Should have been part of the framework. Bear in mind, it is taken at the start so if you make any changes to request you won't see it.
-        /// </summary>
-        /// <param name="request"></param>
-        /// <returns></returns>
         public static RequestHeaders GetTypedHeadersWithCaching(this HttpRequest request)
         {
             if (!request.HttpContext.Items.ContainsKey(RequestHeadersKey))
@@ -62,12 +49,6 @@ namespace CacheCow.Server
             return (RequestHeaders)request.HttpContext.Items[RequestHeadersKey];
         }
 
-         /// <summary>
-        /// Should have been part of the framework. 
-        /// Bear in mind, it is taken first time it is asked so if you make any changes to the response you won't see it.
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
         public static RequestHeaders GetTypedHeadersWithCaching(this HttpResponse response)
         {
             if (!response.HttpContext.Items.ContainsKey(ResponseHeadersKey))
@@ -76,10 +57,6 @@ namespace CacheCow.Server
             return (RequestHeaders)response.HttpContext.Items[ResponseHeadersKey];
         }
 
-        /// <summary>
-        /// Makes a response non-cacheable by all the means available to mankind including nuclear
-        /// </summary>
-        /// <param name="response"></param>
         public static void MakeNonCacheable(this HttpResponse response)
         {
             response.Headers[HttpHeaderNames.Pragma] = "no-cache";
@@ -99,10 +76,6 @@ namespace CacheCow.Server
             }
         }
 
-        /// <summary>
-        /// Adds default implementation of various interfaces
-        /// </summary>
-        /// <param name="services">services</param>
         public static void AddHttpCaching(this IServiceCollection services)
         {
             services.AddTransient<ICacheabilityValidator, DefaultCacheabilityValidator>();
@@ -117,14 +90,16 @@ namespace CacheCow.Server
        
         public static IServiceCollection Remove<T>(this IServiceCollection services)
         {
-            var serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(T));
+            ServiceDescriptor serviceDescriptor = services.FirstOrDefault(descriptor => descriptor.ServiceType == typeof(T));
             if (serviceDescriptor != null)
                 services.Remove(serviceDescriptor);
 
             return services;
         }
 
-        public static void AddDirectiveProviderForViewModel<TViewModel, TCacheDirectiveProvider>(this IServiceCollection services, bool transient = true)
+        public static void AddDirectiveProviderForViewModel<TViewModel, TCacheDirectiveProvider>(
+            this IServiceCollection services,
+            bool transient = true)
             where TCacheDirectiveProvider : class, ICacheDirectiveProvider<TViewModel>
         {
             services.AddServiceWithLifeTime<ICacheDirectiveProvider<TViewModel>, TCacheDirectiveProvider>(transient);
@@ -133,7 +108,9 @@ namespace CacheCow.Server
             services.AddTransient<ICachingPipeline<TViewModel>, CachingPipeline<TViewModel>>();
         }
 
-        public static void AddSeparateDirectiveAndQueryProviderForViewModel<TViewModel, TCacheDirectiveProvider, TQueryProvider>(this IServiceCollection services, bool transient = true)
+        public static void AddSeparateDirectiveAndQueryProviderForViewModel<TViewModel, TCacheDirectiveProvider, TQueryProvider>(
+            this IServiceCollection services,
+            bool transient = true)
             where TCacheDirectiveProvider : class, ICacheDirectiveProvider<TViewModel>
             where TQueryProvider : class, ITimedETagQueryProvider<TViewModel>
         {
@@ -143,7 +120,9 @@ namespace CacheCow.Server
             services.AddTransient<ICachingPipeline<TViewModel>, CachingPipeline<TViewModel>>();
         }
 
-        public static void AddQueryProviderForViewModel<TViewModel, TQueryProvider>(this IServiceCollection services, bool transient = true)
+        public static void AddQueryProviderForViewModel<TViewModel, TQueryProvider>(
+            this IServiceCollection services,
+            bool transient = true)
             where TQueryProvider : class, ITimedETagQueryProvider<TViewModel>
         {
             services.AddServiceWithLifeTime<ICacheDirectiveProvider<TViewModel>, DefaultCacheDirectiveProvider<TViewModel>>(transient);
@@ -152,7 +131,9 @@ namespace CacheCow.Server
             services.AddTransient<ICachingPipeline<TViewModel>, CachingPipeline<TViewModel>>();
         }
 
-        public static void AddQueryProviderAndExtractorForViewModel<TViewModel, TQueryProvider, TExtractor>(this IServiceCollection services, bool transient = true)
+        public static void AddQueryProviderAndExtractorForViewModel<TViewModel, TQueryProvider, TExtractor>(
+            this IServiceCollection services,
+            bool transient = true)
             where TQueryProvider : class, ITimedETagQueryProvider<TViewModel>
             where TExtractor : class, ITimedETagExtractor<TViewModel>
         {
@@ -163,7 +144,9 @@ namespace CacheCow.Server
         }
 
 
-        public static void AddExtractorForViewModel<TViewModel, TExtractor>(this IServiceCollection services, bool transient = true)
+        public static void AddExtractorForViewModel<TViewModel, TExtractor>(
+            this IServiceCollection services,
+            bool transient = true)
             where TExtractor : class, ITimedETagExtractor<TViewModel>
         {
             services.AddServiceWithLifeTime<ICacheDirectiveProvider<TViewModel>, DefaultCacheDirectiveProvider<TViewModel>>(transient);
@@ -172,7 +155,9 @@ namespace CacheCow.Server
             services.AddTransient<ICachingPipeline<TViewModel>, CachingPipeline<TViewModel>>();
         }
 
-        internal static void AddServiceWithLifeTime<TService, TImplementation>(this IServiceCollection services, bool transient)
+        internal static void AddServiceWithLifeTime<TService, TImplementation>(
+            this IServiceCollection services,
+            bool transient)
             where TImplementation : class, TService
             where TService : class
         {
@@ -182,7 +167,9 @@ namespace CacheCow.Server
                 services.AddSingleton<TService, TImplementation>();
         }
 
-        internal static void AddServiceWithLifeTime<TService>(this IServiceCollection services, bool transient)
+        internal static void AddServiceWithLifeTime<TService>(
+            this IServiceCollection services,
+            bool transient)
             where TService : class
         {
             if (transient)

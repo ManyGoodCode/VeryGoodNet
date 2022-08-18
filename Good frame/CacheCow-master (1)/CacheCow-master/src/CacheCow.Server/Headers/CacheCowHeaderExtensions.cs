@@ -11,11 +11,6 @@ namespace CacheCow.Server.Headers
 {
     public static class CacheCowHeaderExtensions
     {
-        /// <summary>
-        /// Extracts CacheCowHeader (server) if one exists
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
         public static CacheCowHeader GetCacheCowHeader(
             this HttpResponseMessage response)
         {
@@ -30,11 +25,6 @@ namespace CacheCow.Server.Headers
 
 #if NET452
 #else
-        /// <summary>
-        /// Extracts CacheCowHeader (server) if one exists
-        /// </summary>
-        /// <param name="response"></param>
-        /// <returns></returns>
         public static CacheCowHeader GetCacheCowHeader(
             this HttpResponse response)
         {

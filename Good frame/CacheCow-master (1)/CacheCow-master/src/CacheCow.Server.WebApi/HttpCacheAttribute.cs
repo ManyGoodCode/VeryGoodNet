@@ -11,9 +11,6 @@ using CacheCow.Server.Headers;
 
 namespace CacheCow.Server.WebApi
 {
-    /// <summary>
-    /// Main impl of server HTTP caching on web api
-    /// </summary>
     public class HttpCacheAttribute : ActionFilterAttribute
     {
         private const string CacheValidatedKey = "###__cache_validated__###";
@@ -29,18 +26,6 @@ namespace CacheCow.Server.WebApi
             bool.TryParse(val, out _doNotEmitHeader);
         }
 
-        /// <summary>
-        /// Happens at the incoming (executING)
-        /// </summary>
-        /// <param name="timedEtag"></param>
-        /// <param name="cacheValidationStatus"></param>
-        /// <param name="context">
-        /// </param>
-        /// <returns>
-        /// True: applied and the call can exit
-        /// False: tried to apply but did not match hence the call should continue
-        /// null: could not apply (timedEtag was null)
-        /// </returns>
         protected bool? ApplyCacheValidation(TimedEntityTagHeaderValue timedEtag,
             CacheValidationStatus cacheValidationStatus,
             ContextUnifier context)
@@ -202,20 +187,8 @@ namespace CacheCow.Server.WebApi
 
         }
 
-        /// <summary>
-        /// Whether in addition to sending cache directive for cacheable resources, it should send such directives for non-cachable resources
-        /// </summary>
         public bool ApplyNoCacheNoStoreForNonCacheableResponse { get; set; }
-
-        /// <summary>
-        /// Gets used to create Cache directives
-        /// </summary>
         public int DefaultExpirySeconds { get; set; }
-
-        /// <summary>
-        /// Type parameter for ITimedETagQueryProvider&lt;T&gt; and ICacheDirectiveProvider&lt;T&gt;.
-        /// A decorative parameter for the ease of IoC service location.
-        /// </summary>
         public Type ViewModelType { get; set; }
     }
 }

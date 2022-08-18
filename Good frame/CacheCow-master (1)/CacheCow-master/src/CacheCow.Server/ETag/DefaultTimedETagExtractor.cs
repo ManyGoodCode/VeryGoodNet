@@ -4,27 +4,24 @@ using System.Text;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// Default impl where it tries to cast as ICacheResource and if successful, calls the method
-    /// </summary>
     public class DefaultTimedETagExtractor : ITimedETagExtractor
     {
-        private readonly ISerialiser _serialiser;
-        private readonly IHasher _hasher;
+        private readonly ISerialiser serialiser;
+        private readonly IHasher hasher;
 
         public DefaultTimedETagExtractor(ISerialiser serialiser, IHasher hasher)
         {
-            _serialiser = serialiser;
-            _hasher = hasher;
+            this.serialiser = serialiser;
+            this.hasher = hasher;
         }
 
         public TimedEntityTagHeaderValue Extract(object viewModel)
         {
-            var resource = viewModel as ICacheResource;
+            ICacheResource resource = viewModel as ICacheResource;
             if (resource != null)
                 return resource.GetTimedETag();
 
-            return new TimedEntityTagHeaderValue(_hasher.ComputeHash(_serialiser.Serialise(viewModel)));
+            return new TimedEntityTagHeaderValue(hasher.ComputeHash(bytes: serialiser.Serialise(viewModel)));
         }
     }
 

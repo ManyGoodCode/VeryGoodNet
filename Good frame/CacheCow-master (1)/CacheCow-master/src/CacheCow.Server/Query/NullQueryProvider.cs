@@ -13,9 +13,6 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// Essentially returns null and does not implement querying. It is the polyfill and default.
-    /// </summary>
     public class NullQueryProvider : ITimedETagQueryProvider
     {
         public void Dispose()

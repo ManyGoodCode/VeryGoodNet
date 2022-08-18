@@ -14,9 +14,6 @@ using Microsoft.Net.Http.Headers;
 
 namespace CacheCow.Server
 {
-    /// <summary>
-    /// The underlying class for implementing caching as two steps
-    /// </summary>
     public class CachingPipeline : ICachingPipeline
     {
         private ICacheabilityValidator _validator;
@@ -38,12 +35,6 @@ namespace CacheCow.Server
         }
 
 
-
-        /// <summary>
-        /// Needs to run before action runs
-        /// </summary>
-        /// <param name="context"></param>
-        /// <returns>Whether continue or not. If false then the action MUST not run</returns>
         public async Task<bool> Before(HttpContext context)
         {
             _cacheCowHeader = new CacheCowHeader();
@@ -62,7 +53,6 @@ namespace CacheCow.Server
                     _cacheCowHeader.ValidationMatched = HttpMethods.IsGet(context.Request.Method); // NOTE: In GET match result in short-circuit and in PUT the opposite
                     if (! _doNotEmitHeader)
                         context.Response.Headers.Add(CacheCowHeader.Name, _cacheCowHeader.ToString());
-                    // the response would have been set and no need to run the rest of the pipeline
                     return false;
                 }
             }
@@ -74,18 +64,6 @@ namespace CacheCow.Server
 
         }
 
-        /// <summary>
-        /// Happens at the incoming (executING)
-        /// </summary>
-        /// <param name="timedEtag"></param>
-        /// <param name="cacheValidationStatus"></param>
-        /// <param name="context">
-        /// </param>
-        /// <returns>
-        /// True: applied and the call can exit (short-circuit)
-        /// False: tried to apply but did not match hence the call should continue
-        /// null: could not apply (timedEtag was null)
-        /// </returns>
         protected bool? ApplyCacheValidation(TimedEntityTagHeaderValue timedEtag,
             CacheValidationStatus cacheValidationStatus,
             HttpContext context)
@@ -155,25 +133,13 @@ namespace CacheCow.Server
             }
         }
 
-        /// <summary>
-        /// Whether in addition to sending cache directive for cacheable resources, it should send such directives for non-cachable resources
-        /// </summary>
         public bool ApplyNoCacheNoStoreForNonCacheableResponse { get; set; }
-
-        /// <summary>
-        /// Gets used to create Cache directives
-        /// </summary>
         public TimeSpan? ConfiguredExpiry { get; set; }
 
 
-        /// <summary>
-        /// Applies after the controller assigned a result to the action
-        /// </summary>
-        /// <param name="context">HttpContext</param>
-        /// <param name="viewModel">action result</param>
         public async Task After(HttpContext context, object viewModel)
         {
-            var ms = context.Response.Body as MemoryStream;
+            MemoryStream ms = context.Response.Body as MemoryStream;
             bool mustReflush = ms != null && ms.Length > 0;
             context.Response.Body = _stream;
 
@@ -198,7 +164,6 @@ namespace CacheCow.Server
                         {
                             _cacheValidated = ApplyCacheValidation(tet, _cacheValidationStatus, context);
                             _cacheCowHeader.ValidationApplied = true;
-                            // the response would have been set and no need to run the rest of the pipeline
 
                             if (_cacheValidated ?? false)
                             {

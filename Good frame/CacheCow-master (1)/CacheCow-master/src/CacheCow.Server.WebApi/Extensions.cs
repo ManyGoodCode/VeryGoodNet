@@ -32,10 +32,6 @@ namespace CacheCow.Server.WebApi
             return CacheValidationStatus.None;
         }
 
-        /// <summary>
-        /// Makes a response non-cacheable by all the means available to mankind including nuclear
-        /// </summary>
-        /// <param name="response"></param>
         public static void MakeNonCacheable(this HttpResponseMessage response)
         {
             response.Headers.Pragma.Add(new NameValueHeaderValue("no-cache"));

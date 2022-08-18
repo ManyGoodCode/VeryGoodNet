@@ -7,9 +7,6 @@ using System.Web.Http.Dependencies;
 
 namespace CacheCow.Server.WebApi
 {
-    /// <summary>
-    /// Runtime environment for fine-tuning configuration of cache filters
-    /// </summary>
     public static class CachingRuntime
     {
         public static event EventHandler<HttpCacheCreatedEventArgs> CacheFilterCreated;
@@ -20,10 +17,6 @@ namespace CacheCow.Server.WebApi
                 CacheFilterCreated(args.FilterInstance, args);
         }
 
-        /// <summary>
-        /// Allowing CacheCow to register its default dependencies in the container
-        /// </summary>
-        /// <param name="registerationStub">Method responsible for registering type in the container: service type, impl type and whether it is TRANSIENT</param>
         public static void RegisterDefaultTypes(Action<Type, Type, bool> registerationStub)
         {           
             Add<ICacheabilityValidator, DefaultCacheabilityValidator>(registerationStub, false);
@@ -52,10 +45,10 @@ namespace CacheCow.Server.WebApi
             if (viewModelType == null)
                 return (ICacheDirectiveProvider) resolver.GetService(typeof(ICacheDirectiveProvider)) ?? defaultFactory();
 
-            var t = typeof(ICacheDirectiveProvider<>);
-            var generic = t.MakeGenericType(viewModelType);
+            Type t = typeof(ICacheDirectiveProvider<>);
+            Type generic = t.MakeGenericType(viewModelType);
 
-            var res = (ICacheDirectiveProvider) resolver.GetService(generic) ?? defaultFactory();
+            ICacheDirectiveProvider res = (ICacheDirectiveProvider) resolver.GetService(generic) ?? defaultFactory();
             return res;
         }
     }

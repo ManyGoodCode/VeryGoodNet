@@ -14,19 +14,20 @@ namespace CacheCow.Server
 {
     public class DefaultCacheDirectiveProvider : ICacheDirectiveProvider
     {
-        private readonly ITimedETagExtractor _timedETagExtractor;
-        private readonly ITimedETagQueryProvider _queryProvider;
+        private readonly ITimedETagExtractor timedETagExtractor;
+        private readonly ITimedETagQueryProvider queryProvider;
 
-        public DefaultCacheDirectiveProvider(ITimedETagExtractor timedETagExtractor,
+        public DefaultCacheDirectiveProvider(
+            ITimedETagExtractor timedETagExtractor,
             ITimedETagQueryProvider queryProvider)
         {
-            _timedETagExtractor = timedETagExtractor;
-            _queryProvider = queryProvider;
+            this.timedETagExtractor = timedETagExtractor;
+            this.queryProvider = queryProvider;
         }
 
         public TimedEntityTagHeaderValue Extract(object viewModel)
         {
-            return _timedETagExtractor.Extract(viewModel);
+            return timedETagExtractor.Extract(viewModel);
         }
 
 #if NET452
@@ -35,13 +36,13 @@ namespace CacheCow.Server
         public Task<TimedEntityTagHeaderValue> QueryAsync(HttpContext context)
 #endif
         {
-            return _queryProvider.QueryAsync(context);
+            return queryProvider.QueryAsync(context);
         }
 
 
         public virtual void Dispose()
         {
-            _queryProvider.Dispose();
+            queryProvider.Dispose();
         }
 
 #if NET452
@@ -75,7 +76,8 @@ namespace CacheCow.Server
 
     public class DefaultCacheDirectiveProvider<TViewModel> : DefaultCacheDirectiveProvider, ICacheDirectiveProvider<TViewModel>
     {
-        public DefaultCacheDirectiveProvider(ITimedETagExtractor<TViewModel> timedETagExtractor,
+        public DefaultCacheDirectiveProvider(
+            ITimedETagExtractor<TViewModel> timedETagExtractor,
             ITimedETagQueryProvider<TViewModel> queryProvider) : base(timedETagExtractor, queryProvider)
         {
         }

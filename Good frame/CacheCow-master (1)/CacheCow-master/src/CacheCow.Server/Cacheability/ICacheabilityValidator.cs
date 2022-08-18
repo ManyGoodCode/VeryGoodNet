@@ -9,6 +9,9 @@ using System.Text;
 
 namespace CacheCow.Server
 {
+    /// <summary>
+    /// 是否可以缓存的验证器。验证 HttpRequestMessage 和  HttpRequest
+    /// </summary>
     public interface ICacheabilityValidator
     {
 #if NET452

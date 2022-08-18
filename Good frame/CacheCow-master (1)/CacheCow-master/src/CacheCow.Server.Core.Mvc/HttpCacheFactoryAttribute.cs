@@ -25,10 +25,6 @@ namespace CacheCow.Server.Core.Mvc
             _expirySeconds = expirySeconds;
         }
 
-        /// <summary>
-        /// Type parameter for ITimedETagQueryProvider&lt;T&gt; and ICacheDirectiveProvider&lt;T&gt;.
-        /// A decorative parameter for the ease of service location.
-        /// </summary>
         public Type ViewModelType { get; set; }
 
         public IFilterMetadata CreateInstance(IServiceProvider serviceProvider)

@@ -19,11 +19,9 @@ namespace CacheCow.Server
         CacheControlHeaderValue GetCacheControl(HttpContext context, TimeSpan? configuredExpiry);
         IEnumerable<string> GetVaryHeaders(HttpContext context);
 #endif
+
     }
 
-    /// <summary>
-    /// Main interface for providing Cache headers for a resource.
-    /// </summary>
     public interface ICacheDirectiveProvider<TViewModel> : ICacheDirectiveProvider
     {
     }

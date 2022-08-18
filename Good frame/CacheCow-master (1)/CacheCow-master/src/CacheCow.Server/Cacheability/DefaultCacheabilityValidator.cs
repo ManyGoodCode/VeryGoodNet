@@ -16,7 +16,6 @@ namespace CacheCow.Server
 #if NET452
         public bool IsCacheable(HttpRequestMessage request)
         {
-            // none-GET (HEAD is ignored here!! Need to change later!!)
             if (request.Method != HttpMethod.Get)
                 return false;
 
@@ -25,7 +24,6 @@ namespace CacheCow.Server
                 return false;
 
             // pragma no-cache
-
             if (request.Headers.Pragma != null && request.Headers.Pragma.Any(x => x.Name.Equals("no-cache", StringComparison.InvariantCultureIgnoreCase)))
                 return false;
 
@@ -62,7 +60,8 @@ namespace CacheCow.Server
         public bool IsCacheable(HttpResponseMessage response)
         {
             // cacheable statuses
-            if (!response.StatusCode.IsIn(HttpStatusCode.OK, 
+            if (!response.StatusCode.IsIn(
+                HttpStatusCode.OK, 
                 HttpStatusCode.Created,
                 HttpStatusCode.Accepted, 
                 HttpStatusCode.MovedPermanently,

@@ -7,27 +7,14 @@ using CacheCow.Server;
 
 namespace CacheCow.Server.Core.Mvc
 {
-    /// <summary>
-    /// MVC Core extensions
-    /// </summary>
     public static class ConfigurationExtensions
     {
-        /// <summary>
-        /// Adds default implementation of various interfaces
-        /// </summary>
-        /// <param name="services">services</param>
         public static void AddHttpCachingMvc(this IServiceCollection services)
         {
 
-            AddHttpCachingMvc(services, (o) => {} // default which does nada
-                );
+            AddHttpCachingMvc(services, (o) => {} );
         }
 
-        /// <summary>
-        /// Adds default implementation of various interfaces with
-        /// </summary>
-        /// <param name="services">services</param>
-        /// <param name="optionsBuilder">builds the options</param>
         public static void AddHttpCachingMvc(this IServiceCollection services, Action<HttpCachingOptions> optionsBuilder)
         {
             services.AddHttpCaching();
