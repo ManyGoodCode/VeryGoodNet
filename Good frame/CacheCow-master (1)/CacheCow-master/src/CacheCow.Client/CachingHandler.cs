@@ -15,78 +15,70 @@ namespace CacheCow.Client
 {
     public class CachingHandler : DelegatingHandler
     {
+        private readonly ICacheStore cacheStore;
+        private Func<HttpRequestMessage, bool> ignoreRequestRules;
+        private bool disposeCacheStore = false;
+        private bool disposeVaryStore = false;
 
-        private readonly ICacheStore _cacheStore;
-        private Func<HttpRequestMessage, bool> _ignoreRequestRules;
-        private bool _disposeCacheStore = false;
-        private bool _disposeVaryStore = false;
+        public IVaryHeaderStore VaryHeaderStore { get; set; }
+        public string[] DefaultVaryHeaders { get; set; }
+        public string[] StarVaryHeaders { get; set; } // TODO: populate and use
+        public bool UseConditionalPutPatchDelete { get; set; }
+        public bool MustRevalidateByDefault { get; set; }
+        public Func<HttpResponseMessage, ResponseValidationResult> ResponseValidator { get; set; }
+        public Action<HttpResponseMessage> ResponseStoragePreparationRules { get; set; }
+        public bool DoNotEmitCacheCowHeader { get; set; } = false;
+        public static Action<Exception> IgnoreExceptionPolicy { get; private set; }
 
-
-        // 13.4: A response received with a status code of 200, 203, 206, 300, 301 or 410 MAY be stored
-        // TODO: Implement caching statuses other than 2xx
-        private static HttpStatusCode[] _cacheableStatuses = new HttpStatusCode[]
+        private static HttpStatusCode[] cacheableStatuses = new HttpStatusCode[]
         {
-        HttpStatusCode.OK, HttpStatusCode.NonAuthoritativeInformation,
-             HttpStatusCode.PartialContent, HttpStatusCode.MultipleChoices,
-        HttpStatusCode.MovedPermanently, HttpStatusCode.Gone
+             HttpStatusCode.OK,
+             HttpStatusCode.NonAuthoritativeInformation,
+             HttpStatusCode.PartialContent,
+             HttpStatusCode.MultipleChoices,
+             HttpStatusCode.MovedPermanently,
+             HttpStatusCode.Gone
       };
 
         public CachingHandler()
             : this(new InMemoryCacheStore())
         {
-            _disposeCacheStore = true;
+            disposeCacheStore = true;
         }
 
         public CachingHandler(ICacheStore cacheStore)
             : this(cacheStore, new InMemoryVaryHeaderStore())
         {
-            _disposeVaryStore = true;
+            disposeVaryStore = true;
         }
 
         public CachingHandler(ICacheStore cacheStore, IVaryHeaderStore varyHeaderStore)
         {
-            _cacheStore = cacheStore;
+            this.cacheStore = cacheStore;
             UseConditionalPutPatchDelete = true;
             MustRevalidateByDefault = true;
             VaryHeaderStore = varyHeaderStore;
             DefaultVaryHeaders = new string[] { HttpHeaderNames.Accept };
             ResponseValidator = (response) =>
             {
-                // 13.4
-                //Unless specifically constrained by a cache-control (section 14.9) directive, a caching system MAY always store
-                // a successful response (see section 13.8) as a cache entry, MAY return it without validation if it
-                // is fresh, and MAY return it after successful validation. If there is neither a cache validator nor an
-                // explicit expiration time associated with a response, we do not expect it to be cached, but certain caches MAY violate this expectation
-                // (for example, when little or no network connectivity is available).
-
-                // 14.9.1
-                // If the no-cache directive does not specify a field-name, then a cache MUST NOT use the response to satisfy a subsequent request without
-                // successful revalidation with the origin server. This allows an origin server to prevent caching
-                // even by caches that have been configured to return stale responses to client requests.
-                //If the no-cache directive does specify one or more field-names, then a cache MAY use the response
-                // to satisfy a subsequent request, subject to any other restrictions on caching. However, the specified
-                // field-name(s) MUST NOT be sent in the response to a subsequent request without successful revalidation
-                // with the origin server. This allows an origin server to prevent the re-use of certain header fields in a response, while still allowing caching of the rest of the response.
-                if (!response.StatusCode.IsIn(_cacheableStatuses))
+                if (!response.StatusCode.IsIn(cacheableStatuses))
                     return ResponseValidationResult.NotCacheable;
 
-                // Technically any response is cacheable unless we are told so or some rules
-                // but we DO NOT deem cacheable a response which does not bother to put CacheControl header
-                if (!response.IsSuccessStatusCode || response.Headers.CacheControl == null ||
-                    response.Headers.CacheControl.NoStore) //  || response.Headers.CacheControl.NoCache was removed. See issue
+                if (!response.IsSuccessStatusCode ||
+                    response.Headers.CacheControl == null ||
+                    response.Headers.CacheControl.NoStore)
                     return ResponseValidationResult.NotCacheable;
 
                 if (response.Headers.Date == null)
                     TraceWriter.WriteLine("Response date is NULL", TraceLevel.Warning);
 
-                response.Headers.Date = response.Headers.Date ?? DateTimeOffset.UtcNow; // this also helps in cache creation
-                var dateTimeOffset = response.Headers.Date;
-                var age = TimeSpan.Zero;
+                response.Headers.Date = response.Headers.Date ?? DateTimeOffset.UtcNow;
+                DateTimeOffset? dateTimeOffset = response.Headers.Date;
+                TimeSpan age = TimeSpan.Zero;
                 if (response.Headers.Age.HasValue)
                     age = response.Headers.Age.Value;
-
                 TraceWriter.WriteLine(
-                    String.Format("CachedResponse date was => {0} - compared to UTC.Now => {1}", dateTimeOffset, DateTimeOffset.UtcNow), TraceLevel.Verbose);
+                    string.Format("CachedResponse date was => {0} - compared to UTC.Now => {1}", dateTimeOffset, DateTimeOffset.UtcNow), TraceLevel.Verbose);
 
                 if (response.Content == null)
                     return ResponseValidationResult.NotCacheable;
@@ -113,7 +105,6 @@ namespace CacheCow.Client
                     return response.Headers.CacheControl.ShouldRevalidate(MustRevalidateByDefault)
                         ? ResponseValidationResult.MustRevalidate : ResponseValidationResult.Stale;
 
-                // moved this down since Expires is < MaxAge
                 if (response.Content.Headers.Expires != null &&
                     response.Content.Headers.Expires < DateTimeOffset.UtcNow)
                     return response.Headers.CacheControl.ShouldRevalidate(MustRevalidateByDefault)
@@ -122,13 +113,10 @@ namespace CacheCow.Client
                 return ResponseValidationResult.OK;
             };
 
-            _ignoreRequestRules = (request) =>
+            ignoreRequestRules = (request) =>
             {
-
                 if (request.Method.IsCacheIgnorable())
                     return true;
-
-                // client can tell CachingHandler not to do caching for a particular request
                 if (request.Headers.CacheControl != null)
                 {
                     if (request.Headers.CacheControl.NoStore)
@@ -140,9 +128,6 @@ namespace CacheCow.Client
 
             ResponseStoragePreparationRules = (response) =>
             {
-                // 14.9.3
-                // If a response includes both an Expires header and a max-age directive,
-                // the max-age directive overrides the Expires header, even if the Expires header is more restrictive.
                 if (response.Content.Headers.Expires != null &&
                     (response.Headers.CacheControl.MaxAge != null || response.Headers.CacheControl.SharedMaxAge != null))
                 {
@@ -157,68 +142,12 @@ namespace CacheCow.Client
             IgnoreExceptionPolicy = (e) => { };
         }
 
-        public IVaryHeaderStore VaryHeaderStore { get; set; }
-
-        public string[] DefaultVaryHeaders { get; set; }
-
-        public string[] StarVaryHeaders { get; set; } // TODO: populate and use
-
-        /// <summary>
-        /// Whether to use cache's ETag or Last-Modified
-        /// to make conditional PUT/PATCH/DELETE according to RFC2616 13.3
-        /// If no cache available on the resource, no conditional is used
-        /// </summary>
-        public bool UseConditionalPutPatchDelete { get; set; }
-
-        /// <summary>
-        /// true by default;
-        /// If true, then as soon as a resource is stale, GET calls will always be
-        /// conditional GET regardless of presence of must-revalidate in the response.
-        /// If false, conditional GET is called only if max-age defined by request or
-        /// must-revalidate is defined in the response.
-        /// </summary>
-        public bool MustRevalidateByDefault { get; set; }
-
-        /// <summary>
-        /// Inspects the response and returns ResponseValidationResult
-        /// based on the rules defined
-        /// </summary>
-        public Func<HttpResponseMessage, ResponseValidationResult> ResponseValidator { get; set; }
-
-        /// <summary>
-        /// Applies a few rules and prepares the response
-        /// for storage in the CacheStore
-        /// </summary>
-        public Action<HttpResponseMessage> ResponseStoragePreparationRules { get; set; }
-
-        /// <summary>
-        /// If set to true, it does not emit CacheCowHeader
-        /// </summary>
-        public bool DoNotEmitCacheCowHeader { get; set; } = false;
-
-        /// <summary>
-        /// Ignores all exceptions. Set it to ExceptionHandler
-        /// </summary>
-        public static Action<Exception> IgnoreExceptionPolicy { get; private set; }
-
-        /// <summary>
-        /// Returns whether resource is fresh or if stale, it is acceptable to be stale
-        /// null --> dont know, cannot be determined
-        /// true --> yes, is OK if stale
-        /// false --> no, it is not OK to be stale
-        /// </summary>
-        /// <param name="cachedResponse"></param>
-        /// <param name="request"></param>
-        /// <returns></returns>
         internal static bool? IsFreshOrStaleAcceptable(HttpResponseMessage cachedResponse, HttpRequestMessage request)
         {
-
-            TimeSpan staleness = TimeSpan.Zero; // negative = fresh, positive = stale
+            TimeSpan staleness = TimeSpan.Zero;
             TimeSpan age = TimeSpan.Zero;
-
             if (cachedResponse == null)
                 throw new ArgumentNullException("cachedResponse");
-
             if (request == null)
                 throw new ArgumentNullException("request");
 
@@ -235,8 +164,6 @@ namespace CacheCow.Client
             if (cachedResponse.Headers.CacheControl == null)
                 return null;
 
-            // calculating staleness
-            // according to http://www.w3.org/Protocols/rfc2616/rfc2616-sec14.html#sec14.9.3 max-age overrides expires header
             if (cachedResponse.Content.Headers.Expires != null)
             {
                 staleness = DateTimeOffset.Now.Subtract(cachedResponse.Content.Headers.Expires.Value);
@@ -265,17 +192,13 @@ namespace CacheCow.Client
             return false;
         }
 
-        // TODO: this method is terribly long. Shorten
         protected async override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var cacheCowHeader = new CacheCowHeader();
+            CacheCowHeader cacheCowHeader = new CacheCowHeader();
             string uri = request.RequestUri.ToString();
-            var originalHeaders = request.Headers.ToList();
-
+            List<KeyValuePair<string, IEnumerable<string>>> originalHeaders = request.Headers.ToList();
             TraceWriter.WriteLine("{0} - Starting SendAsync", TraceLevel.Verbose, uri);
-
-            // check if needs to be ignored
-            if (_ignoreRequestRules(request))
+            if (ignoreRequestRules(request))
                 return await base.SendAsync(request, cancellationToken).ConfigureAwait(false); // EXIT !! _________________
 
             IEnumerable<string> varyHeaders;
@@ -284,22 +207,18 @@ namespace CacheCow.Client
                 varyHeaders = DefaultVaryHeaders;
             }
 
-            var cacheKey = new CacheKey(uri,
+            CacheKey cacheKey = new CacheKey(uri,
                 originalHeaders.Where(x => varyHeaders.Any(y => y.Equals(x.Key,
                     StringComparison.CurrentCultureIgnoreCase)))
                     .SelectMany(z => z.Value)
                 );
 
-            // get from cache and verify response
             HttpResponseMessage cachedResponse;
-            var validationResultForCachedResponse = ResponseValidationResult.NotExist; // default
-
+            ResponseValidationResult validationResultForCachedResponse = ResponseValidationResult.NotExist;
             TraceWriter.WriteLine("{0} - Before TryGetValue", TraceLevel.Verbose, uri);
-
-            cachedResponse = await _cacheStore.GetValueAsync(cacheKey).ConfigureAwait(false);
+            cachedResponse = await cacheStore.GetValueAsync(cacheKey).ConfigureAwait(false);
             cacheCowHeader.DidNotExist = cachedResponse == null;
-            TraceWriter.WriteLine("{0} - After TryGetValue: DidNotExist => {1}", TraceLevel.Verbose,
-                uri, cacheCowHeader.DidNotExist);
+            TraceWriter.WriteLine("{0} - After TryGetValue: DidNotExist => {1}", TraceLevel.Verbose, uri, cacheCowHeader.DidNotExist);
 
             if (!cacheCowHeader.DidNotExist.Value) // so if it EXISTS in cache
             {
@@ -313,53 +232,43 @@ namespace CacheCow.Client
                 TraceLevel.Verbose, request.RequestUri, validationResultForCachedResponse);
 
 
-            // PUT/PATCH/DELETE validation
             if (request.Method.IsPutPatchOrDelete() && validationResultForCachedResponse.IsIn(
                  ResponseValidationResult.OK, ResponseValidationResult.MustRevalidate))
             {
                 ApplyPutPatchDeleteValidationHeaders(request, cacheCowHeader, cachedResponse);
-                return await base.SendAsync(request, cancellationToken).ConfigureAwait(false); // EXIT !! _____________________________
+                return await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             }
 
-            // here onward is only GET only. See if cache OK and if it is then return
             if (validationResultForCachedResponse == ResponseValidationResult.OK)
             {
                 cacheCowHeader.RetrievedFromCache = true;
                 if (!DoNotEmitCacheCowHeader)
                     cachedResponse.AddCacheCowHeader(cacheCowHeader);
-                return cachedResponse; // EXIT !! ____________________________
+                return cachedResponse;
             }
 
-            // if stale
             else if (validationResultForCachedResponse == ResponseValidationResult.Stale)
             {
                 cacheCowHeader.WasStale = true;
-                var isFreshOrStaleAcceptable = IsFreshOrStaleAcceptable(cachedResponse, request);
+                bool? isFreshOrStaleAcceptable = IsFreshOrStaleAcceptable(cachedResponse, request);
                 if (isFreshOrStaleAcceptable.HasValue && isFreshOrStaleAcceptable.Value) // similar to OK
                 {
-                    // TODO: CONSUME AND RELEASE Response !!!
                     if (!DoNotEmitCacheCowHeader)
                         cachedResponse.AddCacheCowHeader(cacheCowHeader);
                     return cachedResponse;
-                    // EXIT !! ____________________________
                 }
                 else
                     validationResultForCachedResponse = ResponseValidationResult.MustRevalidate; // revalidate
             }
-
-            // cache validation for GET
             else if (validationResultForCachedResponse == ResponseValidationResult.MustRevalidate)
             {
                 ApplyGetCacheValidationHeaders(request, cacheCowHeader, cachedResponse);
             }
 
 
-            // _______________________________ RESPONSE only GET  ___________________________________________
-
-            var serverResponse = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
+            HttpResponseMessage serverResponse = await base.SendAsync(request, cancellationToken).ConfigureAwait(false);
             if (serverResponse.Content != null)
             {
-                // these two prevent serialisation without ContentLength which barfs for chunked encoding - issue #267
                 TraceWriter.WriteLine($"Content Size: {serverResponse.Content.Headers.ContentLength}", TraceLevel.Verbose);
                 if (serverResponse.Content.Headers.ContentType == null)
                 {
@@ -367,15 +276,12 @@ namespace CacheCow.Client
                 }
             }
 
-            // HERE IS LATE FOR APPLYING EXCEPTION POLICY !!!
 
-            TraceWriter.WriteLine("{0} - After getting response",
-                TraceLevel.Verbose, uri);
+            TraceWriter.WriteLine("{0} - After getting response", TraceLevel.Verbose, uri);
 
-            if (request.Method != HttpMethod.Get) // only interested here if it is a GET - this line really never called - only GET gets here
+            if (request.Method != HttpMethod.Get)
                 return serverResponse;
 
-            // in case of MustRevalidate with result 304
             if (validationResultForCachedResponse == ResponseValidationResult.MustRevalidate &&
                 serverResponse.StatusCode == HttpStatusCode.NotModified)
             {
@@ -384,15 +290,13 @@ namespace CacheCow.Client
 
                 cachedResponse.RequestMessage = request;
                 cacheCowHeader.RetrievedFromCache = true;
-                TraceWriter.WriteLine("{0} - NotModified",
-                    TraceLevel.Verbose, uri);
+                TraceWriter.WriteLine("{0} - NotModified", TraceLevel.Verbose, uri);
 
-                await UpdateCachedResponseAsync(cacheKey, cachedResponse, serverResponse, _cacheStore).ConfigureAwait(false);
+                await UpdateCachedResponseAsync(cacheKey, cachedResponse, serverResponse, cacheStore).ConfigureAwait(false);
                 ConsumeAndDisposeResponse(serverResponse);
                 if (!DoNotEmitCacheCowHeader)
                     cachedResponse.AddCacheCowHeader(cacheCowHeader).CopyOtherCacheCowHeaders(serverResponse);
                 return cachedResponse;
-                // EXIT !! _______________
             }
 
             var validationResult = ResponseValidator(serverResponse);
@@ -405,12 +309,7 @@ namespace CacheCow.Client
                         TraceLevel.Verbose, uri);
 
 
-                    // prepare
                     ResponseStoragePreparationRules(serverResponse);
-
-                    // re-create cacheKey with real server accept
-
-                    // if there is a vary header, store it
                     if (serverResponse.Headers.Vary != null)
                     {
                         varyHeaders = serverResponse.Headers.Vary.Select(x => x).ToArray();
@@ -421,16 +320,14 @@ namespace CacheCow.Client
                         }
                     }
 
-                    // create real cacheKey with correct Vary headers
                     cacheKey = new CacheKey(uri,
                         originalHeaders.Where(x => varyHeaders.Any(y => y.Equals(x.Key,
                             StringComparison.CurrentCultureIgnoreCase)))
                             .SelectMany(z => z.Value)
                         );
 
-                    // store the cache
                     CheckForCacheCowHeader(serverResponse);
-                    await _cacheStore.AddOrUpdateAsync(cacheKey, serverResponse).ConfigureAwait(false);
+                    await cacheStore.AddOrUpdateAsync(cacheKey, serverResponse).ConfigureAwait(false);
 
                     TraceWriter.WriteLine("{0} - After AddOrUpdate", TraceLevel.Verbose, uri);
 
@@ -441,7 +338,7 @@ namespace CacheCow.Client
                         TraceLevel.Verbose, uri);
 
                     TraceWriter.WriteLine("{0} - Before TryRemove", TraceLevel.Verbose, uri);
-                    await _cacheStore.TryRemoveAsync(cacheKey);
+                    await cacheStore.TryRemoveAsync(cacheKey);
                     TraceWriter.WriteLine("{0} - After TryRemoveAsync", TraceLevel.Verbose, uri);
 
                     cacheCowHeader.NotCacheable = true;
@@ -460,7 +357,6 @@ namespace CacheCow.Client
         private void ApplyPutPatchDeleteValidationHeaders(HttpRequestMessage request, CacheCowHeader cacheCowHeader,
             HttpResponseMessage cachedResponse)
         {
-            // add headers for a cache validation. First check ETag since is better
             if (UseConditionalPutPatchDelete)
             {
                 cacheCowHeader.CacheValidationApplied = true;
@@ -483,9 +379,6 @@ namespace CacheCow.Client
             ICacheStore store)
         {
             TraceWriter.WriteLine("CachingHandler.UpdateCachedResponseAsync - response: " + serverResponse.Headers.ToString(), TraceLevel.Verbose);
-
-            // update only if server had a cachecontrol.
-            // TODO: merge CacheControl headers instead of replace
             if (serverResponse.Headers.CacheControl != null && (!serverResponse.Headers.CacheControl.NoCache)) // added to cover issue #139
             {
                 TraceWriter.WriteLine("CachingHandler.UpdateCachedResponseAsync - CacheControl: " + serverResponse.Headers.CacheControl.ToString(), TraceLevel.Verbose);
@@ -503,7 +396,7 @@ namespace CacheCow.Client
 
         private static void CheckForCacheCowHeader(HttpResponseMessage responseMessage)
         {
-            var header = responseMessage.Headers.GetCacheCowHeader();
+            CacheCowHeader header = responseMessage.Headers.GetCacheCowHeader();
             if (header != null)
             {
                 TraceWriter.WriteLine("!!WARNING!! response stored with CacheCowHeader!!", TraceLevel.Warning);
@@ -515,8 +408,6 @@ namespace CacheCow.Client
         {
             cacheCowHeader.CacheValidationApplied = true;
             cacheCowHeader.WasStale = true;
-
-            // add headers for a cache validation. First check ETag since is better
             if (cachedResponse.Headers.ETag != null)
             {
                 request.Headers.Add(HttpHeaderNames.IfNoneMatch,
@@ -539,11 +430,11 @@ namespace CacheCow.Client
             base.Dispose(disposing);
             if (disposing)
             {
-                if (VaryHeaderStore != null && _disposeVaryStore)
+                if (VaryHeaderStore != null && disposeVaryStore)
                     VaryHeaderStore.Dispose();
 
-                if (_cacheStore != null && _disposeCacheStore)
-                    _cacheStore.Dispose();
+                if (cacheStore != null && disposeCacheStore)
+                    cacheStore.Dispose();
             }
         }
 

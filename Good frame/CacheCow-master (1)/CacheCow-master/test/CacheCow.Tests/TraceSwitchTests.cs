@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using Xunit;
 
@@ -10,7 +10,7 @@ namespace CacheCow
         public void IsThatGood()
         {
             Environment.SetEnvironmentVariable(TraceWriter.CacheCowTracingEnvVarName, "4");
-            Assert.Equal(TraceLevel.Verbose, TraceWriter._switch.Level);
+            Assert.Equal(TraceLevel.Verbose, TraceWriter.switchTrace.Level);
         }
     }
 }

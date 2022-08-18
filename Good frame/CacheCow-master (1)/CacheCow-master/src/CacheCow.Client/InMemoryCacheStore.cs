@@ -18,108 +18,109 @@ using Microsoft.Extensions.Options;
 
 namespace CacheCow.Client
 {
+    /// <summary>
+    /// 通过  MemoryCache 构造缓存器。主键为加密的CacheKey，带有过期时间
+    /// </summary>
     public class InMemoryCacheStore : ICacheStore
     {
         private const string CacheStoreEntryName = "###InMemoryCacheStore_###";
         private static TimeSpan MinCacheExpiry = TimeSpan.FromHours(6);
-        private MemoryCache _responseCache;
+        private MemoryCache responseCache;
 
-        private MessageContentHttpMessageSerializer _messageSerializer = new MessageContentHttpMessageSerializer(true);
-        private readonly TimeSpan _minExpiry;
+        private MessageContentHttpMessageSerializer messageSerializer = new MessageContentHttpMessageSerializer(true);
+        private readonly TimeSpan minExpiry;
 
 #if NET452
 #else
-        private readonly IOptions<MemoryCacheOptions> _options;
+        private readonly IOptions<MemoryCacheOptions> options;
 #endif
         public InMemoryCacheStore()
-            : this(MinCacheExpiry)
-        {
-
-        }
+            : this(minExpiry: MinCacheExpiry) { }
 
         public InMemoryCacheStore(TimeSpan minExpiry) :
 #if NET452
-            this(minExpiry, new MemoryCache(CacheStoreEntryName))
+            this(minExpiry:minExpiry, cache:new MemoryCache(CacheStoreEntryName))
 #else
-            this(minExpiry, Options.Create(new MemoryCacheOptions()))
+            this(minExpiry: minExpiry, options: Options.Create(new MemoryCacheOptions()))
 #endif
         {
+
         }
 
         private InMemoryCacheStore(TimeSpan minExpiry, MemoryCache cache)
         {
-            _minExpiry = minExpiry;
-            _responseCache = cache;
+            this.minExpiry = minExpiry;
+            responseCache = cache;
         }
 
 #if NET452
 #else
-        /// <summary>
-        /// To control cache options
-        /// </summary>
-        /// <param name="minExpiry">expiry</param>
-        /// <param name="options">options</param>
         public InMemoryCacheStore(TimeSpan minExpiry, IOptions<MemoryCacheOptions> options) :
             this(minExpiry, new MemoryCache(options))
         {
-            _options = options;
+            this.options = options;
         }
 #endif
 
 
-        /// <inheritdoc />
         public void Dispose()
         {
-            _responseCache.Dispose();
+            responseCache.Dispose();
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 通过 CacheKey 的加密字段做为主键 从 MemoryCache 中 得到byte[]数据 ，并通过 反序列化 得到最后的 HttpResponseMessage
+        /// </summary>
         public async Task<HttpResponseMessage> GetValueAsync(CacheKey key)
         {
-            var result = (byte[])_responseCache.Get(key.HashBase64);
+            byte[] result = (byte[])responseCache.Get(key.HashBase64);
             if (result == null)
                 return null;
 
-            return await _messageSerializer.DeserializeToResponseAsync(new MemoryStream(result)).ConfigureAwait(false);
+            return await messageSerializer.DeserializeToResponseAsync(new MemoryStream(result)).ConfigureAwait(false);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 通过 CacheKey 的加密字段做为主键 将 HttpResponseMessage 的数据存放到 MemoryCache 中，带有过期时间
+        /// </summary>
         public async Task AddOrUpdateAsync(CacheKey key, HttpResponseMessage response)
         {
-            // removing reference to request so that the request can get GCed
-            // UPDATE 2022 - What on earth am I doing it for? I cannot remember.
-            var req = response.RequestMessage;
+            HttpRequestMessage req = response.RequestMessage;
             response.RequestMessage = null;
-            var memoryStream = new MemoryStream();
-            await _messageSerializer.SerializeAsync(response, memoryStream).ConfigureAwait(false);
-            var buffer = memoryStream.ToArray();
-
+            MemoryStream memoryStream = new MemoryStream();
+            await messageSerializer.SerializeAsync(response, memoryStream).ConfigureAwait(false);
+            byte[] buffer = memoryStream.ToArray();
             response.RequestMessage = req;
-            var suggestedExpiry = response.GetExpiry() ?? DateTimeOffset.UtcNow.Add(_minExpiry);
-            var minExpiry = DateTimeOffset.UtcNow.Add(_minExpiry);
-            var optimalExpiry = (suggestedExpiry > minExpiry) ? suggestedExpiry : minExpiry;
-            _responseCache.Set(key.HashBase64, buffer, optimalExpiry);
+            DateTimeOffset suggestedExpiry = response.GetExpiry() ?? DateTimeOffset.UtcNow.Add(minExpiry);
+            DateTimeOffset expiry = DateTimeOffset.UtcNow.Add(minExpiry);
+            DateTimeOffset optimalExpiry = (suggestedExpiry > expiry) ? suggestedExpiry : expiry;
+            responseCache.Set(key.HashBase64, buffer, optimalExpiry);
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 通过 CacheKey 的加密字段做为主键 移除缓存器内的值
+        /// </summary>
         public Task<bool> TryRemoveAsync(CacheKey key)
         {
+
 #if NET452
-            return Task.FromResult(_responseCache.Remove(key.HashBase64) != null);
+            return Task.FromResult(responseCache.Remove(key.HashBase64) != null);
 #else
-            _responseCache.Remove(key.HashBase64);
+            responseCache.Remove(key.HashBase64);
             return Task.FromResult(true);
 #endif
         }
 
-        /// <inheritdoc />
+        /// <summary>
+        /// 清除缓存器内的值。释放 MemoryCache 对象 ，并新建 MemoryCache 对象
+        /// </summary>
         public Task ClearAsync()
         {
-            _responseCache.Dispose();
+            responseCache.Dispose();
 #if NET452
-            _responseCache = new MemoryCache(CacheStoreEntryName);
+            responseCache = new MemoryCache(CacheStoreEntryName);
 #else
-            _responseCache = new MemoryCache(_options);
+            responseCache = new MemoryCache(options);
 #endif
             return Task.FromResult(0);
         }

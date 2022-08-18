@@ -9,27 +9,22 @@ namespace CacheCow.Client
     public static class ClientExtensions
     {
         /// <summary>
-        /// Creates HttpClient with InMemoryCacheStore and HttpClientHandler
+        /// 创建 HttpClient 通过 缓存器 InMemoryCacheStore 和 HttpClientHandler
         /// </summary>
-        /// <returns></returns>
         public static HttpClient CreateClient(HttpMessageHandler handler = null)
         {
-            return new HttpClient(new CachingHandler()
+            return new HttpClient(handler: new CachingHandler()
             {
                 InnerHandler = handler ?? new HttpClientHandler()
             });
         }
 
         /// <summary>
-        /// Creates HttpClient with the store and HttpClientHandler
+        /// 创建 HttpClient 通过 缓存器 ICacheStore 和 HttpClientHandler
         /// </summary>
-        /// <param name="store"></param>
-        /// <param name="handler"></param>
-        /// <returns></returns>
-
         public static HttpClient CreateClient(this ICacheStore store, HttpMessageHandler handler = null)
         {
-            return new HttpClient(new CachingHandler(store)
+            return new HttpClient(handler: new CachingHandler(store)
             {
                 InnerHandler = handler ?? new HttpClientHandler()
             });
