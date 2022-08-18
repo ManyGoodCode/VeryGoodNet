@@ -13,12 +13,15 @@ using CacheCow.Common;
 
 namespace CacheCow.Client
 {
+    /// <summary>
+    /// 实现 HttpResponseMessage ， HttpRequestMessage 与 Stream 的序列化和反序列化
+    /// </summary>
     public class MessageContentHttpMessageSerializer : IHttpMessageSerializerAsync
     {
         private bool bufferContent;
 
         public MessageContentHttpMessageSerializer()
-            : this(true) { }
+            : this(bufferContent: true) { }
 
         public MessageContentHttpMessageSerializer(bool bufferContent)
         {
@@ -30,18 +33,16 @@ namespace CacheCow.Client
             if (response.Content != null)
             {
                 TraceWriter.WriteLine("SerializeAsync - before load", TraceLevel.Verbose);
-                long? contentLength = response.Content.Headers.ContentLength;
                 if (bufferContent)
                     await response.Content.LoadIntoBufferAsync().ConfigureAwait(false);
                 TraceWriter.WriteLine("SerializeAsync - after load", TraceLevel.Verbose);
             }
             else
             {
-                TraceWriter.WriteLine("Content NULL - before load",
-                    TraceLevel.Verbose);
+                TraceWriter.WriteLine("Content NULL - before load", TraceLevel.Verbose);
             }
 
-            HttpMessageContent httpMessageContent = new HttpMessageContent(response);
+            HttpMessageContent httpMessageContent = new HttpMessageContent(httpResponse: response);
             byte[] buffer = await httpMessageContent.ReadAsByteArrayAsync();
             TraceWriter.WriteLine("SerializeAsync - after ReadAsByteArrayAsync", TraceLevel.Verbose);
             stream.Write(buffer, 0, buffer.Length);
