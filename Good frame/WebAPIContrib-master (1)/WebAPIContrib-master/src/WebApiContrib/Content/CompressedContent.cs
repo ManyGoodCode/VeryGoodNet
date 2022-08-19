@@ -44,14 +44,12 @@ namespace WebApiContrib.Content
         protected override bool TryComputeLength(out long length)
         {
             length = -1;
-
             return false;
         }
 
         protected override Task SerializeToStreamAsync(Stream stream, TransportContext context)
         {
             Stream compressedStream = null;
-
             if (encodingType == "gzip")
             {
                 compressedStream = new GZipStream(stream, CompressionMode.Compress, leaveOpen: true);

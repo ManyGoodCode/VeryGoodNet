@@ -7,47 +7,71 @@ using System.Net.Http.Headers;
 
 namespace WebApiContrib.Conneg
 {
+    /// <summary>
+    /// 通过选择最合适的system.net.http.formating.mediatypeformatter执行内容协商.
+    /// 输出传递给给定请求的格式化器，该格式化器可以序列化对象指定类型。 
+    /// </summary>
     public static class ContentNegotiation
     {
-        public static string Negotiate(this IContentNegotiator contentNegotiator, IEnumerable<string> supportedMediaTypes, string accept)
+        public static string Negotiate(
+            this System.Net.Http.Formatting.IContentNegotiator contentNegotiator, 
+            IEnumerable<string> supportedMediaTypes, 
+            string accept)
         {
-            return Negotiate(contentNegotiator, supportedMediaTypes, accept.Split(',').Select(MediaTypeWithQualityHeaderValue.Parse));
+            return Negotiate(
+                contentNegotiator, 
+                supportedMediaTypes,
+                // 将Select要执行的委托方法直接通过函数传入，返回类型 MediaTypeWithQualityHeaderValue
+                accept.Split(',').Select(System.Net.Http.Headers.MediaTypeWithQualityHeaderValue.Parse));
         }
 
-        public static string Negotiate(this IContentNegotiator contentNegotiator, IEnumerable<string> supportedMediaTypes, IEnumerable<string> accept)
+        public static string Negotiate(
+            this IContentNegotiator contentNegotiator,
+            IEnumerable<string> supportedMediaTypes, 
+            IEnumerable<string> accept)
         {
-            return Negotiate(contentNegotiator, supportedMediaTypes, accept.Select(MediaTypeWithQualityHeaderValue.Parse));
+            return Negotiate(
+                contentNegotiator, 
+                supportedMediaTypes,
+                // 将Select要执行的委托方法直接通过函数传入，返回类型 MediaTypeWithQualityHeaderValue
+                accept.Select(MediaTypeWithQualityHeaderValue.Parse));
         }
 
-        public static string Negotiate(this IContentNegotiator contentNegotiator, IEnumerable<string> supportedMediaTypes, IEnumerable<MediaTypeWithQualityHeaderValue> accept)
+        public static string Negotiate(
+            this IContentNegotiator contentNegotiator, 
+            IEnumerable<string> supportedMediaTypes,
+            IEnumerable<MediaTypeWithQualityHeaderValue> accept)
         {
-            var formatters = supportedMediaTypes.Select(mt => new ConnegFormatter(mt));
-            using (var request = new HttpRequestMessage())
+            IEnumerable<ConnegFormatter> formatters = supportedMediaTypes.Select(mt => new ConnegFormatter(mt));
+            using (HttpRequestMessage request = new HttpRequestMessage())
             {
-                foreach (var header in accept)
+                foreach (MediaTypeWithQualityHeaderValue header in accept)
                     request.Headers.Accept.Add(header);
 
-            	var result = contentNegotiator.Negotiate(typeof (object), request, formatters);
+                ContentNegotiationResult result = contentNegotiator.Negotiate(typeof (object), request, formatters);
                 return result.MediaType.MediaType;
             }
         }
 
-        public static ContentNegotiationResult Negotiate(this IContentNegotiator contentNegotiator, IEnumerable<MediaTypeFormatter> formatters, IEnumerable<MediaTypeWithQualityHeaderValue> accept)
+        public static ContentNegotiationResult Negotiate(
+            this IContentNegotiator contentNegotiator, 
+            IEnumerable<MediaTypeFormatter> formatters, 
+            IEnumerable<MediaTypeWithQualityHeaderValue> accept)
         {
-            using (var request = new HttpRequestMessage())
+            using (HttpRequestMessage request = new HttpRequestMessage())
             {
-                foreach (var header in accept)
+                foreach (MediaTypeWithQualityHeaderValue header in accept)
                     request.Headers.Accept.Add(header);
 
             	return contentNegotiator.Negotiate(typeof (object), request, formatters);
             }
         }
 
-        private class ConnegFormatter : MediaTypeFormatter
+        private class ConnegFormatter : System.Net.Http.Formatting.MediaTypeFormatter
         {
             public ConnegFormatter(string mediaType)
             {
-                SupportedMediaTypes.Add(new MediaTypeHeaderValue(mediaType));
+                SupportedMediaTypes.Add(new System.Net.Http.Headers.MediaTypeHeaderValue(mediaType));
             }
 
         	public override bool CanReadType(Type type)
