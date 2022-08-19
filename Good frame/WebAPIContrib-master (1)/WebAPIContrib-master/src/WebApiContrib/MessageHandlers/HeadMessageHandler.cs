@@ -9,18 +9,23 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace WebApiContrib.MessageHandlers {
+namespace WebApiContrib.MessageHandlers
+{
 
-    public class HeadMessageHandler : DelegatingHandler {
-        
+    public class HeadMessageHandler : DelegatingHandler
+    {
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken) {
 
-            if (request.Method == HttpMethod.Head) {
+        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        {
+
+            if (request.Method == HttpMethod.Head)
+            {
                 request.Method = HttpMethod.Get;
                 return base.SendAsync(request, cancellationToken)
-                    .ContinueWith<HttpResponseMessage>(task => {
-                        var response = task.Result;
+                    .ContinueWith<HttpResponseMessage>(task =>
+                    {
+                        HttpResponseMessage response = task.Result;
                         response.RequestMessage.Method = HttpMethod.Head;
                         response.Content = new HeadContent(response.Content);
                         return task.Result;
@@ -32,30 +37,35 @@ namespace WebApiContrib.MessageHandlers {
         }
     }
 
-    internal class HeadContent : HttpContent {
-
-        public HeadContent(HttpContent content) {
+    internal class HeadContent : HttpContent
+    {
+        public HeadContent(HttpContent content)
+        {
             CopyHeaders(content.Headers, Headers);
         }
 
         protected override Task SerializeToStreamAsync(
-                                                Stream stream,
-                                                TransportContext context) {
-                var tcs = new TaskCompletionSource<object>();
-                tcs.SetResult(null);
-                return tcs.Task;
+        Stream stream,
+        TransportContext context)
+        {
+            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
+            tcs.SetResult(null);
+            return tcs.Task;
         }
 
 
-        protected override bool TryComputeLength(out long length) {
+        protected override bool TryComputeLength(out long length)
+        {
             length = -1;
             return false;
         }
 
         private static void CopyHeaders(HttpContentHeaders fromHeaders,
-                                        HttpContentHeaders toHeaders) {
+                                        HttpContentHeaders toHeaders)
+        {
 
-            foreach (KeyValuePair<string, IEnumerable<string>> header in fromHeaders) {
+            foreach (KeyValuePair<string, IEnumerable<string>> header in fromHeaders)
+            {
                 toHeaders.Add(header.Key, header.Value);
             }
         }

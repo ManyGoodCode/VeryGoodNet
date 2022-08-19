@@ -10,7 +10,6 @@ using WebApiContrib.Messages;
 
 namespace WebApiContrib.MessageHandlers
 {
-    // Code based on: http://weblogs.asp.net/pglavich/archive/2012/02/26/asp-net-web-api-request-response-usage-logging.aspx
     public class LoggingHandler : DelegatingHandler
     {
         private ILoggingRepository _repository;
@@ -20,7 +19,9 @@ namespace WebApiContrib.MessageHandlers
             _repository = repository;
         }
 
-        public LoggingHandler(HttpMessageHandler innerHandler, ILoggingRepository repository)
+        public LoggingHandler(
+            HttpMessageHandler innerHandler, 
+            ILoggingRepository repository)
             : base(innerHandler)
         {
             _repository = repository;
@@ -34,7 +35,7 @@ namespace WebApiContrib.MessageHandlers
             // Execute the request
             return base.SendAsync(request, cancellationToken).ContinueWith(task =>
             {
-            	var response = task.Result;
+                HttpResponseMessage response = task.Result;
                 // Extract the response logging info then persist the information
                 LogResponseLoggingInfo(response);
             	return response;
@@ -43,14 +44,13 @@ namespace WebApiContrib.MessageHandlers
 
         private void LogRequestLoggingInfo(HttpRequestMessage request)
         {
-            var info = new ApiLoggingInfo();
+            ApiLoggingInfo info = new ApiLoggingInfo();
             info.HttpMethod = request.Method.Method;
             info.UriAccessed = request.RequestUri.AbsoluteUri;
             info.IpAddress = HttpContext.Current != null ? HttpContext.Current.Request.UserHostAddress : "0.0.0.0";
             info.MessageType = HttpMessageType.Request;
             
             ExtractMessageHeadersIntoLoggingInfo(info, request.Headers.ToList());
-            
             if (request.Content != null)
             {
                 request.Content.ReadAsByteArrayAsync()
@@ -69,7 +69,7 @@ namespace WebApiContrib.MessageHandlers
 
         private void LogResponseLoggingInfo(HttpResponseMessage response)
         {
-            var info = new ApiLoggingInfo();
+            ApiLoggingInfo info = new ApiLoggingInfo();
             info.MessageType = HttpMessageType.Response;
             info.HttpMethod = response.RequestMessage.Method.ToString();
             info.ResponseStatusCode = response.StatusCode;
@@ -95,24 +95,26 @@ namespace WebApiContrib.MessageHandlers
             _repository.Log(info);
         }
 
-        private void ExtractMessageHeadersIntoLoggingInfo(ApiLoggingInfo info, List<KeyValuePair<string, IEnumerable<string>>> headers)
+        private void ExtractMessageHeadersIntoLoggingInfo(
+            ApiLoggingInfo info, 
+            List<KeyValuePair<string, IEnumerable<string>>> headers)
         {
             headers.ForEach(h =>
             {
-                // convert the header values into one long string from a series of IEnumerable<string> values so it looks for like a HTTP header
-                var headerValues = new StringBuilder();
-
+                StringBuilder headerValues = new StringBuilder();
                 if (h.Value != null)
                 {
-                    foreach (var hv in h.Value)
+                    foreach (string hv in h.Value)
                     {
                         if (headerValues.Length > 0)
                         {
                             headerValues.Append(", ");
                         }
+
                         headerValues.Append(hv);
                     }
                 }
+
                 info.Headers.Add(string.Format("{0}: {1}", h.Key, headerValues.ToString()));
             });
         }

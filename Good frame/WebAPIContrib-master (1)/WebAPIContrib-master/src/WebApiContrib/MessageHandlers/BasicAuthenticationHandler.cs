@@ -13,12 +13,13 @@ namespace WebApiContrib.MessageHandlers
 
         protected abstract string Realm { get; }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, System.Threading.CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, 
+            System.Threading.CancellationToken cancellationToken)
         {
             if (request.Headers.Authorization != null && request.Headers.Authorization.Scheme == "Basic")
             {
-                var credentials = ParseCredentials(request.Headers.Authorization);
-
+                BasicCredentials credentials = ParseCredentials(request.Headers.Authorization);
                 if (Authorize(credentials.Username, credentials.Password))
                 {
                     return base.SendAsync(request, cancellationToken);
@@ -28,10 +29,8 @@ namespace WebApiContrib.MessageHandlers
             return Task<HttpResponseMessage>.Factory.StartNew(
                 () =>
                 {
-                    var response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
-
+                    HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.Unauthorized);
                     response.Headers.Add("WWW-Authenticate", string.Format("Basic realm=\"{0}\"", Realm));
-
                     return response;
                 });
         }
@@ -40,9 +39,8 @@ namespace WebApiContrib.MessageHandlers
         {
             try
             {
-                var credentials = Encoding.ASCII.GetString(Convert.FromBase64String(authHeader.ToString().Substring(6)));
+                string credentials = Encoding.ASCII.GetString(Convert.FromBase64String(authHeader.ToString().Substring(6)));
                 int splitOn = credentials.IndexOf(':');
-
                 return new BasicCredentials
                 {
                     Username = credentials.Substring(0, splitOn),

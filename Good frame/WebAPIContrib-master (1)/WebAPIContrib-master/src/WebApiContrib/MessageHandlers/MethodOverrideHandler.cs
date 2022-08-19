@@ -12,12 +12,12 @@ namespace WebApiContrib.MessageHandlers
         private const string header = "X-HTTP-Method-Override";
 
         protected override Task<HttpResponseMessage> SendAsync(
-            HttpRequestMessage request, CancellationToken cancellationToken)
+            HttpRequestMessage request, 
+            CancellationToken cancellationToken)
         {
             if (request.Method == HttpMethod.Post && request.Headers.Contains(header))
             {
-                var method = request.Headers.GetValues(header).FirstOrDefault();
-
+                string method = request.Headers.GetValues(header).FirstOrDefault();
                 if (methods.Contains(method, StringComparer.InvariantCultureIgnoreCase))
                 {
                     request.Method = new HttpMethod(method);

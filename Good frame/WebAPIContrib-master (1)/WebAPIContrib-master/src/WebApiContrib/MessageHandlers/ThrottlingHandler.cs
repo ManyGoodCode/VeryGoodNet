@@ -1,4 +1,4 @@
-﻿using System;
+﻿-using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -36,14 +36,13 @@ namespace WebApiContrib.MessageHandlers
 
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
-            var identifier = GetUserIdentifier(request);
-
+            string identifier = GetUserIdentifier(request);
             if (string.IsNullOrEmpty(identifier))
             {
                 return CreateResponse(request, HttpStatusCode.Forbidden, "Could not identify client.");
             }
 
-            var maxRequests = _maxRequestsForUserIdentifier(identifier);
+            int maxRequests = _maxRequestsForUserIdentifier(identifier);
 
             ThrottleEntry entry = null;
             if (_store.TryGetValue(identifier, out entry))
@@ -71,24 +70,23 @@ namespace WebApiContrib.MessageHandlers
 
             return response.ContinueWith(task =>
                 {
-                    var remaining = maxRequests - entry.Requests;
+                    int remaining = maxRequests - entry.Requests;
                     if (remaining < 0)
                     {
                         remaining = 0;
                     }
 
-                    var httpResponse = task.Result;
+                    HttpResponseMessage httpResponse = task.Result;
                     httpResponse.Headers.Add("RateLimit-Limit", maxRequests.ToString());
                     httpResponse.Headers.Add("RateLimit-Remaining", remaining.ToString());
-
                     return httpResponse;
                 });
         }
 
         protected Task<HttpResponseMessage> CreateResponse(HttpRequestMessage request, HttpStatusCode statusCode, string message)
         {
-            var tsc = new TaskCompletionSource<HttpResponseMessage>();
-            var response = request.CreateResponse(statusCode);
+            TaskCompletionSource<HttpResponseMessage> tsc = new TaskCompletionSource<HttpResponseMessage>();
+            HttpResponseMessage response = request.CreateResponse(statusCode);
             response.ReasonPhrase = message;
             response.Content = new StringContent(message);
             tsc.SetResult(response);

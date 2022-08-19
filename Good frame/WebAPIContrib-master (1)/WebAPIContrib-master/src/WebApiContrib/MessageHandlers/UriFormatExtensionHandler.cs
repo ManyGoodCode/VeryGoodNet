@@ -14,7 +14,7 @@ namespace WebApiContrib.MessageHandlers
 
         public UriFormatExtensionHandler(IEnumerable<UriFormatExtensionMapping> mappings)
         {
-            foreach (var mapping in mappings)
+            foreach (UriFormatExtensionMapping mapping in mappings)
             {
                 extensionMappings[mapping.Extension] = mapping.MediaType;
             }
@@ -23,13 +23,12 @@ namespace WebApiContrib.MessageHandlers
         protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
         {
             var segments = request.RequestUri.Segments;
-            var lastSegment = segments.LastOrDefault();
+            string lastSegment = segments.LastOrDefault();
             MediaTypeWithQualityHeaderValue mediaType;
-            var found = extensionMappings.TryGetValue(lastSegment, out mediaType);
-            
+            bool found = extensionMappings.TryGetValue(lastSegment, out mediaType);
             if (found)
             {
-                var newUri = request.RequestUri.OriginalString.Replace("/" + lastSegment, "");
+                string newUri = request.RequestUri.OriginalString.Replace("/" + lastSegment, "");
                 request.RequestUri = new Uri(newUri, UriKind.Absolute);
                 request.Headers.Accept.Clear();
                 request.Headers.Accept.Add(mediaType);

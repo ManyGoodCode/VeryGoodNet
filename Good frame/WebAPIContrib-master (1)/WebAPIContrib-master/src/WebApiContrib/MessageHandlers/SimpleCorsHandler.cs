@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 
 namespace WebApiContrib.MessageHandlers
 {
-    // Code based on: http://code.msdn.microsoft.com/Implementing-CORS-support-a677ab5d
     public class SimpleCorsHandler : DelegatingHandler
     {
         private const string origin = "Origin";
@@ -16,21 +15,22 @@ namespace WebApiContrib.MessageHandlers
         private const string accessControlAllowMethods = "Access-Control-Allow-Methods";
         private const string accessControlAllowHeaders = "Access-Control-Allow-Headers";
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request,
-                                                               CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request,
+            CancellationToken cancellationToken)
         {
-            var isCorsRequest = request.Headers.Contains(origin);
-            var isPreflightRequest = request.Method == HttpMethod.Options;
-
+            bool isCorsRequest = request.Headers.Contains(origin);
+            bool isPreflightRequest = request.Method == HttpMethod.Options;
             if (isCorsRequest)
             {
                 if (isPreflightRequest)
                 {
                     return Task.Factory.StartNew(() =>
                             {
-                                var response = new HttpResponseMessage(HttpStatusCode.OK);
-                                response.Headers.Add(accessControlAllowOrigin,
-                                                    request.Headers.GetValues(origin).First());
+                                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
+                                response.Headers.Add(
+                                    accessControlAllowOrigin,
+                                    request.Headers.GetValues(origin).First());
 
                                 var currentAccessControlRequestMethod =
                                     request.Headers.GetValues(accessControlRequestMethod).
@@ -42,8 +42,7 @@ namespace WebApiContrib.MessageHandlers
                                                         currentAccessControlRequestMethod);
                                 }
 
-                                var requestedHeaders = string.Join(", ", request.Headers.GetValues(accessControlRequestHeaders));
-
+                                string requestedHeaders = string.Join(", ", request.Headers.GetValues(accessControlRequestHeaders));
                                 if (!string.IsNullOrEmpty(requestedHeaders))
                                 {
                                     response.Headers.Add(accessControlAllowHeaders,
@@ -57,7 +56,7 @@ namespace WebApiContrib.MessageHandlers
                 {
                     return base.SendAsync(request, cancellationToken).ContinueWith(t =>
                             {
-                                var resp = t.Result;
+                                HttpResponseMessage resp = t.Result;
                                 resp.Headers.Add(
                                     accessControlAllowOrigin,
                                     request.Headers.GetValues(origin).First());

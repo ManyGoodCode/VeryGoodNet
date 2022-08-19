@@ -24,7 +24,9 @@ namespace WebApiContrib.MessageHandlers
 		    this.mediaTypeFormatters = configuration.Formatters;
         }
 
-        public NotAcceptableMessageHandler(HttpConfiguration configuration, HttpMessageHandler innerHandler)
+        public NotAcceptableMessageHandler(
+            HttpConfiguration configuration, 
+            HttpMessageHandler innerHandler)
             : base(innerHandler)
         {
             if (configuration == null)
@@ -34,7 +36,9 @@ namespace WebApiContrib.MessageHandlers
 		    this.mediaTypeFormatters = configuration.Formatters;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, 
+            CancellationToken cancellationToken)
         {
 	        var result = contentNegotiator.Negotiate(mediaTypeFormatters, request.Headers.Accept);
             if (result == null)

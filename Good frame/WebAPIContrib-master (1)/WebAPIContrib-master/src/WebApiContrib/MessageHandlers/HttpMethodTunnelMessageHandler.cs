@@ -10,7 +10,9 @@ namespace WebApiContrib.MessageHandlers
     public class HttpMethodTunnelMessageHandler : DelegatingHandler
     {
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(
+            HttpRequestMessage request, 
+            CancellationToken cancellationToken)
         {
             request.SetOverrideMethodIfAny();
             return base.SendAsync(request, cancellationToken);
@@ -33,9 +35,8 @@ namespace WebApiContrib.MessageHandlers
 
         public static HttpMethod GetOverrideMethod(this HttpRequestMessage request)
         {
-            var method = HttpUtility.ParseQueryString(request.RequestUri.Query)["_method"];
-
-            if (String.IsNullOrEmpty(method))
+            string method = HttpUtility.ParseQueryString(request.RequestUri.Query)["_method"];
+            if (string.IsNullOrEmpty(method))
                 method = request.Headers
                     .Where(h => h.Key == "X-HTTP-Method-Override")
                     .SelectMany(h => h.Value)
@@ -46,14 +47,14 @@ namespace WebApiContrib.MessageHandlers
 
         private static HttpMethod MapMethod(string method)
         {
-            if (String.IsNullOrEmpty(method)) return null;
-            if (String.Compare(method, HttpMethod.Put.Method, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.IsNullOrEmpty(method)) return null;
+            if (string.Compare(method, HttpMethod.Put.Method, StringComparison.OrdinalIgnoreCase) == 0)
                 return HttpMethod.Put;
-            if (String.Compare(method, HttpMethod.Delete.Method, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(method, HttpMethod.Delete.Method, StringComparison.OrdinalIgnoreCase) == 0)
                 return HttpMethod.Delete;
-            if (String.Compare(method, HttpMethod.Options.Method, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(method, HttpMethod.Options.Method, StringComparison.OrdinalIgnoreCase) == 0)
                 return HttpMethod.Options;
-            if (String.Compare(method, HttpMethod.Head.Method, StringComparison.OrdinalIgnoreCase) == 0)
+            if (string.Compare(method, HttpMethod.Head.Method, StringComparison.OrdinalIgnoreCase) == 0)
                 return HttpMethod.Head;
             return null;
         }
