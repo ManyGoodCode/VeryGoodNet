@@ -12,7 +12,7 @@ namespace WebApiContrib.Http
         [Obsolete("See IsLocal at HttpRequestMessageExtensions Version 5.0.0.0")]
         public static bool IsLocal(this HttpRequestMessage request)
         {
-            var localFlag = request.Properties["MS_IsLocal"] as Lazy<bool>;
+            Lazy<bool> localFlag = request.Properties["MS_IsLocal"] as Lazy<bool>;
             return localFlag != null && localFlag.Value;
         }
 
@@ -45,6 +45,7 @@ namespace WebApiContrib.Http
                     return ctx.Request.RemoteIpAddress;
                 }
             }
+
             return null;
         }
     }

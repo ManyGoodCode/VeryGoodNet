@@ -9,32 +9,35 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 
-namespace WebApiContrib.Formatting {
+namespace WebApiContrib.Formatting
+{
 
-    public class CSVMediaTypeFormatter : MediaTypeFormatter
+    public class CSVMediaTypeFormatter : System.Net.Http.Formatting.MediaTypeFormatter
     {
-        public CSVMediaTypeFormatter() 
+        public CSVMediaTypeFormatter()
         {
-            SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
-        }
-        
-        public CSVMediaTypeFormatter(MediaTypeMapping mediaTypeMapping) : this() 
-        {
-            MediaTypeMappings.Add(mediaTypeMapping);
+            this.SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/csv"));
         }
 
-        public CSVMediaTypeFormatter(IEnumerable<MediaTypeMapping> mediaTypeMappings) : this() 
+        public CSVMediaTypeFormatter(MediaTypeMapping mediaTypeMapping)
+            : this()
         {
-            foreach (var mediaTypeMapping in mediaTypeMappings)
+            this.MediaTypeMappings.Add(mediaTypeMapping);
+        }
+
+        public CSVMediaTypeFormatter(IEnumerable<MediaTypeMapping> mediaTypeMappings)
+            : this()
+        {
+            foreach (MediaTypeMapping mediaTypeMapping in mediaTypeMappings)
                 MediaTypeMappings.Add(mediaTypeMapping);
         }
 
-    	public override bool CanReadType(Type type)
-    	{
-    		return false;
-    	}
+        public override bool CanReadType(Type type)
+        {
+            return false;
+        }
 
-    	public override bool CanWriteType(Type type) 
+        public override bool CanWriteType(Type type)
         {
             if (type == null)
                 throw new ArgumentNullException("type");
@@ -47,40 +50,31 @@ namespace WebApiContrib.Formatting {
             return Task.Factory.StartNew(() => WriteStream(type, value, stream, content));
         }
 
-        //private utils
 
-        private static void WriteStream(Type type, object value, Stream stream, HttpContent content) 
+        private static void WriteStream(Type type, object value, Stream stream, HttpContent content)
         {
-            //NOTE: We have check the type inside CanWriteType method
-            //If request comes this far, the type is IEnumerable. We are safe.
-
             Type itemType = type.GetGenericArguments()[0];
-
             using (StringWriter stringWriter = new StringWriter())
             {
                 stringWriter.WriteLine(
-                    string.Join<string>(
-                        ",", itemType.GetProperties().Select(x => x.Name )
-                    )
+                    string.Join<string>(",", itemType.GetProperties().Select(x => x.Name))
                 );
 
-                foreach (var obj in (IEnumerable<object>)value) 
+                foreach (object obj in (IEnumerable<object>)value)
                 {
                     var vals = obj.GetType().GetProperties().Select(
-                        pi => new { 
+                        pi => new
+                        {
                             Value = pi.GetValue(obj, null)
                         }
                     );
 
                     string valueLine = string.Empty;
-
-                	foreach (var val in vals)
-                	{
-                		if (val.Value != null) 
+                    foreach (var val in vals)
+                    {
+                        if (val.Value != null)
                         {
                             string _val = val.Value.ToString();
-                            
-                        	//Check if the value contans a comma and place it in quotes if so
                             if (_val.Contains(","))
                                 _val = string.Concat("\"", _val, "\"");
 
@@ -91,23 +85,22 @@ namespace WebApiContrib.Formatting {
                                 _val = _val.Replace("\n", " ");
 
                             valueLine = string.Concat(valueLine, _val, ",");
-
-                        } 
-                        else 
+                        }
+                        else
                         {
                             valueLine = string.Concat(valueLine, ",");
                         }
-                	}
+                    }
 
-                	stringWriter.WriteLine(valueLine.TrimEnd(','));
+                    stringWriter.WriteLine(valueLine.TrimEnd(','));
                 }
 
-                using (var streamWriter = new StreamWriter(stream))
+                using (StreamWriter streamWriter = new StreamWriter(stream))
                     streamWriter.Write(stringWriter.ToString());
             }
         }
 
-        private static bool IsTypeOfIEnumerable(Type type) 
+        private static bool IsTypeOfIEnumerable(Type type)
         {
             foreach (Type interfaceType in type.GetInterfaces())
                 if (interfaceType == typeof(IEnumerable))

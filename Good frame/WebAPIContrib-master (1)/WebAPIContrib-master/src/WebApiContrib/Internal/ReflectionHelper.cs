@@ -10,8 +10,7 @@ namespace WebApiContrib.Internal
     {
         public static MethodCallExpression GetMethodCall<T>(Expression<T>  action )
         {
-            var call = action.Body as MethodCallExpression;
-
+            MethodCallExpression call = action.Body as MethodCallExpression;
             return call;
         }
 
@@ -22,15 +21,13 @@ namespace WebApiContrib.Internal
 
         public static IEnumerable<Tuple<ParameterInfo, object>> GetArgumentValues(MethodCallExpression methodCall)
         {
-            var parameters = methodCall.Method.GetParameters();
+            ParameterInfo[] parameters = methodCall.Method.GetParameters();
             if(parameters.Any())
             {
                 for(int i = 0; i < parameters.Length; i++)
                 {
-                    var arg = methodCall.Arguments[i];
-
-                    var ceValue = arg as ConstantExpression;
-
+                    Expression arg = methodCall.Arguments[i];
+                    ConstantExpression ceValue = arg as ConstantExpression;
                     if (ceValue != null)
                         yield return new Tuple<ParameterInfo, object>(parameters[i], ceValue.Value);
                     else
@@ -41,8 +38,8 @@ namespace WebApiContrib.Internal
 
         private static object GetExpressionValue(Expression expression)
         {
-            var lambda = Expression.Lambda<Func<object>>(Expression.Convert(expression, typeof (object)));
-            var func = lambda.Compile();
+            Expression<Func<object>> lambda = Expression.Lambda<Func<object>>(Expression.Convert(expression, typeof (object)));
+            Func<object> func = lambda.Compile();
             return func();
         }
     }

@@ -3,8 +3,7 @@ using System.Web.Http.Filters;
 
 namespace WebApiContrib.Filters
 {    
-    // Code based on: http://code.msdn.microsoft.com/Implementing-CORS-support-418970ee
-    public class EnableCorsAttribute : ActionFilterAttribute
+    public class EnableCorsAttribute : System.Web.Http.Filters.ActionFilterAttribute
     {
         private const string origin = "Origin";
         private const string accessControlAllowOrigin = "Access-Control-Allow-Origin";
@@ -13,8 +12,7 @@ namespace WebApiContrib.Filters
         {
             if (actionExecutedContext.Request.Headers.Contains(origin))
             {
-                var originHeader = actionExecutedContext.Request.Headers.GetValues(origin).FirstOrDefault();
-
+                string originHeader = actionExecutedContext.Request.Headers.GetValues(origin).FirstOrDefault();
                 if (!string.IsNullOrEmpty(originHeader))
                 {
                     actionExecutedContext.Response.Headers.Add(accessControlAllowOrigin, originHeader);

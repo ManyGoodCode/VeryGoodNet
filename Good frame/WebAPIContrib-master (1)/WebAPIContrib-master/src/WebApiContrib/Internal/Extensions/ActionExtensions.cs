@@ -12,7 +12,7 @@ namespace WebApiContrib.Internal.Extensions
 		{
 			return () =>
 			       	{
-			       		foreach (var action in actions)
+			       		foreach (Action action in actions)
 			       			action();
 			       	};
 		}

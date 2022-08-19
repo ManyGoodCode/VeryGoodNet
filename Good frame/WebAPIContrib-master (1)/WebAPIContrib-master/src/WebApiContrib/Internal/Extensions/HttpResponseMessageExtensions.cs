@@ -11,7 +11,7 @@ namespace WebApiContrib.Internal.Extensions
 	{
 		public static Task<HttpResponseMessage> ToTask(this HttpResponseMessage responseMessage)
 		{
-			var taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
+			TaskCompletionSource<HttpResponseMessage> taskCompletionSource = new TaskCompletionSource<HttpResponseMessage>();
 			taskCompletionSource.SetResult(responseMessage);
 			return taskCompletionSource.Task;
 		}

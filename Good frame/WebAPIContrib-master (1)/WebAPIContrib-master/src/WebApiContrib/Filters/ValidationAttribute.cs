@@ -7,22 +7,24 @@ using WebApiContrib.Messages;
 
 namespace WebApiContrib.Filters
 {
-    public class ValidationAttribute : ActionFilterAttribute
+    public class ValidationAttribute : System.Web.Http.Filters.ActionFilterAttribute
     {
         public override void OnActionExecuting(HttpActionContext actionContext)
         {
             if (!actionContext.ModelState.IsValid)
             {
-                var errors = actionContext.ModelState
+                Error[] errors = actionContext.ModelState
                     .Where(e => e.Value.Errors.Count > 0)
-                    .Select(e => new Error 
+                    .Select(e => new Error
                     {
                         Name = e.Key,
                         Message = e.Value.Errors.First().ErrorMessage
                     }).ToArray();
 
-            	actionContext.Response = actionContext.Request.CreateResponse(HttpStatusCode.BadRequest, errors);
-            } 
+                actionContext.Response = actionContext.Request.CreateResponse(
+                    statusCode: HttpStatusCode.BadRequest,
+                    value: errors);
+            }
         }
     }
 }

@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 
 namespace WebApiContrib.Formatting
 {
-    public class PlainTextFormatter : MediaTypeFormatter
+    public class PlainTextFormatter : System.Net.Http.Formatting.MediaTypeFormatter
     {
-        private readonly Encoding _encoding;
+        private readonly Encoding encoding;
 
         public PlainTextFormatter(Encoding encoding = null)
         {
-            this._encoding = encoding ?? Encoding.Default;
+            this.encoding = encoding ?? Encoding.Default;
             SupportedMediaTypes.Add(new MediaTypeHeaderValue("text/plain"));
         }
 
@@ -30,23 +30,32 @@ namespace WebApiContrib.Formatting
             return type == typeof(string);
         }
 
-    	public override Task<object> ReadFromStreamAsync(Type type, Stream stream, HttpContent content, IFormatterLogger formatterLogger)
+    	public override Task<object> ReadFromStreamAsync(
+            Type type, 
+            Stream stream,
+            HttpContent content, 
+            IFormatterLogger formatterLogger)
         {
-            var reader = new StreamReader(stream, _encoding);
+            StreamReader reader = new StreamReader(stream, encoding);
             string value = reader.ReadToEnd();
 
-            var tcs = new TaskCompletionSource<object>();
+            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
             tcs.SetResult(value);
             return tcs.Task;
         }
 
-    	public override Task WriteToStreamAsync(Type type, object value, Stream stream, HttpContent content, TransportContext transportContext)
+    	public override Task WriteToStreamAsync(
+            Type type, 
+            object value, 
+            Stream stream, 
+            HttpContent content, 
+            TransportContext transportContext)
         {
-            var writer = new StreamWriter(stream, _encoding);
+            StreamWriter writer = new StreamWriter(stream, encoding);
             writer.Write((string) value);
             writer.Flush();
-            
-            var tcs = new TaskCompletionSource<object>();
+
+            TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
             tcs.SetResult(null);
             return tcs.Task;
         }

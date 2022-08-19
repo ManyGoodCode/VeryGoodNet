@@ -7,7 +7,7 @@ namespace WebApiContrib.Internal.Extensions
     {
         public static void ForEach<T>(this IEnumerable<T> enumeration, Action<T> action)
         {
-            foreach (var item in enumeration)
+            foreach (T item in enumeration)
             {
                 action(item);
             }
