@@ -3,9 +3,13 @@ using System.Web.Http.Controllers;
 
 namespace WebApiContrib.ModelBinders
 {
-    public class MvcStyleBindingAttribute : Attribute, IControllerConfiguration
+    public class MvcStyleBindingAttribute :
+        Attribute,
+        System.Web.Http.Controllers.IControllerConfiguration
     {
-        public void Initialize(HttpControllerSettings controllerSettings, HttpControllerDescriptor controllerDescriptor)
+        public void Initialize(
+        HttpControllerSettings controllerSettings,
+        HttpControllerDescriptor controllerDescriptor)
         {
             controllerSettings.Services.Replace(typeof(IActionValueBinder), new MvcActionValueBinder());
         }

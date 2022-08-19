@@ -14,43 +14,45 @@ using System.Web.Http.ValueProviders.Providers;
 
 namespace WebApiContrib.ModelBinders
 {
-    // Binder with MVC semantics. Treat the body as KeyValue pairs and model bind it.
-    // See http://blogs.msdn.com/b/jmstall/archive/2012/04/18/mvc-style-parameter-binding-for-webapi.aspx
     public class MvcActionValueBinder : DefaultActionValueBinder
     {
-        // Per-request storage, uses the Request.Properties bag. We need a unique key into the bag.
         private const string Key = "{5DC187FB-BFA0-462A-AB93-9E8036871EC8}";
 
         public override HttpActionBinding GetBinding(HttpActionDescriptor actionDescriptor)
         {
-            var actionBinding = new MvcActionBinding();
- 
+            MvcActionBinding actionBinding = new MvcActionBinding();
             HttpParameterDescriptor[] parameters = actionDescriptor.GetParameters().ToArray();
-            HttpParameterBinding[] binders = Array.ConvertAll(parameters, DetermineBinding);
+            // 数组批量转化。传递函数方法当中Converter委托
+            HttpParameterBinding[] binders = Array.ConvertAll(
+                array: parameters,
+                converter: DetermineBinding);
 
             actionBinding.ParameterBindings = binders;
- 
             return actionBinding;
         }
 
         private HttpParameterBinding DetermineBinding(HttpParameterDescriptor parameter)
         {
-            HttpConfiguration config = parameter.Configuration;
-            var attr = new ModelBinderAttribute(); // use default settings
+            System.Web.Http.HttpConfiguration config = parameter.Configuration;
+            System.Web.Http.ModelBinding.ModelBinderAttribute attr = new ModelBinderAttribute();
 
-            ModelBinderProvider provider = attr.GetModelBinderProvider(config);
-            IModelBinder binder = provider.GetBinder(config, parameter.ParameterType);
+            System.Web.Http.ModelBinding.ModelBinderProvider provider = attr.GetModelBinderProvider(config);
+            System.Web.Http.ModelBinding.IModelBinder binder = provider.GetBinder(config, parameter.ParameterType);
 
-            // Alternatively, we could put this ValueProviderFactory in the global config.
-            var vpfs = new List<ValueProviderFactory>(attr.GetValueProviderFactories(config)) { new BodyValueProviderFactory() };
+            List<ValueProviderFactory> vpfs = new List<ValueProviderFactory>(
+            attr.GetValueProviderFactories(config))
+            {
+                new BodyValueProviderFactory()
+            };
+
             return new ModelBinderParameterBinding(parameter, binder, vpfs);
         }
 
-        // Derive from ActionBinding so that we have a chance to read the body once and then share that with all the parameters.
         private class MvcActionBinding : HttpActionBinding
         {
-            // Read the body upfront , add as a ValueProvider
-            public override Task ExecuteBindingAsync(HttpActionContext actionContext, CancellationToken cancellationToken)
+            public override Task ExecuteBindingAsync(
+                HttpActionContext actionContext, 
+                CancellationToken cancellationToken)
             {
                 HttpRequestMessage request = actionContext.ControllerContext.Request;
                 HttpContent content = request.Content;
@@ -63,20 +65,18 @@ namespace WebApiContrib.ModelBinders
                         request.Properties.Add(Key, vp);
                     }
                 }
- 
+
                 return base.ExecuteBindingAsync(actionContext, cancellationToken);
             }
         }
 
-        // Get a value provider over the body. This can be shared by all parameters.
-        // This gets the values computed in MvcActionBinding.
-        private class BodyValueProviderFactory : ValueProviderFactory
+        private class BodyValueProviderFactory : System.Web.Http.ValueProviders.ValueProviderFactory
         {
             public override IValueProvider GetValueProvider(HttpActionContext actionContext)
             {
                 object vp;
                 actionContext.Request.Properties.TryGetValue(Key, out vp);
-                return (IValueProvider)vp; // can be null 
+                return (IValueProvider)vp;
             }
         }
     }
