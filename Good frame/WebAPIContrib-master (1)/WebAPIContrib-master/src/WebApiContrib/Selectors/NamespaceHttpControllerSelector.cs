@@ -8,8 +8,6 @@ using System.Web.Http.Dispatcher;
 
 namespace WebApiContrib.Selectors
 {
-    //originally created for Umbraco https://github.com/umbraco/Umbraco-CMS/blob/7.2.0/src/Umbraco.Web/WebApi/NamespaceHttpControllerSelector.cs
-    //adapted from there, does not recreate HttpControllerDescriptors, instead caches them
     public class NamespaceHttpControllerSelector : DefaultHttpControllerSelector
     {
         private const string ControllerKey = "controller";
@@ -69,11 +67,10 @@ namespace WebApiContrib.Selectors
 
             var duplicateControllers = groupedByName.ToDictionary(
                 g => g.Key,
-                g => g.ToLookup(t => t.Namespace ?? String.Empty, StringComparer.OrdinalIgnoreCase),
+                g => g.ToLookup(t => t.Namespace ?? string.Empty, StringComparer.OrdinalIgnoreCase),
                 StringComparer.OrdinalIgnoreCase);
 
-            var result = new HashSet<NamespacedHttpControllerMetadata>();
-
+            HashSet<NamespacedHttpControllerMetadata> result = new HashSet<NamespacedHttpControllerMetadata>();
             foreach (var controllerTypeGroup in duplicateControllers)
             {
                 foreach (var controllerType in controllerTypeGroup.Value.SelectMany(controllerTypesGrouping => controllerTypesGrouping))
@@ -88,30 +85,30 @@ namespace WebApiContrib.Selectors
 
         private class NamespacedHttpControllerMetadata
         {
-            private readonly string _controllerName;
-            private readonly string _controllerNamespace;
-            private readonly HttpControllerDescriptor _descriptor;
+            private readonly string controllerName;
+            private readonly string controllerNamespace;
+            private readonly HttpControllerDescriptor descriptor;
 
             public NamespacedHttpControllerMetadata(string controllerName, string controllerNamespace, HttpControllerDescriptor descriptor)
             {
-                _controllerName = controllerName;
-                _controllerNamespace = controllerNamespace;
-                _descriptor = descriptor;
+                this.controllerName = controllerName;
+                this.controllerNamespace = controllerNamespace;
+                this.descriptor = descriptor;
             }
 
             public string ControllerName
             {
-                get { return _controllerName; }
+                get { return controllerName; }
             }
 
             public string ControllerNamespace
             {
-                get { return _controllerNamespace; }
+                get { return controllerNamespace; }
             }
 
             public HttpControllerDescriptor Descriptor
             {
-                get { return _descriptor; }
+                get { return descriptor; }
             }
         }
     }

@@ -7,20 +7,25 @@ namespace WebApiContrib.ResponseMessages
 {
     public class ConflictResponse : ResourceResponseBase
     {
-        public ConflictResponse() : base(HttpStatusCode.Conflict)
+        public ConflictResponse() :
+            base(HttpStatusCode.Conflict)
         {
         }
 
-        public ConflictResponse(IApiResource apiResource) : base(HttpStatusCode.Conflict, apiResource)
+        public ConflictResponse(IApiResource apiResource) :
+            base(HttpStatusCode.Conflict, apiResource)
         {
         }
     }
 
-	public class ConflictResponse<T> : ResourceResponseBase<T>
-	{
-		public ConflictResponse(T resource, IEnumerable<MediaTypeWithQualityHeaderValue> accept, IEnumerable<MediaTypeFormatter> formatters)
-			: base(HttpStatusCode.Conflict, resource, accept, formatters)
-		{
-		}
-	}
+    public class ConflictResponse<T> : ResourceResponseBase<T>
+    {
+        public ConflictResponse(
+            T resource,
+            IEnumerable<MediaTypeWithQualityHeaderValue> accept,
+            IEnumerable<MediaTypeFormatter> formatters)
+            : base(HttpStatusCode.Conflict, resource, accept, formatters)
+        {
+        }
+    }
 }

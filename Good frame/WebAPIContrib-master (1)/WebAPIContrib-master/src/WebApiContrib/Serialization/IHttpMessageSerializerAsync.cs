@@ -14,6 +14,5 @@ namespace WebApiContrib.Serialization
 		Task SerializeAsync(HttpRequestMessage request, Stream stream);
 		Task<HttpResponseMessage> DeserializeToResponseAsync(Stream stream);
 		Task<HttpRequestMessage> DeserializeToRequestAsync(Stream stream);
-
 	}
 }

@@ -7,32 +7,62 @@ namespace WebApiContrib.Tracing
 {
 	public static class TraceWriter
 	{
-		public static void Debug(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, Exception exception)
+		public static void Debug(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			Exception exception)
 		{
 			tracer.Debug(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
 		}
 
-		public static void Debug(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, Exception exception, string messageFormat, params object[] messageArguments)
+		public static void Debug(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			Exception exception, 
+			string messageFormat, 
+			params object[] messageArguments)
 		{
 			tracer.Debug(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, exception, messageFormat, messageArguments);
 		}
 
-		public static void Debug(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, string messageFormat, params object[] messageArguments)
+		public static void Debug(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			string messageFormat, 
+			params object[] messageArguments)
 		{
 			tracer.Debug(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, messageFormat, messageArguments);
 		}
 
-		public static void Error(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, Exception exception)
+		public static void Error(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			Exception exception)
 		{
 			tracer.Error(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, exception);
 		}
 
-		public static void Error(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, Exception exception, string messageFormat, params object[] messageArguments)
+		public static void Error(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			Exception exception, 
+			string messageFormat, 
+			params object[] messageArguments)
 		{
 			tracer.Error(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, exception, messageFormat, messageArguments);
 		}
 
-		public static void Error(this ITraceWriter tracer, HttpRequestMessage request, ApiController controller, string messageFormat, params object[] messageArguments)
+		public static void Error(
+			this ITraceWriter tracer, 
+			HttpRequestMessage request, 
+			ApiController controller, 
+			string messageFormat, 
+			params object[] messageArguments)
 		{
 			tracer.Error(request, controller.ControllerContext.ControllerDescriptor.ControllerType.FullName, messageFormat, messageArguments);
 		}

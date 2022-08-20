@@ -13,9 +13,6 @@ using WebApiContrib.Filters;
 
 namespace WebApiContrib.Selectors
 {
-    // Code based on: http://code.msdn.microsoft.com/Implementing-CORS-support-418970ee
-    // and updated by: http://pastebin.com/tNdS5P5A
-    // For a more complete solution, see http://nuget.org/Packages/Thinktecture.IdentityModel.Http
     public class CorsActionSelector : ApiControllerActionSelector
     {
         private const string origin = "Origin";
@@ -26,22 +23,19 @@ namespace WebApiContrib.Selectors
 
         public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
         {
-            var originalRequest = controllerContext.Request;
-            var isCorsRequest = originalRequest.Headers.Contains(origin);
-
+            HttpRequestMessage originalRequest = controllerContext.Request;
+            bool isCorsRequest = originalRequest.Headers.Contains(origin);
             if (originalRequest.Method == HttpMethod.Options && isCorsRequest)
             {
-                var currentAccessControlRequestMethod = originalRequest.Headers.GetValues(accessControlRequestMethod).FirstOrDefault();
-
+                string currentAccessControlRequestMethod = originalRequest.Headers.GetValues(accessControlRequestMethod).FirstOrDefault();
                 if (!string.IsNullOrEmpty(currentAccessControlRequestMethod))
                 {
-                    var modifiedRequest = new HttpRequestMessage(
+                    HttpRequestMessage modifiedRequest = new HttpRequestMessage(
                         new HttpMethod(currentAccessControlRequestMethod),
                         originalRequest.RequestUri);
                     controllerContext.Request = modifiedRequest;
-                    var actualDescriptor = base.SelectAction(controllerContext);
+                    HttpActionDescriptor actualDescriptor = base.SelectAction(controllerContext);
                     controllerContext.Request = originalRequest;
-
                     if (actualDescriptor != null && actualDescriptor.GetFilters().OfType<EnableCorsAttribute>().Any())
                         return new PreflightActionDescriptor(actualDescriptor, accessControlRequestMethod);
                 }
@@ -55,7 +49,9 @@ namespace WebApiContrib.Selectors
             private readonly HttpActionDescriptor originalAction;
             private readonly string prefilghtAccessControlRequestMethod;
 
-            public PreflightActionDescriptor(HttpActionDescriptor originalAction, string accessControlRequestMethod)
+            public PreflightActionDescriptor(
+                HttpActionDescriptor originalAction, 
+                string accessControlRequestMethod)
             {
                 this.originalAction = originalAction;
                 this.prefilghtAccessControlRequestMethod = accessControlRequestMethod;
@@ -66,17 +62,17 @@ namespace WebApiContrib.Selectors
                 get { return originalAction.ActionName; }
             }
 
-            public override Task<object> ExecuteAsync(HttpControllerContext controllerContext, IDictionary<string, object> arguments, CancellationToken cancellationToken)
+            public override Task<object> ExecuteAsync(
+                HttpControllerContext controllerContext, 
+                IDictionary<string, object> arguments, 
+                CancellationToken cancellationToken)
             {
-                var response = new HttpResponseMessage(HttpStatusCode.OK);
+                HttpResponseMessage response = new HttpResponseMessage(HttpStatusCode.OK);
                 response.Headers.Add(accessControlAllowMethods, prefilghtAccessControlRequestMethod);
-
-                var requestedHeaders = string.Join(", ", controllerContext.Request.Headers.GetValues(accessControlRequestHeaders));
-
+                string requestedHeaders = string.Join(", ", controllerContext.Request.Headers.GetValues(accessControlRequestHeaders));
                 if (!string.IsNullOrEmpty(requestedHeaders))
                     response.Headers.Add(accessControlAllowHeaders, requestedHeaders);
-
-                var tcs = new TaskCompletionSource<object>();
+                TaskCompletionSource<object> tcs = new TaskCompletionSource<object>();
                 tcs.SetResult(response);
                 return tcs.Task;
             }

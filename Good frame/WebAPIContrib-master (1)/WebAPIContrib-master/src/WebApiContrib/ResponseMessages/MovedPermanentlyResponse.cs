@@ -5,11 +5,13 @@ namespace WebApiContrib.ResponseMessages
 {
     public class MovedPermanentlyResponse : ResourceIdentifierBase
     {
-        public MovedPermanentlyResponse() : base(HttpStatusCode.MovedPermanently)
+        public MovedPermanentlyResponse() : 
+            base(HttpStatusCode.MovedPermanently)
         {
         }
 
-        public MovedPermanentlyResponse(Uri resource) : base(HttpStatusCode.MovedPermanently, resource)
+        public MovedPermanentlyResponse(Uri resource) :
+            base(HttpStatusCode.MovedPermanently, resource)
         {
         }
     }
