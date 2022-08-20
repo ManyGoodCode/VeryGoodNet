@@ -10,11 +10,7 @@ namespace CommandLine
         private Type resourceType;
         public string Name { get; private set; }
 
-        public bool Hidden
-        {
-            get;
-            set;
-        }
+        public bool Hidden { get; set; }
 
         public string HelpText
         {
@@ -33,7 +29,7 @@ namespace CommandLine
 
         public VerbAttribute(string name, bool isDefault = false, string[] aliases = null)
         {
-            if (string.IsNullOrWhiteSpace(name)) 
+            if (string.IsNullOrWhiteSpace(name))
                 throw new ArgumentException("name");
             Name = name;
             IsDefault = isDefault;

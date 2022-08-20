@@ -11,9 +11,14 @@ namespace CSharpx
 {
     static class EnumerableExtensions
     {
+        /// <summary>
+        /// 获取 IEnumerable 集合的第一个元素。
+        /// 如果有数据返回 Maybe.Just ；没数据返回 Maybe.Nothing
+        /// </summary>
         public static Maybe<T> TryHead<T>(this IEnumerable<T> source)
         {
-            using (var e = source.GetEnumerator()) {
+            using (IEnumerator<T> e = source.GetEnumerator()) 
+            {
                 return e.MoveNext()
                     ? Maybe.Just(e.Current)
                     : Maybe.Nothing<T>();

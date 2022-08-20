@@ -33,6 +33,9 @@ namespace CommandLine.Core
                    select t;
         }
 
+        /// <summary>
+        /// 传递Key字符串 和 Values组成 KeyValuePair对象
+        /// </summary>
         private static KeyValuePair<string, IEnumerable<string>> ToKeyValuePair(this string value, params string[] values)
         {
             return new KeyValuePair<string, IEnumerable<string>>(value, values);

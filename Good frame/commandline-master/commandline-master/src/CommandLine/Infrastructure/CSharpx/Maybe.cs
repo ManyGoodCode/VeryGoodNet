@@ -19,6 +19,10 @@ namespace CSharpx
         }
 
         public MaybeType Tag { get { return tag; } }
+
+        /// <summary>
+        /// 判断 是否为  MaybeType.Just 类型
+        /// </summary>
         public bool MatchJust(out T value)
         {
             value = Tag == MaybeType.Just ? ((Just<T>)this).Value : default(T);
@@ -225,6 +229,9 @@ namespace CSharpx
             return maybe.MatchJust(out value) ? value : noneValue;
         }
 
+        /// <summary>
+        /// 如果有数据执行利用 Maybe 里面的值执行 func ，如果没有数据返回默认值 noneValue
+        /// </summary>
         public static T2 MapValueOrDefault<T1, T2>(this Maybe<T1> maybe, Func<T1, T2> func, T2 noneValue)
         {
             T1 value1;
