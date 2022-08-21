@@ -1,5 +1,8 @@
 namespace Fclp.Internals.Parsing
 {
+	/// <summary>
+	/// 解析的原始数据
+	/// </summary>
 	public class ParsedOption
 	{
 		public ParsedOption(string key, string value)
@@ -42,9 +45,12 @@ namespace Fclp.Internals.Parsing
 
 		public override bool Equals(object obj)
 		{
-			if (ReferenceEquals(null, obj)) return false;
-			if (ReferenceEquals(this, obj)) return true;
-			if (obj.GetType() != this.GetType()) return false;
+			if (ReferenceEquals(null, obj)) 
+				return false;
+			if (ReferenceEquals(this, obj))
+				return true;
+			if (obj.GetType() != this.GetType()) 
+				return false;
 			return Equals((ParsedOption) obj);
 		}
 
