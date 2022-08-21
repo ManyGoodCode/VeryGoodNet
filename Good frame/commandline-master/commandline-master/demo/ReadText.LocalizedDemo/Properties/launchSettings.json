@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "ReadText.LocalizedDemo": {
-      "commandName": "Project",
-      "commandLineArgs": "head"
-    }
-  }
-}

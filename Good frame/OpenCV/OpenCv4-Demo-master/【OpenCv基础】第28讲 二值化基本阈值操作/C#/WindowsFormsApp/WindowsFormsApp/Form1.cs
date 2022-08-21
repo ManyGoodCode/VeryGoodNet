@@ -22,7 +22,7 @@ namespace WindowsFormsApp
         private void button1_Click(object sender, EventArgs e)
         {
             // 读入用户提供的图像
-            g_srcImage = Cv2.ImRead("1.jpg");
+            g_srcImage = Cv2.ImRead("1.BMP");
             if (g_srcImage.Data == null)
             {
                 MessageBox.Show("Oh，no，读取g_srcImage图片错误~！");
