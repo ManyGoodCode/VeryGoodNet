@@ -29,6 +29,9 @@ namespace Fclp.Internals.Extensions
 			return string.IsNullOrEmpty(value) == false && value.Contains(" ");
 		}
 
+		/// <summary>
+		/// 包含两个双引号
+		/// </summary>
 		public static string WrapInDoubleQuotes(this string str)
 		{
 			return string.Format(@"""{0}""", str);

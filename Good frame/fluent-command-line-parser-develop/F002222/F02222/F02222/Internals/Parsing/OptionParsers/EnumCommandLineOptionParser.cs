@@ -5,47 +5,59 @@ using Fclp.Internals.Extensions;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
-	public class EnumCommandLineOptionParser<TEnum> : ICommandLineOptionParser<TEnum>
-	{
-		private readonly IList<TEnum> _all;
-		private readonly Dictionary<string, TEnum> _insensitiveNames;
-		private readonly Dictionary<int, TEnum> _values;
+    /// <summary>
+    /// 枚举解析器通过 Enum.TryParse 和 判断字符串名称 是否包含在枚举中确定
+    /// </summary>
+    public class EnumCommandLineOptionParser<TEnum> : ICommandLineOptionParser<TEnum>
+    {
+        private readonly IList<TEnum> allEnumValues;
+        private readonly Dictionary<string, TEnum> insensitiveNames;
+        private readonly Dictionary<int, TEnum> values;
 
-		public EnumCommandLineOptionParser()
-		{
-			Type type = typeof(TEnum);
-			if (!type.IsEnum) 
-				throw new ArgumentException(string.Format("T must be an System.Enum but is '{0}'", type));
-			_all = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
-			_insensitiveNames = _all.ToDictionary(k => Enum.GetName(typeof(TEnum), k).ToLowerInvariant());
-			_values = _all.ToDictionary(k => Convert.ToInt32(k));
-		}
+        public EnumCommandLineOptionParser()
+        {
+            Type type = typeof(TEnum);
+            // 判断Type类型是否为枚举
+            if (!type.IsEnum)
+                throw new ArgumentException(string.Format("T must be an System.Enum but is '{0}'", type));
+            allEnumValues = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
+            insensitiveNames = allEnumValues
+                .ToDictionary(k => Enum.GetName(enumType: typeof(TEnum), value: k)
+                .ToLowerInvariant());
 
-		public TEnum Parse(ParsedOption parsedOption)
-		{
-			return (TEnum)Enum.Parse(typeof(TEnum), parsedOption.Value.ToLowerInvariant(), true);
-		}
+            // 将集合字节转换为字典 keySelector 委托
+            values = allEnumValues.ToDictionary(keySelector: k => Convert.ToInt32(k));
+        }
 
-		public bool CanParse(ParsedOption parsedOption)
-		{
-			if (parsedOption.HasValue == false) 
-				return false;
-			if (parsedOption.Value.IsNullOrWhiteSpace()) 
-				return false;
-			return IsDefined(parsedOption.Value);
-		}
+        public TEnum Parse(ParsedOption parsedOption)
+        {
+            return (TEnum)Enum.Parse(
+                enumType: typeof(TEnum),
+                value: parsedOption.Value.ToLowerInvariant(),
+                //忽略大小写
+                ignoreCase: true);
+        }
 
-		private bool IsDefined(string value)
-		{
-			int asInt;
-			return int.TryParse(value, out asInt) 
-				? IsDefined(asInt) 
-				: _insensitiveNames.Keys.Contains(value.ToLowerInvariant());
-		}
+        public bool CanParse(ParsedOption parsedOption)
+        {
+            if (parsedOption.HasValue == false)
+                return false;
+            if (parsedOption.Value.IsNullOrWhiteSpace())
+                return false;
+            return IsDefined(parsedOption.Value);
+        }
 
-		private bool IsDefined(int value)
-		{
-			return _values.Keys.Contains(value);
-		}
-	}
+        private bool IsDefined(string value)
+        {
+            int asInt;
+            return int.TryParse(value, out asInt)
+                ? IsDefined(asInt)
+                : insensitiveNames.Keys.Contains(value.ToLowerInvariant());
+        }
+
+        private bool IsDefined(int value)
+        {
+            return values.Keys.Contains(value);
+        }
+    }
 }

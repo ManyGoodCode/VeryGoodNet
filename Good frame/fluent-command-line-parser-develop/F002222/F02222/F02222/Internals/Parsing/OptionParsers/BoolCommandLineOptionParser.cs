@@ -4,6 +4,9 @@ using Fclp.Internals.Extensions;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+    /// <summary>
+    /// 布尔类型解析器，判断 ParsedOption 是否有 "off", "0" 或  "on", "1"
+    /// </summary>
     public class BoolCommandLineOptionParser : ICommandLineOptionParser<bool>
     {
         private static readonly string[] recognisedFalseArgs = new[] { "off", "0" };

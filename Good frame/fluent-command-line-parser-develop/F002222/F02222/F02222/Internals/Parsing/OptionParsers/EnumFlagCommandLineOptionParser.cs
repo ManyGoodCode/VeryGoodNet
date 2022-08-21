@@ -5,11 +5,14 @@ using Fclp.Internals.Extensions;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+    /// <summary>
+    /// 枚举标志解析器
+    /// </summary>
     public class EnumFlagCommandLineOptionParser<TEnum> : ICommandLineOptionParser<TEnum>
     {
-        private readonly IList<TEnum> _all;
-        private readonly Dictionary<string, TEnum> _insensitiveNames;
-        private readonly Dictionary<int, TEnum> _values;
+        private readonly IList<TEnum> all;
+        private readonly Dictionary<string, TEnum> insensitiveNames;
+        private readonly Dictionary<int, TEnum> values;
 
         public EnumFlagCommandLineOptionParser()
         {
@@ -20,18 +23,19 @@ namespace Fclp.Internals.Parsing.OptionParsers
             if (!type.IsDefined(typeof(FlagsAttribute), false))
                 throw new ArgumentException("T must have a System.FlagsAttribute'");
 
-            _all = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
-            _insensitiveNames = _all.ToDictionary(k => Enum.GetName(typeof(TEnum), k).ToLowerInvariant());
-            _values = _all.ToDictionary(k => Convert.ToInt32(k));
+            all = Enum.GetValues(typeof(TEnum)).Cast<TEnum>().ToList();
+            insensitiveNames = all.ToDictionary(k => Enum.GetName(typeof(TEnum), k).ToLowerInvariant());
+            values = all.ToDictionary(k => Convert.ToInt32(k));
         }
 
         public TEnum Parse(ParsedOption parsedOption)
         {
             int result = 0;
-            foreach (var value in parsedOption.Values)
+            foreach (string value in parsedOption.Values)
             {
                 result += (int)Enum.Parse(typeof(TEnum), value.ToLowerInvariant(), true);
             }
+
             return (TEnum)(object)result;
 
         }
@@ -46,7 +50,8 @@ namespace Fclp.Internals.Parsing.OptionParsers
             return parsedOption.Values.All(
             value =>
             {
-                if (value.IsNullOrWhiteSpace()) return false;
+                if (value.IsNullOrWhiteSpace())
+                    return false;
                 return IsDefined(value);
             });
         }
@@ -56,12 +61,12 @@ namespace Fclp.Internals.Parsing.OptionParsers
             int asInt;
             return int.TryParse(value, out asInt)
                 ? IsDefined(asInt)
-                : _insensitiveNames.Keys.Contains(value.ToLowerInvariant());
+                : insensitiveNames.Keys.Contains(value.ToLowerInvariant());
         }
 
         private bool IsDefined(int value)
         {
-            return _values.Keys.Contains(value);
+            return values.Keys.Contains(value);
         }
     }
 }
