@@ -3,6 +3,9 @@ using System.Globalization;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+	/// <summary>
+	/// TimeSpan ½âÎöÆ÷
+	/// </summary>
 	public class TimeSpanCommandLineOptionParser : ICommandLineOptionParser<TimeSpan>
 	{
 		public TimeSpan Parse(ParsedOption parsedOption)

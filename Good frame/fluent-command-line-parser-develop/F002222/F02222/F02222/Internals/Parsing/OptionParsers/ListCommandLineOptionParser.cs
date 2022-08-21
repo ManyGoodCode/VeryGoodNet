@@ -3,18 +3,20 @@ using System.Linq;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+    /// <summary>
+    /// ¼¯ºÏ½âÎöÆ÷
+    /// </summary>
     public class ListCommandLineOptionParser<T> : ICommandLineOptionParser<List<T>>
     {
-        private readonly ICommandLineOptionParserFactory _parserFactory;
+        private readonly ICommandLineOptionParserFactory parserFactory;
         public ListCommandLineOptionParser(ICommandLineOptionParserFactory parserFactory)
         {
-            _parserFactory = parserFactory;
+            this.parserFactory = parserFactory;
         }
 
         public List<T> Parse(ParsedOption parsedOption)
         {
-            ICommandLineOptionParser<T> parser = _parserFactory.CreateParser<T>();
-
+            ICommandLineOptionParser<T> parser = parserFactory.CreateParser<T>();
             return parsedOption.Values.Select(value =>
             {
                 ParsedOption clone = parsedOption.Clone();
@@ -25,14 +27,14 @@ namespace Fclp.Internals.Parsing.OptionParsers
 
         public bool CanParse(ParsedOption parsedOption)
         {
-            if (parsedOption == null) 
+            if (parsedOption == null)
                 return false;
-            if (parsedOption.HasValue == false) 
+            if (parsedOption.HasValue == false)
                 return false;
 
-            ICommandLineOptionParser<T> parser = _parserFactory.CreateParser<T>();
+            ICommandLineOptionParser<T> parser = parserFactory.CreateParser<T>();
             return parsedOption.Values.All(
-           value =>
+            value =>
             {
                 ParsedOption clone = parsedOption.Clone();
                 clone.Value = value;

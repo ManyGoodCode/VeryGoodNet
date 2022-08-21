@@ -2,15 +2,16 @@ using System;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
-    public class NullableEnumCommandLineOptionParser<TEnum> : ICommandLineOptionParser<TEnum?> where TEnum : struct
+    public class NullableEnumCommandLineOptionParser<TEnum> 
+        : ICommandLineOptionParser<TEnum?> where TEnum : struct
     {
-        private readonly ICommandLineOptionParserFactory _parserFactory;
+        private readonly ICommandLineOptionParserFactory parserFactory;
         public NullableEnumCommandLineOptionParser(ICommandLineOptionParserFactory parserFactory)
         {
             Type type = typeof(TEnum);
             if (!type.IsEnum)
                 throw new ArgumentException(string.Format("T must be an System.Enum but is '{0}'", type));
-            _parserFactory = parserFactory;
+            this.parserFactory = parserFactory;
         }
 
 
@@ -18,7 +19,7 @@ namespace Fclp.Internals.Parsing.OptionParsers
         {
             if (parsedOption.HasValue == false) 
                 return null;
-            ICommandLineOptionParser<TEnum> parser = _parserFactory.CreateParser<TEnum>();
+            ICommandLineOptionParser<TEnum> parser = parserFactory.CreateParser<TEnum>();
             return parser.Parse(parsedOption);
         }
 
@@ -29,7 +30,7 @@ namespace Fclp.Internals.Parsing.OptionParsers
             if (parsedOption.HasValue == false) 
                 return true;
 
-            ICommandLineOptionParser<TEnum> parser = _parserFactory.CreateParser<TEnum>();
+            ICommandLineOptionParser<TEnum> parser = parserFactory.CreateParser<TEnum>();
             return parser.CanParse(parsedOption);
         }
     }

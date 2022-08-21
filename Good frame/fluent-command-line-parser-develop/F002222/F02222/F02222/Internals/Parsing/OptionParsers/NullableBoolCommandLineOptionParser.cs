@@ -1,16 +1,19 @@
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+    /// <summary>
+    /// ²¼¶û¿É¿Õ½âÎöÆ÷
+    /// </summary>
     public class NullableBoolCommandLineOptionParser : ICommandLineOptionParser<bool?>
     {
-        private readonly ICommandLineOptionParserFactory _parserFactory;
+        private readonly ICommandLineOptionParserFactory parserFactory;
         public NullableBoolCommandLineOptionParser(ICommandLineOptionParserFactory parserFactory)
         {
-            _parserFactory = parserFactory;
+            this.parserFactory = parserFactory;
         }
 
         public bool? Parse(ParsedOption parsedOption)
         {
-            ICommandLineOptionParser<bool> parser = _parserFactory.CreateParser<bool>();
+            ICommandLineOptionParser<bool> parser = parserFactory.CreateParser<bool>();
             if (parser.CanParse(parsedOption) == false) 
                 return null;
             return parser.Parse(parsedOption);

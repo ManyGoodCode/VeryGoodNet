@@ -18,6 +18,7 @@ namespace Fclp.Internals.Parsing.OptionParsers
             this.AddOrReplace(new TimeSpanCommandLineOptionParser());
             this.AddOrReplace(new DoubleCommandLineOptionParser());
             this.AddOrReplace(new UriCommandLineOptionParser());
+
             this.AddOrReplace(new ListCommandLineOptionParser<string>(this));
             this.AddOrReplace(new ListCommandLineOptionParser<int>(this));
             this.AddOrReplace(new ListCommandLineOptionParser<long>(this));
@@ -26,6 +27,8 @@ namespace Fclp.Internals.Parsing.OptionParsers
             this.AddOrReplace(new ListCommandLineOptionParser<TimeSpan>(this));
             this.AddOrReplace(new ListCommandLineOptionParser<bool>(this));
             this.AddOrReplace(new ListCommandLineOptionParser<Uri>(this));
+
+
             this.AddOrReplace(new NullableCommandLineOptionParser<bool>(this));
             this.AddOrReplace(new NullableCommandLineOptionParser<int>(this));
             this.AddOrReplace(new NullableCommandLineOptionParser<long>(this));
@@ -43,6 +46,9 @@ namespace Fclp.Internals.Parsing.OptionParsers
             this.Parsers.Add(parserType, parser);
         }
 
+        /// <summary>
+        /// 返回指定的解析器
+        /// </summary>
         public ICommandLineOptionParser<T> CreateParser<T>()
         {
             Type type = typeof(T);
@@ -59,6 +65,7 @@ namespace Fclp.Internals.Parsing.OptionParsers
 
         private bool TryAddAsSpecialParser<T>(Type type)
         {
+            // 判断是否是枚举
             if (type.IsEnum)
             {
                 bool hasFlags = typeof(T).IsDefined(typeof(FlagsAttribute), false);
@@ -78,6 +85,21 @@ namespace Fclp.Internals.Parsing.OptionParsers
                     }
 
                 }
+
+                return true;
+            }
+
+            // 判断是否为可空类型
+            if (IsNullableEnum(type))
+            {
+                Type underlyingType = Nullable.GetUnderlyingType(type);
+                Type nullableEnumParserType = typeof(NullableEnumCommandLineOptionParser<>).MakeGenericType(underlyingType);
+                ICommandLineOptionParser<T> parser = (ICommandLineOptionParser<T>)Activator.CreateInstance(nullableEnumParserType, this);
+                if (!this.Parsers.ContainsKey(type))
+                {
+                    this.AddOrReplace(parser);
+                }
+
                 return true;
             }
 
@@ -98,20 +120,6 @@ namespace Fclp.Internals.Parsing.OptionParsers
                         return true;
                     }
                 }
-            }
-
-            if (IsNullableEnum(type))
-            {
-                Type underlyingType = Nullable.GetUnderlyingType(type);
-                Type nullableEnumParserType = typeof(NullableEnumCommandLineOptionParser<>).MakeGenericType(underlyingType);
-                ICommandLineOptionParser<T> parser = (ICommandLineOptionParser<T>)Activator.CreateInstance(nullableEnumParserType, this);
-
-                if (!this.Parsers.ContainsKey(type))
-                {
-                    this.AddOrReplace(parser);
-                }
-
-                return true;
             }
 
             return false;

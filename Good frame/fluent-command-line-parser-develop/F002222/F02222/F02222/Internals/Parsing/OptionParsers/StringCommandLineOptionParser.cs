@@ -3,6 +3,9 @@ using Fclp.Internals.Extensions;
 
 namespace Fclp.Internals.Parsing.OptionParsers
 {
+	/// <summary>
+	/// ×Ö·û´®½âÎöÆ÷
+	/// </summary>
 	public class StringCommandLineOptionParser : ICommandLineOptionParser<string>
 	{
 		public string Parse(ParsedOption parsedOption)
