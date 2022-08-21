@@ -5,10 +5,10 @@ namespace Fclp.Internals.Validators
 {
 	public class CommandLineOptionValidator : ICommandLineOptionValidator
 	{
-		private readonly IList<ICommandLineOptionValidator> _rules;
+		private readonly IList<ICommandLineOptionValidator> rules;
         public CommandLineOptionValidator(ICommandLineOptionContainer container, SpecialCharacters specialCharacters)
 		{
-			_rules = new List<ICommandLineOptionValidator>
+			rules = new List<ICommandLineOptionValidator>
 			{
 				new OptionNameValidator(specialCharacters),
 				new NoDuplicateOptionValidator(container)
@@ -17,7 +17,7 @@ namespace Fclp.Internals.Validators
 
 	    public void Validate(ICommandLineOption commandLineOption, StringComparison stringComparison)
 		{
-			foreach (ICommandLineOptionValidator rule in _rules)
+			foreach (ICommandLineOptionValidator rule in rules)
 			{
 				rule.Validate(commandLineOption, stringComparison);
 			}

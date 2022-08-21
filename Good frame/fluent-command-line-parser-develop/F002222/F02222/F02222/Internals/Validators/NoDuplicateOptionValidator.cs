@@ -11,17 +11,17 @@ namespace Fclp.Internals.Validators
 
 	public class NoDuplicateOptionValidator : ICommandLineOptionValidator
 	{
-        private readonly ICommandLineOptionContainer _container;
+        private readonly ICommandLineOptionContainer container;
         public NoDuplicateOptionValidator(ICommandLineOptionContainer container)
 		{
             if (container == null) 
                 throw new ArgumentNullException("container");
-            _container = container;
+            this.container = container;
 		}
 
 	    public void Validate(ICommandLineOption commandLineOption, StringComparison stringComparison)
 		{
-            foreach (ICommandLineOption option in _container.Options)
+            foreach (ICommandLineOption option in container.Options)
 			{
 			    if (option.HasCommand)
 			    {

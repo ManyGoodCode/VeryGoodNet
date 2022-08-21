@@ -6,10 +6,10 @@ namespace Fclp.Internals.Validators
 {
 	public class OptionNameValidator : ICommandLineOptionValidator
 	{
-	    private readonly char[] _reservedChars;
+	    private readonly char[] reservedChars;
         public OptionNameValidator(SpecialCharacters specialCharacters)
 	    {
-	        _reservedChars = specialCharacters.ValueAssignments.Union(new[] { specialCharacters.Whitespace }).ToArray();
+	       reservedChars = specialCharacters.ValueAssignments.Union(new[] { specialCharacters.Whitespace }).ToArray();
         }
 
 
@@ -61,7 +61,7 @@ namespace Fclp.Internals.Validators
 		{
 			if (string.IsNullOrEmpty(value)) 
 				return;
-			foreach (char reservedChar in _reservedChars)
+			foreach (char reservedChar in reservedChars)
 			{
 				if (value.Contains(reservedChar))
 				{

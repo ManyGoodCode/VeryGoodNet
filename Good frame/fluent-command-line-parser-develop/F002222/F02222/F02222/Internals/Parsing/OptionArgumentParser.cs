@@ -7,15 +7,18 @@ namespace Fclp.Internals.Parsing
 {
 	public class OptionArgumentParser
 	{
-	    private readonly SpecialCharacters _specialCharacters;
+	    private readonly SpecialCharacters specialCharacters;
         public OptionArgumentParser(SpecialCharacters specialCharacters)
 	    {
-	        _specialCharacters = specialCharacters;
+	        this.specialCharacters = specialCharacters;
 	    }
 
+		/// <summary>
+		/// 解析语句 Key-Value 到  ParsedOption
+		/// </summary>
 		public void ParseArguments(IEnumerable<string> args, ParsedOption option)
 		{
-			if (option.Key != null && _specialCharacters.ValueAssignments.Any(option.Key.Contains))
+			if (option.Key != null && specialCharacters.ValueAssignments.Any(option.Key.Contains))
 			{
 				TryGetArgumentFromKey(option);
 			}
@@ -42,15 +45,21 @@ namespace Fclp.Internals.Parsing
 			option.AdditionalValues = additionalArguments.ToArray();
 		}
 
+		/// <summary>
+		/// 为  ParsedOption 赋值语句 加载  Key 和 Value
+		/// </summary>
 		private void TryGetArgumentFromKey(ParsedOption option)
 		{
-			string[] split = option.Key.Split(_specialCharacters.ValueAssignments, 2, StringSplitOptions.RemoveEmptyEntries);
+			string[] split = option.Key.Split(specialCharacters.ValueAssignments, 2, StringSplitOptions.RemoveEmptyEntries);
 			option.Key = split[0];
 			option.Value = split.Length > 1 
 				               ? split[1].WrapInDoubleQuotesIfContainsWhitespace()
 				               : null;
 		}
 
+		/// <summary>
+		/// 包装值为 "" 
+		/// </summary>
 	    private IEnumerable<string> CollectArgumentsUntilNextKey(IEnumerable<string> args)
 		{
 			return from argument in args
@@ -58,9 +67,12 @@ namespace Fclp.Internals.Parsing
 			       select argument.WrapInDoubleQuotesIfContainsWhitespace();
 		}
 
+		/// <summary>
+		/// 判断是否为结束字符
+		/// </summary>
         private bool IsEndOfOptionsKey(string arg)
 		{
-			return string.Equals(arg, _specialCharacters.EndOfOptionsKey, StringComparison.InvariantCultureIgnoreCase);
+			return string.Equals(arg, specialCharacters.EndOfOptionsKey, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }

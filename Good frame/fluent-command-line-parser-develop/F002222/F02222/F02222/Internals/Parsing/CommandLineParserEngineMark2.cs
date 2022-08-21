@@ -7,22 +7,22 @@ namespace Fclp.Internals.Parsing
 {
 	public class CommandLineParserEngineMark2 : ICommandLineParserEngine
 	{
-	    private readonly SpecialCharacters _specialCharacters;
-	    private readonly List<string> _additionalArgumentsFound = new List<string>();
-		private readonly List<ParsedOption> _parsedOptions = new List<ParsedOption>();
-	    private readonly OptionArgumentParser _optionArgumentParser;
+	    private readonly SpecialCharacters specialCharacters;
+	    private readonly List<string> additionalArgumentsFound = new List<string>();
+		private readonly List<ParsedOption> parsedOptions = new List<ParsedOption>();
+	    private readonly OptionArgumentParser optionArgumentParser;
 
 
         public CommandLineParserEngineMark2(SpecialCharacters specialCharacters)
 	    {
-	        _specialCharacters = specialCharacters;
-	        _optionArgumentParser = new OptionArgumentParser(specialCharacters);
+	        this.specialCharacters = specialCharacters;
+			this.optionArgumentParser = new OptionArgumentParser(specialCharacters);
         }
 
         public ParserEngineResult Parse(string[] args, bool parseCommands)
 		{
 			args = args ?? new string[0];
-			CommandLineOptionGrouper grouper = new CommandLineOptionGrouper(_specialCharacters);
+			CommandLineOptionGrouper grouper = new CommandLineOptionGrouper(specialCharacters);
             string[][] grouped = grouper.GroupArgumentsByOption(args, parseCommands);
             string command = parseCommands ? ExtractAnyCommand(grouped) : null;
             foreach (string[] optionGroup in grouped)
@@ -33,10 +33,10 @@ namespace Fclp.Internals.Parsing
 
             if (command != null)
             {
-                _additionalArgumentsFound.RemoveAt(0);
+                additionalArgumentsFound.RemoveAt(0);
             }
 
-			return new ParserEngineResult(_parsedOptions, _additionalArgumentsFound, command);
+			return new ParserEngineResult(parsedOptions, additionalArgumentsFound, command);
 		}
 
 	    private string ExtractAnyCommand(string[][] grouped)
@@ -59,9 +59,9 @@ namespace Fclp.Internals.Parsing
 		{
 			if (IsAKey(rawKey))
 			{
-				ParsedOption parsedOption = new ParsedOptionFactory(_specialCharacters).Create(rawKey);
+				ParsedOption parsedOption = new ParsedOptionFactory(specialCharacters).Create(rawKey);
 				TrimSuffix(parsedOption);
-				_optionArgumentParser.ParseArguments(optionGroup, parsedOption);
+				optionArgumentParser.ParseArguments(optionGroup, parsedOption);
 				AddParsedOptionToList(parsedOption);
 			}
 			else
@@ -71,36 +71,51 @@ namespace Fclp.Internals.Parsing
 			}
 		}
 
+		/// <summary>
+		/// 拷贝或者直接添加 ParsedOption 到集合
+		/// </summary>
 		private void AddParsedOptionToList(ParsedOption parsedOption)
 		{
 			if (ShortOptionNeedsToBeSplit(parsedOption))
 			{
-				_parsedOptions.AddRange(CloneAndSplit(parsedOption));
+				parsedOptions.AddRange(CloneAndSplit(parsedOption));
 			}
 			else
 			{
-				_parsedOptions.Add(parsedOption);
+				parsedOptions.Add(parsedOption);
 			}
 		}
 
+		/// <summary>
+		/// 如果参数不以结束字符，则添加到参数集合
+		/// </summary>
 		private void AddAdditionArgument(string argument)
 		{
 			if (IsEndOfOptionsKey(argument) == false)
 			{
-				_additionalArgumentsFound.Add(argument);
+				additionalArgumentsFound.Add(argument);
 			}
 		}
 
+		/// <summary>
+		/// 判断 ParsedOption 为短前缀且Key长度大于1
+		/// </summary>
 		private bool ShortOptionNeedsToBeSplit(ParsedOption parsedOption)
 		{
 			return PrefixIsShortOption(parsedOption.Prefix) && parsedOption.Key.Length > 1;
 		}
 
+		/// <summary>
+		/// 静态克隆  ParsedOption Key为之前Key的第一个字符
+		/// </summary>
 		private static IEnumerable<ParsedOption> CloneAndSplit(ParsedOption parsedOption)
 		{
 			return parsedOption.Key.Select(c => Clone(parsedOption, c)).ToList();
 		}
 
+		/// <summary>
+		/// 静态克隆  ParsedOption Key为传入的字符
+		/// </summary>
 		private static ParsedOption Clone(ParsedOption toClone, char c)
 		{
 			ParsedOption clone = toClone.Clone();
@@ -108,9 +123,12 @@ namespace Fclp.Internals.Parsing
 			return clone;
 		}
 
+		/// <summary>
+		/// 判断是否包含短前缀
+		/// </summary>
 		private bool PrefixIsShortOption(string key)
 		{
-			return _specialCharacters.ShortOptionPrefix.Contains(key);
+			return specialCharacters.ShortOptionPrefix.Contains(key);
 		}
 
 		private static void TrimSuffix(ParsedOption parsedOption)
@@ -121,16 +139,22 @@ namespace Fclp.Internals.Parsing
 			}
 		}
 
+		/// <summary>
+		/// 判断是否开始于前缀符号或者等于前缀符号 "/", "--", "-"
+		/// </summary>
 		private bool IsAKey(string arg)
 		{ 
 			return arg != null 
-				&& _specialCharacters.OptionPrefix.Any(arg.StartsWith)
-				&& _specialCharacters.OptionPrefix.Any(arg.Equals) == false;
+				&& specialCharacters.OptionPrefix.Any(arg.StartsWith)
+				&& specialCharacters.OptionPrefix.Any(arg.Equals) == false;
 		}
 
+		/// <summary>
+		/// 判断是否以结束符  "--"
+		/// </summary>
 		private bool IsEndOfOptionsKey(string arg)
 		{
-			return string.Equals(arg, _specialCharacters.EndOfOptionsKey, StringComparison.InvariantCultureIgnoreCase);
+			return string.Equals(arg, specialCharacters.EndOfOptionsKey, StringComparison.InvariantCultureIgnoreCase);
 		}
 	}
 }
