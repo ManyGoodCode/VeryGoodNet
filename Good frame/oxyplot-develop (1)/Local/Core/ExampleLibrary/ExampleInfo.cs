@@ -75,7 +75,7 @@ namespace ExampleLibrary
         public string Code => this.PlotModel?.ToCode();
 
         /// <summary>
-        /// Gets a value indicating whether the plot model is reversible.
+        /// 标识绘图模型是否可逆
         /// </summary>
         public bool IsReversible
         {
@@ -87,7 +87,7 @@ namespace ExampleLibrary
         }
 
         /// <summary>
-        /// Gets a value indicating whether the plot model is transposable.
+        /// 标识绘图模型是否可以旋转
         /// </summary>
         public bool IsTransposable
         {

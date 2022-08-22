@@ -15,12 +15,12 @@ namespace ExampleLibrary
     public enum ExampleFlags
     {
         /// <summary>
-        /// Transpose the axes, so that horizontal axes become vertical and vice versa.
+        /// 将轴转置，使水平轴变成垂直，反之亦然。 
         /// </summary>
         Transpose = 1,
 
         /// <summary>
-        /// Reverse the axes, so that their start and end positions are mirrored within the plot area.
+        /// 反转坐标轴，使它们的开始和结束位置反映在情节区域内。 
         /// </summary>
         Reverse = 2,
     }

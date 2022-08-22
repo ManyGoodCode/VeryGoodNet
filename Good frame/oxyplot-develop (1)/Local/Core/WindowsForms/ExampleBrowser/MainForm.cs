@@ -60,6 +60,9 @@
             this.reversedCheck.Enabled = this.vm.SelectedExample?.IsReversible ?? false;
         }
 
+        /// <summary>
+        /// OxyPlot.WindowsForms.PlotView 控件加载对象
+        /// </summary>
         private void InitPlot()
         {
             if (this.vm.SelectedExample == null)
@@ -69,12 +72,15 @@
             }
             else
             {
-                ExampleFlags flags = ExampleInfo.PrepareFlags(
-                    this.transposedCheck.Enabled && this.transposedCheck.Checked,
-                    this.reversedCheck.Enabled && this.reversedCheck.Checked);
+                ExampleFlags flags = ExampleInfo.PrepareFlags
+                    (
+                    // 有这一项且可以界面勾选
+                    transpose: this.transposedCheck.Enabled && this.transposedCheck.Checked,
+                    reverse: this.reversedCheck.Enabled && this.reversedCheck.Checked
+                    );
 
-                this.plot1.Model = this.vm.SelectedExample.GetModel(flags);
-                this.plot1.Controller = this.vm.SelectedExample.GetController(flags);
+                this.plot1.Model = this.vm.SelectedExample.GetModel(flags: flags);
+                this.plot1.Controller = this.vm.SelectedExample.GetController(flags: flags);
             }
         }
 
