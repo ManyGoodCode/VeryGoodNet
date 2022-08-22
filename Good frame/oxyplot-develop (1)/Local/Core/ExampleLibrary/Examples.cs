@@ -17,58 +17,62 @@ namespace ExampleLibrary
     public static class Examples
     {
         /// <summary>
-        /// Gets all examples in the specified category.
+        /// 获取 用 Type 分类类型下【递归父类也算】
+        /// 所有用  ExampleAttribute 修饰的 方法类型。返回 ExampleInfo集合
         /// </summary>
-        /// <param name="categoryType">The type of the category.</param>
         public static IEnumerable<ExampleInfo> GetCategory(Type categoryType)
         {
-            var typeInfo = categoryType.GetTypeInfo();
-            var examplesAttribute = typeInfo.GetCustomAttributes<ExamplesAttribute>().FirstOrDefault();
-            var examplesTags = typeInfo.GetCustomAttributes<TagsAttribute>().FirstOrDefault() ?? new TagsAttribute();
+            TypeInfo typeInfo = categoryType.GetTypeInfo();
+            ExamplesAttribute typeExamplesAttribute = typeInfo.GetCustomAttributes<ExamplesAttribute>().FirstOrDefault();
+            TagsAttribute typeExamplesTagsAttribute = typeInfo.GetCustomAttributes<TagsAttribute>().FirstOrDefault() ?? new TagsAttribute();
 
-            var types = new List<Type>();
-            var baseType = typeInfo;
+            List<Type> types = new List<Type>();
+            TypeInfo baseType = typeInfo;
             while (baseType != null)
             {
                 types.Add(baseType.AsType());
                 baseType = baseType.BaseType?.GetTypeInfo();
             }
 
-            foreach (var t in types)
+            foreach (Type t in types)
             {
-                foreach (var method in t.GetRuntimeMethods())
+                foreach (MethodInfo method in t.GetRuntimeMethods())
                 {
-                    var exampleAttribute = method.GetCustomAttributes<ExampleAttribute>().FirstOrDefault();
-                    if (exampleAttribute != null)
+                    ExampleAttribute methodExampleAttribute = method.GetCustomAttributes<ExampleAttribute>().FirstOrDefault();
+                    if (methodExampleAttribute != null)
                     {
-                        var exampleTags = method.GetCustomAttributes<TagsAttribute>().FirstOrDefault() ?? new TagsAttribute();
-                        var tags = new List<string>(examplesTags.Tags);
-                        tags.AddRange(exampleTags.Tags);
+                        TagsAttribute methodExampleTags = method.GetCustomAttributes<TagsAttribute>().FirstOrDefault() ?? new TagsAttribute();
+                        List<string> tags = new List<string>(typeExamplesTagsAttribute.Tags);
+                        tags.AddRange(methodExampleTags.Tags);
                         yield return
                             new ExampleInfo(
-                                examplesAttribute.Category,
-                                exampleAttribute.Title,
-                                tags.ToArray(),
-                                method,
-                                exampleAttribute.ExcludeFromAutomatedTests);
+                               category: typeExamplesAttribute.Category,
+                               title: methodExampleAttribute.Title,
+                               tags: tags.ToArray(),
+                               method: method,
+                               excludeFromAutomatedTests: methodExampleAttribute.ExcludeFromAutomatedTests);
                     }
                 }
             }
         }
 
         /// <summary>
-        /// Gets all examples.
+        /// 获取 ExampleLibrary 命名 空间下，利用 ExamplesAttribute 修饰的Type类型的
+        /// 所有用  ExampleAttribute 修饰的 方法类型。返回 ExampleInfo集合
         /// </summary>
         public static IEnumerable<ExampleInfo> GetList()
         {
-            foreach (var type in typeof(Examples).GetTypeInfo().Assembly.DefinedTypes)
+            IEnumerable<TypeInfo> typeInfos = typeof(ExampleLibrary.Examples).GetTypeInfo().Assembly.DefinedTypes;
+            foreach (TypeInfo typeInfo in typeInfos)
             {
-                if (!type.GetCustomAttributes<ExamplesAttribute>().Any())
+                if (!typeInfo.GetCustomAttributes<ExampleLibrary.ExamplesAttribute>().Any())
                 {
                     continue;
                 }
 
-                foreach (var example in GetCategory(type.AsType()))
+                Type categoryType = typeInfo.AsType();
+                IEnumerable<ExampleLibrary.ExampleInfo> exampleInfos = GetCategory(categoryType: categoryType);
+                foreach (ExampleLibrary.ExampleInfo example in exampleInfos)
                 {
                     yield return example;
                 }

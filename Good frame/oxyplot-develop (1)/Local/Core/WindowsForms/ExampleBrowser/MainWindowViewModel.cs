@@ -14,16 +14,27 @@
 
         public MainWindowViewModel()
         {
+            // Category为Type特性修饰的分类名称
+            // Title为方法特性修饰的名称
+            // Method为具体方法
             this.Examples = ExampleLibrary.Examples.GetList().OrderBy(e => e.Category);
             this.SelectedExample = this.Examples.FirstOrDefault(ei => ei.Title == Properties.Settings.Default.SelectedExample);
         }
 
+        // 接口实现
         public event PropertyChangedEventHandler PropertyChanged;
 
         public IEnumerable<ExampleInfo> Examples
         {
-            get { return this.examples; }
-            set { this.examples = value; this.RaisePropertyChanged("Examples"); }
+            get
+            { 
+                return this.examples; 
+            }
+            set 
+            {
+                this.examples = value; 
+                this.RaisePropertyChanged("Examples");
+            }
         }
 
         public ExampleInfo SelectedExample
@@ -31,7 +42,8 @@
             get { return this.selectedExample; }
             set
             {
-                this.selectedExample = value; this.RaisePropertyChanged("SelectedExample");
+                this.selectedExample = value; 
+                this.RaisePropertyChanged("SelectedExample");
                 Properties.Settings.Default.SelectedExample = value != null ? value.Title : null;
                 Properties.Settings.Default.Save();
             }

@@ -4,6 +4,7 @@
       <UseWindowsForms>true</UseWindowsForms>
     <OutputType>WinExe</OutputType>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <ApplicationIcon></ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\..\OxyPlot\OxyPlot.csproj" />

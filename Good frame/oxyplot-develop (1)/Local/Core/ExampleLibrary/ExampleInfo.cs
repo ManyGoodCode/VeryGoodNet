@@ -62,11 +62,8 @@ namespace ExampleLibrary
         }
 
         /// <summary>
-        /// Gets the category.
+        /// Type用 ExampleAttribute 修饰的名称 
         /// </summary>
-        /// <value>
-        /// The category.
-        /// </value>
         public string Category { get; }
 
         /// <summary>
@@ -214,11 +211,8 @@ namespace ExampleLibrary
         public bool ExcludeFromAutomatedTests { get; }
 
         /// <summary>
-        /// Gets the title.
+        /// 方法用 ExampleAttribute 修饰的名称
         /// </summary>
-        /// <value>
-        /// The title.
-        /// </value>
         public string Title { get; }
 
         /// <summary>
