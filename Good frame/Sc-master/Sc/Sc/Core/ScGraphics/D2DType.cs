@@ -9,9 +9,9 @@ namespace Sc
 {
     enum RenderTargetMode
     {
-        UNKNOWN,
-        WIC,
-        HWND
+        UnKonown,
+        Wic,
+        Hwnd
     }
 
     public struct D2DFont

@@ -9,6 +9,5 @@ namespace Sc
     public class ScControlCollection
     {
         Dictionary<string, ScLayer> scControlDict = new Dictionary<string, ScLayer>();
-
     }
 }

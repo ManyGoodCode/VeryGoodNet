@@ -11,7 +11,6 @@ namespace Sc
     {
         void SetClip(RectangleF clipRect);
         void ResetClip();
-
         void TranslateTransform(float dx, float dy);
         void ResetTransform();
 
