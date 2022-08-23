@@ -48,10 +48,10 @@ namespace Sc
         private ScGraphics graphics = null;
         private SizeF sizeScale;
         private GraphicsType graphicsType = GraphicsType.D2D;
-        private DrawType drawType = DrawType.NOIMAGE;
+        private DrawType drawType = DrawType.NoImage;
 
 
-        public ControlType controlType = ControlType.STDCONTROL;
+        public ControlType controlType = ControlType.StdControl;
         public Matrix matrix = new Matrix();
 
 
@@ -64,52 +64,56 @@ namespace Sc
         {
             if (isUsedUpdateLayerFrm)
             {
-                if (stdControl == null)
-                    stdControl = new UpdateLayerFrm();
-
-                Init(stdControl as UpdateLayerFrm);
+                stdControl = stdControl ?? new Sc.UpdateLayerFrm();
+                Init(form: stdControl as Sc.UpdateLayerFrm);
             }
             else
             {
-                Init(stdControl.Width, stdControl.Height, DrawType.NOIMAGE);
+                Init(width: stdControl.Width, height: stdControl.Height, drawType: DrawType.NoImage);
                 stdControl.Controls.Add(control);
             }
         }
 
-        public ScMgr(int width, int height, DrawType drawType = DrawType.NOIMAGE)
+        public ScMgr(int width, int height, DrawType drawType = DrawType.NoImage)
         {
             Init(width, height, drawType);
         }
 
 
-        void Init(int width, int height, DrawType drawType = DrawType.NOIMAGE)
+        private void Init(int width, int height, DrawType drawType = DrawType.NoImage)
         {
             cacheRootScLayer = rootScLayer;
-
             this.drawType = drawType;
             this.graphicsType = GraphicsType.D2D;
 
-            if (drawType == DrawType.NOIMAGE)
+            if (drawType == DrawType.NoImage)
             {
-                control = new ScLayerControl(this);
-                control.Width = width;
-                control.Height = height;
-                control.Dock = DockStyle.Fill;
+                control = new Sc.ScLayerControl(scMgr: this)
+                {
+                    Width = width,
+                    Height = height,
+                    Dock = DockStyle.Fill
+                };
             }
             else
             {
-                bitmap = new Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-                var wicFactory = new ImagingFactory();
-                wicBitmap = new WicBitmap(wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPBGRA, BitmapCreateCacheOption.CacheOnLoad);
+                bitmap = new System.Drawing.Bitmap(width, height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
+                wicBitmap = new SharpDX.WIC.Bitmap(
+                    factory: new SharpDX.WIC.ImagingFactory(),
+                    width: width,
+                    height: height,
+                    pixelFormat: SharpDX.WIC.PixelFormat.Format32bppPBGRA,
+                    option: SharpDX.WIC.BitmapCreateCacheOption.CacheOnLoad);
             }
 
 
             GraphicsType = graphicsType;
-
             D2DGraphics d2dGraph = (D2DGraphics)graphics;
-            Size2 pixelSize = d2dGraph.renderTarget.PixelSize;
-            Size2F logicSize = d2dGraph.renderTarget.Size;
-            sizeScale = new SizeF(logicSize.Width / pixelSize.Width, logicSize.Height / pixelSize.Height);
+            SharpDX.Size2 pixelSize = d2dGraph.renderTarget.PixelSize;
+            SharpDX.Size2F logicSize = d2dGraph.renderTarget.Size;
+            sizeScale = new System.Drawing.SizeF(
+                width: logicSize.Width / pixelSize.Width,
+                height: logicSize.Height / pixelSize.Height);
 
 
             rootScLayer.ScMgr = this;
@@ -117,26 +121,28 @@ namespace Sc
             rootScLayer.Name = "__root__";
             rootScLayer.D2DPaint += RootScControl_D2DPaint;
 
-            rootParent = new ScLayer(this);
-            rootParent.DirectionRect = rootScLayer.DirectionRect;
-            rootParent.DrawBox = rootScLayer.DirectionRect;
-            rootParent.Add(rootScLayer);
+            rootParent = new Sc.ScLayer(this)
+            {
+                DirectionRect = rootScLayer.DirectionRect,
+                DrawBox = rootScLayer.DirectionRect
+            };
 
+            rootParent.Add(rootScLayer);
             RegControlEvent();
         }
 
 
-        void Init(UpdateLayerFrm form)
+        private void Init(Sc.UpdateLayerFrm form)
         {
             cacheRootScLayer = rootScLayer;
-            drawType = DrawType.IMAGE;
-            controlType = ControlType.UPDATELAYERFORM;
+            drawType = DrawType.Image;
+            controlType = ControlType.UpdateLayerForm;
             form.scMgr = this;
             control = form;
 
             bitmap = new Bitmap(control.Width, control.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-            var wicFactory = new ImagingFactory();
+            ImagingFactory wicFactory = new ImagingFactory();
             wicBitmap = new WicBitmap(
                 wicFactory,
                 control.Width, control.Height,
@@ -163,17 +169,12 @@ namespace Sc
             rootParent.DrawBox = rootScLayer.DirectionRect;
             rootParent.Add(rootScLayer);
 
-
             RegControlEvent();
         }
 
-        public GraphicsType GraphicsType
+        public Sc.GraphicsType GraphicsType
         {
-            get
-            {
-                return graphicsType;
-            }
-
+            get { return graphicsType; }
             set
             {
                 graphicsType = value;
@@ -181,7 +182,7 @@ namespace Sc
             }
         }
 
-        public ScGraphics Graphics
+        public Sc.ScGraphics Graphics
         {
             get
             {
@@ -190,7 +191,7 @@ namespace Sc
         }
 
 
-        void CreateGraphics()
+        private void CreateGraphics()
         {
             switch (GraphicsType)
             {
@@ -200,43 +201,39 @@ namespace Sc
             }
         }
 
-
-        bool CreateD2D()
+        private bool CreateD2D()
         {
-            foreach (var item in dot9BitmaShadowDict)
+            foreach (KeyValuePair<string, Dot9BitmapD2D> item in dot9BitmaShadowDict)
             {
                 item.Value.Dispose();
             }
-            dot9BitmaShadowDict.Clear();
 
-            //
+            dot9BitmaShadowDict.Clear();
             if (graphics != null)
                 graphics.Dispose();
 
             if (cacheRootScLayer != null)
                 rootScLayer = cacheRootScLayer;
 
-            if (drawType == DrawType.NOIMAGE &&
+            if (drawType == DrawType.NoImage &&
                 (control.Width <= 0 || control.Height <= 0))
             {
                 rootScLayer = null;
                 return false;
             }
-            else if (drawType != DrawType.NOIMAGE &&
+            else if (drawType != DrawType.NoImage &&
                 (bitmap.Width <= 0 || bitmap.Height <= 0))
             {
                 rootScLayer = null;
                 return false;
             }
 
-
-            if (drawType == DrawType.NOIMAGE)
-                graphics = new D2DGraphics(control);
+            if (drawType == DrawType.NoImage)
+                graphics = new D2DGraphics(control: control);
             else
-                graphics = new D2DGraphics(wicBitmap);
+                graphics = new D2DGraphics(wicBitmap: wicBitmap);
 
-
-            foreach (ScLayer layer in rebulidLayerList)
+            foreach (Sc.ScLayer layer in rebulidLayerList)
             {
                 layer.ScReBulid();
             }
@@ -244,27 +241,26 @@ namespace Sc
             return true;
         }
 
-        void ReBulidD2D()
+        private void ReBulidD2D()
         {
-            if (drawType == DrawType.NOIMAGE)
+            if (drawType == DrawType.NoImage)
             {
-                graphics.ReSize(control.Width, control.Height);
-
-                foreach (ScLayer layer in rebulidLayerList)
+                graphics.ReSize(width: control.Width, height: control.Height);
+                foreach (Sc.ScLayer layer in rebulidLayerList)
                 {
                     layer.ScReBulid();
                 }
             }
         }
 
-        public void AddReBulidLayer(ScLayer layer)
+        public void AddReBulidLayer(Sc.ScLayer layer)
         {
             rebulidLayerList.Add(layer);
         }
 
         public void ClearBitmapRect(RectangleF clipRect)
         {
-            if (bitmap != null && controlType == ControlType.UPDATELAYERFORM)
+            if (bitmap != null && controlType == ControlType.UpdateLayerForm)
             {
                 Rectangle rc = new Rectangle(
                     (int)clipRect.Left, (int)clipRect.Top,
@@ -283,7 +279,7 @@ namespace Sc
                 RawColor4 color = GDIDataD2DUtils.TransToRawColor4(BackgroundColor.Value);
                 g.RenderTarget.Clear(color);
             }
-            else if (controlType == ControlType.UPDATELAYERFORM)
+            else if (controlType == ControlType.UpdateLayerForm)
             {
                 g.RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
             }
@@ -292,30 +288,29 @@ namespace Sc
 
         public void SetImeWindowsPos(int x, int y)
         {
-            if (controlType == ControlType.STDCONTROL)
-                ((ScLayerControl)control).SetImeWindowsPos(x, y);
+            if (controlType == ControlType.StdControl)
+                ((Sc.ScLayerControl)control).SetImeWindowsPos(x, y);
             else
-                ((UpdateLayerFrm)control).SetImeWindowsPos(x, y);
+                ((Sc.UpdateLayerFrm)control).SetImeWindowsPos(x, y);
         }
 
 
         public void PaintToBitmap()
         {
-            if (bitmap == null || drawType != DrawType.IMAGE)
+            if (bitmap == null || drawType != DrawType.Image)
                 return;
 
-            Rectangle clipRect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            System.Drawing.Rectangle clipRect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
             PaintToBitmap(clipRect);
         }
 
-        public void PaintToBitmap(Rectangle rc)
+        public void PaintToBitmap(System.Drawing.Rectangle rc)
         {
-            if (bitmap == null || drawType != DrawType.IMAGE)
+            if (bitmap == null || drawType != DrawType.Image)
                 return;
 
-            ScDrawNode rootNode;
             graphics.BeginDraw();
-            rootNode = reDrawTree.ReCreateReDrawTree(rootScLayer, rc);
+            ScDrawNode rootNode = reDrawTree.ReCreateReDrawTree(rootScLayer, rc);
             reDrawTree.Draw(graphics);
             graphics.EndDraw();
 
@@ -395,7 +390,7 @@ namespace Sc
         {
             D2DGraphics d2dGraphics = (D2DGraphics)graphics;
 
-            if (drawType == DrawType.NOIMAGE)
+            if (drawType == DrawType.NoImage)
             {
                 WindowRenderTarget wRT = (WindowRenderTarget)d2dGraphics.RenderTarget;
                 WindowState wstate = wRT.CheckWindowState();
@@ -457,7 +452,7 @@ namespace Sc
                     (int)Math.Round(refreshArea.Height) + 2);
             }
 
-            if (controlType == ControlType.UPDATELAYERFORM)
+            if (controlType == ControlType.UpdateLayerForm)
             {
                 ((UpdateLayerFrm)control).Invalidate(rect, true);
             }
@@ -865,19 +860,16 @@ namespace Sc
         }
 
 
-        void RegControlEvent()
+        private void RegControlEvent()
         {
             if (control == null)
                 return;
 
             control.MouseDown += Control_MouseDown;
-
-
             control.MouseLeave += Control_MouseLeave;
             control.MouseUp += Control_MouseUp;
             control.MouseMove += Control_MouseMove;
             control.MouseWheel += Control_MouseWheel;
-
             control.MouseDoubleClick += Control_MouseDoubleClick;
 
             control.GotFocus += Control_GotFocus;
@@ -887,17 +879,17 @@ namespace Sc
             control.SizeChanged += Control_SizeChanged;
 
 
-            if (controlType == ControlType.STDCONTROL)
+            if (controlType == ControlType.StdControl)
             {
-                ((ScLayerControl)control).CharEvent += Control_CharEvent;
-                ((ScLayerControl)control).ImeStringEvent += Control_ImeStringEvent;
-                ((ScLayerControl)control).DirectionKeyEvent += Control_KeyDown;
+                ((Sc.ScLayerControl)control).CharEvent += Control_CharEvent;
+                ((Sc.ScLayerControl)control).ImeStringEvent += Control_ImeStringEvent;
+                ((Sc.ScLayerControl)control).DirectionKeyEvent += Control_KeyDown;
             }
             else
             {
-                ((UpdateLayerFrm)control).CharEvent += Control_CharEvent;
-                ((UpdateLayerFrm)control).ImeStringEvent += Control_ImeStringEvent;
-                ((UpdateLayerFrm)control).DirectionKeyEvent += Control_KeyDown;
+                ((Sc.UpdateLayerFrm)control).CharEvent += Control_CharEvent;
+                ((Sc.UpdateLayerFrm)control).ImeStringEvent += Control_ImeStringEvent;
+                ((Sc.UpdateLayerFrm)control).DirectionKeyEvent += Control_KeyDown;
 
                 rootScLayer.MouseDown += RootScLayer_MouseDown;
                 rootScLayer.MouseUp += RootScLayer_MouseUp;

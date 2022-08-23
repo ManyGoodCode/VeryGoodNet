@@ -35,7 +35,7 @@ namespace Sc
         public ScLayer layer;
         public virtual GraphicsType GetGraphicsType()
         {
-            return GraphicsType.UNKNOWN;
+            return GraphicsType.UnKnown;
         }
          
         public virtual void BeginDraw()

@@ -112,7 +112,7 @@ namespace Sc
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
 
-             if(scMgr.GraphicsType == GraphicsType.GDIPLUS)
+             if(scMgr.GraphicsType == GraphicsType.GDIPlus)
                  SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
 
             m_hImc = ImmGetContext(this.Handle);         

@@ -11,23 +11,23 @@ namespace Sc
     
     public enum GraphicsType
     {
-        UNKNOWN,
+        UnKnown,
         D2D,
-        GDIPLUS
+        GDIPlus
     }
 
     public enum DrawType
     {
-        UNKNOWN,
-        IMAGE,
-        NOIMAGE
+        UnKnown,
+        Image,
+        NoImage
     }
 
     public enum ControlType
     {
-        UNKNOWN,
-        STDCONTROL,
-        UPDATELAYERFORM
+        UnKnown,
+        StdControl,
+        UpdateLayerForm,
     }
 
     public enum ScDockStyle

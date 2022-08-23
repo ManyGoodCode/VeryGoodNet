@@ -307,7 +307,7 @@ namespace Sc
             PointF pt = new Point(x, y);
             pt = TransLocalToGlobal(pt);
 
-            if (scMgr.controlType == ControlType.STDCONTROL)
+            if (scMgr.controlType == ControlType.StdControl)
                 ((ScLayerControl)ScMgr.control).SetImeWindowsPos((int)pt.X, (int)pt.Y);
             else
                 ((UpdateLayerFrm)ScMgr.control).SetImeWindowsPos((int)pt.X, (int)pt.Y);
@@ -1187,7 +1187,7 @@ namespace Sc
         {
             switch (scMgr.GraphicsType)
             {
-                case GraphicsType.GDIPLUS:
+                case GraphicsType.GDIPlus:
 
                     if (hitGraphicsPath == null)
                         return;
@@ -1439,7 +1439,7 @@ namespace Sc
 
             switch (scMgr.GraphicsType)
             {
-                case GraphicsType.GDIPLUS:
+                case GraphicsType.GDIPlus:
                     return transLastHitGraphicsPath.IsVisible(pt);
 
                 case GraphicsType.D2D:
