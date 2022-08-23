@@ -142,7 +142,7 @@ namespace Sc
 
             bitmap = new Bitmap(control.Width, control.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-            ImagingFactory wicFactory = new ImagingFactory();
+            SharpDX.WIC.ImagingFactory wicFactory = new SharpDX.WIC.ImagingFactory();
             wicBitmap = new WicBitmap(
                 wicFactory,
                 control.Width, control.Height,
@@ -151,20 +151,20 @@ namespace Sc
 
             form.bitmap = bitmap;
 
-            this.graphicsType = GraphicsType.D2D;
-            GraphicsType = GraphicsType.D2D;
+            this.graphicsType = Sc.GraphicsType.D2D;
+            GraphicsType = Sc.GraphicsType.D2D;
 
-            D2DGraphics d2dGraph = (D2DGraphics)graphics;
-            Size2 pixelSize = d2dGraph.renderTarget.PixelSize;
-            Size2F logicSize = d2dGraph.renderTarget.Size;
-            sizeScale = new SizeF(logicSize.Width / pixelSize.Width, logicSize.Height / pixelSize.Height);
+            Sc.D2DGraphics d2dGraph = (Sc.D2DGraphics)graphics;
+            SharpDX.Size2 pixelSize = d2dGraph.renderTarget.PixelSize;
+            SharpDX.Size2F logicSize = d2dGraph.renderTarget.Size;
+            sizeScale = new System.Drawing.SizeF(logicSize.Width / pixelSize.Width, logicSize.Height / pixelSize.Height);
 
             rootScLayer.ScMgr = this;
-            rootScLayer.Dock = ScDockStyle.Fill;
+            rootScLayer.Dock = Sc.ScDockStyle.Fill;
             rootScLayer.Name = "__root__";
             rootScLayer.D2DPaint += RootScControl_D2DPaint;
 
-            rootParent = new ScLayer(this);
+            rootParent = new Sc.ScLayer(this);
             rootParent.DirectionRect = rootScLayer.DirectionRect;
             rootParent.DrawBox = rootScLayer.DirectionRect;
             rootParent.Add(rootScLayer);
@@ -195,7 +195,7 @@ namespace Sc
         {
             switch (GraphicsType)
             {
-                case GraphicsType.D2D:
+                case Sc.GraphicsType.D2D:
                     CreateD2D();
                     break;
             }
@@ -215,23 +215,23 @@ namespace Sc
             if (cacheRootScLayer != null)
                 rootScLayer = cacheRootScLayer;
 
-            if (drawType == DrawType.NoImage &&
+            if (drawType == Sc.DrawType.NoImage &&
                 (control.Width <= 0 || control.Height <= 0))
             {
                 rootScLayer = null;
                 return false;
             }
-            else if (drawType != DrawType.NoImage &&
+            else if (drawType != Sc.DrawType.NoImage &&
                 (bitmap.Width <= 0 || bitmap.Height <= 0))
             {
                 rootScLayer = null;
                 return false;
             }
 
-            if (drawType == DrawType.NoImage)
-                graphics = new D2DGraphics(control: control);
+            if (drawType == Sc.DrawType.NoImage)
+                graphics = new Sc.D2DGraphics(control: control);
             else
-                graphics = new D2DGraphics(wicBitmap: wicBitmap);
+                graphics = new Sc.D2DGraphics(wicBitmap: wicBitmap);
 
             foreach (Sc.ScLayer layer in rebulidLayerList)
             {
@@ -243,7 +243,7 @@ namespace Sc
 
         private void ReBulidD2D()
         {
-            if (drawType == DrawType.NoImage)
+            if (drawType == Sc.DrawType.NoImage)
             {
                 graphics.ReSize(width: control.Width, height: control.Height);
                 foreach (Sc.ScLayer layer in rebulidLayerList)
@@ -258,11 +258,11 @@ namespace Sc
             rebulidLayerList.Add(layer);
         }
 
-        public void ClearBitmapRect(RectangleF clipRect)
+        public void ClearBitmapRect(System.Drawing.RectangleF clipRect)
         {
-            if (bitmap != null && controlType == ControlType.UpdateLayerForm)
+            if (bitmap != null && controlType == Sc.ControlType.UpdateLayerForm)
             {
-                Rectangle rc = new Rectangle(
+                System.Drawing.Rectangle rc = new System.Drawing.Rectangle(
                     (int)clipRect.Left, (int)clipRect.Top,
                     (int)clipRect.Width, (int)clipRect.Height);
 
@@ -272,16 +272,16 @@ namespace Sc
 
         private void RootScControl_D2DPaint(D2DGraphics g)
         {
-            RawRectangleF rect = new RawRectangleF(0, 0, rootScLayer.Width, rootScLayer.Height);
+            SharpDX.Mathematics.Interop.RawRectangleF rect = new SharpDX.Mathematics.Interop.RawRectangleF(0, 0, rootScLayer.Width, rootScLayer.Height);
 
             if (BackgroundColor != null)
             {
-                RawColor4 color = GDIDataD2DUtils.TransToRawColor4(BackgroundColor.Value);
+                SharpDX.Mathematics.Interop.RawColor4 color = Sc.GDIDataD2DUtils.TransToRawColor4(BackgroundColor.Value);
                 g.RenderTarget.Clear(color);
             }
-            else if (controlType == ControlType.UpdateLayerForm)
+            else if (controlType == Sc.ControlType.UpdateLayerForm)
             {
-                g.RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
+                g.RenderTarget.Clear(new SharpDX.Mathematics.Interop.RawColor4(0, 0, 0, 0));
             }
         }
 
@@ -310,11 +310,10 @@ namespace Sc
                 return;
 
             graphics.BeginDraw();
-            ScDrawNode rootNode = reDrawTree.ReCreateReDrawTree(rootScLayer, rc);
+            Sc.ScDrawNode rootNode = reDrawTree.ReCreateReDrawTree(rootScLayer, rc);
             reDrawTree.Draw(graphics);
             graphics.EndDraw();
-
-            if (graphicsType == GraphicsType.D2D && rootNode != null)
+            if (graphicsType == Sc.GraphicsType.D2D && rootNode != null)
             {
                 unsafe
                 {
@@ -327,53 +326,13 @@ namespace Sc
                     Rectangle bitmapRect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
                     BitmapData srcBmData = bitmap.LockBits(bitmapRect, ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-
-                    //DataPointer dataPtr = new DataPointer((IntPtr)srcBmData.Scan0, bitmap.Height * srcBmData.Stride);
-                    //wicBitmap.CopyPixels(srcBmData.Stride, dataPtr);
                     byte* ptr = (byte*)srcBmData.Scan0;
                     ptr += (int)clip.Y * srcBmData.Stride + (int)clip.X * 4;
                     DataPointer dataPtr = new DataPointer(ptr, (int)clip.Height * srcBmData.Stride);
                     RawBox box = new RawBox((int)clip.X, (int)clip.Y, (int)clip.Width, (int)clip.Height);
                     wicBitmap.CopyPixels(box, srcBmData.Stride, dataPtr);
-
-
                     bitmap.UnlockBits(srcBmData);
                 }
-
-                //unsafe
-                //{
-                //    RectangleF clip = rootNode.clipRect;
-                //    clip.X = (int)(clip.X / sizeScale.Width);
-                //    clip.Y = (int)(clip.Y / sizeScale.Height);
-                //    clip.Width = (int)(clip.Width / sizeScale.Width);
-                //    clip.Height = (int)(clip.Height / sizeScale.Height);
-                //    Rectangle bitmapRect = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
-                //    BitmapData srcBmData = bitmap.LockBits(bitmapRect, ImageLockMode.ReadWrite, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
-
-
-                //    BitmapLock bmplock = wicBitmap.Lock(BitmapLockFlags.Read);
-                //    DataRectangle dataRect = bmplock.Data;
-                //    byte* wicPtr = (byte*)dataRect.DataPointer;
-
-                //    byte* dstScan = (byte*)(srcBmData.Scan0);
-                //    byte* dstPtr = dstScan + (int)clip.Y * srcBmData.Stride + (int)clip.X * 4;
-                //    byte* srcPtr = wicPtr + (int)clip.Y * bmplock.Stride + (int)clip.X * 4;
-                //    int pos;
-
-                //    for (int i = 0; i < (int)clip.Height; i++)
-                //    {
-                //        pos = i * srcBmData.Stride;
-
-                //        for (int j = 0; j < (int)clip.Width; j++)
-                //        {
-                //            *(uint*)(dstPtr + pos) = *(uint*)(srcPtr + pos);
-                //            pos += 4;
-                //        }
-                //    }
-
-                //    bmplock.Dispose();
-                //    bitmap.UnlockBits(srcBmData);
-                //}
             }
         }
 
@@ -388,9 +347,9 @@ namespace Sc
 
         void _PaintByD2D(Rectangle refreshArea)
         {
-            D2DGraphics d2dGraphics = (D2DGraphics)graphics;
+            Sc.D2DGraphics d2dGraphics = (Sc.D2DGraphics)graphics;
 
-            if (drawType == DrawType.NoImage)
+            if (drawType == Sc.DrawType.NoImage)
             {
                 WindowRenderTarget wRT = (WindowRenderTarget)d2dGraphics.RenderTarget;
                 WindowState wstate = wRT.CheckWindowState();
@@ -403,7 +362,7 @@ namespace Sc
             }
         }
 
-        void _RenderByD2D(D2DGraphics graph, Rectangle refreshArea)
+        void _RenderByD2D(Sc.D2DGraphics graph, Rectangle refreshArea)
         {
             try
             {
