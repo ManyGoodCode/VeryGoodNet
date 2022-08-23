@@ -84,12 +84,6 @@
     <Compile Include="Utils\PrintUtils\PrinterSetting\AddPrintModuleFrm.Designer.cs">
       <DependentUpon>AddPrintModuleFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.Designer.cs">
-      <DependentUpon>CreatePrinterExSettingFrm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterDocumentPreSettingOp.cs" />
     <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterExSettingInfoOp.cs" />
     <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterSettingInfoOp.cs" />
@@ -197,9 +191,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\PrintUtils\PrinterSetting\AddPrintModuleFrm.resx">
       <DependentUpon>AddPrintModuleFrm.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.resx">
-      <DependentUpon>CreatePrinterExSettingFrm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Utils\PrintUtils\ReportView.resx">
       <DependentUpon>ReportView.cs</DependentUpon>

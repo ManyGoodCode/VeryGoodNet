@@ -1,26 +1,4 @@
-﻿//----------------------------------------------------------------------------
-// Simple Control (Sc) - Version 1.1
-// A high quality control rendering engine for C#
-// Copyright (C) 2016-2020 cymheart
-// Contact: 
-//
-// 
-// Sc is free software; you can redistribute it and/or
-// modify it under the terms of the GNU General Public License
-// as published by the Free Software Foundation; either version 2
-// of the License, or (at your option) any later version.
-// 
-// Sc is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-// 
-// You should have received a copy of the GNU General Public License
-// along with Sc; if not, write to the Free Software
-//----------------------------------------------------------------------------
-
-
-using SharpDX;
+﻿using SharpDX;
 using SharpDX.Mathematics.Interop;
 using SharpDX.WIC;
 using System;
@@ -46,44 +24,44 @@ namespace Sc
 {
     public class ScMgr : IDisposable
     {
-        ScLayer rootParent;
-        ScLayer rootScLayer = new ScLayer();      
-        ScReDrawTree reDrawTree = new ScReDrawTree();
+        private ScLayer rootParent;
+        private ScLayer rootScLayer = new ScLayer();
+        private ScReDrawTree reDrawTree = new ScReDrawTree();
+        private ScLayer cacheRootScLayer = null;
 
-        ScLayer cacheRootScLayer = null;
 
         public ScLayer FocusScControl { get; set; }
-
         public Control control;
-
         public Bitmap bitmap;
         public WicBitmap wicBitmap;
 
-        List<ScLayer> mouseMoveScControlList;
-        List<ScLayer> oldMouseMoveScControlList;
+
+        private List<ScLayer> mouseMoveScControlList;
+        private List<ScLayer> oldMouseMoveScControlList;
 
         public List<ScLayer> rebulidLayerList = new List<ScLayer>();
         public Dictionary<string, Dot9BitmapD2D> dot9BitmaShadowDict = new Dictionary<string, Dot9BitmapD2D>();
         public Color? BackgroundColor { get; set; }
         public System.Drawing.Image BackgroundImage { get; set; }
 
-        ScGraphics graphics = null;
-        SizeF sizeScale;
 
-        GraphicsType graphicsType = GraphicsType.D2D;
-        DrawType drawType = DrawType.NOIMAGE;
+        private ScGraphics graphics = null;
+        private SizeF sizeScale;
+        private GraphicsType graphicsType = GraphicsType.D2D;
+        private DrawType drawType = DrawType.NOIMAGE;
+
+
         public ControlType controlType = ControlType.STDCONTROL;
+        public Matrix matrix = new Matrix();
+
 
         private Point mouseOrgLocation; //记录鼠标指针的坐标
         private Point controlOrgLocation;
         private bool isMouseDown = false; //记录鼠标按键是否按下
 
-        public Matrix matrix = new Matrix();
-
-   
 
         public ScMgr(Control stdControl, bool isUsedUpdateLayerFrm = false)
-        {    
+        {
             if (isUsedUpdateLayerFrm)
             {
                 if (stdControl == null)
@@ -99,7 +77,7 @@ namespace Sc
         }
 
         public ScMgr(int width, int height, DrawType drawType = DrawType.NOIMAGE)
-        {       
+        {
             Init(width, height, drawType);
         }
 
@@ -116,7 +94,7 @@ namespace Sc
                 control = new ScLayerControl(this);
                 control.Width = width;
                 control.Height = height;
-                control.Dock = DockStyle.Fill;                
+                control.Dock = DockStyle.Fill;
             }
             else
             {
@@ -125,7 +103,7 @@ namespace Sc
                 wicBitmap = new WicBitmap(wicFactory, width, height, SharpDX.WIC.PixelFormat.Format32bppPBGRA, BitmapCreateCacheOption.CacheOnLoad);
             }
 
-           
+
             GraphicsType = graphicsType;
 
             D2DGraphics d2dGraph = (D2DGraphics)graphics;
@@ -147,7 +125,7 @@ namespace Sc
             RegControlEvent();
         }
 
-      
+
         void Init(UpdateLayerFrm form)
         {
             cacheRootScLayer = rootScLayer;
@@ -158,11 +136,11 @@ namespace Sc
 
             bitmap = new Bitmap(control.Width, control.Height, System.Drawing.Imaging.PixelFormat.Format32bppPArgb);
 
-            var wicFactory = new ImagingFactory();    
+            var wicFactory = new ImagingFactory();
             wicBitmap = new WicBitmap(
-                wicFactory, 
-                control.Width, control.Height, 
-                SharpDX.WIC.PixelFormat.Format32bppPBGRA, 
+                wicFactory,
+                control.Width, control.Height,
+                SharpDX.WIC.PixelFormat.Format32bppPBGRA,
                 BitmapCreateCacheOption.CacheOnLoad);
 
             form.bitmap = bitmap;
@@ -214,7 +192,7 @@ namespace Sc
 
         void CreateGraphics()
         {
-            switch(GraphicsType)
+            switch (GraphicsType)
             {
                 case GraphicsType.D2D:
                     CreateD2D();
@@ -222,7 +200,7 @@ namespace Sc
             }
         }
 
-        
+
         bool CreateD2D()
         {
             foreach (var item in dot9BitmaShadowDict)
@@ -234,8 +212,8 @@ namespace Sc
             //
             if (graphics != null)
                 graphics.Dispose();
-  
-            if(cacheRootScLayer != null)
+
+            if (cacheRootScLayer != null)
                 rootScLayer = cacheRootScLayer;
 
             if (drawType == DrawType.NOIMAGE &&
@@ -257,7 +235,7 @@ namespace Sc
             else
                 graphics = new D2DGraphics(wicBitmap);
 
-         
+
             foreach (ScLayer layer in rebulidLayerList)
             {
                 layer.ScReBulid();
@@ -268,16 +246,16 @@ namespace Sc
 
         void ReBulidD2D()
         {
-                if (drawType == DrawType.NOIMAGE)
-                {
-                    graphics.ReSize(control.Width, control.Height);
+            if (drawType == DrawType.NOIMAGE)
+            {
+                graphics.ReSize(control.Width, control.Height);
 
-                    foreach (ScLayer layer in rebulidLayerList)
-                    {
-                        layer.ScReBulid();
-                    }
+                foreach (ScLayer layer in rebulidLayerList)
+                {
+                    layer.ScReBulid();
                 }
             }
+        }
 
         public void AddReBulidLayer(ScLayer layer)
         {
@@ -289,7 +267,7 @@ namespace Sc
             if (bitmap != null && controlType == ControlType.UPDATELAYERFORM)
             {
                 Rectangle rc = new Rectangle(
-                    (int)clipRect.Left, (int)clipRect.Top, 
+                    (int)clipRect.Left, (int)clipRect.Top,
                     (int)clipRect.Width, (int)clipRect.Height);
 
                 ColorDisplace.Displace(bitmap, Color.FromArgb(0, 0, 0, 0), rc, true);
@@ -305,16 +283,16 @@ namespace Sc
                 RawColor4 color = GDIDataD2DUtils.TransToRawColor4(BackgroundColor.Value);
                 g.RenderTarget.Clear(color);
             }
-            else if(controlType == ControlType.UPDATELAYERFORM)
+            else if (controlType == ControlType.UPDATELAYERFORM)
             {
-                g.RenderTarget.Clear(new RawColor4(0,0,0,0));
+                g.RenderTarget.Clear(new RawColor4(0, 0, 0, 0));
             }
         }
 
- 
+
         public void SetImeWindowsPos(int x, int y)
         {
-            if(controlType == ControlType.STDCONTROL)
+            if (controlType == ControlType.STDCONTROL)
                 ((ScLayerControl)control).SetImeWindowsPos(x, y);
             else
                 ((UpdateLayerFrm)control).SetImeWindowsPos(x, y);
@@ -625,7 +603,7 @@ namespace Sc
 
         private void Control_GotFocus(object sender, EventArgs e)
         {
-            if(FocusScControl != null)
+            if (FocusScControl != null)
                 FocusScControl.ScGotFocus(e);
         }
 
@@ -657,7 +635,7 @@ namespace Sc
                 if (control.Visible == false)
                     continue;
 
-                Point pt = new Point((int)(e.Location.X * sizeScale.Width),(int)(e.Location.Y * sizeScale.Height));
+                Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                 ptf = control.TransGlobalToLocal(pt);
                 scMouseLocation = new PointF(ptf.X, ptf.Y);
                 mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation);
@@ -710,7 +688,7 @@ namespace Sc
         }
 
         private void Control_MouseMove(object sender, MouseEventArgs e)
-        {  
+        {
             if (e.Button == MouseButtons.Left)
             {
                 ScMouseMove(e);
@@ -725,7 +703,7 @@ namespace Sc
             ScMouseMove(e);
         }
 
-       
+
 
 
         void CheckScControlMouseMove(Point mouseLocation)
@@ -836,7 +814,7 @@ namespace Sc
                     }
                 }
 
-                if(isFind == false)
+                if (isFind == false)
                 {
                     oldControl.ScMouseLeave();
                 }
@@ -927,13 +905,13 @@ namespace Sc
             }
         }
 
-       
+
 
         public void Dispose()
         {
             if (graphics != null)
             {
-                graphics.Dispose();             
+                graphics.Dispose();
             }
 
             if (dot9BitmaShadowDict != null)
@@ -951,7 +929,7 @@ namespace Sc
                 bitmap = null;
             }
 
-            if(wicBitmap != null)
+            if (wicBitmap != null)
             {
                 wicBitmap.Dispose();
                 wicBitmap = null;
