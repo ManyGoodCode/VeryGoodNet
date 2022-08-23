@@ -1,0 +1,100 @@
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.exe.config
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\Sc.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\ThoughtWorks.QRCode.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.Direct2D1.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.Mathematics.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.DXGI.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\Sc.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.Form1.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.Properties.Resources.resources
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.csproj.GenerateResource.Cache
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.exe
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.pdb
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\DevComponents.DotNetBar2.dll
+C:\Users\Administrator\Documents\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\DevComponents.DotNetBar2.xml
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.exe.config
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.exe
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.exe
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\demo.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\Sc.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.Direct2D1.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.DXGI.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\SharpDX.Mathematics.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\ThoughtWorks.QRCode.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\DevComponents.DotNetBar2.xml
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\bin\Debug\Sc.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.Form1.resources
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.Properties.Resources.resources
+D:\我的文档\Visual Studio 2015\Projects\Sc\Sc\demo\obj\Debug\demo.csproj.GenerateResource.Cache
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\demo.exe.config
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.exe
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\demo.exe
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\demo.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\Sc.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\SharpDX.Direct2D1.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\SharpDX.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\SharpDX.DXGI.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\SharpDX.Mathematics.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\ThoughtWorks.QRCode.dll
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\DevComponents.DotNetBar2.xml
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\bin\Debug\Sc.pdb
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.csprojResolveAssemblyReference.cache
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.Form1.resources
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.Properties.Resources.resources
+D:\我的文档\Visual Studio 2015\Projects\Sc2\Sc\demo\obj\Debug\demo.csproj.GenerateResource.Cache
+D:\MyDocuments\GitHub\Sc\demo\bin\Debug\demo.exe.config
+D:\MyDocuments\GitHub\Sc\demo\bin\Debug\demo.exe
+D:\MyDocuments\GitHub\Sc\demo\bin\Debug\demo.pdb
+D:\MyDocuments\GitHub\Sc\demo\bin\Debug\DevComponents.DotNetBar2.xml
+D:\MyDocuments\GitHub\Sc\demo\bin\Debug\Sc.pdb
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.csprojAssemblyReference.cache
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.Form1.resources
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.Properties.Resources.resources
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.csproj.GenerateResource.cache
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.csproj.CoreCompileInputs.cache
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.csproj.CopyComplete
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.exe
+D:\MyDocuments\GitHub\Sc\demo\obj\Debug\demo.pdb
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\demo.exe.config
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\demo.exe
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\demo.pdb
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\Sc.pdb
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.Form1.resources
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.Properties.Resources.resources
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.csproj.GenerateResource.cache
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.csproj.CopyComplete
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.exe
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.pdb
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\Sc.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\SharpDX.Direct2D1.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\SharpDX.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\SharpDX.DXGI.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\SharpDX.Mathematics.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\bin\Debug\ThoughtWorks.QRCode.dll
+C:\Users\cym\Documents\GitHub\Sc\demo\obj\Debug\demo.csprojAssemblyReference.cache
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\demo.exe.config
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\demo.exe
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\demo.pdb
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\Sc.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\SharpDX.Direct2D1.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\SharpDX.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\SharpDX.DXGI.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\SharpDX.Mathematics.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\ThoughtWorks.QRCode.dll
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\bin\Debug\Sc.pdb
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.csproj.AssemblyReference.cache
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.Form1.resources
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.Properties.Resources.resources
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.csproj.GenerateResource.cache
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.csproj.CoreCompileInputs.cache
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.csproj.CopyComplete
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.exe
+C:\Users\H474357\Desktop\Sc-master\Sc-master\demo\obj\Debug\demo.pdb

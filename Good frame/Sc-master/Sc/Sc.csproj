@@ -1,0 +1,219 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="14.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{C4F0817D-08BE-4158-81ED-B8F04D33DC4B}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Sc</RootNamespace>
+    <AssemblyName>Sc</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="SharpDX">
+      <HintPath>bin\SharpDX.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Direct2D1">
+      <HintPath>bin\SharpDX.Direct2D1.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.DXGI">
+      <HintPath>bin\SharpDX.DXGI.dll</HintPath>
+    </Reference>
+    <Reference Include="SharpDX.Mathematics">
+      <HintPath>bin\SharpDX.Mathematics.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThoughtWorks.QRCode, Version=1.0.2774.19990, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>bin\ThoughtWorks.QRCode.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Utils\PrintUtils\CreatePrinterPreSettingFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\CreatePrinterPreSettingFrm.Designer.cs">
+      <DependentUpon>CreatePrinterPreSettingFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\Print.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterDefaultSettingOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterPreSettingOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterSetFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetFrm.designer.cs">
+      <DependentUpon>PrinterSetFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetting.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterSetting\AddPrintModuleFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetting\AddPrintModuleFrm.Designer.cs">
+      <DependentUpon>AddPrintModuleFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.Designer.cs">
+      <DependentUpon>CreatePrinterExSettingFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterDocumentPreSettingOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterExSettingInfoOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterSetting\PrinterSettingInfoOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrinterSetting\PrintModuleInfoOp.cs" />
+    <Compile Include="Utils\PrintUtils\PrintPageBase.cs" />
+    <Compile Include="Utils\PrintUtils\ReportView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Utils\PrintUtils\ReportView.Designer.cs">
+      <DependentUpon>ReportView.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sc\Animation\AnimationEffect.cs" />
+    <Compile Include="Sc\Animation\ScAnimation.cs" />
+    <Compile Include="Sc\Core\ScControlCollection.cs" />
+    <Compile Include="Sc\Core\ScDrawNode.cs" />
+    <Compile Include="Sc\Core\ScGraphics\D2DGraphics.cs" />
+    <Compile Include="Sc\Core\ScGraphics\D2DType.cs" />
+    <Compile Include="Sc\Core\ScGraphics\IScGraphics.cs" />
+    <Compile Include="Sc\Core\ScGraphics\ScGraphics.cs" />
+    <Compile Include="Sc\Core\ScLayer.cs" />
+    <Compile Include="Sc\Core\ScLayerControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Sc\Core\ScMgr.cs" />
+    <Compile Include="Sc\Core\ScMouseEventArgs.cs" />
+    <Compile Include="Sc\Core\ScObject.cs" />
+    <Compile Include="Sc\Core\ScReDrawTree.cs" />
+    <Compile Include="Sc\Core\ScType.cs" />
+    <Compile Include="Sc\Core\UpdateLayerFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Sc\Core\UpdateLayerFrm.Designer.cs">
+      <DependentUpon>UpdateLayerFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Sc\Core\Win32.cs" />
+    <Compile Include="Sc\Controls\ScButton\ScButton.cs" />
+    <Compile Include="Sc\Controls\ScButton\ScTitleButton.cs" />
+    <Compile Include="Sc\Controls\ScCheckBox\ScCheckBox.cs" />
+    <Compile Include="Sc\Controls\ScCheckBox\ScLabelCheckBox.cs" />
+    <Compile Include="Sc\Controls\ScGridView\ScGridViewCoreContainer.cs" />
+    <Compile Include="Sc\Controls\ScGridView\ScGridViewCore.cs" />
+    <Compile Include="Sc\Controls\ScGridView\ScGridView.cs" />
+    <Compile Include="Sc\Controls\ScLabel\ScLabel.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerColumnInfo.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerDoubleScreenViewport.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerHeaderItem.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerHeaderItemContainer.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerItem.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerScreen.cs" />
+    <Compile Include="Sc\Controls\ScLayerLayoutViewer\ScLayerLayoutViewerType.cs" />
+    <Compile Include="Sc\Controls\ScListView\ScListView.cs" />
+    <Compile Include="Sc\Controls\ScPanel\ScPanel.cs" />
+    <Compile Include="Sc\Controls\ScScrollBar\ScScrollBar.cs" />
+    <Compile Include="Sc\Controls\ScScrollBar\ScScrollBarSlider.cs" />
+    <Compile Include="Sc\Controls\ScScrollBar\ScScrollBarType.cs" />
+    <Compile Include="Sc\Controls\ScShadow\ScShadow.cs" />
+    <Compile Include="Sc\Controls\ScTab\ScTab.cs" />
+    <Compile Include="Sc\Controls\ScTab\ScTabHeader.cs" />
+    <Compile Include="Sc\Controls\ScTab\ScTabHeaderItem.cs" />
+    <Compile Include="Sc\Controls\ScTab\ScTabHeaderPevNextBtn.cs" />
+    <Compile Include="Sc\Controls\ScTab\SimpleTabType.cs" />
+    <Compile Include="Sc\Controls\ScTextBox\ColorDrawingEffect.cs" />
+    <Compile Include="Sc\Controls\ScTextBox\ScTextBox.cs" />
+    <Compile Include="Sc\Controls\ScTextBox\ScTextRender.cs" />
+    <Compile Include="Sc\Controls\ScTextBox\ScTextViewBox.cs" />
+    <Compile Include="Sc\Controls\ScTextBox\ScTextView.cs" />
+    <Compile Include="Utils\BarCodeAndQRCode\BarCode\Code128.cs" />
+    <Compile Include="Utils\BarCodeAndQRCode\QRCode\QRCode.cs" />
+    <Compile Include="Utils\BarCodeAndQRCode\QRCode\QRCodeInfoCapacity.cs" />
+    <Compile Include="Utils\Bitmap\D2D\Dot9BitmapD2D.cs" />
+    <Compile Include="Utils\Bitmap\GDI\BitmapProcess.cs" />
+    <Compile Include="Utils\Bitmap\GDI\ColorDisplace.cs" />
+    <Compile Include="Utils\Bitmap\GDI\Dot9Bitmap.cs" />
+    <Compile Include="Utils\Bitmap\GDI\GaussianBlur.cs" />
+    <Compile Include="Utils\CustomProperty\CustomProperty.cs" />
+    <Compile Include="Utils\CustomProperty\CustomPropertyCollection.cs" />
+    <Compile Include="Utils\CustomProperty\CustomPropertyDescriptor.cs" />
+    <Compile Include="Utils\Draw\DrawTools.cs" />
+    <Compile Include="Utils\Draw\DrawUtils.cs" />
+    <Compile Include="Utils\Draw\GDIDataD2DUtils.cs" />
+    <Compile Include="Utils\Draw\LimitBoxDrawUtils.cs" />
+    <Compile Include="Utils\File\FileDirTree.cs" />
+    <Compile Include="Utils\hook\GlobalHook.cs" />
+    <Compile Include="Utils\hook\KeyboardHook.cs" />
+    <Compile Include="Utils\hook\KeyboardSimulator.cs" />
+    <Compile Include="Utils\hook\MouseHook.cs" />
+    <Compile Include="Utils\hook\MouseSimulator.cs" />
+    <Compile Include="Utils\System\ControlPreventFlash.cs" />
+    <Compile Include="Utils\System\ExWindowsAPI.cs" />
+    <Compile Include="Utils\System\MonitorInfo.cs" />
+    <Compile Include="Utils\System\Register.cs" />
+    <Compile Include="Utils\Table\Table.cs" />
+    <Compile Include="Utils\Table\TableBaseTypes.cs" />
+    <Compile Include="Utils\Table\TableEx.cs" />
+    <Compile Include="Utils\Table\TableMgr.cs" />
+    <Compile Include="Utils\Utils.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Utils\PrintUtils\CreatePrinterPreSettingFrm.resx">
+      <DependentUpon>CreatePrinterPreSettingFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\PrintUtils\PrinterSetFrm.resx">
+      <DependentUpon>PrinterSetFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\PrintUtils\PrinterSetting\AddPrintModuleFrm.resx">
+      <DependentUpon>AddPrintModuleFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\PrintUtils\PrinterSetting\CreatePrinterExSettingFrm.resx">
+      <DependentUpon>CreatePrinterExSettingFrm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Utils\PrintUtils\ReportView.resx">
+      <DependentUpon>ReportView.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Sc\Core\UpdateLayerFrm.resx">
+      <DependentUpon>UpdateLayerFrm.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
