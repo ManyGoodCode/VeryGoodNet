@@ -13,10 +13,8 @@ namespace Demo2
 {
     public partial class Form1 : Form
     {
-        ScMgr scMgr;
-        ScLayer root;
-        App app;
-        UpdateLayerFrm frm;
+        Sc.ScMgr scMgr;
+        Demo2.App app;
         public Form1()
         {
             InitializeComponent();
@@ -29,22 +27,20 @@ namespace Demo2
 
         private void LoadModel1()
         {
-            //////////////////////////////////////////
             //透明无边框窗口测试代码，测试时打开下面的注释
-            scMgr = new ScMgr(stdControl: null, isUsedUpdateLayerFrm: true);
+            scMgr = new Sc.ScMgr(stdControl: null, isUsedUpdateLayerFrm: true);
             scMgr.BackgroundColor = Color.FromArgb(alpha: 100, red: 0, green: 0, blue: 251);
-            app = new App(scMgr: scMgr);
+            app = new Demo2.App(scMgr: scMgr);
             scMgr.ReBulid();
             scMgr.Show();
         }
 
         private void LoadModel2()
         {
-            ////////////////////////////////////
             //常规窗口测试代码，测试时打开下面的注释
-            scMgr = new ScMgr(stdControl: panel);
+            scMgr = new Sc.ScMgr(stdControl: panel);
             scMgr.BackgroundColor = Color.FromArgb(alpha: 255,red: 246,green: 245,blue: 251);
-            app = new App(scMgr: scMgr);
+            app = new Demo2.App(scMgr: scMgr);
             scMgr.ReBulid();
         }
 
