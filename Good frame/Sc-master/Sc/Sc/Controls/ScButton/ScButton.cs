@@ -28,10 +28,7 @@ namespace Sc
 
         public Color NormalColor
         {
-            get
-            {
-                return normalColor;
-            }
+            get { return normalColor; }
             set
             {
                 normalColor = value;
@@ -42,48 +39,26 @@ namespace Sc
 
         public Color EnterColor
         {
-            get
-            {
-                return enterColor;
-            }
-            set
-            {
-                enterColor = value;
-            }
+            get { return enterColor; }
+            set { enterColor = value; }
         }
 
         public Color DownColor
         {
-            get
-            {
-                return downColor;
-            }
-            set
-            {
-                downColor = value;
-            }
+            get { return downColor; }
+            set { downColor = value; }
         }
 
 
         public Color DisableColor
         {
-            get
-            {
-                return disableColor;
-            }
-            set
-            {
-                disableColor = value;
-            }
+            get { return disableColor; }
+            set { disableColor = value; }
         }
-
 
         public Color NormalFontColor
         {
-            get
-            {
-                return normalFontColor;
-            }
+            get { return normalFontColor; }
             set
             {
                 normalFontColor = value;
@@ -91,41 +66,22 @@ namespace Sc
             }
         }
 
-
         public Color EnterFontColor
         {
-            get
-            {
-                return enterFontColor;
-            }
-            set
-            {
-                enterFontColor = value;
-            }
+            get { return enterFontColor; }
+            set { enterFontColor = value; }
         }
 
         public Color DownFontColor
         {
-            get
-            {
-                return downFontColor;
-            }
-            set
-            {
-                downFontColor = value;
-            }
+            get { return downFontColor; }
+            set { downFontColor = value; }
         }
 
         public Color DisableFontColor
         {
-            get
-            {
-                return disableFontColor;
-            }
-            set
-            {
-                disableFontColor = value;
-            }
+            get { return disableFontColor; }
+            set { disableFontColor = value; }
         }
 
         public bool IsUseShadow
@@ -166,7 +122,6 @@ namespace Sc
         ScLinearAnimation linearFontG;
         ScLinearAnimation linearFontB;
 
-
         public string Text = "";
         public float RadiusX = 4;
         public float RadiusY = 4;
@@ -190,14 +145,8 @@ namespace Sc
 
         public D2DFont ForeFont
         {
-            get
-            {
-                return foreFont;
-            }
-            set
-            {
-                foreFont = value;
-            }
+            get { return foreFont; }
+            set { foreFont = value; }
         }
 
         public delegate void AnimalStopEventHandler(ScButton button);
@@ -285,8 +234,6 @@ namespace Sc
             {
                 g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
                 RawRectangleF rect = new RawRectangleF(0, 0, Width - 1, Height - 1);
-
-
                 SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, GDIDataD2DUtils.TransToRawColor4(fontColor));
                 TextFormat textFormat = new TextFormat(D2DGraphics.dwriteFactory, foreFont.FamilyName, foreFont.Weight, foreFont.Style, foreFont.Size)
                 { TextAlignment = TextAlignment.Center, ParagraphAlignment = ParagraphAlignment.Center };
@@ -398,7 +345,6 @@ namespace Sc
         public void StartFontColorAnim(Color stopFontColor)
         {
             scFontColorAnim.Stop();
-
             linearFontR = new ScLinearAnimation(fontColor.R, stopFontColor.R, scFontColorAnim);
             linearFontG = new ScLinearAnimation(fontColor.G, stopFontColor.G, scFontColorAnim);
             linearFontB = new ScLinearAnimation(fontColor.B, stopFontColor.B, scFontColorAnim);

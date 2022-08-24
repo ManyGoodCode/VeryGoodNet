@@ -11,10 +11,10 @@ using Utils;
 
 namespace Sc
 {
-    public class ScTitleButton:ScLayer
+    public class ScTitleButton : ScLayer
     {
         public Color[] colors;
-     
+
         Color color = Color.FromArgb(234, 232, 233);
         Color fontColor = Color.FromArgb(234, 232, 233);
 
@@ -22,7 +22,7 @@ namespace Sc
         Color enterColor = Color.FromArgb(248, 248, 245);
         Color downColor = Color.FromArgb(153, 114, 49);
         Color disableColor = Color.FromArgb(153, 114, 49);
-  
+
         Color normalFontColor = Color.FromArgb(255, 191, 152, 90);
         Color enterFontColor = Color.FromArgb(248, 248, 245);
         Color downFontColor = Color.FromArgb(255, 233, 233, 233);
@@ -30,10 +30,7 @@ namespace Sc
 
         public Color NormalColor
         {
-            get
-            {
-                return normalColor;
-            }
+            get { return normalColor; }
             set
             {
                 normalColor = value;
@@ -44,48 +41,27 @@ namespace Sc
 
         public Color EnterColor
         {
-            get
-            {
-                return enterColor;
-            }
-            set
-            {
-                enterColor = value;
-            }
+            get { return enterColor; }
+            set { enterColor = value; }
         }
 
         public Color DownColor
         {
-            get
-            {
-                return downColor;
-            }
-            set
-            {
-                downColor = value;
-            }
+            get { return downColor; }
+            set { downColor = value; }
         }
 
 
         public Color DisableColor
         {
-            get
-            {
-                return disableColor;
-            }
-            set
-            {
-                disableColor = value;
-            }
+            get { return disableColor; }
+            set { disableColor = value; }
         }
 
 
         public Color NormalFontColor
         {
-            get
-            {
-                return normalFontColor;
-            }
+            get { return normalFontColor; }
             set
             {
                 normalFontColor = value;
@@ -96,38 +72,20 @@ namespace Sc
 
         public Color EnterFontColor
         {
-            get
-            {
-                return enterFontColor;
-            }
-            set
-            {
-                enterFontColor = value;
-            }
+            get { return enterFontColor; }
+            set { enterFontColor = value; }
         }
 
         public Color DownFontColor
         {
-            get
-            {
-                return downFontColor;
-            }
-            set
-            {
-                downFontColor = value;
-            }
+            get { return downFontColor; }
+            set { downFontColor = value; }
         }
 
         public Color DisableFontColor
         {
-            get
-            {
-                return disableFontColor;
-            }
-            set
-            {
-                disableFontColor = value;
-            }
+            get { return disableFontColor; }
+            set { disableFontColor = value; }
         }
 
 
@@ -160,20 +118,14 @@ namespace Sc
                 scFontColorAnim.animMS = value;
             }
         }
-            
+
 
         D2DFont foreFont = new D2DFont("微软雅黑", 12);
 
         public D2DFont ForeFont
         {
-            get
-            {
-                return foreFont;
-            }
-            set
-            {
-                foreFont = value;
-            }
+            get { return foreFont; }
+            set { foreFont = value; }
         }
 
         public delegate void AnimalStopEventHandler(ScTitleButton button);
@@ -183,7 +135,7 @@ namespace Sc
         public event PaintEventHandler PaintEvent = null;
 
         public ScTitleButton(ScMgr scmgr = null)
-            :base(scmgr)
+            : base(scmgr)
         {
             colors = new Color[]
             {
@@ -208,14 +160,6 @@ namespace Sc
             this.MouseLeave += ScButton_MouseLeave;
 
             this.D2DPaint += ScButton_D2DPaint;
- 
-
-            //scAnim = new ScAnimation(this, animMS, true);
-            //scAnim.AnimationEvent += ScAnim_AnimationEvent;
-
-            //scFontColorAnim = new ScAnimation(this, animMS, true);
-            //scFontColorAnim.AnimationEvent += ScFontColorAnim_AnimationEvent;
-
 
             IsUseOrgHitGeometry = false;
 
@@ -225,7 +169,7 @@ namespace Sc
 
         }
 
-       
+
         private void ScButton_D2DPaint(D2DGraphics g)
         {
             FillItemGeometry(g);
@@ -300,10 +244,8 @@ namespace Sc
             gradientStops[4].Color = GDIDataD2DUtils.TransToRawColor4(colors[2]);
             gradientStops[4].Position = 1f;
 
-            //
             gradientStopCollection = new GradientStopCollection(g.RenderTarget, gradientStops, Gamma.StandardRgb, ExtendMode.Clamp);
 
-            //
             props = new LinearGradientBrushProperties()
             {
                 StartPoint = new RawVector2(rect.Left, rect.Top),
@@ -313,9 +255,6 @@ namespace Sc
 
             linearGradientBrush = new SharpDX.Direct2D1.LinearGradientBrush(g.RenderTarget, props, gradientStopCollection);
             g.RenderTarget.FillRoundedRectangle(roundedRect, linearGradientBrush);
-
-
-          
 
             RawColor4 rawColor = GDIDataD2DUtils.TransToRawColor4(Color.FromArgb(SideShadowAlpha, 0, 0, 0));
             SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, rawColor);
@@ -339,9 +278,6 @@ namespace Sc
                 g.RenderTarget.DrawText(Text, textFormat, rect, brush, DrawTextOptions.Clip);
             }
         }
-
-
-
 
         private void ScButton_SizeChanged(object sender, SizeF oldSize)
         {
@@ -379,8 +315,6 @@ namespace Sc
             return roundedRectGeo;
         }
 
-
-      
         private void ScButton_MouseDown(object sender, ScMouseEventArgs e)
         {
             StartAnim(downColor);
@@ -399,7 +333,6 @@ namespace Sc
             StartFontColorAnim(enterFontColor);
         }
 
-
         private void ScButton_MouseLeave(object sender)
         {
             StartAnim(normalColor);
@@ -411,14 +344,10 @@ namespace Sc
             StartAnim(normalColor);
             StartFontColorAnim(normalFontColor);
         }
+
         public void StartAnim(Color stopColor)
         {
-            //scAnim.Stop();
 
-            //linearR = new ScLinearAnimation(color.R, stopColor.R, scAnim);
-            //linearG = new ScLinearAnimation(color.G, stopColor.G, scAnim);
-            //linearB = new ScLinearAnimation(color.B, stopColor.B, scAnim);
-            //scAnim.Start();
         }
 
         private void ScAnim_AnimationEvent(ScAnimation scAnimation)
@@ -449,12 +378,7 @@ namespace Sc
 
         public void StartFontColorAnim(Color stopFontColor)
         {
-            //scFontColorAnim.Stop();
 
-            //linearFontR = new ScLinearAnimation(fontColor.R, stopFontColor.R, scFontColorAnim);
-            //linearFontG = new ScLinearAnimation(fontColor.G, stopFontColor.G, scFontColorAnim);
-            //linearFontB = new ScLinearAnimation(fontColor.B, stopFontColor.B, scFontColorAnim);
-            //scFontColorAnim.Start();
         }
 
         private void ScFontColorAnim_AnimationEvent(ScAnimation scAnimation)

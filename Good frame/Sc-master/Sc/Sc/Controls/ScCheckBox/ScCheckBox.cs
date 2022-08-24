@@ -15,7 +15,7 @@ namespace Sc
         public float boxSideWidth = 1;
         public Color BoxColor = Color.FromArgb(255, 150, 150, 150);
         public Color FillInBoxColor = Color.FromArgb(85, 121, 198, 248);
-        public Color CheckColor = Color.FromArgb(255, 255,  0, 0);
+        public Color CheckColor = Color.FromArgb(255, 255, 0, 0);
 
         public int CheckType = 0;
         public Margin FillMargin = new Margin(2, 2, 3, 3);
@@ -30,7 +30,7 @@ namespace Sc
             {
                 isChecked = value;
 
-                if(DrawCheckLayer != null)
+                if (DrawCheckLayer != null)
                     DrawCheckLayer.Refresh();
             }
         }
@@ -39,10 +39,10 @@ namespace Sc
 
         int state = 0;
         bool isChecked = false;
-       
+
 
         public ScCheckBox(ScMgr scmgr = null)
-            :base(scmgr)
+            : base(scmgr)
         {
             DrawCheckLayer = new ScLayer(scmgr);
             Add(DrawCheckLayer);
@@ -83,19 +83,19 @@ namespace Sc
 
         private void ScCheckBox_MouseDown(object sender, ScMouseEventArgs e)
         {
-            state = 2;        
+            state = 2;
             Refresh();
         }
 
         public void SetDrawCheckDirectParentLayer(ScLayer directParent)
         {
-            if(CheckType == 0)
+            if (CheckType == 0)
                 DrawCheckLayer.DirectParentClipLayer = directParent;
         }
 
         private void DrawCheckLayer_D2DPaint(D2DGraphics g)
         {
-            if(isChecked)
+            if (isChecked)
                 DrawCheck(g);
         }
 
@@ -117,12 +117,10 @@ namespace Sc
 
         }
 
-       
-
         private void ScCheckBox_D2DPaint(D2DGraphics g)
         {
-        
-            switch(state)
+
+            switch (state)
             {
                 case 0:
                     PaintState0(g);
@@ -148,7 +146,7 @@ namespace Sc
             g.RenderTarget.DrawRectangle(rect, brush, boxSideWidth);
             brush.Dispose();
 
-            if(IsUseInFill)
+            if (IsUseInFill)
                 FillIn(g, Color.FromArgb(50, BoxColor.R, BoxColor.G, BoxColor.B));
         }
 
@@ -175,7 +173,6 @@ namespace Sc
                 FillIn2(g, FillInBoxColor);
         }
 
-
         void PaintState2(D2DGraphics g)
         {
             g.RenderTarget.AntialiasMode = AntialiasMode.Aliased;
@@ -201,9 +198,8 @@ namespace Sc
 
             if (IsUseInFill2)
                 FillIn2(g, Color.FromArgb(FillInBoxColor.A, R, G, B));
- 
-        }
 
+        }
 
         void FillIn(D2DGraphics g, Color boxColor)
         {
@@ -218,10 +214,8 @@ namespace Sc
             g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
             GradientStop[] gradientStops = new GradientStop[3];
 
-        
             gradientStops[0].Color = GDIDataD2DUtils.TransToRawColor4(Color.FromArgb(255, boxColor.R, boxColor.G, boxColor.B));
             gradientStops[0].Position = 0f;
-
 
             gradientStops[1].Color = GDIDataD2DUtils.TransToRawColor4(Color.FromArgb(20, boxColor.R, boxColor.G, boxColor.B));
             gradientStops[1].Position = 0.5f;
@@ -242,7 +236,6 @@ namespace Sc
             g.RenderTarget.FillRectangle(fillRect, linearGradientBrush);
             gradientStopCollection.Dispose();
             linearGradientBrush.Dispose();
-       
         }
 
         void FillIn2(D2DGraphics g, Color boxColor)
@@ -283,13 +276,13 @@ namespace Sc
             g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
             Geometry checkGeometry = null;
 
-            switch(CheckType)
+            switch (CheckType)
             {
                 case 0: checkGeometry = CreateCheckGeometry0(g); break;
                 case 1: checkGeometry = CreateCheckGeometry1(g); break;
                 default: checkGeometry = CreateCheckGeometry0(g); break;
             }
-            
+
             RawColor4 rawColor = GDIDataD2DUtils.TransToRawColor4(CheckColor);
             SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, rawColor);
             g.RenderTarget.FillGeometry(checkGeometry, brush);
@@ -297,7 +290,6 @@ namespace Sc
             checkGeometry.Dispose();
         }
 
-  
         Geometry CreateCheckGeometry0(D2DGraphics g)
         {
             RectangleF rect = new RectangleF(0, Height, Width, Height);
@@ -312,10 +304,8 @@ namespace Sc
 
             pSink.BeginFigure(new RawVector2(rect.Left, rect.Top), FigureBegin.Filled);
 
-
-    
             RawVector2[] points =
-                {
+             {
                 new RawVector2(rect.Left + w, rect.Top + h * 2),
                 new RawVector2(rect.Right + w, rect.Top - h * 2),
                 new RawVector2(rect.Left + w, rect.Bottom),
@@ -329,11 +319,9 @@ namespace Sc
             return pathGeometry;
         }
 
-
-
         Geometry CreateCheckGeometry1(D2DGraphics g)
         {
-            RectangleF rect = new RectangleF(FillMargin.left , FillMargin.top , Width - FillMargin.right - FillMargin.left, Height - FillMargin.bottom - FillMargin.top);
+            RectangleF rect = new RectangleF(FillMargin.left, FillMargin.top, Width - FillMargin.right - FillMargin.left, Height - FillMargin.bottom - FillMargin.top);
 
             float w = rect.Width / 2;
             float h2 = rect.Height / 2;
@@ -346,8 +334,6 @@ namespace Sc
             pSink.SetFillMode(SharpDX.Direct2D1.FillMode.Winding);
 
             pSink.BeginFigure(new RawVector2(rect.Left, rect.Top + h2), FigureBegin.Filled);
-
-
 
             RawVector2[] points =
                 {

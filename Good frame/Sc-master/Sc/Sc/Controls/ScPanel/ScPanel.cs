@@ -9,13 +9,10 @@ using System.Threading.Tasks;
 
 namespace Sc
 {
-    public class ScPanel: ScLayer
+    public class ScPanel : ScLayer
     {
-
-
-
         public ScPanel(ScMgr scmgr = null)
-            :base(scmgr)
+            : base(scmgr)
         {
             ScShadow shadow = new ScShadow(scmgr);
             shadow.CornersRadius = 4;
@@ -36,7 +33,7 @@ namespace Sc
             if (ShadowLayer != null)
             {
                 ScShadow shadow = (ScShadow)ShadowLayer;
-                shadow.Location = new PointF(DirectionRect.X - shadow.ShadowRadius, DirectionRect.Y - shadow.ShadowRadius );
+                shadow.Location = new PointF(DirectionRect.X - shadow.ShadowRadius, DirectionRect.Y - shadow.ShadowRadius);
             }
         }
 

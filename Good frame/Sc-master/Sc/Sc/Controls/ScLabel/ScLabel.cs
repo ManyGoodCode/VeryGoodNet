@@ -12,7 +12,7 @@ using Utils;
 
 namespace Sc
 {
-    public class ScLabel: ScLayer
+    public class ScLabel : ScLayer
     {
         public string Text = null;
         public object Value = null;
@@ -24,7 +24,7 @@ namespace Sc
         public Margin TextPadding = new Margin(0, 0, 0, 0);
 
         public ScLabel(ScMgr scmgr)
-            :base(scmgr)
+            : base(scmgr)
         {
             foreFont = new D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular);
             D2DPaint += ScLabel_D2DPaint;
@@ -32,17 +32,11 @@ namespace Sc
 
         public D2DFont ForeFont
         {
-            get
-            {
-                return foreFont;
-            }
-            set
-            {
-                foreFont = value;
-            }
+            get { return foreFont; }
+            set { foreFont = value; }
         }
 
-   
+
         private void ScLabel_D2DPaint(D2DGraphics g)
         {
 
