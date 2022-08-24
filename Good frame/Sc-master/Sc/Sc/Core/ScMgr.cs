@@ -88,6 +88,7 @@ namespace Sc
 
             if (drawType == DrawType.NoImage)
             {
+                // 创建Control
                 control = new Sc.ScLayerControl(scMgr: this)
                 {
                     Width = width,

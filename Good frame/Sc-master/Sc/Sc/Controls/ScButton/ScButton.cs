@@ -11,9 +11,8 @@ using Utils;
 
 namespace Sc
 {
-    public class ScButton:ScLayer
+    public class ScButton : ScLayer
     {
-     
         Color color = Color.FromArgb(234, 232, 233);
         Color fontColor = Color.FromArgb(234, 232, 233);
 
@@ -21,7 +20,7 @@ namespace Sc
         Color enterColor = Color.FromArgb(248, 248, 245);
         Color downColor = Color.FromArgb(153, 114, 49);
         Color disableColor = Color.FromArgb(153, 114, 49);
-  
+
         Color normalFontColor = Color.FromArgb(255, 191, 152, 90);
         Color enterFontColor = Color.FromArgb(248, 248, 245);
         Color downFontColor = Color.FromArgb(255, 233, 233, 233);
@@ -185,7 +184,7 @@ namespace Sc
                 scFontColorAnim.animMS = value;
             }
         }
-            
+
 
         D2DFont foreFont = new D2DFont("微软雅黑", 12);
 
@@ -208,8 +207,8 @@ namespace Sc
         public event PaintEventHandler PaintEvent = null;
 
         public ScButton(ScMgr scmgr = null)
-            :base(scmgr)
-        { 
+            : base(scmgr)
+        {
             D2DPaint += ScButton_D2DPaint;
 
 
@@ -226,7 +225,7 @@ namespace Sc
             this.MouseLeave += ScButton_MouseLeave;
 
             this.D2DPaint += ScButton_D2DPaint;
- 
+
 
             scAnim = new ScAnimation(this, animMS, true);
             scAnim.AnimationEvent += ScAnim_AnimationEvent;
@@ -336,7 +335,7 @@ namespace Sc
         }
 
 
-     
+
         private void ScButton_MouseDown(object sender, ScMouseEventArgs e)
         {
             StartAnim(downColor);
@@ -395,7 +394,7 @@ namespace Sc
                     AnimalStopEvent(this);
             }
         }
-     
+
         public void StartFontColorAnim(Color stopFontColor)
         {
             scFontColorAnim.Stop();

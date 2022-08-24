@@ -13,9 +13,69 @@ using Utils;
 
 namespace Sc
 {
-    public class ScLayer : ScObject,IDisposable
+    public class ScLayer : ScObject, IDisposable
     {
-        public ScLayer(ScMgr scmgr = null)
+        // 背景色
+        public Color? BackgroundColor
+        {
+            get { return backgroundColor; }
+            set { backgroundColor = value; }
+        }
+
+        public bool Enable = true;
+
+        // 直接作用的父裁剪层
+        public Sc.ScLayer DirectParentClipLayer
+        {
+            get { return directParentClipLayer; }
+            set { directParentClipLayer = value; }
+        }
+
+        // 设置阴影层
+        public Sc.ScLayer ShadowLayer
+        {
+            get { return shadowLayer; }
+            set { shadowLayer = value; }
+        }
+
+
+        public RectangleF DrawBox
+        {
+            get { return drawBox; }
+            set { drawBox = value; }
+        }
+
+        public int VisibleAnimMS
+        {
+            get { return visibleAnimMS; }
+            set
+            {
+                visibleAnimMS = value;
+                visableAnim.animMS = value;
+            }
+        }
+
+
+        // 锚点位置
+        public PointF Anchor
+        {
+            get { return anchor; }
+            set { anchor = value; }
+        }
+
+        public Sc.ScMgr ScMgr
+        {
+            get { return scMgr; }
+            set { scMgr = value; }
+        }
+
+        public Sc.ScDockStyle Dock
+        {
+            get { return dock; }
+            set { dock = value; }
+        }
+
+        public ScLayer(Sc.ScMgr scmgr = null)
         {
             ScMgr = scmgr;
             Opacity = 1.0f;
@@ -23,41 +83,12 @@ namespace Sc
             MouseEnter += ScControl_MouseEnter;
             MouseLeave += ScControl_MouseLeave;
 
-            visableAnim = new ScAnimation(this, VisibleAnimMS, true);
+            visableAnim = new ScAnimation(layer: this, animMS: VisibleAnimMS, autoRest: true);
             visableAnim.AnimationEvent += VisibleAnim_AnimationEvent;
         }
 
-        ~ScLayer()
-        {
-            this.Dispose();
-        }
-
-        public virtual void Dispose()
-        {
-            dispose = true;
-            ReleaseSelfTransformInfo();
-
-            directClipChildLayerList.Clear();
-
-            foreach (ScAnimation anim in animationList)
-            {
-                anim.Dispose();
-            }
-
-            foreach (ScLayer clayer in controls)
-            { 
-                clayer.Dispose();      
-            }
-
-            animationList.Clear();
-            directClipChildLayerList.Clear();
-            controls.Clear();
-
-            GC.SuppressFinalize(this);
-        }
-
         #region 内部参数
-        
+
         ScLayer parent;
         public List<ScLayer> controls = new List<ScLayer>();
 
@@ -86,29 +117,16 @@ namespace Sc
         List<ScAnimation> animationList = new List<ScAnimation>();
         ScLayer shadowLayer;
 
-        /// <summary>
-        /// 相对于父的子矩形 
-        /// </summary>
-        RectangleF boundBox = RectangleF.Empty;
-
-        /// <summary>
-        /// 全局重绘rect
-        /// </summary>
+        // 全局重绘rect
         RectangleF drawBox = RectangleF.Empty;
 
-        /// <summary>
-        /// 变换后的layer显示区域点的位置
-        /// </summary>
+        // 变换后的layer显示区域点的位置
         PointF[] transLastPts;
 
-        /// <summary>
-        /// 变换后的点击PathGeometry 
-        /// </summary>
+        // 变换后的点击PathGeometry 
         Geometry transLastHitPathGeometry;
 
-        /// <summary>
-        /// 变换后的点击GraphicsPath
-        /// </summary>
+        // 变换后的点击GraphicsPath
         GraphicsPath transLastHitGraphicsPath;
 
         PointF anchor = new PointF(0, 0);
@@ -125,12 +143,9 @@ namespace Sc
         bool isUseDebugPanitCode = false;
         bool usePosttreatmentEffect = false;
         bool useHitGeometryLayerBound = false;
-  
-        //
         bool isComputedStraight = false;
-
-
         #endregion
+
 
         #region 读写参数设置(普通参数设置，不会对布局重绘参数影响)
 
@@ -160,17 +175,13 @@ namespace Sc
             }
         }
 
-        /// <summary>
-        /// 是否为计算后的正矩形区域
-        /// </summary>
+        // 是否为计算后的正矩形区域
         public bool IsComputedStraight
         {
             get { return isComputedStraight; }
         }
 
-        /// <summary>
-        /// 是否层全局DrawBox在根DrawBox范围内
-        /// </summary>
+        // 是否层全局DrawBox在根DrawBox范围内
         public bool IsNotAtRootDrawBoxBound
         {
             get { return isNotAtRootDrawBoxBound; }
@@ -178,43 +189,28 @@ namespace Sc
 
         public Geometry TransLastHitPathGeometry
         {
-            get
-            {
-                return transLastHitPathGeometry;
-            }
+            get { return transLastHitPathGeometry; }
         }
 
 
         public GraphicsPath TransLastHitGraphicsPath
         {
-            get
-            {
-                return transLastHitGraphicsPath;
-            }
+            get { return transLastHitGraphicsPath; }
         }
 
         public Matrix DrawGlobalMatrix
         {
-            get
-            {
-                return drawGlobalMatrix;
-            }
+            get { return drawGlobalMatrix; }
         }
 
         public PointF[] TransLastPts
         {
-            get
-            {
-                return transLastPts;
-            }
+            get { return transLastPts; }
         }
 
         public bool Focused
         {
-            get
-            {
-                return focus;
-            }
+            get { return focus; }
         }
 
         public string Name { get; set; }
@@ -222,28 +218,14 @@ namespace Sc
 
         public object Tag
         {
-            get
-            {
-                return tag;
-            }
-
-            set
-            {
-                tag = value;
-            }
+            get { return tag; }
+            set { tag = value; }
         }
 
         public Cursor Cursor
         {
-            get
-            {
-                return cursor;
-            }
-
-            set
-            {
-                cursor = value;
-            }
+            get { return cursor; }
+            set { cursor = value; }
         }
 
 
@@ -265,10 +247,8 @@ namespace Sc
             {
                 EventArgs e = new EventArgs();
                 ScLayer oldFocus = scMgr.FocusScControl;
-
                 if (oldFocus != null)
                     oldFocus.ScLostFocus(e);
-
                 scMgr.FocusScControl = this;
                 ScGotFocus(e);
                 return true;
@@ -282,7 +262,6 @@ namespace Sc
         {
             PointF pt = new Point(x, y);
             pt = TransLocalToGlobal(pt);
-
             if (scMgr.controlType == ControlType.StdControl)
                 ((ScLayerControl)ScMgr.control).SetImeWindowsPos((int)pt.X, (int)pt.Y);
             else
@@ -303,35 +282,21 @@ namespace Sc
         public Margin Padding = new Margin(0, 0, 0, 0);
 
         public bool IsComputeBoundBox = false;
-
         public bool IsRender = true;
 
-        /// <summary>
-        /// 是否使用原始方形点击区域
-        /// </summary>
+        // 是否使用原始方形点击区域
         public bool IsUseOrgHitGeometry = true;
 
-        /// <summary>
-        /// 是否使用点击区域作为层边界
-        /// </summary>
+        // 是否使用点击区域作为层边界
         public bool IsUseHitGeometryLayerBound = false;
 
-
-        /// <summary>
-        /// 是否使用整型坐标绘制控件
-        /// </summary>
+        // 是否使用整型坐标绘制控件
         public bool IsUseIntegerCoordDraw = true;
 
-      
-        /// <summary>
-        /// 事件是否可以穿透当前层,作用于父层，或兄弟层次
-        /// </summary>
+        // 事件是否可以穿透当前层,作用于父层，或兄弟层次
         public bool IsHitThrough = true;
 
-      
-        /// <summary>
-        /// 层隐藏显示切换过渡时间
-        /// </summary>
+        // 层隐藏显示切换过渡时间
         public int visibleAnimMS = 20;
 
         /// <summary>
@@ -355,116 +320,6 @@ namespace Sc
 #endif
             }
         }
-
-        /// <summary>
-        /// 背景色
-        /// </summary>
-        public Color? BackgroundColor
-        {
-            get
-            {
-                return backgroundColor;
-            }
-            set
-            {
-                backgroundColor = value;
-            }
-        }
-
-        public bool Enable = true;
-
-        /// <summary>
-        /// 直接作用的父裁剪层
-        /// </summary>
-        public ScLayer DirectParentClipLayer
-        {
-            get { return directParentClipLayer; }
-
-            set
-            {
-                directParentClipLayer = value;       
-            }
-        }
-
-
-        /// <summary>
-        /// 设置阴影层
-        /// </summary>
-        public ScLayer ShadowLayer
-        {
-            get { return shadowLayer; }
-
-            set
-            {
-                shadowLayer = value;         
-            }
-        }
-
-
-        public RectangleF DrawBox
-        {
-            get
-            {
-                return drawBox;
-            }
-
-            set
-            {
-                drawBox = value;
-            }
-        }
-
-        public int VisibleAnimMS
-        {
-            get { return visibleAnimMS; }
-            set
-            {
-                visibleAnimMS = value;
-                visableAnim.animMS = value;
-            }
-        }
-
-
-        /// <summary>
-        /// 锚点位置
-        /// </summary>
-        public PointF Anchor
-        {
-            get
-            {
-                return anchor;
-            }
-            set
-            {
-                anchor = value;
-            }
-        }
-
-        public ScMgr ScMgr
-        {
-            get
-            {
-                return scMgr;
-            }
-            set
-            {
-                scMgr = value;
-            }
-        }
-
-        public ScDockStyle Dock
-        {
-            get
-            {
-                return dock;
-            }
-
-            set
-            {
-                dock = value;
-            }
-        }
-
 
 
         #endregion
@@ -510,16 +365,13 @@ namespace Sc
             }
         }
 
-        /// <summary>
-        /// 层透明度设置
-        /// </summary>
+        // 层透明度设置
         public float Opacity
         {
             get { return opacity; }
             set
             {
                 opacity = value;
-
                 if (IsStraightRectArea())
                     isComputedStraight = true;
                 else
@@ -528,9 +380,7 @@ namespace Sc
         }
 
 
-        /// <summary>
-        /// 后处理特效
-        /// </summary>
+        // 后处理特效
         public bool UsePosttreatmentEffect
         {
             get { return usePosttreatmentEffect; }
@@ -545,16 +395,13 @@ namespace Sc
             }
         }
 
-        /// <summary>
-        /// 后处理特效
-        /// </summary>
+        // 后处理特效
         public bool UseHitGeometryLayerBound
         {
             get { return useHitGeometryLayerBound; }
             set
             {
                 useHitGeometryLayerBound = value;
-
                 if (IsStraightRectArea())
                     isComputedStraight = true;
                 else
@@ -572,7 +419,6 @@ namespace Sc
             {
                 return new PointF(directionRect.X, directionRect.Y);
             }
-
             set
             {
                 if (directionRect.X != value.X || directionRect.Y != value.Y)
@@ -582,7 +428,6 @@ namespace Sc
 
                     directionRect.X = value.X;
                     directionRect.Y = value.Y;
-
                     ScLocationChanged(new PointF(oldValueX, oldValueY));
                 }
 
@@ -596,7 +441,6 @@ namespace Sc
             {
                 return directionRect.Width;
             }
-
             set
             {
                 if (directionRect.Width != value)
@@ -689,10 +533,7 @@ namespace Sc
             }
         }
 
-        /// <summary>
-        /// 根据Dock类型设置层的宽高，位置
-        /// </summary>
-        /// <param name="parent"></param>
+        // 根据Dock类型设置层的宽高，位置
         public bool SetDirectionRectByDockType()
         {
             float x, y, w, h;
@@ -739,7 +580,8 @@ namespace Sc
                     {
                         Location = new PointF((int)x, (int)y);
                     }
-                    else {
+                    else
+                    {
                         Location = new PointF(x, y);
                     }
 
@@ -779,7 +621,7 @@ namespace Sc
                 scaleX = value;
                 localMatrix = new Matrix();
 
-                if(rotateAngle != 0)
+                if (rotateAngle != 0)
                     localMatrix.Rotate(rotateAngle);
 
                 localMatrix.Scale(scaleX, scaleY);
@@ -812,7 +654,7 @@ namespace Sc
 
 
 
-      
+
 
         #endregion
 
@@ -829,10 +671,9 @@ namespace Sc
             controls.Add(childLayer);
 
             childLayer.CreateContextRelationInfo();
-
             if (suspendLayoutCount == 0)
                 childLayer.Layout();
-    
+
         }
 
 
@@ -863,7 +704,7 @@ namespace Sc
 
         public void CreateContextRelationInfo()
         {
-            if (ReBulid != null && 
+            if (ReBulid != null &&
                 !scMgr.rebulidLayerList.Contains(this))
             {
                 scMgr.AddReBulidLayer(this);
@@ -885,9 +726,9 @@ namespace Sc
         }
 
         public void Remove(ScLayer childLayer)
-        {       
+        {
             childLayer.RemoveContextRelationInfo();
-            childLayer.Dispose();     
+            childLayer.Dispose();
             controls.Remove(childLayer);
         }
 
@@ -919,7 +760,7 @@ namespace Sc
         }
 
         #endregion
- 
+
         #region 布局控制
         public void SuspendLayout()
         {
@@ -981,9 +822,9 @@ namespace Sc
         {
             int ret;
 
-            if (ScMgr == null || 
-                parent == null  ||
-                parent.globalMatrix == null || 
+            if (ScMgr == null ||
+                parent == null ||
+                parent.globalMatrix == null ||
                 ScMgr.GetRootLayer() == null)
             {
                 return -1;
@@ -1000,15 +841,11 @@ namespace Sc
         {
 
             RectangleF rootDrawBox = parent.ScMgr.GetRootLayer().DrawBox;
-
-            //
             if (IsStraightRectArea())
             {
                 isComputedStraight = true;
                 globalMatrix = new Matrix(1, 0, 0, 1, parent.DrawBox.X + directionRect.Left, parent.DrawBox.Y + directionRect.Top);
                 drawBox = new RectangleF(globalMatrix.Elements[4], globalMatrix.Elements[5], Width, Height);
-
-                //
                 if (!rootDrawBox.IntersectsWith(drawBox))
                 {
                     isNotAtRootDrawBoxBound = true;
@@ -1016,12 +853,11 @@ namespace Sc
                 }
 
                 isNotAtRootDrawBoxBound = false;
-                boundBox = directionRect;
 
                 if (!IsUseOrgHitGeometry)
                 {
                     //获取点击区域
-                    _CreateHitGeometry();
+                    CreateHitGeometry();
 
                     //获取变换后点击区域
                     ComputeTransLastHitGeometry();
@@ -1054,17 +890,9 @@ namespace Sc
             invertGlobalMatrix = globalMatrix.Clone();
             invertGlobalMatrix.Invert();
 
-            //获取自身包围框
-            if (IsComputeBoundBox)
-            {
-                Matrix m = new Matrix();
-                PointF[] pts = null;
-                boundBox = ComputeBoundBox(m, ref pts);
-            }
 
-              
             //获取点击区域
-            _CreateHitGeometry();
+            CreateHitGeometry();
 
             //获取变换后点击区域
             ComputeTransLastHitGeometry();
@@ -1131,7 +959,7 @@ namespace Sc
             return boundBox;
         }
 
-        private void _CreateHitGeometry()
+        private void CreateHitGeometry()
         {
             if (hitGraphicsPath != null)
                 hitGraphicsPath.Dispose();
@@ -1153,8 +981,8 @@ namespace Sc
         protected virtual Geometry CreateHitGeometryByD2D(D2DGraphics g)
         {
             IsUseOrgHitGeometry = true;
-            RawRectangleF rc = new RawRectangleF(0, 0, Width, Height);
-            RectangleGeometry geometry = new RectangleGeometry(D2DGraphics.d2dFactory, rc);
+            SharpDX.Mathematics.Interop.RawRectangleF rc = new SharpDX.Mathematics.Interop.RawRectangleF(0, 0, Width, Height);
+            SharpDX.Direct2D1.RectangleGeometry geometry = new SharpDX.Direct2D1.RectangleGeometry(D2DGraphics.d2dFactory, rc);
             return geometry;
         }
 
@@ -1195,10 +1023,6 @@ namespace Sc
             return transPath;
         }
 
-
-
-
-
         public void ReleaseSelfTransformInfo()
         {
             if (globalMatrix != null)
@@ -1212,7 +1036,7 @@ namespace Sc
 
             if (invertGlobalMatrix != null)
                 invertGlobalMatrix.Dispose();
-        
+
             globalMatrix = null;
             transLastHitGraphicsPath = null;
             transLastHitPathGeometry = null;
@@ -1220,10 +1044,7 @@ namespace Sc
         }
 
 
-        /// <summary>
-        /// 是否为正矩形区域判断
-        /// </summary>
-        /// <returns></returns>
+        // 是否为正矩形区域判断
         bool IsStraightRectArea()
         {
             if (parent == null)
@@ -1251,7 +1072,7 @@ namespace Sc
         }
 
         #endregion
-    
+
         #region 刷新
         public void Refresh()
         {
@@ -1296,7 +1117,6 @@ namespace Sc
         #region 绘制
         public virtual void OnD2DPaint(ScGraphics g)
         {
-          
             D2DGraphics d2dGraph = (D2DGraphics)g;
 
             if (d2dGraph == null)
@@ -1320,7 +1140,7 @@ namespace Sc
                 }
             }
 
-            if (D2DPaint != null)           
+            if (D2DPaint != null)
                 D2DPaint(d2dGraph);
         }
 
@@ -1337,7 +1157,7 @@ namespace Sc
 
             PointF[] pts = new PointF[] { globalPt };
 
-            if(invertGlobalMatrix != null)
+            if (invertGlobalMatrix != null)
                 invertGlobalMatrix.TransformPoints(pts);
 
             return pts[0];
@@ -1369,7 +1189,7 @@ namespace Sc
             //获取尺寸框
             RectangleF localRect = GetBoundBox(pts);
 
-          
+
             return localRect;
         }
 
@@ -1377,16 +1197,16 @@ namespace Sc
         public PointF TransLocalToGlobal(PointF localPt)
         {
             if (globalMatrix == null)
-                return new PointF(0,0);
+                return new PointF(0, 0);
 
-            PointF[] pts = new PointF[] { localPt };  
+            PointF[] pts = new PointF[] { localPt };
             globalMatrix.TransformPoints(pts);
             return pts[0];
         }
 
         public RectangleF TransLocalToGlobal(RectangleF localRect)
         {
-            PointF[] pts = new PointF[] 
+            PointF[] pts = new PointF[]
             {
                 new PointF(localRect.Left, localRect.Top),
                 new PointF(localRect.Right, localRect.Top),
@@ -1401,11 +1221,7 @@ namespace Sc
             return globalRect;
         }
 
-        /// <summary>
-        /// 指示点是否包含在层的HitPathGeometry中
-        /// </summary>
-        /// <param name="pt"></param>
-        /// <returns></returns>
+        // 指示点是否包含在层的HitPathGeometry中
         public bool FillContainsPoint(PointF pt)
         {
             if (isComputedStraight && IsUseOrgHitGeometry)
@@ -1432,11 +1248,10 @@ namespace Sc
         private void VisibleAnim_AnimationEvent(ScAnimation scAnimation)
         {
             Opacity = opacityLinear.GetCurtValue();
-
             if (opacityLinear.IsStop)
             {
                 scAnimation.Stop();
-                if(Opacity == 0)
+                if (Opacity == 0)
                     visible = false;
             }
 
@@ -1446,12 +1261,10 @@ namespace Sc
         public void StartVisibleAnim(bool isVisible)
         {
             visableAnim.Stop();
-
             float stopOpacity = 0;
-
             if (isVisible == true)
             {
-                visible = true;     
+                visible = true;
                 stopOpacity = 1.0f;
             }
 
@@ -1462,72 +1275,22 @@ namespace Sc
 
         #endregion
 
-        #region 调试代码
-
-        private void DebugLayer_D2DPaint(D2DGraphics g)
-        {
-            g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
-            RawRectangleF rect = new RawRectangleF(1, 1, Width - 1, Height - 1);
-            RawColor4 rawColor = GDIDataD2DUtils.TransToRawColor4(Color.DarkBlue);
-            SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, rawColor);
-
-
-            //宽度
-            TextFormat textFormat = new TextFormat(D2DGraphics.dwriteFactory, "微软雅黑", 12)
-           { TextAlignment = TextAlignment.Center, ParagraphAlignment = ParagraphAlignment.Center};
-            RawRectangleF rectw = new RawRectangleF(0, Height - 20, Width - 1, Height - 1);
-            g.RenderTarget.DrawText(Width.ToString(), textFormat, rectw, brush);
-
-            //高度
-            TextFormat textFormat2 = new TextFormat(D2DGraphics.dwriteFactory, "微软雅黑", 12)
-            { TextAlignment = TextAlignment.Center, ParagraphAlignment = ParagraphAlignment.Center, FlowDirection = SharpDX.DirectWrite.FlowDirection.TopToBottom };
-            RawRectangleF recth = new RawRectangleF(Width - 10, 0, Width - 1, Height - 1);
-            g.RenderTarget.DrawText(Height.ToString(), textFormat2, recth, brush);
-
-
-            //全局坐标位置
-            PointF pt = parent.TransLocalToGlobal(Location);
-            textFormat.ParagraphAlignment = ParagraphAlignment.Near;
-            textFormat.TextAlignment = TextAlignment.Justified;
-            RawRectangleF rectxy = new RawRectangleF(0, 0, Width - 1, 10);
-            g.RenderTarget.DrawText(pt.ToString(), textFormat, rectxy, brush);
-
-
-            //层类名称
-            string mm = this.GetType().Name;
-
-            if (!string.IsNullOrWhiteSpace(Name))
-                mm += "(" + Name + ")";
-          
-
-            textFormat.ParagraphAlignment = ParagraphAlignment.Center;
-            textFormat.TextAlignment = TextAlignment.Center;
-            RawRectangleF rectname = new RawRectangleF(0, 0, Width - 1, 10);
-            g.RenderTarget.DrawText(mm, textFormat, rectxy, brush);
-
-            g.RenderTarget.DrawRectangle(rect, brush, 1f);
-
-
-
-        }
-
-        #endregion
 
         #region 鼠标事件
 
         public virtual void SelfMouseEnter(object sender, ScMouseEventArgs e)
         {
-            
+
         }
 
         #endregion
 
         #region 事件
+
         private void ScControl_MouseLeave(object sender)
         {
             if (cursor == null)
                 return;
-
             ScLayer scCon = this.parent;
             for (; scCon != null; scCon = scCon.parent)
             {
@@ -1544,7 +1307,7 @@ namespace Sc
         {
             if (cursor == null)
             {
-                ScLayer scCon = this.parent;
+                Sc.ScLayer scCon = this.parent;
                 for (; scCon != null; scCon = scCon.parent)
                 {
                     if (scCon.Cursor != null)
@@ -1563,7 +1326,6 @@ namespace Sc
         {
             if (MouseMove == null || Enable == false || dispose == true)
                 return;
-
             MouseMove(this, mouseEventArgs);
         }
 
@@ -1571,7 +1333,6 @@ namespace Sc
         {
             if (MouseLeave == null || Enable == false || dispose == true)
                 return;
-
             MouseLeave(this);
         }
 
@@ -1579,7 +1340,6 @@ namespace Sc
         {
             if (MouseEnter == null || Enable == false || dispose == true)
                 return;
-
             MouseEnter(this, mouseEventArgs);
         }
 
@@ -1587,7 +1347,6 @@ namespace Sc
         {
             if (MouseDown == null || Enable == false || dispose == true)
                 return;
-
             MouseDown(this, mouseEventArgs);
         }
 
@@ -1595,7 +1354,6 @@ namespace Sc
         {
             if (MouseUp == null || Enable == false || dispose == true)
                 return;
-
             MouseUp(this, mouseEventArgs);
         }
 
@@ -1603,7 +1361,6 @@ namespace Sc
         {
             if (MouseWheel == null || Enable == false || dispose == true)
                 return;
-
             MouseWheel(this, mouseEventArgs);
         }
 
@@ -1611,7 +1368,6 @@ namespace Sc
         {
             if (MouseDoubleClick == null || Enable == false || dispose == true)
                 return;
-
             MouseDoubleClick(this, mouseEventArgs);
         }
 
@@ -1620,9 +1376,7 @@ namespace Sc
         {
             if (Enable == false || dispose == true)
                 return;
-
             focus = true;
-
             if (GotFocus != null)
                 GotFocus(this, e);
         }
@@ -1631,7 +1385,6 @@ namespace Sc
         {
             if (Enable == false || dispose == true)
                 return;
-
             focus = false;
             if (LostFocus != null)
                 LostFocus(this, e);
@@ -1664,14 +1417,13 @@ namespace Sc
 
         public void ScSizeChanged(SizeF oldSize)
         {
-            foreach (ScLayer clayer in controls)
+            foreach (Sc.ScLayer clayer in controls)
             {
                 clayer.SetDirectionRectByDockType();
             }
 
             if (SizeChanged == null || dispose == true)
                 return;
-
             SizeChanged(this, oldSize);
         }
 
@@ -1679,7 +1431,6 @@ namespace Sc
         {
             if (LocationChanged == null || dispose == true)
                 return;
-
             LocationChanged(this, oldLocation);
         }
 
@@ -1688,16 +1439,13 @@ namespace Sc
         {
             if (ReBulid == null || dispose == true)
                 return;
-
             ReBulid(this);
         }
-
 
         public System.Drawing.Bitmap ScPostTreatmentEffectGDI(System.Drawing.Bitmap backBitmap)
         {
             if (PostTreatmentEffectGDI == null || dispose == true)
                 return null;
-
             return PostTreatmentEffectGDI(this, backBitmap);
         }
 
@@ -1705,13 +1453,12 @@ namespace Sc
         {
             if (ReleasePostTreatmentEffectGDI == null || dispose == true)
                 return;
-
-           ReleasePostTreatmentEffectGDI(this, effectBitmap);
+            ReleasePostTreatmentEffectGDI(this, effectBitmap);
         }
 
 
 
-      
+
 
         public delegate void ScMouseEventHandler(object sender, ScMouseEventArgs e);
         public delegate void ScKeyEventHandler(object sender, KeyEventArgs e);
@@ -1733,7 +1480,7 @@ namespace Sc
         public delegate Geometry CreateHitGeometryD2DEventHandler(D2DGraphics d2dGraphics);
         public event CreateHitGeometryD2DEventHandler D2DHitGeometry = null;
 
-        public event ScReBulidEventHandler  ReBulid;
+        public event ScReBulidEventHandler ReBulid;
 
         public event ScMouseEventHandler MouseDown;
 
@@ -1779,6 +1526,34 @@ namespace Sc
         public event ReleasePostTreatmentEffectGDIEventHandler ReleasePostTreatmentEffectGDI;
 
         #endregion
-      
+
+        ~ScLayer()
+        {
+            this.Dispose();
+        }
+
+        public virtual void Dispose()
+        {
+            dispose = true;
+            ReleaseSelfTransformInfo();
+
+            directClipChildLayerList.Clear();
+
+            foreach (ScAnimation anim in animationList)
+            {
+                anim.Dispose();
+            }
+
+            foreach (ScLayer clayer in controls)
+            {
+                clayer.Dispose();
+            }
+
+            animationList.Clear();
+            directClipChildLayerList.Clear();
+            controls.Clear();
+
+            GC.SuppressFinalize(this);
+        }
     }
 }

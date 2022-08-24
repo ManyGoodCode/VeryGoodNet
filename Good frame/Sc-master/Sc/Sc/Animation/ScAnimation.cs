@@ -119,6 +119,7 @@ namespace Sc
 
         void Update(object obj)
         {
+            // 调用此事件的时候传递的是this【此对象】 且调用此事件的对象为 System.Windows.Forms.Control
             this.AnimationEvent?.Invoke(this);
         }
 
