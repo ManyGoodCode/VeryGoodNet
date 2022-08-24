@@ -9,6 +9,12 @@ namespace Sc
     public class AnimationEffect
     {
         protected bool isStop = false;
+
+        /// <summary>
+        /// 判断当前值 【从 startValue 开始的值增加】是否超出停止值，超出的话，标记停止
+        /// 
+        /// 返回当前的值
+        /// </summary>
         public virtual float GetCurtValue()
         {
             return 0;
@@ -16,37 +22,34 @@ namespace Sc
 
         public bool IsStop
         {
-            get
-            {
-                return isStop;
-            }
-            set
-            {
-                isStop = value;
-            }
+            get { return isStop; }
+            set { isStop = value; }
         }
     }
 
-    public class ScLinearAnimation:AnimationEffect
+    public class ScLinearAnimation : AnimationEffect
     {
-        float n = 0;
-        ScAnimation scAnim = null;
+        float step = 0;
+        Sc.ScAnimation scAnim = null;
         float startValue;
         float stopValue;
 
-        public ScLinearAnimation(float startValue, float stopValue, ScAnimation scAnimation)
+        public ScLinearAnimation(float startValue, float stopValue, Sc.ScAnimation scAnimation)
         {
             scAnim = scAnimation;
             this.startValue = startValue;
             this.stopValue = stopValue;
-            n = (stopValue - startValue) / scAnim.AnimMS * scAnim.DurationMS;
+            this.step = (stopValue - startValue) / scAnim.AnimMS * scAnim.DurationMS;
         }
 
+        /// <summary>
+        /// 判断当前值 【从 startValue 开始的值增加】是否超出停止值，超出的话，标记停止
+        /// </summary>
         public override float GetCurtValue()
         {
-            float val = startValue + scAnim.FrameIndex * n;
+            float val = startValue + scAnim.FrameIndex * this.step;
 
-            if ((n >= 0 && val >= stopValue) || (n <= 0 && val <= stopValue))
+            if ((this.step >= 0 && val >= stopValue) || (this.step <= 0 && val <= stopValue))
             {
                 val = stopValue;
                 isStop = true;
@@ -58,20 +61,21 @@ namespace Sc
 
     public class ScStepAnimation : AnimationEffect
     {
-        float n = 0;
-        ScAnimation scAnim = null;
+        float step = 0;
+        Sc.ScAnimation scAnim = null;
         float startValue;
 
-        public ScStepAnimation(float startValue, float step, ScAnimation scAnimation)
+        public ScStepAnimation(float startValue, float step, Sc.ScAnimation scAnimation)
         {
             scAnim = scAnimation;
             this.startValue = startValue;
-            n = step;
+            this.step = step;
         }
+
 
         public override float GetCurtValue()
         {
-            float val = startValue + scAnim.FrameIndex * n;
+            float val = startValue + scAnim.FrameIndex * this.step;
             return val;
         }
     }

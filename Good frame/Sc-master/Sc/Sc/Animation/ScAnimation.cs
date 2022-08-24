@@ -8,67 +8,70 @@ using System.Windows.Forms;
 
 namespace Sc
 {
-    public class ScAnimation:IDisposable
+    /// <summary>
+    /// 此类未有任何类继承 Animation ： 绘制。
+    /// </summary>
+    public class ScAnimation : IDisposable
     {
-        ScLayer layer;
-        private System.Timers.Timer refreshTimer = null;
+        // 包含 该类型对象的集合容器 
+        Sc.ScLayer layer;
+
+        // 定时器【定时执行的事件】
+        System.Timers.Timer refreshTimer = null;
+
+        // 设置定时器是执行一次（false）还是一直执行(true)
         bool autoRest = false;
+
         int durationMS = 20;
-        public int animMS = 100;
         int frameIndex = 0;
         bool isDisposed = false;
 
-        public delegate void AnimationEventHandler(ScAnimation scAnimation);
+
+        public int animMS = 100;
+
+        // 事件。调用此事件的时候传递的是this【此对象】 且调用此事件的对象为 System.Windows.Forms.Control
+        public delegate void AnimationEventHandler(Sc.ScAnimation scAnimation);
         public event AnimationEventHandler AnimationEvent;
 
+        // 委托。函数内封装了上面事件的 Invoke();
         delegate void UpdateCallback(object obj);
         UpdateCallback updateDet;
 
-        public ScAnimation(ScLayer layer, bool autoRest)
+        public ScAnimation(Sc.ScLayer layer, bool autoRest)
         {
             this.layer = layer;
             this.autoRest = autoRest;
-            updateDet = new UpdateCallback(Update);
+            // 设置委托
+            updateDet = this.Update;
 
             layer.AppendAnimation(this);
         }
 
-        public ScAnimation(ScLayer layer, int animMS, bool autoRest)
+        public ScAnimation(Sc.ScLayer layer, int animMS, bool autoRest)
         {
             this.layer = layer;
             this.autoRest = autoRest;
-            this.animMS = animMS;   
-            updateDet = new UpdateCallback(Update);
+            this.animMS = animMS;
+            // 设置委托
+            updateDet = this.Update;
 
             layer.AppendAnimation(this);
         }
 
         public int AnimMS
         {
-            get
-            {
-                return animMS;
-            }
+            get { return animMS; }
         }
 
         public int DurationMS
         {
-            get
-            {
-                return durationMS;
-            }
-            set
-            {
-                durationMS = value;
-            }
+            get { return durationMS; }
+            set { durationMS = value; }
         }
 
         public int FrameIndex
         {
-            get
-            {
-                return frameIndex;
-            }
+            get { return frameIndex; }
         }
 
         public void Start()
@@ -79,16 +82,16 @@ namespace Sc
 
         public void Stop()
         {
-            StopTimer();  
+            StopTimer();
         }
 
         void StartTimer(int period)
         {
-           if (isDisposed)
+            if (isDisposed)
                 return;
 
             refreshTimer = new System.Timers.Timer(period);   //实例化Timer类，设置间隔时间为period毫秒   
-            refreshTimer.Elapsed += new System.Timers.ElapsedEventHandler(theout); //到达时间的时候执行事件   
+            refreshTimer.Elapsed += TimerWork; //到达时间的时候执行事件   
             refreshTimer.AutoReset = autoRest;   //设置是执行一次（false）还是一直执行(true)   
             refreshTimer.Enabled = true;     //是否执行System.Timers.Timer.Elapsed事件  
         }
@@ -103,26 +106,28 @@ namespace Sc
             }
         }
 
-        public void theout(object source, EventArgs e)
+        public void TimerWork(object source, EventArgs e)
         {
             if (layer == null || layer.ScMgr == null)
                 return;
 
             frameIndex++;
-            layer.ScMgr.control.Invoke(updateDet, this);
+            // updateDet 是将 this.Update 函数封装了一层。转换为 Delegate
+            System.Windows.Forms.Control control = layer.ScMgr.control;
+            control.Invoke(method: updateDet, args: this);
         }
 
         void Update(object obj)
         {
-            AnimationEvent?.Invoke(this);
+            this.AnimationEvent?.Invoke(this);
         }
 
         public void Dispose()
         {
             Stop();
             layer = null;
-            isDisposed = true;            
+            isDisposed = true;
         }
     }
-   
+
 }

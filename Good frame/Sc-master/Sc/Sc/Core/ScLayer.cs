@@ -290,7 +290,7 @@ namespace Sc
         }
 
 
-        public void AppendAnimation(ScAnimation animation)
+        public void AppendAnimation(Sc.ScAnimation animation)
         {
             animationList.Add(animation);
         }
