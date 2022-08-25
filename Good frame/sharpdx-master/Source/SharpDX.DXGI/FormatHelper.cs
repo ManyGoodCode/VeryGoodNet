@@ -1,22 +1,3 @@
-// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 
@@ -32,62 +13,32 @@ namespace SharpDX.DXGI
         private static readonly bool[] srgbFormats = new bool[256];
         private static readonly bool[] typelessFormats = new bool[256];
 
-        /// <summary>
-        /// Calculates the size of a <see cref="Format"/> in bytes. Can be 0 for compressed format (as they are less than 1 byte)
-        /// </summary>
-        /// <param name="format">The DXGI format.</param>
-        /// <returns>size of in bytes</returns>
         public static int SizeOfInBytes(this Format format)
         {
             var sizeInBits = SizeOfInBits(format);
             return sizeInBits >> 3;
         }
 
-        /// <summary>
-        /// Calculates the size of a <see cref="Format"/> in bits.
-        /// </summary>
-        /// <param name="format">The DXGI format.</param>
-        /// <returns>size of in bits</returns>
         public static int SizeOfInBits(this Format format)
         {
             return sizeOfInBits[(int) format];
         }
 
-        /// <summary>
-        /// Returns true if the <see cref="Format"/> is valid.
-        /// </summary>
-        /// <param name="format">A format to validate</param>
-        /// <returns>True if the <see cref="Format"/> is valid.</returns>
         public static bool IsValid(this Format format)
         {
             return ( (int)(format) >= 1 && (int)(format) <= 115 );
         }
 
-        /// <summary>
-        /// Returns true if the <see cref="Format"/> is a compressed format.
-        /// </summary>
-        /// <param name="format">The format to check for compressed.</param>
-        /// <returns>True if the <see cref="Format"/> is a compressed format</returns>
         public static bool IsCompressed(this Format format)
         {
             return compressedFormats[(int) format];
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Format"/> is packed.
-        /// </summary>
-        /// <param name="format">The DXGI Format.</param>
-        /// <returns><c>true</c> if the specified <see cref="Format"/> is packed; otherwise, <c>false</c>.</returns>
         public static bool IsPacked(this Format format )
         {
             return ((format == Format.R8G8_B8G8_UNorm) || (format == Format.G8R8_G8B8_UNorm));
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Format"/> is video.
-        /// </summary>
-        /// <param name="format">The <see cref="Format"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Format"/> is video; otherwise, <c>false</c>.</returns>
         public static bool IsVideo(this Format format )
         {
             switch ( format )
@@ -102,7 +53,6 @@ namespace SharpDX.DXGI
                 case Format.Y210:
                 case Format.Y216:
                 case Format.NV11:
-                    // These video formats can be used with the 3D pipeline through special view mappings
                     return true;
 
                 case Format.Opaque420:
@@ -110,7 +60,6 @@ namespace SharpDX.DXGI
                 case Format.IA44:
                 case Format.P8:
                 case Format.A8P8:
-                    // These are limited use video formats not usable in any way by the 3D pipeline
                     return true;
 
                 default:
@@ -118,32 +67,16 @@ namespace SharpDX.DXGI
             }
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Format"/> is a SRGB format.
-        /// </summary>
-        /// <param name="format">The <see cref="Format"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Format"/> is a SRGB format; otherwise, <c>false</c>.</returns>
         public static bool IsSRgb(this Format format )
         {
             return srgbFormats[(int) format];
         }
 
-        /// <summary>
-        /// Determines whether the specified <see cref="Format"/> is typeless.
-        /// </summary>
-        /// <param name="format">The <see cref="Format"/>.</param>
-        /// <returns><c>true</c> if the specified <see cref="Format"/> is typeless; otherwise, <c>false</c>.</returns>
         public static bool IsTypeless(this Format format )
         {
             return typelessFormats[(int) format];
         }
 
-        /// <summary>
-        /// Computes the scanline count (number of scanlines).
-        /// </summary>
-        /// <param name="format">The <see cref="Format"/>.</param>
-        /// <param name="height">The height.</param>
-        /// <returns>The scanline count.</returns>
         public static int ComputeScanlineCount(this Format format, int height)
         {
             switch (format)
@@ -176,9 +109,6 @@ namespace SharpDX.DXGI
             }
         }
 
-        /// <summary>
-        /// Static initializer to speed up size calculation (not sure the JIT is enough "smart" for this kind of thing).
-        /// </summary>
         static FormatHelper()
         {
             InitFormat(new[] { Format.R1_UNorm }, 1);
@@ -300,7 +230,6 @@ namespace SharpDX.DXGI
             }, 8);
 
 
-            // Init compressed formats
             InitDefaults(new[]
                              {
                                  Format.BC1_Typeless,
@@ -326,7 +255,6 @@ namespace SharpDX.DXGI
                                  Format.BC7_UNorm_SRgb,
                              }, compressedFormats);
 
-            // Init srgb formats
             InitDefaults(new[]
                              {
                                  Format.R8G8B8A8_UNorm_SRgb,
@@ -338,7 +266,6 @@ namespace SharpDX.DXGI
                                  Format.BC7_UNorm_SRgb,
                              }, srgbFormats);
 
-            // Init typeless formats
             InitDefaults(new[]
                              {
                                  Format.R32G32B32A32_Typeless,

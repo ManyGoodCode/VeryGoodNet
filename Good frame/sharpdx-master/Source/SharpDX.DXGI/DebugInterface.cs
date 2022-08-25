@@ -13,8 +13,6 @@ namespace SharpDX.DXGI
 
         static DebugInterface()
         {
-            // https://blogs.msdn.microsoft.com/chuckw/2015/07/27/dxgi-debug-device/
-#if DESKTOP_APP
             IntPtr moduleHandle = Kernel32.LoadLibraryEx("dxgidebug.dll", IntPtr.Zero, Kernel32.LoadLibraryFlags.LoadLibrarySearchSystem32);
             if (moduleHandle != IntPtr.Zero)
             {
@@ -24,9 +22,6 @@ namespace SharpDX.DXGI
                     getDebugInterface = (GetDebugInterface)Marshal.GetDelegateForFunctionPointer(procedureHandle, typeof(GetDebugInterface));
                 }
             }
-#else
-            getDebugInterface = null;
-#endif
         }
 
         public static bool TryCreateComPtr<T>(out IntPtr comPtr) where T : class
