@@ -1,23 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-using System;
+﻿using System;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -25,10 +6,6 @@ using SharpDX.Mathematics.Interop;
 
 namespace SharpDX.Win32
 {
-    /// <summary>
-    /// Variant COM.
-    /// </summary>
-    /// <unmanaged>PROPVARIANT</unmanaged>
     [StructLayout(LayoutKind.Sequential)]
     public struct Variant
     {
@@ -38,45 +15,18 @@ namespace SharpDX.Win32
         private ushort reserved3;
         private VariantValue variantValue;
 
-        /// <summary>
-        /// Gets the type of the element.
-        /// </summary>
-        /// <value>
-        /// The type of the element.
-        /// </value>
         public VariantElementType ElementType
         {
-            get
-            {
-                return (VariantElementType)(vt & 0x0fff);
-            }
-            set
-            {
-                vt = (ushort)((vt & 0xf000) | (ushort)value);
-            }
+            get { return (VariantElementType)(vt & 0x0fff); }
+            set { vt = (ushort)((vt & 0xf000) | (ushort)value); }
         }
 
-        /// <summary>
-        /// Gets the type.
-        /// </summary>
         public VariantType Type
         {
-            get
-            {
-                return (VariantType)(vt & 0xf000);
-            }
-            set
-            {
-                vt = (ushort)((vt & 0x0fff) | (ushort)value);
-            }
+            get { return (VariantType)(vt & 0xf000); }
+            set { vt = (ushort)((vt & 0x0fff) | (ushort)value); }
         }
 
-        /// <summary>
-        /// Gets or sets the value.
-        /// </summary>
-        /// <value>
-        /// The value.
-        /// </value>
         public unsafe object Value
         {
             get
@@ -124,7 +74,6 @@ namespace SharpDX.Win32
                                 return variantValue.doubleValue;
                             case VariantElementType.BinaryString:
                                 throw new NotSupportedException();
-                                //return Marshal.PtrToStringBSTR(variantValue.pointerValue);
                             case VariantElementType.StringPointer:
                                 return Marshal.PtrToStringAnsi(variantValue.pointerValue);
                             case VariantElementType.WStringPointer:
@@ -215,10 +164,6 @@ namespace SharpDX.Win32
                             case VariantElementType.BinaryString:
                                 {
                                     throw new NotSupportedException();
-                                    //var array = new string[size];
-                                    //for (int i = 0; i < size; i++)
-                                    //    array[i] = Marshal.PtrToStringBSTR(((IntPtr*)variantValue.recordValue.RecordPointer)[i]);
-                                    //return array;
                                 }
                             case VariantElementType.StringPointer:
                                 {
@@ -275,19 +220,19 @@ namespace SharpDX.Win32
                 Type = VariantType.Default;
                 if (type.GetTypeInfo().IsPrimitive)
                 {
-					if (type == typeof(byte))
-					{
-						ElementType = VariantElementType.UByte;
-						variantValue.byteValue = (byte)value;
-						return;
-					}
+                    if (type == typeof(byte))
+                    {
+                        ElementType = VariantElementType.UByte;
+                        variantValue.byteValue = (byte)value;
+                        return;
+                    }
 
-	                if (type == typeof(sbyte))
-	                {
-		                ElementType = VariantElementType.Byte;
-		                variantValue.signedByteValue = (sbyte)value;
-		                return;
-	                }
+                    if (type == typeof(sbyte))
+                    {
+                        ElementType = VariantElementType.Byte;
+                        variantValue.signedByteValue = (sbyte)value;
+                        return;
+                    }
 
                     if (type == typeof(int))
                     {
@@ -306,7 +251,7 @@ namespace SharpDX.Win32
                     if (type == typeof(long))
                     {
                         ElementType = VariantElementType.Long;
-                        variantValue.longValue= (long)value;
+                        variantValue.longValue = (long)value;
                         return;
                     }
 
@@ -320,7 +265,7 @@ namespace SharpDX.Win32
                     if (type == typeof(short))
                     {
                         ElementType = VariantElementType.Short;
-                        variantValue.shortValue= (short)value;
+                        variantValue.shortValue = (short)value;
                         return;
                     }
 
