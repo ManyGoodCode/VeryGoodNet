@@ -1,22 +1,3 @@
-// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -31,10 +12,6 @@ using Mono.Options;
 
 namespace SharpPak
 {
-    /// <summary>
-    /// SharpPak application is able to pack/link into a single executable a SharpDX application
-    /// without requiring additional dependencies.
-    /// </summary>
     public class SharpPakApp
     {
         public SharpPakApp()
@@ -43,58 +20,25 @@ namespace SharpPak
             AssembliesToLink = new List<string>();
         }
 
-        /// <summary>
-        /// Gets or sets the output directory.
-        /// </summary>
-        /// <value>The output directory.</value>
         public string OutputDirectory { get; set; }
-
-        /// <summary>
-        /// Gets or sets the path to the main assembly to pack.
-        /// </summary>
-        /// <value>The main assembly to pack.</value>
         public string MainAssembly { get; set; }
-
-        /// <summary>
-        /// Gets or sets the paths to the assemblies to merge into the main assembly.
-        /// </summary>
-        /// <value>The assemblies to merge into the main assembly.</value>
         public List<string> AssembliesToLink { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [auto references].
-        /// </summary>
-        /// <value><c>true</c> if [auto references]; otherwise, <c>false</c>.</value>
         public bool AutoReferences { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether [no linker].
-        /// </summary>
-        /// <value><c>true</c> if [no linker]; otherwise, <c>false</c>.</value>
         public bool NoLinker { get; set; }
 
-        /// <summary>
-        /// Print usages the error.
-        /// </summary>
-        /// <param name="error">The error.</param>
         private static void UsageError(string error)
         {
-            var exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
+            string exeName = Path.GetFileName(Assembly.GetEntryAssembly().Location);
             Console.Write("{0}: ", exeName);
             Console.WriteLine(error);
             Console.WriteLine("Use {0} --help' for more information.", exeName);
             Environment.Exit(1);
         }
 
-        /// <summary>
-        /// Parses the command line arguments.
-        /// </summary>
-        /// <param name="args">The args.</param>
         public void ParseArguments(string[] args)
         {
-            var showHelp = false;
-
-            var options = new OptionSet()
+            bool showHelp = false;
+            OptionSet options = new OptionSet()
                               {
                                   "Copyright (c) 2010-2014 SharpDX - Alexandre Mutel",
                                   "Usage: SharpPak [options]* MainAssembly.exe/dll [ Assembly1.dll...]*",
@@ -105,7 +49,6 @@ namespace SharpPak
                                   {"n|nolinker", "Perform no linker [default: false]", opt => NoLinker = opt != null},
                                   {"o|output=", "Specify the output directory [default: Output]", opt => OutputDirectory = opt},
                                   {"h|help", "Show this message and exit", opt => showHelp = opt != null},
-                                  // default
                                   {"<>", opt => AssembliesToLink.AddRange(opt.Split(' ', '\t')) },
                               };
             try
@@ -135,7 +78,7 @@ namespace SharpPak
             string fromDirectory,
             string[] includeMergeListRegex)
         {
-            var hashSet = new HashSet<AssemblyDefinition>();
+            HashSet<AssemblyDefinition> hashSet = new HashSet<AssemblyDefinition>();
             AddAssemblies(assembly, paths, fromDirectory, includeMergeListRegex, hashSet);
         }
 
@@ -146,7 +89,7 @@ namespace SharpPak
                 return;
 
             added.Add(assembly);
-            var directoryOfAssembly = Path.GetDirectoryName(assembly.MainModule.FullyQualifiedName);
+            string directoryOfAssembly = Path.GetDirectoryName(assembly.MainModule.FullyQualifiedName);
             if (fromDirectory == directoryOfAssembly)
             {
                 if(!paths.Contains(assembly.MainModule.FullyQualifiedName))
@@ -155,8 +98,7 @@ namespace SharpPak
                 }
             }
 
-            // Load SharpDX assemblies
-            foreach (var assemblyRef in assembly.MainModule.AssemblyReferences)
+            foreach (AssemblyNameReference assemblyRef in assembly.MainModule.AssemblyReferences)
             {
                 bool isAssemblyAdded = false;
 

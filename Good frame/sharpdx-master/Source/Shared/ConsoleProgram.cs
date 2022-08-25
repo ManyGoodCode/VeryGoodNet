@@ -1,24 +1,4 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -29,22 +9,6 @@ using System.Runtime.InteropServices;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// Reusable, reflection based helper for parsing command line options.
-    /// Greetings to Shawn Hargreaves, original code http://blogs.msdn.com/b/shawnhar/archive/2012/04/20/a-reusable-reflection-based-command-line-parser.aspx
-    /// This is a modified version of command line parser that adds:
-    /// - .NET 2.0 compatible
-    /// - Allow inheritance to simplify declaration
-    /// - Print exe banner, using AssemblyTitle and AssemblyCopyright.
-    /// - Better padding of options, add descriptor and value text overrides.
-    /// - Add support for - and / starting options.
-    /// - Remove usage of ":" to separate option from parsed option
-    /// - Add "&lt;options&gt;" to the Usage when options are defined
-    /// - Add Console Color handling
-    /// </summary>
-    /// <remarks>
-    /// This single file is intended to be directly included in the project that needs to handle command line without requiring any SharpDX assembly dependencies.
-    /// </remarks>
     class ConsoleProgram
     {
         private const int STD_OUTPUT_HANDLE = -11;
@@ -74,12 +38,10 @@ namespace SharpDX
         {
         }
 
-        // Constructor.
         private ConsoleProgram(object optionsObjectArg, int padOptions = 16)
         {
             this.optionsObject = optionsObjectArg ?? this;
 
-            // Reflect to find what command line options are available.
             foreach (FieldInfo field in optionsObject.GetType().GetFields())
             {
                 var option = GetOptionName(field);
@@ -88,14 +50,11 @@ namespace SharpDX
 
                 if (option.Required)
                 {
-                    // Record a required option.
                     requiredOptions.Enqueue(field);
-
                     requiredUsageHelp.Add(string.Format("<{0}>", option.Name));
                 }
                 else
                 {
-                    // Record an optional option.
                     optionalOptions.Add(optionName, field);
 
                     if (field.FieldType == typeof (bool))
@@ -145,7 +104,6 @@ namespace SharpDX
                 }
             }
 
-            // Make sure we got all the required options.
             FieldInfo missingRequiredOption = null;
 
             foreach (var field in requiredOptions)
@@ -227,12 +185,10 @@ namespace SharpDX
             {
                 if (IsList(field))
                 {
-                    // Append this value to a list of options.
                     GetList(field).Add(ChangeType(value, ListElementType(field)));
                 }
                 else
                 {
-                    // Set the value of a single option.
                     field.SetValue(optionsObject, ChangeType(value, field.FieldType));
                 }
 
@@ -316,10 +272,6 @@ namespace SharpDX
             return null;
         }
 
-        /// <summary>
-        /// Gets the assembly title.
-        /// </summary>
-        /// <value>The assembly title.</value>
         private static string GetAssemblyTitle()
         {
             var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyTitleAttribute), false);
@@ -332,10 +284,6 @@ namespace SharpDX
             return Path.GetFileNameWithoutExtension(Assembly.GetExecutingAssembly().CodeBase);
         }
 
-        /// <summary>
-        /// Gets the assembly title.
-        /// </summary>
-        /// <value>The assembly title.</value>
         private static string GetAssemblyCopyright()
         {
             var attributes = Assembly.GetExecutingAssembly().GetCustomAttributes(typeof(AssemblyCopyrightAttribute), false);
@@ -348,7 +296,6 @@ namespace SharpDX
             return string.Empty;
         }
 
-        // Used on optionsObject fields to indicate which options are required.
 
         [DllImport("kernel32.dll", EntryPoint = "GetStdHandle", SetLastError = true,
             CharSet = CharSet.Auto,
@@ -442,9 +389,6 @@ namespace SharpDX
         #endregion
     }
 
-    /// <summary>
-    /// Colors used by <see cref="ConsoleProgram.Color"/>
-    /// </summary>
     [Flags]
     enum ConsoleColor
     {
@@ -482,13 +426,7 @@ namespace SharpDX
         /// Red background color.
         /// </summary>
         RedBackground = 0x00000040,
-
-        /// <summary>
-        /// Intensity background color modifier.
-        /// </summary>
         IntensityBackground = 0x00000080,
-
-
         Black = 0,
 
         Cyan = Green | Blue,
