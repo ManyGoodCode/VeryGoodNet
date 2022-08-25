@@ -20,7 +20,6 @@ namespace Sc
         D2DFont foreFont;
 
         public TextAlignment Alignment = TextAlignment.Center;
-
         public Margin TextPadding = new Margin(0, 0, 0, 0);
 
         public ScLabel(ScMgr scmgr)
@@ -41,12 +40,14 @@ namespace Sc
         {
 
             RawRectangleF rect = new RawRectangleF(TextPadding.left, TextPadding.top, Width - TextPadding.left - TextPadding.right, Height - TextPadding.top - TextPadding.bottom);
-
             if (!string.IsNullOrWhiteSpace(Text))
             {
                 SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, GDIDataD2DUtils.TransToRawColor4(ForeColor));
                 TextFormat textFormat = new TextFormat(D2DGraphics.dwriteFactory, foreFont.FamilyName, foreFont.Weight, foreFont.Style, foreFont.Size)
-                { TextAlignment = Alignment, ParagraphAlignment = ParagraphAlignment.Center };
+                { 
+                    TextAlignment = Alignment, 
+                    ParagraphAlignment = ParagraphAlignment.Center 
+                };
 
                 textFormat.WordWrapping = WordWrapping.Wrap;
 

@@ -11,20 +11,20 @@ namespace Sc
         public ScCheckBox CheckBox;
         ScLabel Label;
         public ScLabelCheckBox(ScMgr scmgr = null)
-            :base(scmgr)
+            : base(scmgr)
         {
             CheckBox = new ScCheckBox(scmgr);
-            Add(CheckBox);
+            Add(childLayer: CheckBox);
 
             Label = new ScLabel(scmgr);
-            Add(Label);
+            Add(childLayer: Label);
 
             SizeChanged += ScLabelCheckBox_SizeChanged;
         }
 
         private void ScLabelCheckBox_SizeChanged(object sender, System.Drawing.SizeF oldSize)
         {
-             
+
         }
     }
 }

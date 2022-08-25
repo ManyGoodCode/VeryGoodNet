@@ -58,7 +58,6 @@ namespace Sc
             set { disableColor = value; }
         }
 
-
         public Color NormalFontColor
         {
             get { return normalFontColor; }
@@ -68,7 +67,6 @@ namespace Sc
                 fontColor = normalFontColor;
             }
         }
-
 
         public Color EnterFontColor
         {
@@ -87,7 +85,6 @@ namespace Sc
             get { return disableFontColor; }
             set { disableFontColor = value; }
         }
-
 
 
         ScAnimation scAnim;
@@ -146,7 +143,6 @@ namespace Sc
 
             D2DPaint += ScButton_D2DPaint;
 
-
             ScShadow shadow = new ScShadow(scmgr);
             shadow.CornersRadius = 6;
             shadow.ShadowRadius = 3;
@@ -165,8 +161,6 @@ namespace Sc
 
             SizeChanged += ScButton_SizeChanged;
             LocationChanged += ScButton_LocationChanged;
-
-
         }
 
 
@@ -211,15 +205,12 @@ namespace Sc
             gradientStops[4].Color = GDIDataD2DUtils.TransToRawColor4(colors[0]);
             gradientStops[4].Position = 1f;
 
-            //
             GradientStopCollection gradientStopCollection = new GradientStopCollection(g.RenderTarget, gradientStops, Gamma.StandardRgb, ExtendMode.Clamp);
 
-            //
             LinearGradientBrushProperties props = new LinearGradientBrushProperties()
             {
                 StartPoint = new RawVector2(rect.Left, rect.Top),
                 EndPoint = new RawVector2(rect.Left, rect.Bottom)
-
             };
 
             SharpDX.Direct2D1.LinearGradientBrush linearGradientBrush = new SharpDX.Direct2D1.LinearGradientBrush(g.RenderTarget, props, gradientStopCollection);
@@ -245,7 +236,6 @@ namespace Sc
             gradientStops[4].Position = 1f;
 
             gradientStopCollection = new GradientStopCollection(g.RenderTarget, gradientStops, Gamma.StandardRgb, ExtendMode.Clamp);
-
             props = new LinearGradientBrushProperties()
             {
                 StartPoint = new RawVector2(rect.Left, rect.Top),
@@ -299,11 +289,7 @@ namespace Sc
 
         protected override Geometry CreateHitGeometryByD2D(D2DGraphics g)
         {
-            RawRectangleF rect = new RawRectangleF(
-                0, 0,
-                 Width - 1,
-                Height - 1);
-
+            RawRectangleF rect = new RawRectangleF(0, 0, Width - 1, Height - 1);
             RoundedRectangle roundedRect = new RoundedRectangle()
             {
                 RadiusX = this.RadiusX,
@@ -352,11 +338,9 @@ namespace Sc
 
         private void ScAnim_AnimationEvent(ScAnimation scAnimation)
         {
-            int r, g, b;
-
-            r = (int)linearR.GetCurtValue();
-            g = (int)linearG.GetCurtValue();
-            b = (int)linearB.GetCurtValue();
+            int r = (int)linearR.GetCurtValue();
+            int g = (int)linearG.GetCurtValue();
+            int b = (int)linearB.GetCurtValue();
 
             color = Color.FromArgb(r, g, b);
 
@@ -366,9 +350,7 @@ namespace Sc
             if (linearR.IsStop && linearG.IsStop && linearB.IsStop)
             {
                 scAnimation.Stop();
-
-                if (AnimalStopEvent != null)
-                    AnimalStopEvent(this);
+                AnimalStopEvent?.Invoke(this);
             }
         }
         public void StartLeaveFontColorAnim()
@@ -383,11 +365,9 @@ namespace Sc
 
         private void ScFontColorAnim_AnimationEvent(ScAnimation scAnimation)
         {
-            int r, g, b;
-
-            r = (int)linearFontR.GetCurtValue();
-            g = (int)linearFontG.GetCurtValue();
-            b = (int)linearFontB.GetCurtValue();
+            int r = (int)linearFontR.GetCurtValue();
+            int g = (int)linearFontG.GetCurtValue();
+            int b = (int)linearFontB.GetCurtValue();
 
             fontColor = Color.FromArgb(r, g, b);
 
@@ -397,9 +377,7 @@ namespace Sc
             if (linearFontR.IsStop && linearFontG.IsStop && linearFontB.IsStop)
             {
                 scAnimation.Stop();
-
-                if (AnimalStopEvent != null)
-                    AnimalStopEvent(this);
+                AnimalStopEvent?.Invoke(this);
             }
         }
     }

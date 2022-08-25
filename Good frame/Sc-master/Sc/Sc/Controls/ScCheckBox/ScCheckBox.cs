@@ -29,9 +29,7 @@ namespace Sc
             set
             {
                 isChecked = value;
-
-                if (DrawCheckLayer != null)
-                    DrawCheckLayer.Refresh();
+                DrawCheckLayer?.Refresh();
             }
         }
 
@@ -145,7 +143,6 @@ namespace Sc
             SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, rawColor);
             g.RenderTarget.DrawRectangle(rect, brush, boxSideWidth);
             brush.Dispose();
-
             if (IsUseInFill)
                 FillIn(g, Color.FromArgb(50, BoxColor.R, BoxColor.G, BoxColor.B));
         }
@@ -297,11 +294,8 @@ namespace Sc
             float h = rect.Height / 4;
 
             PathGeometry pathGeometry = new PathGeometry(D2DGraphics.d2dFactory);
-
-            GeometrySink pSink = null;
-            pSink = pathGeometry.Open();
+            GeometrySink pSink = pathGeometry.Open();
             pSink.SetFillMode(SharpDX.Direct2D1.FillMode.Winding);
-
             pSink.BeginFigure(new RawVector2(rect.Left, rect.Top), FigureBegin.Filled);
 
             RawVector2[] points =
@@ -328,9 +322,7 @@ namespace Sc
             float h4 = rect.Height / 4f;
 
             PathGeometry pathGeometry = new PathGeometry(D2DGraphics.d2dFactory);
-
-            GeometrySink pSink = null;
-            pSink = pathGeometry.Open();
+            GeometrySink pSink = pathGeometry.Open();
             pSink.SetFillMode(SharpDX.Direct2D1.FillMode.Winding);
 
             pSink.BeginFigure(new RawVector2(rect.Left, rect.Top + h2), FigureBegin.Filled);
@@ -349,6 +341,5 @@ namespace Sc
 
             return pathGeometry;
         }
-
     }
 }

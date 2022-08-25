@@ -13,14 +13,12 @@ namespace Sc
 {
     public class ScButton : ScLayer
     {
-        Color color = Color.FromArgb(234, 232, 233);
+        Color color = Color.FromArgb(red: 234, green: 232, blue: 233);
         Color fontColor = Color.FromArgb(234, 232, 233);
-
         Color normalColor = Color.FromArgb(234, 232, 233);
         Color enterColor = Color.FromArgb(248, 248, 245);
         Color downColor = Color.FromArgb(153, 114, 49);
         Color disableColor = Color.FromArgb(153, 114, 49);
-
         Color normalFontColor = Color.FromArgb(255, 191, 152, 90);
         Color enterFontColor = Color.FromArgb(248, 248, 245);
         Color downFontColor = Color.FromArgb(255, 233, 233, 233);
@@ -86,19 +84,8 @@ namespace Sc
 
         public bool IsUseShadow
         {
-            get
-            {
-                if (ShadowLayer == null)
-                    return false;
-                return true;
-            }
-            set
-            {
-                if (value == true)
-                    ShadowLayer = shadow;
-                else
-                    ShadowLayer = null;
-            }
+            get { return ShadowLayer != null; }
+            set { ShadowLayer = value ? shadow : null; }
         }
 
 
@@ -116,7 +103,6 @@ namespace Sc
         ScLinearAnimation linearR;
         ScLinearAnimation linearG;
         ScLinearAnimation linearB;
-
 
         ScLinearAnimation linearFontR;
         ScLinearAnimation linearFontG;
@@ -158,15 +144,11 @@ namespace Sc
         public ScButton(ScMgr scmgr = null)
             : base(scmgr)
         {
-            D2DPaint += ScButton_D2DPaint;
-
-
             shadow = new ScShadow(scmgr);
             shadow.CornersRadius = 6;
             shadow.ShadowRadius = 3;
             shadow.ShadowColor = Color.FromArgb(15, 0, 0, 0);
             ShadowLayer = shadow;
-
 
             this.MouseDown += ScButton_MouseDown;
             this.MouseUp += ScButton_MouseUp;
@@ -175,19 +157,16 @@ namespace Sc
 
             this.D2DPaint += ScButton_D2DPaint;
 
-
-            scAnim = new ScAnimation(this, animMS, true);
+            scAnim = new ScAnimation(layer: this, animMS: animMS, autoRest: true);
             scAnim.AnimationEvent += ScAnim_AnimationEvent;
 
             scFontColorAnim = new ScAnimation(this, animMS, true);
             scFontColorAnim.AnimationEvent += ScFontColorAnim_AnimationEvent;
 
-
             IsUseOrgHitGeometry = false;
 
             SizeChanged += ScButton_SizeChanged;
             LocationChanged += ScButton_LocationChanged;
-
         }
 
         private void ScButton_D2DPaint(D2DGraphics g)
@@ -197,7 +176,6 @@ namespace Sc
                 FillItemGeometry(g);
                 DrawString(g);
             }
-
             if (PaintEvent != null)
             {
                 RawRectangleF rect = new RawRectangleF(0, 0, Width, Height);
@@ -230,18 +208,19 @@ namespace Sc
 
         void DrawString(D2DGraphics g)
         {
-            if (!string.IsNullOrWhiteSpace(Text))
+            if (string.IsNullOrWhiteSpace(Text))
+                return;
+            g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
+            RawRectangleF rect = new RawRectangleF(0, 0, Width - 1, Height - 1);
+            SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, GDIDataD2DUtils.TransToRawColor4(fontColor));
+            TextFormat textFormat = new TextFormat(D2DGraphics.dwriteFactory, foreFont.FamilyName, foreFont.Weight, foreFont.Style, foreFont.Size)
             {
-                g.RenderTarget.AntialiasMode = AntialiasMode.PerPrimitive;
-                RawRectangleF rect = new RawRectangleF(0, 0, Width - 1, Height - 1);
-                SolidColorBrush brush = new SolidColorBrush(g.RenderTarget, GDIDataD2DUtils.TransToRawColor4(fontColor));
-                TextFormat textFormat = new TextFormat(D2DGraphics.dwriteFactory, foreFont.FamilyName, foreFont.Weight, foreFont.Style, foreFont.Size)
-                { TextAlignment = TextAlignment.Center, ParagraphAlignment = ParagraphAlignment.Center };
+                TextAlignment = TextAlignment.Center,
+                ParagraphAlignment = ParagraphAlignment.Center
+            };
 
-                textFormat.WordWrapping = WordWrapping.Wrap;
-
-                g.RenderTarget.DrawText(Text, textFormat, rect, brush, DrawTextOptions.Clip);
-            }
+            textFormat.WordWrapping = WordWrapping.Wrap;
+            g.RenderTarget.DrawText(Text, textFormat, rect, brush, DrawTextOptions.Clip);
         }
 
 
@@ -265,11 +244,7 @@ namespace Sc
 
         protected override Geometry CreateHitGeometryByD2D(D2DGraphics g)
         {
-            RawRectangleF rect = new RawRectangleF(
-                0, 0,
-                 Width - 1,
-                Height - 1);
-
+            RawRectangleF rect = new RawRectangleF(0, 0, Width - 1, Height - 1);
             RoundedRectangle roundedRect = new RoundedRectangle()
             {
                 RadiusX = this.RadiusX,
@@ -280,8 +255,6 @@ namespace Sc
             RoundedRectangleGeometry roundedRectGeo = new RoundedRectangleGeometry(D2DGraphics.d2dFactory, roundedRect);
             return roundedRectGeo;
         }
-
-
 
         private void ScButton_MouseDown(object sender, ScMouseEventArgs e)
         {
@@ -322,11 +295,9 @@ namespace Sc
 
         private void ScAnim_AnimationEvent(ScAnimation scAnimation)
         {
-            int r, g, b;
-
-            r = (int)linearR.GetCurtValue();
-            g = (int)linearG.GetCurtValue();
-            b = (int)linearB.GetCurtValue();
+            int r = (int)linearR.GetCurtValue();
+            int g = (int)linearG.GetCurtValue();
+            int b = (int)linearB.GetCurtValue();
 
             color = Color.FromArgb(r, g, b);
 
@@ -336,9 +307,8 @@ namespace Sc
             if (linearR.IsStop && linearG.IsStop && linearB.IsStop)
             {
                 scAnimation.Stop();
-
-                if (AnimalStopEvent != null)
-                    AnimalStopEvent(this);
+                // 当前线程执行
+                AnimalStopEvent?.Invoke(this);
             }
         }
 
@@ -353,23 +323,18 @@ namespace Sc
 
         private void ScFontColorAnim_AnimationEvent(ScAnimation scAnimation)
         {
-            int r, g, b;
-
-            r = (int)linearFontR.GetCurtValue();
-            g = (int)linearFontG.GetCurtValue();
-            b = (int)linearFontB.GetCurtValue();
+            int r = (int)linearFontR.GetCurtValue();
+            int g = (int)linearFontG.GetCurtValue();
+            int b = (int)linearFontB.GetCurtValue();
 
             fontColor = Color.FromArgb(r, g, b);
-
             Refresh();
             Update();
 
             if (linearFontR.IsStop && linearFontG.IsStop && linearFontB.IsStop)
             {
                 scAnimation.Stop();
-
-                if (AnimalStopEvent != null)
-                    AnimalStopEvent(this);
+                AnimalStopEvent?.Invoke(this);
             }
         }
     }

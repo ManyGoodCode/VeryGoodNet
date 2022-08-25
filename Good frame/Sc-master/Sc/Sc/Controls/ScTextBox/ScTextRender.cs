@@ -27,17 +27,16 @@ namespace Sc
                 return Result.Ok;
             }
 
-            var pathGeometry = new PathGeometry(_d2DFactory);
-            var geometrySink = pathGeometry.Open();
+            PathGeometry pathGeometry = new PathGeometry(_d2DFactory);
+            GeometrySink geometrySink = pathGeometry.Open();
 
-            var fontFace = glyphRun.FontFace;
+            FontFace fontFace = glyphRun.FontFace;
             if (glyphRun.Indices.Length > 0)
                 fontFace.GetGlyphRunOutline(glyphRun.FontSize, glyphRun.Indices, glyphRun.Advances, glyphRun.Offsets, glyphRun.IsSideways, glyphRun.BidiLevel % 2 != 0, geometrySink);
             geometrySink.Close();
             geometrySink.Dispose();
             fontFace.Dispose();
-
-            var matrix = new Matrix3x2()
+            Matrix3x2 matrix = new Matrix3x2()
             {
                 M11 = 1,
                 M12 = 0,
@@ -47,11 +46,10 @@ namespace Sc
                 M32 = baselineOriginY
             };
 
-            var transformedGeometry = new TransformedGeometry(_d2DFactory, pathGeometry, matrix);
+            TransformedGeometry transformedGeometry = new TransformedGeometry(_d2DFactory, pathGeometry, matrix);
 
-            var brushColor = (Color4)Color.Black;
+            Color4 brushColor = (Color4)Color.Black;
             SolidColorBrush brush = null;
-
             if (clientDrawingEffect != null && clientDrawingEffect is ColorDrawingEffect)
             {
                 brushColor = (clientDrawingEffect as ColorDrawingEffect).Color;
