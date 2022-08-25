@@ -31,10 +31,6 @@ namespace SharpDX.XInput
         private readonly UserIndex userIndex;
         private static readonly IXInput xinput;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Controller"/> class.
-        /// </summary>
-        /// <param name="userIndex">Index of the user.</param>
         public Controller(UserIndex userIndex = UserIndex.Any)
         {
             if(xinput == null)
@@ -44,18 +40,10 @@ namespace SharpDX.XInput
             this.userIndex = userIndex;
         }
 
-        /// <summary>
-        /// Gets the <see cref="UserIndex"/> associated with this controller.
-        /// </summary>
-        /// <value>The index of the user.</value>
+        // Gets the <see cref="UserIndex"/> associated with this controller.
         public UserIndex UserIndex { get { return this.userIndex; } }
 
-        /// <summary>
-        /// Gets the battery information.
-        /// </summary>
-        /// <param name="batteryDeviceType">Type of the battery device.</param>
-        /// <returns></returns>
-        /// <unmanaged>unsigned int XInputGetBatteryInformation([In] XUSER_INDEX dwUserIndex,[In] BATTERY_DEVTYPE devType,[Out] XINPUT_BATTERY_INFORMATION* pBatteryInformation)</unmanaged>	
+        // Gets the battery information.
         public BatteryInformation GetBatteryInformation(BatteryDeviceType batteryDeviceType)
         {
             BatteryInformation temp;
@@ -64,12 +52,7 @@ namespace SharpDX.XInput
             return temp;
         }
 
-        /// <summary>
-        /// Gets the capabilities.
-        /// </summary>
-        /// <param name="deviceQueryType">Type of the device query.</param>
-        /// <returns></returns>
-        /// <unmanaged>unsigned int XInputGetCapabilities([In] XUSER_INDEX dwUserIndex,[In] XINPUT_DEVQUERYTYPE dwFlags,[Out] XINPUT_CAPABILITIES* pCapabilities)</unmanaged>	
+        // Gets the capabilities.
         public Capabilities GetCapabilities(DeviceQueryType deviceQueryType)
         {
             Capabilities temp;
@@ -78,34 +61,20 @@ namespace SharpDX.XInput
             return temp;
         }
 
-        /// <summary>
-        /// Gets the capabilities.
-        /// </summary>
-        /// <param name="deviceQueryType">Type of the device query.</param>
-        /// <param name="capabilities">The capabilities of this controller.</param>
-        /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
+        // Gets the capabilities.
         public bool GetCapabilities(DeviceQueryType deviceQueryType, out Capabilities capabilities)
         {
             return xinput.XInputGetCapabilities((int)userIndex, deviceQueryType, out capabilities) == 0;
         }
 
-        /// <summary>
-        /// Gets the keystroke.
-        /// </summary>
-        /// <param name="deviceQueryType">The flag.</param>
-        /// <param name="keystroke">The keystroke.</param>
-        /// <returns></returns>
-        /// <unmanaged>unsigned int XInputGetKeystroke([In] XUSER_INDEX dwUserIndex,[In] unsigned int dwReserved,[Out] XINPUT_KEYSTROKE* pKeystroke)</unmanaged>	
+        // Gets the keystroke.
         public Result GetKeystroke(DeviceQueryType deviceQueryType, out Keystroke keystroke)
         {
             var result = ErrorCodeHelper.ToResult(xinput.XInputGetKeystroke((int)userIndex, (int)deviceQueryType, out keystroke));
             return result;
         }
 
-        /// <summary>
-        /// Gets the state.
-        /// </summary>
-        /// <returns>The state of this controller.</returns>
+        // Gets the state.
         public State GetState()
         {
             State temp;
@@ -114,20 +83,14 @@ namespace SharpDX.XInput
             return temp;
         }
 
-        /// <summary>
-        /// Gets the state.
-        /// </summary>
-        /// <param name="state">The state of this controller.</param>
-        /// <returns><c>true</c> if the controller is connected, <c>false</c> otherwise.</returns>
+        // Gets the state.
+        //if the controller is connected, <c>false</c> otherwise.</returns>
         public bool GetState(out State state)
         {
             return xinput.XInputGetState((int)userIndex, out state) == 0;
         }
 
-        /// <summary>
-        /// Sets the reporting.
-        /// </summary>
-        /// <param name="enableReporting">if set to <c>true</c> [enable reporting].</param>
+        // Sets the reporting.
         public static void SetReporting(bool enableReporting)
         {
             if(xinput != null)
@@ -136,11 +99,7 @@ namespace SharpDX.XInput
             }
         }
 
-        /// <summary>
-        /// Sets the vibration.
-        /// </summary>
-        /// <param name="vibration">The vibration.</param>
-        /// <returns></returns>
+        // Sets the vibration 
         public Result SetVibration(Vibration vibration)
         {
             var result = ErrorCodeHelper.ToResult(xinput.XInputSetState((int)userIndex, vibration));
@@ -148,12 +107,7 @@ namespace SharpDX.XInput
             return result;
         }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is connected.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is connected; otherwise, <c>false</c>.
-        /// </value>
+        // Gets a value indicating whether this instance is connected.
         public bool IsConnected
         {
             get
@@ -163,7 +117,6 @@ namespace SharpDX.XInput
             }
         }
 
-#if !WINDOWS_UWP
         static Controller()
         {
             if(LoadLibrary("xinput1_4.dll") != IntPtr.Zero)
@@ -182,11 +135,5 @@ namespace SharpDX.XInput
 
         [DllImport("kernel32", CharSet = CharSet.Unicode, EntryPoint = "LoadLibrary", SetLastError = true)]
         private static extern IntPtr LoadLibrary(string lpFileName);
-#else
-        static Controller()
-        {
-            xinput = new XInput14();
-        }
-#endif
     }
 }
