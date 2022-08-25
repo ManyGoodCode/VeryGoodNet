@@ -1,64 +1,22 @@
-﻿// Copyright (c) 2010-2014 SharpDX - Alexandre Mutel
-// 
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-// 
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-// 
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-// THE SOFTWARE.
-using System;
+﻿using System;
 using System.Runtime.InteropServices;
 using SharpDX.Diagnostics;
 
 namespace SharpDX
 {
-    /// <summary>
-    /// Root IUnknown class to interop with COM object
-    /// </summary>
     public partial class ComObject : CppObject, IUnknown
     {
-        /// <summary>
-        /// Logs a warning of a possible memory leak when <see cref="Configuration.EnableObjectTracking" /> is enabled.
-        /// Default uses <see cref="System.Diagnostics.Debug"/>.
-        /// </summary>
         public static Action<string> LogMemoryLeakWarning = (warning) => System.Diagnostics.Debug.WriteLine(warning);
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComObject"/> class from a IUnknown object.
-        /// </summary>
-        /// <param name="iunknowObject">Reference to a IUnknown object</param>
         public ComObject(object iunknowObject)
         {
             NativePointer = Marshal.GetIUnknownForObject(iunknowObject);
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ComObject"/> class.
-        /// </summary>
         protected ComObject()
         {
         }
 
-        /// <summary>
-        /// Query this instance for a particular COM GUID/interface support.
-        /// </summary>
-        /// <param name = "guid">GUID query interface</param>
-        /// <param name = "outPtr">output object associated with this GUID, IntPtr.Zero in interface is not supported</param>
-        /// <exception cref="SharpDXException">If this object doesn't support the interface</exception>
-        /// <msdn-id>ms682521</msdn-id>
-        /// <unmanaged>IUnknown::QueryInterface</unmanaged>	
-        /// <unmanaged-short>IUnknown::QueryInterface</unmanaged-short>
         public virtual void QueryInterface(Guid guid, out IntPtr outPtr)
         {
             var result = ((IUnknown) this).QueryInterface(ref guid, out outPtr);
