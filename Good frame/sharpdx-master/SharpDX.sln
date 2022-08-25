@@ -1,0 +1,95 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.32106.194
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Sources", "Sources", "{CC8DB471-0644-430D-9D4B-808A2475BEC0}"
+	ProjectSection(SolutionItems) = preProject
+		Source\Mapping.Direct3D1x.xml = Source\Mapping.Direct3D1x.xml
+		Source\Mapping.xml = Source\Mapping.xml
+		Source\MappingFiles.props = Source\MappingFiles.props
+		Source\SharedAssemblyInfo.cs = Source\SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{F1AF9A3B-7856-46C9-992A-391E5455BF1F}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX", "Source\SharpDX\SharpDX.csproj", "{D0BCD56A-41C4-4A4E-8590-26864CED07FF}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Direct2D1", "Source\SharpDX.Direct2D1\SharpDX.Direct2D1.csproj", "{C97878F4-1510-4BBA-8153-BD71DA7D50D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpPak", "Source\Tools\SharpPak\SharpPak.csproj", "{5E597A82-9DE9-4BA5-AD76-51202190E951}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Documentation", "Documentation\Documentation.csproj", "{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Documentation", "Documentation", "{57C5C966-ADB2-43F2-BB54-99BCB56C9F10}"
+	ProjectSection(SolutionItems) = preProject
+		ChangeLog.txt = ChangeLog.txt
+		README.markdown = README.markdown
+		ReleaseNotes.html = ReleaseNotes.html
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{1B526C0E-EE4A-4E8F-BF8F-8C7397FB4918}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.Animation", "Source\SharpDX.Animation\SharpDX.Animation.csproj", "{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpGitLog", "Source\Tools\SharpGitLog\SharpGitLog.csproj", "{15BA35B5-3E54-4715-8857-36F4F96F51FB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{3EF31A42-4EEF-44AC-8D18-D036D080A955}"
+	ProjectSection(SolutionItems) = preProject
+		Source\Directory.build.props = Source\Directory.build.props
+		Source\Directory.build.targets = Source\Directory.build.targets
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SharpDX.DXGI", "Source\SharpDX.DXGI\SharpDX.DXGI.csproj", "{A2EA1101-C781-4040-91FC-A77529E9C73F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D0BCD56A-41C4-4A4E-8590-26864CED07FF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D0BCD56A-41C4-4A4E-8590-26864CED07FF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D0BCD56A-41C4-4A4E-8590-26864CED07FF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D0BCD56A-41C4-4A4E-8590-26864CED07FF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C97878F4-1510-4BBA-8153-BD71DA7D50D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C97878F4-1510-4BBA-8153-BD71DA7D50D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C97878F4-1510-4BBA-8153-BD71DA7D50D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C97878F4-1510-4BBA-8153-BD71DA7D50D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5E597A82-9DE9-4BA5-AD76-51202190E951}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A2EA1101-C781-4040-91FC-A77529E9C73F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A2EA1101-C781-4040-91FC-A77529E9C73F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A2EA1101-C781-4040-91FC-A77529E9C73F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A2EA1101-C781-4040-91FC-A77529E9C73F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D0BCD56A-41C4-4A4E-8590-26864CED07FF} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+		{C97878F4-1510-4BBA-8153-BD71DA7D50D8} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+		{5E597A82-9DE9-4BA5-AD76-51202190E951} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{9AA405CA-B7FD-44D0-9EBC-21F5D0F44DEB} = {57C5C966-ADB2-43F2-BB54-99BCB56C9F10}
+		{874DEC63-9AB9-4A09-B1EA-E8FB1F1B68A1} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+		{15BA35B5-3E54-4715-8857-36F4F96F51FB} = {F1AF9A3B-7856-46C9-992A-391E5455BF1F}
+		{A2EA1101-C781-4040-91FC-A77529E9C73F} = {CC8DB471-0644-430D-9D4B-808A2475BEC0}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {4DB4E6D7-1EEE-47F3-9530-F142104A7AC2}
+	EndGlobalSection
+EndGlobal
