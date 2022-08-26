@@ -630,7 +630,7 @@ namespace Sc
 
             PointF ptf;
             PointF scMouseLocation;
-            ScMouseEventArgs mouseEventArgs;
+            Sc.ScMouseEventArgs mouseEventArgs;
 
             foreach (ScLayer control in mouseMoveScControlList)
             {
@@ -640,28 +640,31 @@ namespace Sc
                 Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                 ptf = control.TransGlobalToLocal(pt);
                 scMouseLocation = new PointF(ptf.X, ptf.Y);
-                mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation, e.Delta);
+                mouseEventArgs = new Sc.ScMouseEventArgs(e.Button, scMouseLocation, e.Delta);
                 control.ScMouseWheel(mouseEventArgs);
             }
         }
 
-        private void Control_MouseMove(object sender, MouseEventArgs e)
+        private void Control_MouseMove(object sender, System.Windows.Forms.MouseEventArgs e)
         {
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
-                ScMouseMove(e);
+                ScMouseMove(e: e);
                 return;
             }
 
             Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
-            CheckScControlMouseMove(pt);
+            CheckScControlMouseMove(mouseLocation: pt);
 
             ScMouseLeave();
-            ScMouseEnter(e);
-            ScMouseMove(e);
+            ScMouseEnter(e: e);
+            ScMouseMove(e: e);
         }
 
 
+        /// <summary>
+        /// 将鼠标点所在的 父 Sc.ScLayer 添加入
+        /// </summary>
         void CheckScControlMouseMove(Point mouseLocation)
         {
             if (rootScLayer == null)
@@ -670,15 +673,16 @@ namespace Sc
             if (mouseMoveScControlList != null)
                 oldMouseMoveScControlList = mouseMoveScControlList;
 
-            mouseMoveScControlList = new List<ScLayer>();
-
-            bool isChildHitThrough = CheckChildScControlMouseMove(rootScLayer, mouseLocation);
-
+            mouseMoveScControlList = new List<Sc.ScLayer>();
+            bool isChildHitThrough = CheckChildScControlMouseMove(parent: rootScLayer, mouseLocation: mouseLocation);
             if (isChildHitThrough)
                 mouseMoveScControlList.Add(rootScLayer);
         }
 
-
+        /// <summary>
+        /// 递归遍历  Sc.ScLayer 及其子 Sc.ScLayer 包含该鼠标点，
+        /// 并将他们添加到鼠标控件集合中
+        /// </summary>
 
         bool CheckChildScControlMouseMove(Sc.ScLayer parent, Point mouseLocation)
         {
@@ -701,19 +705,24 @@ namespace Sc
                 if (layer.FillContainsPoint(mouseLocation))
                 {
                     ret = true;
-                    isChildHitThrough = CheckChildScControlMouseMove(layer, mouseLocation);
-
+                    // 递归遍历子类，观察是否存在 点
+                    isChildHitThrough = CheckChildScControlMouseMove(parent: layer, mouseLocation: mouseLocation);
                     if (isChildHitThrough)
                     {
                         mouseMoveScControlList.Add(layer);
-
                         if (layer.IsHitThrough)
+                        {
                             continue;
+                        }
                         else
+                        {
                             ret = false;
+                        }
                     }
                     else
+                    {
                         ret = false;
+                    }
 
                     break;
                 }
