@@ -197,10 +197,7 @@ namespace Sc
 
         public Sc.ScGraphics Graphics
         {
-            get
-            {
-                return graphics;
-            }
+            get { return graphics; }
         }
 
 
@@ -540,38 +537,32 @@ namespace Sc
 
         private void Control_ImeStringEvent(string imeString)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScImeStringEvent(imeString);
+            FocusScControl?.ScImeStringEvent(imeString);
         }
 
         private void Control_CharEvent(char c)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScCharEvent(c);
+            FocusScControl?.ScCharEvent(c);
         }
 
         private void Control_KeyUp(object sender, KeyEventArgs e)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScKeyUp(e);
+            FocusScControl?.ScKeyUp(e);
         }
 
         private void Control_KeyDown(object sender, KeyEventArgs e)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScKeyDown(e);
+            FocusScControl?.ScKeyDown(e);
         }
 
         private void Control_LostFocus(object sender, EventArgs e)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScLostFocus(e);
+            FocusScControl?.ScLostFocus(e);
         }
 
         private void Control_GotFocus(object sender, EventArgs e)
         {
-            if (FocusScControl != null)
-                FocusScControl.ScGotFocus(e);
+            FocusScControl?.ScGotFocus(e);
         }
 
         private void Control_MouseLeave(object sender, EventArgs e)
@@ -689,19 +680,19 @@ namespace Sc
 
 
 
-        bool CheckChildScControlMouseMove(ScLayer parent, Point mouseLocation)
+        bool CheckChildScControlMouseMove(Sc.ScLayer parent, Point mouseLocation)
         {
-            ScLayer layer;
+            Sc.ScLayer layer;
             bool isChildHitThrough;
             bool ret = true;
 
             for (int i = parent.controls.Count() - 1; i >= 0; i--)
             {
                 layer = parent.controls[i];
-
                 if (layer.Visible == false)
                     continue;
 
+                // 确定根Layout层矩形是否与扫描到Layout矩形相交
                 if (!rootScLayer.DrawBox.IntersectsWith(layer.DrawBox))
                 {
                     continue;
@@ -731,16 +722,18 @@ namespace Sc
             return ret;
         }
 
-        void ScMouseMove(MouseEventArgs e)
+        /// <summary>
+        /// 将鼠标当前的移动位置传递给 所有可见的 Layout Control
+        /// </summary>
+        void ScMouseMove(System.Windows.Forms.MouseEventArgs e)
         {
             PointF ptf;
             PointF scMouseLocation;
-            ScMouseEventArgs mouseEventArgs;
-
+            Sc.ScMouseEventArgs mouseEventArgs;
             if (mouseMoveScControlList == null)
                 return;
 
-            foreach (ScLayer control in mouseMoveScControlList)
+            foreach (Sc.ScLayer control in mouseMoveScControlList)
             {
                 if (control.Visible == false)
                     continue;
@@ -748,11 +741,15 @@ namespace Sc
                 Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                 ptf = control.TransGlobalToLocal(pt);
                 scMouseLocation = new PointF(ptf.X, ptf.Y);
-                mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation);
+                mouseEventArgs = new Sc.ScMouseEventArgs(e.Button, scMouseLocation);
                 control.ScMouseMove(mouseEventArgs);
             }
         }
 
+        /// <summary>
+        /// 通过对比现在的鼠标所在可见的Layout Control和以前鼠标所在可见的Layout Control，
+        /// 遍历找到在以前但不在现在的执行  ScMouseLeave()
+        /// </summary>
         void ScMouseLeave()
         {
             if (oldMouseMoveScControlList == null)
@@ -760,14 +757,14 @@ namespace Sc
 
             bool isFind = false;
 
-            foreach (ScLayer oldControl in oldMouseMoveScControlList)
+            foreach (Sc.ScLayer oldControl in oldMouseMoveScControlList)
             {
                 if (oldControl.Visible == false)
                     continue;
 
                 isFind = false;
 
-                foreach (ScLayer newControl in mouseMoveScControlList)
+                foreach (Sc.ScLayer newControl in mouseMoveScControlList)
                 {
                     if (newControl.Visible == false)
                         continue;

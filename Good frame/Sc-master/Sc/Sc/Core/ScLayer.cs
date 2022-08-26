@@ -1322,7 +1322,7 @@ namespace Sc
                 ScMgr.control.Cursor = cursor;
             }
         }
-        public void ScMouseMove(ScMouseEventArgs mouseEventArgs)
+        public void ScMouseMove(Sc.ScMouseEventArgs mouseEventArgs)
         {
             if (MouseMove == null || Enable == false || dispose == true)
                 return;
