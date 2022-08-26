@@ -31,8 +31,20 @@ namespace Sc
 
 
         public ScLayer FocusScControl { get; set; }
-        public Control control;
+
+        /// <summary>
+        /// System.Windows.Forms
+        /// </summary>
+        public System.Windows.Forms.Control control;
+
+        /// <summary>
+        /// System.Drawing.Bitmap
+        /// </summary>
         public Bitmap bitmap;
+
+        /// <summary>
+        /// SharpDX.WIC.Bitmap
+        /// </summary>
         public WicBitmap wicBitmap;
 
 
@@ -659,8 +671,6 @@ namespace Sc
         }
 
 
-
-
         void CheckScControlMouseMove(Point mouseLocation)
         {
             if (rootScLayer == null)
@@ -776,26 +786,28 @@ namespace Sc
             }
         }
 
-        void ScMouseEnter(MouseEventArgs e)
+        /// <summary>
+        /// 通过对比现在的鼠标所在可见的Layout Control和以前鼠标所在可见的Layout Control，
+        /// 遍历找到在现在但不在以前的执行  ScMouseEnter(Sc.ScMouseEventArgs mouseEventArgs) 区别于 ScMouseEnter(System.Windows.Forms.MouseEventArgs e)
+        /// </summary>
+        void ScMouseEnter(System.Windows.Forms.MouseEventArgs e)
         {
             bool isFind = false;
             PointF ptf;
             PointF scMouseLocation;
-            ScMouseEventArgs mouseEventArgs;
-
+            Sc.ScMouseEventArgs mouseEventArgs;
             if (mouseMoveScControlList == null)
                 return;
 
-            foreach (ScLayer newControl in mouseMoveScControlList)
+            foreach (Sc.ScLayer newControl in mouseMoveScControlList)
             {
                 if (newControl.Visible == false)
                     continue;
-
                 isFind = false;
 
                 if (oldMouseMoveScControlList != null)
                 {
-                    foreach (ScLayer oldControl in oldMouseMoveScControlList)
+                    foreach (Sc.ScLayer oldControl in oldMouseMoveScControlList)
                     {
                         if (oldControl.Visible == false)
                             continue;
@@ -813,7 +825,7 @@ namespace Sc
                     Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                     ptf = newControl.TransGlobalToLocal(pt);
                     scMouseLocation = new PointF(ptf.X, ptf.Y);
-                    mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation);
+                    mouseEventArgs = new Sc.ScMouseEventArgs(e.Button, scMouseLocation);
                     newControl.ScMouseEnter(mouseEventArgs);
                 }
             }
@@ -839,6 +851,7 @@ namespace Sc
             control.SizeChanged += Control_SizeChanged;
 
 
+            // 不同Control还需要注册额外的事件
             if (controlType == ControlType.StdControl)
             {
                 ((Sc.ScLayerControl)control).CharEvent += Control_CharEvent;
@@ -861,37 +874,26 @@ namespace Sc
 
         public void Dispose()
         {
-            if (graphics != null)
-            {
-                graphics.Dispose();
-            }
-
+            graphics?.Dispose();
             if (dot9BitmaShadowDict != null)
             {
-                foreach (var item in dot9BitmaShadowDict)
+                foreach (KeyValuePair<string, Utils.Dot9BitmapD2D> item in dot9BitmaShadowDict)
                 {
                     item.Value.Dispose();
                 }
+
                 dot9BitmaShadowDict.Clear();
             }
 
-            if (bitmap != null)
-            {
-                bitmap.Dispose();
-                bitmap = null;
-            }
+            bitmap?.Dispose();
+            bitmap = null;
 
-            if (wicBitmap != null)
-            {
-                wicBitmap.Dispose();
-                wicBitmap = null;
-            }
+            wicBitmap?.Dispose();
+            wicBitmap = null;
 
-            if (rebulidLayerList != null)
-                rebulidLayerList.Clear();
+            rebulidLayerList?.Clear();
 
-            if (rootParent != null)
-                rootParent.Dispose();
+            rootParent?.Dispose();
         }
     }
 }

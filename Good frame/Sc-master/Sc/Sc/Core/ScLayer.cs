@@ -1336,7 +1336,7 @@ namespace Sc
             MouseLeave(this);
         }
 
-        public void ScMouseEnter(ScMouseEventArgs mouseEventArgs)
+        public void ScMouseEnter(Sc.ScMouseEventArgs mouseEventArgs)
         {
             if (MouseEnter == null || Enable == false || dispose == true)
                 return;
