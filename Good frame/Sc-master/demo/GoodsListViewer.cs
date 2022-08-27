@@ -18,27 +18,23 @@ namespace demo
 
     public class GoodsListViewer : IDisposable
     {
-        public ScMgr scMgr;
-        ScGridView gridView;
-        ScLayer root;
+        public Sc.ScMgr scMgr;
+        Sc.ScGridView gridView;
+        Sc.ScLayer root;
+        Sc.ScListView listView;
 
         List<TestData> testDatalistFront = new List<TestData>();
         List<TestData> testDatalistBack = new List<TestData>();
 
-
-        //
-        ScListView listView;
-
-
-        public GoodsListViewer(Control control)
+        public GoodsListViewer(System.Windows.Forms.Control control)
         {
-            scMgr = new ScMgr(control.Width, control.Height);
+            scMgr = new Sc.ScMgr(control.Width, control.Height);
             scMgr.BackgroundColor = Color.FromArgb(255, 246, 245, 251);
             control.Controls.Add(scMgr.control);
+
             scMgr.control.Dock = DockStyle.Fill;
             root = scMgr.GetRootLayer();
             root.Dock = ScDockStyle.Fill;
-            // root.Padding = new Utils.Margin(100, 100, 100, 100);
 
 
             gridView = new ScGridView(scMgr);
@@ -334,26 +330,20 @@ namespace demo
         }
         public void UpdateDataSource()
         {
-          
             gridView.ResetDataRowCount(testDatalistFront.Count());
-           // listView.ResetDataRowCount(testDatalistFront.Count());
         }
 
 
         public void CreateBackDataList()
         {
             testDatalistBack.Clear();
-
             for (int i = 0; i < 106; i++)
             {
                 TestData testData = new TestData();
                 testData.test = "测试数据" + i;
                 testDatalistBack.Add(testData);
             }
-
         }
-
-
 
         public void Dispose()
         {
