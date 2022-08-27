@@ -20,8 +20,15 @@ namespace Sc
         static public SharpDX.DirectWrite.Factory dwriteFactory = null;
 
 
-
+        /// <summary>
+        /// 控件的话就是 ： SharpDX.Direct2D1.WindowRenderTarget【基类RenderTarget】
+        /// Bitmap就是  :  SharpDX.Direct2D1.WicRenderTarget 【基类RenderTarget】
+        /// </summary>
         public SharpDX.Direct2D1.RenderTarget renderTarget;
+
+        /// <summary>
+        /// 通过 SharpDX.Direct2D1.RenderTarget以及GUID 创建得到 SharpDX.Direct2D1.GdiInteropRenderTarget
+        /// </summary>
         public SharpDX.Direct2D1.GdiInteropRenderTarget gdiRenderTarget;
 
         SharpDX.Mathematics.Interop.RawMatrix3x2 matrix = new RawMatrix3x2(
@@ -109,20 +116,23 @@ namespace Sc
                 PresentOptions = PresentOptions.Immediately | PresentOptions.RetainContents
             };
 
+            SharpDX.Direct2D1.RenderTargetProperties rtProperties = new RenderTargetProperties()
+            {
+                Usage = SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible
+            };
 
-            SharpDX.Direct2D1.RenderTargetProperties rtProps = new RenderTargetProperties();
-            rtProps.Usage = SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible;
-
-            renderTarget = new SharpDX.Direct2D1.WindowRenderTarget(d2dFactory, rtProps, properties)
+            renderTarget = new SharpDX.Direct2D1.WindowRenderTarget(
+                factory: d2dFactory,
+                renderTargetProperties: rtProperties,
+                hwndProperties: properties)
             {
                 AntialiasMode = SharpDX.Direct2D1.AntialiasMode.PerPrimitive,
                 TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Cleartype
             };
 
-
             IntPtr gdirtPtr;
-            renderTarget.QueryInterface(Guid.Parse("e0db51c3-6f77-4bae-b3d5-e47509b35838"), out gdirtPtr);
-            gdiRenderTarget = new SharpDX.Direct2D1.GdiInteropRenderTarget(gdirtPtr);
+            renderTarget.QueryInterface(guid: Guid.Parse("e0db51c3-6f77-4bae-b3d5-e47509b35838"), outPtr: out gdirtPtr);
+            gdiRenderTarget = new SharpDX.Direct2D1.GdiInteropRenderTarget(nativePtr: gdirtPtr);
 
         }
 
@@ -143,21 +153,23 @@ namespace Sc
                 dpiX, dpiY,
                 SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible, FeatureLevel.Level_DEFAULT);
 
-            renderTarget = new WicRenderTarget(d2dFactory, wicBitmap, renderTargetProperties);
+            renderTarget = new SharpDX.Direct2D1.WicRenderTarget(
+               factory: d2dFactory,
+               wicBitmap: wicBitmap,
+               renderTargetProperties: renderTargetProperties);
 
             IntPtr gdirtPtr;
-            renderTarget.QueryInterface(Guid.Parse("e0db51c3-6f77-4bae-b3d5-e47509b35838"), out gdirtPtr);
-            gdiRenderTarget = new GdiInteropRenderTarget(gdirtPtr);
+            renderTarget.QueryInterface(guid: Guid.Parse("e0db51c3-6f77-4bae-b3d5-e47509b35838"), outPtr: out gdirtPtr);
+            gdiRenderTarget = new GdiInteropRenderTarget(nativePtr: gdirtPtr);
         }
 
 
         public override void ReSize(int width, int height)
         {
-            if (control != null)
-            {
-                SharpDX.Direct2D1.WindowRenderTarget wrt = (WindowRenderTarget)renderTarget;
-                wrt.Resize(new SharpDX.Size2(width, height));
-            }
+            if (control == null)
+                return;
+            SharpDX.Direct2D1.WindowRenderTarget wrt = (WindowRenderTarget)renderTarget;
+            wrt.Resize(new SharpDX.Size2(width, height));
         }
 
         public SharpDX.Direct2D1.RenderTarget RenderTarget
@@ -167,8 +179,9 @@ namespace Sc
 
         public Graphics CreateGdiGraphics()
         {
-            IntPtr hdc = gdiRenderTarget.GetDC(SharpDX.Direct2D1.DeviceContextInitializeMode.Copy);
-            System.Drawing.Graphics gdiGraphics = Graphics.FromHdc(hdc);
+            IntPtr hdc = gdiRenderTarget.GetDC(mode: SharpDX.Direct2D1.DeviceContextInitializeMode.Copy);
+            // 创建GDI句柄
+            System.Drawing.Graphics gdiGraphics = System.Drawing.Graphics.FromHdc(hdc);
             gdiGraphics.Transform = layer.GlobalMatrix;
             return gdiGraphics;
         }
@@ -179,15 +192,10 @@ namespace Sc
             gdiGraphics.Dispose();
         }
 
-        public override Sc.GraphicsType GetGraphicsType()
-        {
-            return GraphicsType.D2D;
-        }
+        public override Sc.GraphicsType GetGraphicsType() => GraphicsType.D2D;
         public override void BeginDraw() => renderTarget.BeginDraw();
         public override void EndDraw() => renderTarget.EndDraw();
-
         public override void ResetClip() => renderTarget.PopAxisAlignedClip();
-
         public override void ResetTransform() => renderTarget.Transform = matrix;
 
         public override void SetClip(System.Drawing.RectangleF clipRect)
