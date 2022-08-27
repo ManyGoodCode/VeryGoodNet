@@ -601,6 +601,9 @@ namespace Sc
             }
         }
 
+        /// <summary>
+        /// 遍历集合中所有可见的 Sc.ScLayer 执行 ScMouseUp(Sc.ScMouseEventArgs mouseEventArgs)
+        /// </summary>
         private void Control_MouseUp(object sender, MouseEventArgs e)
         {
             if (mouseMoveScControlList == null)
@@ -610,7 +613,7 @@ namespace Sc
             PointF scMouseLocation;
             ScMouseEventArgs mouseEventArgs;
 
-            foreach (ScLayer control in mouseMoveScControlList)
+            foreach (Sc.ScLayer control in mouseMoveScControlList)
             {
                 if (control.Visible == false)
                     continue;
@@ -618,11 +621,14 @@ namespace Sc
                 Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                 ptf = control.TransGlobalToLocal(pt);
                 scMouseLocation = new PointF(ptf.X, ptf.Y);
-                mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation);
+                mouseEventArgs = new Sc.ScMouseEventArgs(e.Button, scMouseLocation);
                 control.ScMouseUp(mouseEventArgs);
             }
         }
 
+        /// <summary>
+        /// 遍历集合中所有可见的 Sc.ScLayer 执行 ScMouseWheel(Sc.ScMouseEventArgs mouseEventArgs)
+        /// </summary>
         private void Control_MouseWheel(object sender, MouseEventArgs e)
         {
             if (mouseMoveScControlList == null)
@@ -632,7 +638,7 @@ namespace Sc
             PointF scMouseLocation;
             Sc.ScMouseEventArgs mouseEventArgs;
 
-            foreach (ScLayer control in mouseMoveScControlList)
+            foreach (Sc.ScLayer control in mouseMoveScControlList)
             {
                 if (control.Visible == false)
                     continue;
@@ -663,7 +669,7 @@ namespace Sc
 
 
         /// <summary>
-        /// 将鼠标点所在的 父 Sc.ScLayer 添加入
+        /// 将鼠标点所在的 父 Sc.ScLayer 添加入控件的集合
         /// </summary>
         void CheckScControlMouseMove(Point mouseLocation)
         {

@@ -1350,14 +1350,14 @@ namespace Sc
             MouseDown(this, mouseEventArgs);
         }
 
-        public void ScMouseUp(ScMouseEventArgs mouseEventArgs)
+        public void ScMouseUp(Sc.ScMouseEventArgs mouseEventArgs)
         {
             if (MouseUp == null || Enable == false || dispose == true)
                 return;
             MouseUp(this, mouseEventArgs);
         }
 
-        public void ScMouseWheel(ScMouseEventArgs mouseEventArgs)
+        public void ScMouseWheel(Sc.ScMouseEventArgs mouseEventArgs)
         {
             if (MouseWheel == null || Enable == false || dispose == true)
                 return;
