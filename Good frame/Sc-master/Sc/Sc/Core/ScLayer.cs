@@ -1343,7 +1343,7 @@ namespace Sc
             MouseEnter(this, mouseEventArgs);
         }
 
-        public void ScMouseDown(ScMouseEventArgs mouseEventArgs)
+        public void ScMouseDown(Sc.ScMouseEventArgs mouseEventArgs)
         {
             if (MouseDown == null || Enable == false || dispose == true)
                 return;
@@ -1372,31 +1372,29 @@ namespace Sc
         }
 
 
-        public void ScGotFocus(EventArgs e)
+        public void ScGotFocus(System.EventArgs e)
         {
             if (Enable == false || dispose == true)
                 return;
             focus = true;
-            if (GotFocus != null)
-                GotFocus(this, e);
+            GotFocus?.Invoke(this, e);
         }
 
-        public void ScLostFocus(EventArgs e)
+        public void ScLostFocus(System.EventArgs e)
         {
             if (Enable == false || dispose == true)
                 return;
             focus = false;
-            if (LostFocus != null)
-                LostFocus(this, e);
+            LostFocus?.Invoke(this, e);
         }
 
-        public void ScKeyDown(KeyEventArgs e)
+        public void ScKeyDown(System.Windows.Forms.KeyEventArgs e)
         {
             if (KeyDown != null && Enable != false && dispose == false)
                 KeyDown(this, e);
         }
 
-        public void ScKeyUp(KeyEventArgs e)
+        public void ScKeyUp(System.Windows.Forms.KeyEventArgs e)
         {
             if (KeyUp != null && Enable != false && dispose == false)
                 KeyUp(this, e);

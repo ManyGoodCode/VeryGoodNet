@@ -29,8 +29,10 @@ namespace Sc
         private ScReDrawTree reDrawTree = new ScReDrawTree();
         private ScLayer cacheRootScLayer = null;
 
-
-        public ScLayer FocusScControl { get; set; }
+        /// <summary>
+        /// 聚焦的 Sc.ScLayer
+        /// </summary>
+        public Sc.ScLayer FocusScControl { get; set; }
 
         /// <summary>
         /// System.Windows.Forms
@@ -531,7 +533,7 @@ namespace Sc
 
         public void Show()
         {
-            UpdateLayerFrm frm = control as UpdateLayerFrm;
+            Sc.UpdateLayerFrm frm = control as Sc.UpdateLayerFrm;
             frm.Show();
         }
 
@@ -545,32 +547,47 @@ namespace Sc
             FocusScControl?.ScCharEvent(c);
         }
 
+        /// <summary>
+        /// 聚焦的 Sc.ScLayer 执行 ScKeyUp(System.Windows.Forms.KeyEventArgs e)
+        /// </summary>
         private void Control_KeyUp(object sender, KeyEventArgs e)
         {
             FocusScControl?.ScKeyUp(e);
         }
 
+        /// <summary>
+        /// 聚焦的 Sc.ScLayer 执行 ScKeyDown(System.Windows.Forms.KeyEventArgs e)
+        /// </summary>
         private void Control_KeyDown(object sender, KeyEventArgs e)
         {
             FocusScControl?.ScKeyDown(e);
         }
 
+        /// <summary>
+        /// 聚焦的 Sc.ScLayer 执行 ScLostFocus(System.EventArgs e) 失焦点
+        /// </summary>
         private void Control_LostFocus(object sender, EventArgs e)
         {
             FocusScControl?.ScLostFocus(e);
         }
 
+        /// <summary>
+        /// 聚焦的 Sc.ScLayer 执行 ScGotFocus
+        /// </summary>
         private void Control_GotFocus(object sender, EventArgs e)
         {
             FocusScControl?.ScGotFocus(e);
         }
 
+        /// <summary>
+        /// 遍历集合中所有可见的 Sc.ScLayer 执行 ScMouseDown(Sc.ScMouseEventArgs mouseEventArgs)
+        /// </summary>
         private void Control_MouseLeave(object sender, EventArgs e)
         {
             if (mouseMoveScControlList == null)
                 return;
 
-            foreach (ScLayer control in mouseMoveScControlList)
+            foreach (Sc.ScLayer control in mouseMoveScControlList)
             {
                 control.ScMouseLeave();
             }
@@ -579,6 +596,9 @@ namespace Sc
             oldMouseMoveScControlList = null;
         }
 
+        /// <summary>
+        /// 遍历集合中所有可见的 Sc.ScLayer 执行 ScMouseDown(Sc.ScMouseEventArgs mouseEventArgs)
+        /// </summary>
         private void Control_MouseDown(object sender, MouseEventArgs e)
         {
             if (mouseMoveScControlList == null)
@@ -586,9 +606,9 @@ namespace Sc
 
             PointF ptf;
             PointF scMouseLocation;
-            ScMouseEventArgs mouseEventArgs;
+            Sc.ScMouseEventArgs mouseEventArgs;
 
-            foreach (ScLayer control in mouseMoveScControlList)
+            foreach (Sc.ScLayer control in mouseMoveScControlList)
             {
                 if (control.Visible == false)
                     continue;
@@ -596,7 +616,7 @@ namespace Sc
                 Point pt = new Point((int)(e.Location.X * sizeScale.Width), (int)(e.Location.Y * sizeScale.Height));
                 ptf = control.TransGlobalToLocal(pt);
                 scMouseLocation = new PointF(ptf.X, ptf.Y);
-                mouseEventArgs = new ScMouseEventArgs(e.Button, scMouseLocation);
+                mouseEventArgs = new Sc.ScMouseEventArgs(e.Button, scMouseLocation);
                 control.ScMouseDown(mouseEventArgs);
             }
         }
