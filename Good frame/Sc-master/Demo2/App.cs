@@ -15,19 +15,23 @@ namespace Demo2
             this.scMgr = scMgr;
             root = scMgr.GetRootLayer();
 
-            Demo2.TestLayer testLayer = new Demo2.TestLayer(scMgr);
-            testLayer.Name = "layer1";
-            testLayer.Location = new System.Drawing.PointF(100, 100);
-            testLayer.Width = 300;
-            testLayer.Height = 300;
-            testLayer.BackgroundColor = System.Drawing.Color.FromArgb(255, 255, 0, 255);
+            Demo2.TestLayer testLayer = new Demo2.TestLayer(scMgr)
+            {
+                Name = "layer1",
+                Location = new System.Drawing.PointF(100, 100),
+                Width = 300,
+                Height = 300,
+                BackgroundColor = System.Drawing.Color.FromArgb(255, 255, 0, 255),
+            };
             root.Add(testLayer);
 
+            Sc.ScTextBox text = new Sc.ScTextBox(scMgr)
+            {
+                Location = new System.Drawing.PointF(150, 0),
+                Width = 200,
+                Height = 30
+            };
 
-            Sc.ScTextBox text = new Sc.ScTextBox(scMgr);
-            text.Location = new System.Drawing.PointF(150, 0);
-            text.Width = 200;
-            text.Height = 30;
             root.Add(text);
         }
     }

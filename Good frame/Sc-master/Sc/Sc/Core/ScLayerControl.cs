@@ -11,7 +11,6 @@ namespace Sc
 {
     public class ScLayerControl : System.Windows.Forms.Control
     {
-        #region api
         public const int WM_NCVATIVATE = 0x86;
         public const int WM_NCPAINT = 0x0085;
         public const int WM_NCCALCSIZE = 0x83;
@@ -67,10 +66,9 @@ namespace Sc
 
         [DllImport("imm32.dll")]
         static extern bool ImmSetCompositionWindow(IntPtr hIMC, ref COMPOSITIONFORM lpCompForm);
-#endregion
 
         IntPtr m_hImc;
-        ScMgr scMgr;
+        Sc.ScMgr scMgr;
 
         public delegate void ImeStringEventHandler(string imeString);
         public event ImeStringEventHandler ImeStringEvent;
@@ -81,14 +79,13 @@ namespace Sc
         public delegate void DirectionKeyEventHandler(object sender, KeyEventArgs e);
         public event DirectionKeyEventHandler DirectionKeyEvent;
 
-        public ScLayerControl(ScMgr scMgr)
+        public ScLayerControl(Sc.ScMgr scMgr)
         {
             this.scMgr = scMgr;
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
              if(scMgr.GraphicsType == GraphicsType.GDIPlus)
                  SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
-
             m_hImc = ImmGetContext(this.Handle);         
         }
 

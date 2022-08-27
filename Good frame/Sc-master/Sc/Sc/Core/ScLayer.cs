@@ -307,17 +307,6 @@ namespace Sc
             set
             {
                 isUseDebugPanitCode = value;
-
-#if USE_DEBUG_CODE
-                if (value == true)
-                {
-                     D2DPaint += DebugLayer_D2DPaint;
-                }
-                else
-                {
-                    D2DPaint -= DebugLayer_D2DPaint;
-                }
-#endif
             }
         }
 
