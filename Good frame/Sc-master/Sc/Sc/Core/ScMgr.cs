@@ -391,6 +391,9 @@ namespace Sc
             }
         }
 
+        /// <summary>
+        /// 有 rootScLayer 属性且自动new
+        /// </summary>
         public ScLayer GetRootLayer()
         {
             return rootScLayer;

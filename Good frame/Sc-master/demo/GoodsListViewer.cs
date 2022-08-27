@@ -20,7 +20,7 @@ namespace demo
     {
         public Sc.ScMgr scMgr;
         Sc.ScGridView gridView;
-        Sc.ScLayer root;
+        Sc.ScLayer rootLayer;
         Sc.ScListView listView;
 
         List<TestData> testDatalistFront = new List<TestData>();
@@ -28,24 +28,64 @@ namespace demo
 
         public GoodsListViewer(System.Windows.Forms.Control control)
         {
-            scMgr = new Sc.ScMgr(control.Width, control.Height);
-            scMgr.BackgroundColor = Color.FromArgb(255, 246, 245, 251);
+            scMgr = new Sc.ScMgr(control.Width, control.Height)
+            {
+                BackgroundColor = Color.FromArgb(255, 246, 245, 251)
+            };
+
             control.Controls.Add(scMgr.control);
 
-            scMgr.control.Dock = System.Windows.Forms.DockStyle.Fill;
-            root = scMgr.GetRootLayer();
-            root.Dock = Sc.ScDockStyle.Fill;
+            rootLayer = scMgr.GetRootLayer();
+            rootLayer.Dock = Sc.ScDockStyle.Fill;
 
+            gridView = new Sc.ScGridView(scMgr)
+            {
+                Dock = ScDockStyle.Fill,
 
-            gridView = new Sc.ScGridView(scMgr);
+                //透明度背景色设置
+                Opacity = 1.0f,
+                BackgroundColor = Color.FromArgb(255, 255, 255, 255),
 
-            //样式设置
-            Setting();
+                //滚动条设置
+                VerScrollSize = 10,
+                HorScrollSize = 10,
+                ScrollBarSliderColor = Color.FromArgb(255, 100, 100, 100),
+
+                //边距设置
+                IsUseInside = true,
+                Margin = new Utils.Margin(50, 70, 50, 70),
+                SideSpacing = new Utils.Margin(10, 10, 10, 10),
+                OutsideLineColor = Color.FromArgb(255, 220, 220, 220),
+                InsideLineColor = Color.FromArgb(255, 200, 200, 200),
+
+                //列头设置
+                HeaderStyle = 0,
+                HeaderSpacing = 1,
+                HeaderHeight = 50,
+                HeaderSizeMode = ScLayerLayoutViewerHeaderSizeMode.ADAPTIVE,
+                HeaderControlerSize = 20,
+
+                //内容行设置
+                RowHeight = 60f,
+                RowSpacing = 1f,
+                ItemMinSize = 20,
+
+                //阴影设置
+                IsUseShadow = true,
+                ShadowStyle = 2,
+                ShadowRange = 15,
+                ShadowCornersRadius = 1,
+                ShadowColor = Color.FromArgb(250, 0, 0, 0),
+            };
+
+            //列头标题
+            gridView.CreateHeaderTitleEvent += GridView_CreateHeaderTitleEvent;
+            gridView.CreateHeaderTitleLayer();
 
             //生成列
             CreateColumnSetting();
 
-            root.Add(gridView);
+            rootLayer.Add(gridView);
 
             scMgr.ReBulid();
             CreateBackDataList();
@@ -56,62 +96,6 @@ namespace demo
             testDatalistBack.Clear();
 
             UpdateDataSource();
-        }
-
-
-        /// <summary>
-        /// 样式设置
-        /// </summary>
-        void Setting()
-        {
-            gridView.Dock = ScDockStyle.Fill;
-
-            //透明度背景色设置
-            gridView.Opacity = 1.0f;
-            gridView.BackgroundColor = Color.FromArgb(255, 255, 255, 255);
-
-            //滚动条设置
-            gridView.VerScrollSize = 10;
-            gridView.HorScrollSize = 10;
-            gridView.ScrollBarSliderColor = Color.FromArgb(255, 100, 100, 100);
-
-
-            //边距设置
-            gridView.IsUseInside = true;
-            gridView.Margin = new Utils.Margin(50, 70, 50, 70);
-            gridView.SideSpacing = new Utils.Margin(10, 10, 10, 10);
-            gridView.OutsideLineColor = Color.FromArgb(255, 220, 220, 220);
-            gridView.InsideLineColor = Color.FromArgb(255, 200, 200, 200);
-
-
-            //列头设置
-            gridView.HeaderStyle = 0;
-            gridView.HeaderSpacing = 1;
-            gridView.HeaderHeight = 50;
-            //gridView.HeaderBackGroundColor = Color.FromArgb(255, 0, 0, 0);
-            gridView.HeaderSizeMode = ScLayerLayoutViewerHeaderSizeMode.ADAPTIVE;
-            gridView.HeaderControlerSize = 20;
-
-
-            //内容行设置
-            gridView.RowHeight = 60f;
-            gridView.RowSpacing = 1f;
-            //gridView.ContainerBackGroundColor = Color.FromArgb(255, 0, 0, 155);
-            gridView.ItemMinSize = 20;
-
-
-
-            //阴影设置
-            gridView.IsUseShadow = true;
-            gridView.ShadowStyle = 2;
-            gridView.ShadowRange = 15;
-            gridView.ShadowCornersRadius = 1;
-            gridView.ShadowColor = Color.FromArgb(250, 0, 0, 0);
-
-
-            //列头标题
-            gridView.CreateHeaderTitleEvent += GridView_CreateHeaderTitleEvent;
-            gridView.CreateHeaderTitleLayer();
         }
 
 
@@ -223,19 +207,19 @@ namespace demo
 
         ScLayer CreateItemControlFieldTest1(ScMgr scmgr, ColumnSetting columnSetting)
         {
-            ScLayer layer = new ScLayer(scmgr)
+            Sc.ScLayer layer = new Sc.ScLayer(scmgr)
             {
-                Dock = ScDockStyle.Fill
+                Dock = Sc.ScDockStyle.Fill
             };
 
-            ScCheckBox checkBox = new ScCheckBox(scmgr)
+            Sc.ScCheckBox checkBox = new Sc.ScCheckBox(scmgr)
             {
                 CheckType = 0,
                 boxSideWidth = 1,
                 FillMargin = new Margin(2, 2, 3, 3),
                 CheckColor = Color.DarkRed,
-                Dock = ScDockStyle.Center,
-                Size = new SizeF(15, 15)
+                Dock = Sc.ScDockStyle.Center,
+                Size = new System.Drawing.SizeF(15, 15)
             };
 
             checkBox.SetDrawCheckDirectParentLayer(layer);
