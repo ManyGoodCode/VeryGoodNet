@@ -15,8 +15,11 @@ namespace Sc
 {
     public class D2DGraphics : ScGraphics
     {
+        // 静态工厂
         static public SharpDX.Direct2D1.Factory d2dFactory = null;
         static public SharpDX.DirectWrite.Factory dwriteFactory = null;
+
+
 
         public SharpDX.Direct2D1.RenderTarget renderTarget;
         public SharpDX.Direct2D1.GdiInteropRenderTarget gdiRenderTarget;
@@ -66,7 +69,7 @@ namespace Sc
         }
 
         /// <summary>
-        /// 设备独立资源
+        /// 设备独立资源。静态资源工厂创建
         /// </summary>
         bool CreateDeviceIndependentResource()
         {
@@ -76,19 +79,18 @@ namespace Sc
         }
 
         /// <summary>
-        /// 设备依赖资源
+        /// 设备依赖资源。根据枚举类型 
         /// </summary>
-        /// <returns></returns>
         bool CreateDeviceDependentResource()
         {
             switch (renderTargetMode)
             {
                 case Sc.RenderTargetMode.Hwnd:
-                    CreateRenderTarget(control);
+                    CreateRenderTarget(control: control);
                     break;
 
                 case Sc.RenderTargetMode.Wic:
-                    CreateRenderTarget(wicBitmap);
+                    CreateRenderTarget(wicBitmap: wicBitmap);
                     break;
             }
 
@@ -181,25 +183,12 @@ namespace Sc
         {
             return GraphicsType.D2D;
         }
-        public override void BeginDraw()
-        {
-            renderTarget.BeginDraw();
-        }
+        public override void BeginDraw() => renderTarget.BeginDraw();
+        public override void EndDraw() => renderTarget.EndDraw();
 
-        public override void EndDraw()
-        {
-            renderTarget.EndDraw();
-        }
+        public override void ResetClip() => renderTarget.PopAxisAlignedClip();
 
-        public override void ResetClip()
-        {
-            renderTarget.PopAxisAlignedClip();
-        }
-
-        public override void ResetTransform()
-        {
-            renderTarget.Transform = matrix;
-        }
+        public override void ResetTransform() => renderTarget.Transform = matrix;
 
         public override void SetClip(System.Drawing.RectangleF clipRect)
         {
@@ -233,17 +222,11 @@ namespace Sc
 
         public override void Dispose()
         {
-            if (gdiRenderTarget != null)
-            {
-                gdiRenderTarget.Dispose();
-                gdiRenderTarget = null;
-            }
+            gdiRenderTarget?.Dispose();
+            gdiRenderTarget = null;
 
-            if (renderTarget != null)
-            {
-                renderTarget.Dispose();
-                renderTarget = null;
-            }
+            renderTarget?.Dispose();
+            renderTarget = null;
         }
     }
 }
