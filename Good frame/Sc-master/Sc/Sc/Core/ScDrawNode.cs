@@ -10,12 +10,12 @@ namespace Sc
 {
     public class ScDrawNode
     {
-        public ScLayer layer = null;
+        public Sc.ScLayer layer = null;
         public bool isRender = true;
-        public RectangleF clipRect;
-        public Matrix m;
-        public ScLayer rootLayer = null;
-        public List<ScDrawNode> nodes = new List<ScDrawNode>();
-        public ScDrawNode parent;
+        public System.Drawing.RectangleF clipRect;
+        public System.Drawing.Drawing2D.Matrix m;
+        public Sc.ScLayer rootLayer = null;
+        public List<Sc.ScDrawNode> nodes = new List<Sc.ScDrawNode>();
+        public Sc.ScDrawNode parent;
     }
 }

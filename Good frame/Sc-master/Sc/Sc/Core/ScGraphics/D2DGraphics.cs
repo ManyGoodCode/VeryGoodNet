@@ -18,37 +18,33 @@ namespace Sc
         static public SharpDX.Direct2D1.Factory d2dFactory = null;
         static public SharpDX.DirectWrite.Factory dwriteFactory = null;
 
-        public RenderTarget renderTarget;
-        public GdiInteropRenderTarget gdiRenderTarget;
+        public SharpDX.Direct2D1.RenderTarget renderTarget;
+        public SharpDX.Direct2D1.GdiInteropRenderTarget gdiRenderTarget;
 
-        RawMatrix3x2 matrix = new RawMatrix3x2(
+        SharpDX.Mathematics.Interop.RawMatrix3x2 matrix = new RawMatrix3x2(
              1.0f, 0.0f,
              0.0f, 1.0f,
              0.0f, 0.0f
              );
 
-        Control control = null;
+        System.Windows.Forms.Control control = null;
         SharpDX.WIC.Bitmap wicBitmap;
-        RenderTargetMode renderTargetMode;
+        Sc.RenderTargetMode renderTargetMode;
 
         public D2DGraphics(Control control)
         {
-            renderTargetMode = RenderTargetMode.Hwnd;
-
+            renderTargetMode = Sc.RenderTargetMode.Hwnd;
             CreateDeviceIndependentResource();
-
             if (control.Width <= 0 || control.Height <= 0)
                 return;
 
             this.control = control;
-
             CreateDeviceDependentResource();
         }
 
         public D2DGraphics(SharpDX.WIC.Bitmap wicBitmap)
         {
-            renderTargetMode = RenderTargetMode.Wic;
-
+            renderTargetMode = Sc.RenderTargetMode.Wic;
             CreateDeviceIndependentResource();
 
             this.wicBitmap = wicBitmap;
@@ -76,13 +72,13 @@ namespace Sc
         /// <returns></returns>
         bool CreateDeviceDependentResource()
         {
-            switch(renderTargetMode)
+            switch (renderTargetMode)
             {
-                case RenderTargetMode.Hwnd:
+                case Sc.RenderTargetMode.Hwnd:
                     CreateRenderTarget(control);
                     break;
 
-                case RenderTargetMode.Wic:
+                case Sc.RenderTargetMode.Wic:
                     CreateRenderTarget(wicBitmap);
                     break;
             }
@@ -90,32 +86,32 @@ namespace Sc
             return true;
         }
 
-        public void CreateRenderTarget(Control control)
+        public void CreateRenderTarget(System.Windows.Forms.Control control)
         {
             if (renderTarget != null)
                 return;
 
-            var properties = new HwndRenderTargetProperties
-            { 
+            SharpDX.Direct2D1.HwndRenderTargetProperties properties = new HwndRenderTargetProperties
+            {
                 Hwnd = control.Handle,
-                PixelSize = new Size2(control.Width, control.Height), 
+                PixelSize = new SharpDX.Size2(control.Width, control.Height),
                 PresentOptions = PresentOptions.Immediately | PresentOptions.RetainContents
             };
 
 
-            RenderTargetProperties rtProps = new RenderTargetProperties();
-            rtProps.Usage = RenderTargetUsage.GdiCompatible;
+            SharpDX.Direct2D1.RenderTargetProperties rtProps = new RenderTargetProperties();
+            rtProps.Usage = SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible;
 
-            renderTarget = new WindowRenderTarget(d2dFactory, rtProps, properties)
+            renderTarget = new SharpDX.Direct2D1.WindowRenderTarget(d2dFactory, rtProps, properties)
             {
-                AntialiasMode = AntialiasMode.PerPrimitive,
+                AntialiasMode = SharpDX.Direct2D1.AntialiasMode.PerPrimitive,
                 TextAntialiasMode = SharpDX.Direct2D1.TextAntialiasMode.Cleartype
             };
 
 
             IntPtr gdirtPtr;
             renderTarget.QueryInterface(Guid.Parse("e0db51c3-6f77-4bae-b3d5-e47509b35838"), out gdirtPtr);
-            gdiRenderTarget = new GdiInteropRenderTarget(gdirtPtr);
+            gdiRenderTarget = new SharpDX.Direct2D1.GdiInteropRenderTarget(gdirtPtr);
 
         }
 
@@ -124,16 +120,17 @@ namespace Sc
             if (renderTarget != null)
                 return;
             float dpiX = 96, dpiY = 96;
-            using (Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
+            using (System.Drawing.Graphics graphics = Graphics.FromHwnd(IntPtr.Zero))
             {
                 dpiX = graphics.DpiX;
                 dpiY = graphics.DpiY;
             }
 
-            var renderTargetProperties = new RenderTargetProperties(
-                RenderTargetType.Default,
+            SharpDX.Direct2D1.RenderTargetProperties renderTargetProperties = new SharpDX.Direct2D1.RenderTargetProperties(
+                SharpDX.Direct2D1.RenderTargetType.Default,
                 new SharpDX.Direct2D1.PixelFormat(Format.Unknown, SharpDX.Direct2D1.AlphaMode.Unknown),
-                dpiX, dpiY, RenderTargetUsage.GdiCompatible, FeatureLevel.Level_DEFAULT);
+                dpiX, dpiY, 
+                SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible, FeatureLevel.Level_DEFAULT);
 
             renderTarget = new WicRenderTarget(d2dFactory, wicBitmap, renderTargetProperties);
 
@@ -147,31 +144,31 @@ namespace Sc
         {
             if (control != null)
             {
-                WindowRenderTarget wrt = (WindowRenderTarget)renderTarget;
-                wrt.Resize(new Size2(width, height));
+                SharpDX.Direct2D1.WindowRenderTarget wrt = (WindowRenderTarget)renderTarget;
+                wrt.Resize(new SharpDX.Size2(width, height));
             }
         }
 
-        public RenderTarget RenderTarget
+        public SharpDX.Direct2D1.RenderTarget RenderTarget
         {
             get { return renderTarget; }
         }
 
         public Graphics CreateGdiGraphics()
         {
-            IntPtr hdc = gdiRenderTarget.GetDC(DeviceContextInitializeMode.Copy);
-            Graphics gdiGraphics = Graphics.FromHdc(hdc);
+            IntPtr hdc = gdiRenderTarget.GetDC(SharpDX.Direct2D1.DeviceContextInitializeMode.Copy);
+            System.Drawing.Graphics gdiGraphics = Graphics.FromHdc(hdc);
             gdiGraphics.Transform = layer.GlobalMatrix;
             return gdiGraphics;
         }
 
-        public void RelaseGdiGraphics(Graphics gdiGraphics)
+        public void RelaseGdiGraphics(System.Drawing.Graphics gdiGraphics)
         {
             gdiRenderTarget.ReleaseDC();
             gdiGraphics.Dispose();
         }
 
-        public override GraphicsType GetGraphicsType()
+        public override Sc.GraphicsType GetGraphicsType()
         {
             return GraphicsType.D2D;
         }
@@ -182,7 +179,7 @@ namespace Sc
 
         public override void EndDraw()
         {
-            renderTarget.EndDraw();   
+            renderTarget.EndDraw();
         }
 
         public override void ResetClip()
@@ -197,34 +194,28 @@ namespace Sc
 
         public override void SetClip(System.Drawing.RectangleF clipRect)
         {
-            RawRectangleF rawRectF = TransRectFToRawRectF(clipRect);
+            SharpDX.Mathematics.Interop.RawRectangleF rawRectF = TransRectFToRawRectF(clipRect);
             renderTarget.PushAxisAlignedClip(rawRectF, AntialiasMode.PerPrimitive);
         }
 
         public override void TranslateTransform(float dx, float dy)
         {
-            System.Drawing.Drawing2D.Matrix m = GDIDataD2DUtils.TransRawMatrix3x2ToMatrix(renderTarget.Transform);
+            System.Drawing.Drawing2D.Matrix m = Sc.GDIDataD2DUtils.TransRawMatrix3x2ToMatrix(renderTarget.Transform);
             m.Translate(dx, dy);
-            renderTarget.Transform = GDIDataD2DUtils.TransMatrixToRawMatrix3x2(m);
+            renderTarget.Transform = Sc.GDIDataD2DUtils.TransMatrixToRawMatrix3x2(m);
         }
 
         public override System.Drawing.Drawing2D.Matrix Transform
         {
-            get
-            {
-                return GDIDataD2DUtils.TransRawMatrix3x2ToMatrix(renderTarget.Transform);
-            }
+            get { return Sc.GDIDataD2DUtils.TransRawMatrix3x2ToMatrix(renderTarget.Transform); }
 
-            set
-            {
-                renderTarget.Transform = GDIDataD2DUtils.TransMatrixToRawMatrix3x2(value);
-            }
+            set { renderTarget.Transform = Sc.GDIDataD2DUtils.TransMatrixToRawMatrix3x2(value); }
         }
 
-    
-        RawRectangleF TransRectFToRawRectF(System.Drawing.RectangleF clipRect)
+
+        SharpDX.Mathematics.Interop.RawRectangleF TransRectFToRawRectF(System.Drawing.RectangleF clipRect)
         {
-            RawRectangleF rawRectF = 
+            RawRectangleF rawRectF =
                 new RawRectangleF(
                 clipRect.Left, clipRect.Top,
                 clipRect.Right, clipRect.Bottom);
@@ -245,6 +236,6 @@ namespace Sc
                 renderTarget.Dispose();
                 renderTarget = null;
             }
-        }     
+        }
     }
 }

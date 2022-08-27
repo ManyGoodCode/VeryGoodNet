@@ -10,16 +10,16 @@ namespace Sc
 {
     public class ScMouseEventArgs
     {
-        public ScMouseEventArgs(MouseButtons Button, PointF Location, int Delta = 0)
+        public ScMouseEventArgs(System.Windows.Forms.MouseButtons Button, System.Drawing.PointF Location, int Delta = 0)
         {
             this.Button = Button;
             this.Location = Location;
             this.Delta = Delta;
         }
 
-        public MouseButtons Button { get; }
+        public System.Windows.Forms.MouseButtons Button { get; }
 
-        public PointF Location { get; }
+        public System.Drawing.PointF Location { get; }
 
         public int Delta { get; }
     }

@@ -7,69 +7,60 @@ namespace Sc
 {
     public partial class ScReDrawTree
     {
-        ScMgr scmgr;
-        public ScDrawNode root;
+        Sc.ScMgr scmgr;
+        public Sc.ScDrawNode root;
 
-        static RawMatrix3x2 identityMatrix = new RawMatrix3x2(
-            1.0f, 0.0f,
-            0.0f, 1.0f,
-            0.0f, 0.0f
-            );
+        static SharpDX.Mathematics.Interop.RawMatrix3x2 identityMatrix = new RawMatrix3x2(
+            m11: 1.0f, m12: 0.0f,
+            m21: 0.0f, m22: 1.0f,
+            m31: 0.0f, m32: 0.0f);
 
-        public void Draw(ScGraphics g)
+        public void Draw(Sc.ScGraphics g)
         {
             if (root == null)
                 return;
 
             g.SetClip(root.clipRect);
-
             switch (g.GetGraphicsType())
             {
-                case GraphicsType.D2D:
+                case Sc.GraphicsType.D2D:
 
                     if (root.isRender)
                         D2DPaint(g, root);
-
                     DrawChildNodeD2D(root, g);
                     break;
-
-
             }
 
             g.ResetClip();
         }
 
 
-        void DrawChildNodeD2D(ScDrawNode parent, ScGraphics g)
+        void DrawChildNodeD2D(Sc.ScDrawNode parent, Sc.ScGraphics g)
         {
-            Layer d2dLayer;
- 
-            foreach (ScDrawNode node in parent.nodes)
+            SharpDX.Direct2D1.Layer d2dLayer;
+            foreach (Sc.ScDrawNode node in parent.nodes)
             {
                 if (node.layer.IsComputedStraight)
                 {
-                    if(node.isRender && node.layer.IsRender)
+                    if (node.isRender && node.layer.IsRender)
                         D2DPaint(g, node);
-
                     DrawChildNodeD2D(node, g);
                 }
                 else
                 {
-                    d2dLayer = PushLayer((D2DGraphics)g, node.layer);
+                    d2dLayer = PushLayer((Sc.D2DGraphics)g, node.layer);
                     D2DPaint(g, node);
                     DrawChildNodeD2D(node, g);
-
-                    PopLayer((D2DGraphics)g);
+                    PopLayer((Sc.D2DGraphics)g);
                     d2dLayer.Dispose();
                 }
             }
         }
 
-       
-        void D2DPaint(ScGraphics g, ScDrawNode node)
-        {
-            ScLayer layer = node.layer;
 
+        void D2DPaint(Sc.ScGraphics g, Sc.ScDrawNode node)
+        {
+            Sc.ScLayer layer = node.layer;
             g.SetClip(node.clipRect);
             g.Transform = layer.GlobalMatrix;
             g.layer = layer;
@@ -80,19 +71,17 @@ namespace Sc
         }
 
 
-        public Layer PushLayer(D2DGraphics g, ScLayer sclayer)
+        public SharpDX.Direct2D1.Layer PushLayer(Sc.D2DGraphics g, Sc.ScLayer sclayer)
         {
-            Layer d2dLayer = new Layer(g.RenderTarget);
-
-            LayerParameters layerParameters = new LayerParameters();
+            SharpDX.Direct2D1.Layer d2dLayer = new Layer(g.RenderTarget);
+            SharpDX.Direct2D1.LayerParameters layerParameters = new LayerParameters();
             layerParameters.ContentBounds = GDIDataD2DUtils.TransToRawRectF(sclayer.DrawBox);
             layerParameters.LayerOptions = LayerOptions.InitializeForCleartype;
             layerParameters.MaskAntialiasMode = AntialiasMode.PerPrimitive;
 
             //应用到GeometricMask上的变换，这个变换可能已经在计算布局的时候已经计算到了sclayer.TransLastHitPathGeometry上
             //所以不需要应用变换
-            layerParameters.MaskTransform = identityMatrix;   
-
+            layerParameters.MaskTransform = identityMatrix;
             layerParameters.Opacity = sclayer.Opacity;
             layerParameters.GeometricMask = sclayer.TransLastHitPathGeometry;
 
@@ -100,53 +89,49 @@ namespace Sc
             return d2dLayer;
         }
 
-        public void PopLayer(D2DGraphics g)
+        public void PopLayer(Sc.D2DGraphics g)
         {
             g.RenderTarget.PopLayer();
         }
 
 
-        public ScDrawNode ReCreateReDrawTree(ScLayer rootLayer, Rectangle refreshArea)
+        public Sc.ScDrawNode ReCreateReDrawTree(Sc.ScLayer rootLayer, Rectangle refreshArea)
         {
             if (rootLayer.Visible == false)
                 return null;
 
             scmgr = rootLayer.ScMgr;
-
-            RectangleF clipRect = new RectangleF(refreshArea.X, refreshArea.Y, refreshArea.Width, refreshArea.Height);        
-            root = _AddChildReDrawScLayer(null, clipRect, new List<ScLayer> { rootLayer }); 
-
+            RectangleF clipRect = new RectangleF(refreshArea.X, refreshArea.Y, refreshArea.Width, refreshArea.Height);
+            root = _AddChildReDrawScLayer(null, clipRect, new List<Sc.ScLayer> { rootLayer });
             return root;
 
         }
 
-     
-        void AddChildReDrawScLayer(ScDrawNode parentDrawNode, RectangleF parentClipRect)
+
+        void AddChildReDrawScLayer(Sc.ScDrawNode parentDrawNode, RectangleF parentClipRect)
         {
-            ScLayer parentScLayer = parentDrawNode.layer;
+            Sc.ScLayer parentScLayer = parentDrawNode.layer;
             _AddChildReDrawScLayer(parentDrawNode, parentClipRect, parentScLayer.controls);
             _AddChildReDrawScLayer(parentDrawNode, parentClipRect, parentScLayer.DirectClipChildLayerList);
         }
 
-
-        ScDrawNode _AddChildReDrawScLayer(ScDrawNode parentDrawNode, RectangleF parentClipRect, List<ScLayer> childLayerList)
+        Sc.ScDrawNode _AddChildReDrawScLayer(Sc.ScDrawNode parentDrawNode, RectangleF parentClipRect, List<Sc.ScLayer> childLayerList)
         {
             if (childLayerList == null)
                 return null;
 
             RectangleF rect;
-            ScDrawNode drawNode = null;
+            Sc.ScDrawNode drawNode = null;
 
-            foreach (ScLayer childLayer in childLayerList)
+            foreach (Sc.ScLayer childLayer in childLayerList)
             {
                 if (childLayer.Visible == false ||
                     childLayer.IsNotAtRootDrawBoxBound)
                     continue;
 
                 rect = childLayer.DrawBox;
-                ScDrawNode clipDrawNode;
+                Sc.ScDrawNode clipDrawNode;
                 RectangleF clipRect;
-
                 clipDrawNode = parentDrawNode;
                 clipRect = parentClipRect;
 
@@ -159,7 +144,7 @@ namespace Sc
                     drawNode.clipRect = rect;
                     drawNode.parent = clipDrawNode;
 
-                    if(clipDrawNode != null)
+                    if (clipDrawNode != null)
                         clipDrawNode.nodes.Add(drawNode);
 
                     //子层完全覆盖了父层，父层将不再绘制
@@ -183,6 +168,6 @@ namespace Sc
             }
 
             return drawNode;
-        }   
+        }
     }
 }

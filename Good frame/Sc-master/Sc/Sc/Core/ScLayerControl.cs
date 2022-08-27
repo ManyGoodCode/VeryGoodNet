@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace Sc
 {
-    public class ScLayerControl : Control
+    public class ScLayerControl : System.Windows.Forms.Control
     {
         #region api
         public const int WM_NCVATIVATE = 0x86;
@@ -84,12 +84,8 @@ namespace Sc
         public ScLayerControl(ScMgr scMgr)
         {
             this.scMgr = scMgr;
-
-
-
             SetStyle(ControlStyles.UserPaint, true);
             SetStyle(ControlStyles.AllPaintingInWmPaint, true); // 禁止擦除背景.
-
              if(scMgr.GraphicsType == GraphicsType.GDIPlus)
                  SetStyle(ControlStyles.DoubleBuffer, true); // 双缓冲
 
@@ -99,10 +95,10 @@ namespace Sc
         public void SetImeWindowsPos(int x, int y)
         {
             COMPOSITIONFORM Composition = new COMPOSITIONFORM();
+
             Composition.dwStyle = CFS_POINT;
             Composition.ptCurrentPos.x = x;
             Composition.ptCurrentPos.y = y;
-
             ImmSetCompositionWindow(m_hImc, ref Composition);
         }
    
@@ -143,13 +139,11 @@ namespace Sc
                 case WM_CHAR:
                     KeyEventArgs e = new KeyEventArgs(((Keys)((int)((long)m.WParam))) | ModifierKeys);
                     char a = (char)e.KeyData; //英文 
-
                     if ((a >= 32) && (a <= 255))
                         CharEvent(a);
                     break;
                   
                 case WM_IME_COMPOSITION:
-
                     if ((m.LParam.ToInt32() & GCS_RESULTSTR) != 0)
                     {
                         int size = ImmGetCompositionStringW(m_hImc, GCS_RESULTSTR, null, 0);    
@@ -159,6 +153,7 @@ namespace Sc
                         string str = System.Text.Encoding.Unicode.GetString(buffer);
                         ImeStringEvent(str);
                     }
+
                     break;
             }
 

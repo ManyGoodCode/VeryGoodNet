@@ -18,11 +18,15 @@ namespace Sc
     {
         public string FamilyName { get; set; }
         public float Size { get; set; }
-        public FontStyle Style { get; set; }
+        public SharpDX.DirectWrite.FontStyle Style { get; set; }
 
-        public FontWeight Weight { get; set; }
+        public SharpDX.DirectWrite.FontWeight Weight { get; set; }
 
-        public D2DFont(string familyName, float size, FontWeight weight = FontWeight.Normal,  FontStyle style = FontStyle.Normal)
+        public D2DFont(
+            string familyName, 
+            float size, 
+            SharpDX.DirectWrite.FontWeight weight = FontWeight.Normal,
+            SharpDX.DirectWrite.FontStyle style = FontStyle.Normal)
         {
             FamilyName = familyName;
             Size = size;
