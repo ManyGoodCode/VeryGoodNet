@@ -244,18 +244,21 @@ namespace demo
 
         }
 
-        ScLayer CreateItemControlFieldTest(ScMgr scmgr, ColumnSetting columnSetting)
+        Sc.ScLayer CreateItemControlFieldTest(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
-            ScLabel label = new ScLabel(scmgr);
-            label.Dock = ScDockStyle.Fill;
-            label.ForeFont = new D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
-            label.ForeColor = Color.FromArgb(255, 58, 166, 254);
+            Sc.ScLabel label = new Sc.ScLabel(scmgr)
+            {
+                Dock = Sc.ScDockStyle.Fill,
+                ForeFont = new D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold),
+                ForeColor = Color.FromArgb(255, 58, 166, 254)
+            };
+
             return label;
         }
 
-        ScLayer CreateItemControlFieldTest3(ScMgr scmgr, ColumnSetting columnSetting)
+        Sc.ScLayer CreateItemControlFieldTest3(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
-            listView = new ScListView(scmgr);
+            listView = new Sc.ScListView(scmgr);
             listView.Name = "ListView";
             listView.IsUseShadow = false;
             listView.ShadowRange = 4;
@@ -263,7 +266,7 @@ namespace demo
 
             listView.DisplayItemValue += DisplayItem;
             listView.CreateDefaultContentInfoSeting();
-            listView.Dock = ScDockStyle.Fill;
+            listView.Dock = Sc.ScDockStyle.Fill;
 
             Sc.ScLayer listViewPack;
             if (listView.IsUseShadow)
@@ -280,10 +283,9 @@ namespace demo
             }
         }
 
-        void DisplayItem(ScLayer columnItem, int dataRowIdx)
+        void DisplayItem(Sc.ScLayer columnItem, int dataRowIdx)
         {
-            ScLabel label = (ScLabel)columnItem;
-
+            Sc.ScLabel label = (Sc.ScLabel)columnItem;
             if (label == null)
                 return;
 
