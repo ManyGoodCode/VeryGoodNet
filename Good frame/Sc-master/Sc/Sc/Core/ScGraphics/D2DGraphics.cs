@@ -27,8 +27,22 @@ namespace Sc
              0.0f, 0.0f
              );
 
+
+        /// <summary>
+        /// 枚举类型为RenderTargetMode.Hwnd 时 System.Windows.Forms.Control 有值
+        /// </summary>
         System.Windows.Forms.Control control = null;
+
+        /// <summary>
+        /// 枚举类型为 RenderTargetMode.Wic 时 SharpDX.WIC.Bitmap 有值
+        /// </summary>
         SharpDX.WIC.Bitmap wicBitmap;
+
+        /// <summary>
+        /// 枚举类型。
+        /// RenderTargetMode.Hwnd 时 System.Windows.Forms.Control 有值
+        /// RenderTargetMode.Wic 时 SharpDX.WIC.Bitmap 有值
+        /// </summary>
         Sc.RenderTargetMode renderTargetMode;
 
         public D2DGraphics(Control control)
@@ -54,15 +68,10 @@ namespace Sc
         /// <summary>
         /// 设备独立资源
         /// </summary>
-        /// <returns></returns>
         bool CreateDeviceIndependentResource()
         {
-            if (d2dFactory == null)
-                d2dFactory = new SharpDX.Direct2D1.Factory(SharpDX.Direct2D1.FactoryType.MultiThreaded);
-
-            if (dwriteFactory == null)
-                dwriteFactory = new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
-
+            d2dFactory = d2dFactory ?? new SharpDX.Direct2D1.Factory(SharpDX.Direct2D1.FactoryType.MultiThreaded);
+            dwriteFactory = dwriteFactory ?? new SharpDX.DirectWrite.Factory(SharpDX.DirectWrite.FactoryType.Shared);
             return true;
         }
 
@@ -129,7 +138,7 @@ namespace Sc
             SharpDX.Direct2D1.RenderTargetProperties renderTargetProperties = new SharpDX.Direct2D1.RenderTargetProperties(
                 SharpDX.Direct2D1.RenderTargetType.Default,
                 new SharpDX.Direct2D1.PixelFormat(Format.Unknown, SharpDX.Direct2D1.AlphaMode.Unknown),
-                dpiX, dpiY, 
+                dpiX, dpiY,
                 SharpDX.Direct2D1.RenderTargetUsage.GdiCompatible, FeatureLevel.Level_DEFAULT);
 
             renderTarget = new WicRenderTarget(d2dFactory, wicBitmap, renderTargetProperties);
@@ -208,7 +217,6 @@ namespace Sc
         public override System.Drawing.Drawing2D.Matrix Transform
         {
             get { return Sc.GDIDataD2DUtils.TransRawMatrix3x2ToMatrix(renderTarget.Transform); }
-
             set { renderTarget.Transform = Sc.GDIDataD2DUtils.TransMatrixToRawMatrix3x2(value); }
         }
 

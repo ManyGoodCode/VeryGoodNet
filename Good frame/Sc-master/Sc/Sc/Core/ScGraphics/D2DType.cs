@@ -10,7 +10,15 @@ namespace Sc
     enum RenderTargetMode
     {
         UnKonown,
+
+        /// <summary>
+        /// 渲染的为 SharpDX.WIC.Bitmap
+        /// </summary>
         Wic,
+
+        /// <summary>
+        /// 渲染的为System.Windows.Forms.Control
+        /// </summary>
         Hwnd
     }
 

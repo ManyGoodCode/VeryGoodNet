@@ -8,53 +8,33 @@ using System.Threading.Tasks;
 
 namespace Sc
 {
-    public class ScGraphics : Sc.IScGraphics,IDisposable
+    /// <summary>
+    /// 包含 Sc.ScLayer 属性
+    /// 拥有:GetGraphicsType/BeginDraw/EndDraw/ReSize(int width, int height)/Dispose函数
+    /// </summary>
+    public class ScGraphics : Sc.IScGraphics, IDisposable
     {
         public Sc.ScLayer layer;
         public virtual Sc.GraphicsType GetGraphicsType()
         {
             return GraphicsType.UnKnown;
         }
-         
-        public virtual void BeginDraw()
-        {
-            
-        }
 
-        public virtual void EndDraw()
-        {
-            
-        }
+        public virtual void BeginDraw() { }
 
-        public virtual void ResetClip()
-        {
-           
-        }
+        public virtual void EndDraw() { }
 
-        public virtual void ResetTransform()
-        {
-            
-        }
+        public virtual void ResetClip() { }
 
-        public virtual void SetClip(RectangleF clipRect)
-        {
-            
-        }
+        public virtual void ResetTransform() { }
 
-        public virtual void TranslateTransform(float dx, float dy)
-        {
-           
-        }
+        public virtual void SetClip(System.Drawing.RectangleF clipRect) { }
 
-        public virtual void ReSize(int width, int height)
-        {
+        public virtual void TranslateTransform(float dx, float dy) { }
 
-        }
+        public virtual void ReSize(int width, int height) { }
 
-        public virtual void Dispose()
-        {
-            
-        }
+        public virtual void Dispose() { }
 
         public virtual System.Drawing.Drawing2D.Matrix Transform
         {
