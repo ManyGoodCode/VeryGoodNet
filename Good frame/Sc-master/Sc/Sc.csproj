@@ -98,7 +98,6 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Sc\Animation\AnimationEffect.cs" />
     <Compile Include="Sc\Animation\ScAnimation.cs" />
-    <Compile Include="Sc\Core\ScControlCollection.cs" />
     <Compile Include="Sc\Core\ScDrawNode.cs" />
     <Compile Include="Sc\Core\ScGraphics\D2DGraphics.cs" />
     <Compile Include="Sc\Core\ScGraphics\D2DType.cs" />
