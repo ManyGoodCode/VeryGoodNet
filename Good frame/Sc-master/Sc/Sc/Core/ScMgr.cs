@@ -83,24 +83,24 @@ namespace Sc
             }
             else
             {
-                Init(width: stdControl.Width, height: stdControl.Height, drawType: DrawType.NoImage);
+                Init(width: stdControl.Width, height: stdControl.Height, drawType: Sc.DrawType.NoImage);
                 stdControl.Controls.Add(control);
             }
         }
 
-        public ScMgr(int width, int height, DrawType drawType = DrawType.NoImage)
+        public ScMgr(int width, int height, Sc.DrawType drawType = Sc.DrawType.NoImage)
         {
             Init(width, height, drawType);
         }
 
 
-        private void Init(int width, int height, DrawType drawType = DrawType.NoImage)
+        private void Init(int width, int height, Sc.DrawType drawType = Sc.DrawType.NoImage)
         {
             cacheRootScLayer = rootScLayer;
             this.drawType = drawType;
-            this.graphicsType = GraphicsType.D2D;
+            this.graphicsType = Sc.GraphicsType.D2D;
 
-            if (drawType == DrawType.NoImage)
+            if (drawType == Sc.DrawType.NoImage)
             {
                 // 创建Control
                 control = new Sc.ScLayerControl(scMgr: this)
@@ -123,7 +123,7 @@ namespace Sc
 
 
             GraphicsType = graphicsType;
-            D2DGraphics d2dGraph = (D2DGraphics)graphics;
+            Sc.D2DGraphics d2dGraph = (Sc.D2DGraphics)graphics;
             SharpDX.Size2 pixelSize = d2dGraph.renderTarget.PixelSize;
             SharpDX.Size2F logicSize = d2dGraph.renderTarget.Size;
             sizeScale = new System.Drawing.SizeF(
@@ -132,7 +132,7 @@ namespace Sc
 
 
             rootScLayer.ScMgr = this;
-            rootScLayer.Dock = ScDockStyle.Fill;
+            rootScLayer.Dock = Sc.ScDockStyle.Fill;
             rootScLayer.Name = "__root__";
             rootScLayer.D2DPaint += RootScControl_D2DPaint;
 
@@ -215,7 +215,7 @@ namespace Sc
 
         private bool CreateD2D()
         {
-            foreach (KeyValuePair<string, Dot9BitmapD2D> item in dot9BitmaShadowDict)
+            foreach (KeyValuePair<string,Utils.Dot9BitmapD2D> item in dot9BitmaShadowDict)
             {
                 item.Value.Dispose();
             }
@@ -300,7 +300,7 @@ namespace Sc
 
         public void SetImeWindowsPos(int x, int y)
         {
-            if (controlType == ControlType.StdControl)
+            if (controlType == Sc.ControlType.StdControl)
                 ((Sc.ScLayerControl)control).SetImeWindowsPos(x, y);
             else
                 ((Sc.UpdateLayerFrm)control).SetImeWindowsPos(x, y);
@@ -309,7 +309,7 @@ namespace Sc
 
         public void PaintToBitmap()
         {
-            if (bitmap == null || drawType != DrawType.Image)
+            if (bitmap == null || drawType != Sc.DrawType.Image)
                 return;
 
             System.Drawing.Rectangle clipRect = new System.Drawing.Rectangle(0, 0, bitmap.Width, bitmap.Height);
@@ -318,7 +318,7 @@ namespace Sc
 
         public void PaintToBitmap(System.Drawing.Rectangle rc)
         {
-            if (bitmap == null || drawType != DrawType.Image)
+            if (bitmap == null || drawType != Sc.DrawType.Image)
                 return;
 
             graphics.BeginDraw();
@@ -340,8 +340,8 @@ namespace Sc
 
                     byte* ptr = (byte*)srcBmData.Scan0;
                     ptr += (int)clip.Y * srcBmData.Stride + (int)clip.X * 4;
-                    DataPointer dataPtr = new DataPointer(ptr, (int)clip.Height * srcBmData.Stride);
-                    RawBox box = new RawBox((int)clip.X, (int)clip.Y, (int)clip.Width, (int)clip.Height);
+                    SharpDX.DataPointer dataPtr = new SharpDX.DataPointer(ptr, (int)clip.Height * srcBmData.Stride);
+                    SharpDX.Mathematics.Interop.RawBox box = new RawBox((int)clip.X, (int)clip.Y, (int)clip.Width, (int)clip.Height);
                     wicBitmap.CopyPixels(box, srcBmData.Stride, dataPtr);
                     bitmap.UnlockBits(srcBmData);
                 }
@@ -363,9 +363,9 @@ namespace Sc
 
             if (drawType == Sc.DrawType.NoImage)
             {
-                WindowRenderTarget wRT = (WindowRenderTarget)d2dGraphics.RenderTarget;
-                WindowState wstate = wRT.CheckWindowState();
-                if (wstate != WindowState.Occluded)
+                SharpDX.Direct2D1.WindowRenderTarget wRT = (WindowRenderTarget)d2dGraphics.RenderTarget;
+                SharpDX.Direct2D1.WindowState wstate = wRT.CheckWindowState();
+                if (wstate != SharpDX.Direct2D1.WindowState.Occluded)
                     _RenderByD2D(d2dGraphics, refreshArea);
             }
             else
@@ -397,30 +397,25 @@ namespace Sc
         }
         public void Refresh()
         {
-            Refresh(Rectangle.Empty);
+            Refresh(refreshArea: Rectangle.Empty);
         }
         public void Refresh(RectangleF refreshArea)
         {
             Rectangle rect;
-
             if (rootScLayer == null)
                 return;
 
             if (refreshArea == Rectangle.Empty)
             {
                 rect = new Rectangle(
-                0,
-                0,
-                (int)rootScLayer.Width,
-                (int)rootScLayer.Height);
+                    0, 0,
+                    (int)rootScLayer.Width, (int)rootScLayer.Height);
             }
             else
             {
                 rect = new Rectangle(
-                    (int)refreshArea.X - 1,
-                    (int)refreshArea.Y - 1,
-                    (int)Math.Round(refreshArea.Width) + 2,
-                    (int)Math.Round(refreshArea.Height) + 2);
+                    (int)refreshArea.X - 1, (int)refreshArea.Y - 1,
+                    (int)Math.Round(refreshArea.Width) + 2, (int)Math.Round(refreshArea.Height) + 2);
             }
 
             if (controlType == ControlType.UpdateLayerForm)
@@ -444,7 +439,7 @@ namespace Sc
         {
             // 修改鼠标状态isMouseDown的值
             // 确保只有鼠标左键按下并移动时，才移动窗体
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 //松开鼠标时，停止移动
                 isMouseDown = false;
@@ -462,7 +457,7 @@ namespace Sc
             if (isMouseDown)
             {
                 //移动的位置计算
-                Point mousePos = Control.MousePosition;
+                Point mousePos = System.Windows.Forms.Control.MousePosition;
 
                 mousePos.X -= mouseOrgLocation.X;
                 mousePos.Y -= mouseOrgLocation.Y;
@@ -475,13 +470,13 @@ namespace Sc
             }
         }
 
-        private void RootScLayer_MouseDown(object sender, ScMouseEventArgs e)
+        private void RootScLayer_MouseDown(object sender, Sc.ScMouseEventArgs e)
         {
             //点击窗体时，记录鼠标位置，启动移动
-            if (e.Button == MouseButtons.Left)
+            if (e.Button == System.Windows.Forms.MouseButtons.Left)
             {
                 controlOrgLocation = control.Location;
-                mouseOrgLocation = Control.MousePosition;
+                mouseOrgLocation = System.Windows.Forms.Control.MousePosition;
                 isMouseDown = true;
             }
         }
@@ -531,6 +526,9 @@ namespace Sc
 
         }
 
+        /// <summary>
+        /// control 为  Sc.UpdateLayerFrm 显示出来
+        /// </summary>
         public void Show()
         {
             Sc.UpdateLayerFrm frm = control as Sc.UpdateLayerFrm;
