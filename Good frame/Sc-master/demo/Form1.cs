@@ -13,7 +13,8 @@ namespace demo
 {
     public partial class Form1 : Form
     {
-        demo.GoodsListViewer goodsListViewer;
+        private demo.GoodsListViewer goodsListViewer;
+
         public Form1()
         {
             InitializeComponent();

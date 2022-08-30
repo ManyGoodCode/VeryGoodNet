@@ -99,16 +99,18 @@ namespace demo
         }
 
 
-        private ScLayer GridView_CreateHeaderTitleEvent(ScMgr scmgr)
+        private Sc.ScLayer GridView_CreateHeaderTitleEvent(ScMgr scmgr)
         {
-            ScLabel headerLabel = new ScLabel(scmgr);
-            headerLabel.Name = "Title";
-            headerLabel.Dock = ScDockStyle.Fill;
-            headerLabel.Text = "订单列表";
-            headerLabel.TextPadding = new Margin(20, 0, 0, 0);
-            headerLabel.ForeFont = new D2DFont("微软雅黑", 35, SharpDX.DirectWrite.FontWeight.Bold);
-            headerLabel.Alignment = TextAlignment.Leading;
-            headerLabel.BackgroundColor = Color.FromArgb(100, 255, 0, 0);
+            Sc.ScLabel headerLabel = new Sc.ScLabel(scmgr)
+            {
+                Name = "Title",
+                Dock = ScDockStyle.Fill,
+                Text = "订单列表",
+                TextPadding = new Margin(20, 0, 0, 0),
+                ForeFont = new D2DFont("微软雅黑", 35, SharpDX.DirectWrite.FontWeight.Bold),
+                Alignment = TextAlignment.Leading,
+                BackgroundColor = Color.FromArgb(100, 255, 0, 0)
+            };
 
             return headerLabel;
         }
@@ -242,22 +244,27 @@ namespace demo
 
         Sc.ScLayer CreateItemControlFieldTest3(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
-            listView = new Sc.ScListView(scmgr);
-            listView.Name = "ListView";
-            listView.IsUseShadow = false;
-            listView.ShadowRange = 4;
-            listView.Margin = new Margin(10, 10, 10, 10);
+            listView = new Sc.ScListView(scmgr)
+            {
+                Name = "ListView",
+                IsUseShadow = false,
+                ShadowRange = 4,
+                Margin = new Margin(10, 10, 10, 10),
+                Dock = Sc.ScDockStyle.Fill
+            };
 
             listView.DisplayItemValue += DisplayItem;
             listView.CreateDefaultContentInfoSeting();
-            listView.Dock = Sc.ScDockStyle.Fill;
 
-            Sc.ScLayer listViewPack;
             if (listView.IsUseShadow)
             {
-                listViewPack = new ScLayer();
-                listViewPack.Name = "ListViewPack";
-                listViewPack.Dock = ScDockStyle.Fill;
+                Sc.ScLayer listViewPack = new Sc.ScLayer()
+                {
+
+                    Name = "ListViewPack",
+                    Dock = ScDockStyle.Fill
+                };
+
                 listViewPack.Add(listView);
                 return listViewPack;
             }
@@ -276,12 +283,12 @@ namespace demo
             if (dataRowIdx % 2 == 0)
             {
                 label.ForeColor = Color.FromArgb(255, 0, 0, 0);
-                label.ForeFont = new D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular);
+                label.ForeFont = new Sc.D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular);
             }
             else
             {
                 label.ForeColor = Color.FromArgb(255, 0, 0, 255);
-                label.ForeFont = new D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
+                label.ForeFont = new Sc.D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
             }
 
 
@@ -296,21 +303,17 @@ namespace demo
 
         void DisplayItem3(ScLayer columnItem, int dataRowIdx)
         {
-            ScListView listView;
-
+            Sc.ScListView listView;
             if (columnItem.Name == "ListViewPack")
-                listView = (ScListView)(columnItem.controls[1]);
+                listView = (Sc.ScListView)(columnItem.controls[1]);
             else
-                listView = (ScListView)(columnItem);
-
+                listView = (Sc.ScListView)(columnItem);
             listView.ResetDataRowCount(testDatalistFront.Count());
-
         }
         public void UpdateDataSource()
         {
             gridView.ResetDataRowCount(testDatalistFront.Count());
         }
-
 
         public void CreateBackDataList()
         {
