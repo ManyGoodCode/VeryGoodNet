@@ -122,77 +122,80 @@ namespace demo
         void CreateColumnSetting()
         {
             Sc.ColumnSetting columnSetting = new Sc.ColumnSetting("Test", "测试列1", true, false, 200);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test2", "测试列2", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest1;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField1;
             columnSetting.DisplayItemValue += DisplayItem1;
             gridView.AppendColumnSetting(columnSetting);
 
             columnSetting = new Sc.ColumnSetting("Test3", "测试列3", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest3;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField3;
             columnSetting.DisplayItemValue += DisplayItem3;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test4", "测试列4", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test5", "测试列5", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test6", "测试列6", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test7", "测试列7", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test8", "测试列8", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test9", "测试列9", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
 
             columnSetting = new Sc.ColumnSetting("Test10", "测试列10", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlFieldTest;
-            columnSetting.CreateItemControl += CreateItemControlFieldTest;
+            columnSetting.CreateHeaderControl += CreateHeaderControlField;
+            columnSetting.CreateItemControl += CreateItemControlField;
             columnSetting.DisplayItemValue += DisplayItem;
             gridView.AppendColumnSetting(columnSetting);
 
             gridView.AppendColumnSettingEnd();
         }
 
-        ScLayer CreateHeaderControlFieldTest(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
+        /// <summary>
+        /// 创建头控件
+        /// </summary>
+        ScLayer CreateHeaderControlField(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
             Sc.ScLabel label = new Sc.ScLabel(scmgr)
             {
@@ -206,8 +209,10 @@ namespace demo
             return label;
         }
 
-
-        ScLayer CreateItemControlFieldTest1(ScMgr scmgr, ColumnSetting columnSetting)
+        /// <summary>
+        /// 表格CheckBox
+        /// </summary>
+        ScLayer CreateItemControlField1(ScMgr scmgr, ColumnSetting columnSetting)
         {
             Sc.ScLayer layer = new Sc.ScLayer(scmgr)
             {
@@ -230,7 +235,10 @@ namespace demo
 
         }
 
-        Sc.ScLayer CreateItemControlFieldTest(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
+        /// <summary>
+        /// 创建表格列名称
+        /// </summary>
+        Sc.ScLayer CreateItemControlField(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
             Sc.ScLabel label = new Sc.ScLabel(scmgr)
             {
@@ -242,7 +250,10 @@ namespace demo
             return label;
         }
 
-        Sc.ScLayer CreateItemControlFieldTest3(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
+        /// <summary>
+        /// 创建可以拖动的视图  ScListView
+        /// </summary>
+        Sc.ScLayer CreateItemControlField3(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
             listView = new Sc.ScListView(scmgr)
             {
@@ -260,7 +271,6 @@ namespace demo
             {
                 Sc.ScLayer listViewPack = new Sc.ScLayer()
                 {
-
                     Name = "ListViewPack",
                     Dock = ScDockStyle.Fill
                 };
@@ -279,6 +289,7 @@ namespace demo
             Sc.ScLabel label = (Sc.ScLabel)columnItem;
             if (label == null)
                 return;
+
             bool isPair = (dataRowIdx % 2 == 0);
             label.ForeColor = isPair
                 ? Color.FromArgb(255, 0, 0, 0)
@@ -288,8 +299,7 @@ namespace demo
                 ? new Sc.D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular)
                 : new Sc.D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
 
-            label.Text = testDatalistFront[dataRowIdx].test;
-            label.Value = label.Text;
+            label.Value = label.Text = testDatalistFront[dataRowIdx].test;
         }
 
         void DisplayItem1(ScLayer columnItem, int dataRowIdx)
@@ -297,7 +307,7 @@ namespace demo
 
         }
 
-        void DisplayItem3(ScLayer columnItem, int dataRowIdx)
+        void DisplayItem3(Sc.ScLayer columnItem, int dataRowIdx)
         {
             Sc.ScListView listView;
             if (columnItem.Name == "ListViewPack")
