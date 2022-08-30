@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Domain.Common;
+using CleanArchitecture.Blazor.Domain.Entities.Tenant;
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
     public class Document : AuditableEntity, IHasDomainEvent
@@ -9,6 +11,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public string? URL { get; set; }
         public int DocumentTypeId { get; set; }
         public virtual DocumentType DocumentType { get; set; } = default!;
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public System.Collections.Generic.List<DomainEvent> DomainEvents { get; set; } = new System.Collections.Generic.List<DomainEvent>();
     }
 }

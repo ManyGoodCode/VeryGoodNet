@@ -1,13 +1,14 @@
+using CleanArchitecture.Blazor.Domain.Common;
 namespace CleanArchitecture.Blazor.Domain.Events
 {
     public class DepartmentCreatedEvent : DomainEvent
     {
-        public DepartmentCreatedEvent(Department item)
+        public DepartmentCreatedEvent(Entities.Department item)
         {
             Item = item;
         }
 
-        public Department Item { get; }
+        public Entities.Department Item { get; }
     }
 }
 

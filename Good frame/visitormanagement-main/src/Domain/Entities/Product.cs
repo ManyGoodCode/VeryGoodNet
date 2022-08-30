@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using CleanArchitecture.Blazor.Domain.Common;
+
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
     public class Product : AuditableEntity

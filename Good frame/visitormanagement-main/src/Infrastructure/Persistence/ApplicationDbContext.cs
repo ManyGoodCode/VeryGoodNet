@@ -1,3 +1,8 @@
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Domain.Common;
+using CleanArchitecture.Blazor.Domain.Entities.Log;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence
 {
     public class ApplicationDbContext : IdentityDbContext<

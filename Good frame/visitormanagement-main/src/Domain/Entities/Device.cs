@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
@@ -16,6 +17,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public int? CheckinPointId { get; set; }
         public virtual CheckinPoint? CheckinPoint { get; set; }
 
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }
 }

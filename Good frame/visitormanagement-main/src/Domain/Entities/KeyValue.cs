@@ -1,3 +1,6 @@
+using System.Collections.Generic;
+using CleanArchitecture.Blazor.Domain.Common;
+
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
     public class KeyValue : AuditableEntity, IHasDomainEvent, IAuditTrial
@@ -7,6 +10,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public string? Value { get; set; }
         public string? Text { get; set; }
         public string? Description { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }
 }

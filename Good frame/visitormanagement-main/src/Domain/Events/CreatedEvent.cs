@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Domain.Common;
+
 namespace CleanArchitecture.Blazor.Domain.Events
 {
     public class CreatedEvent<T> : DomainEvent

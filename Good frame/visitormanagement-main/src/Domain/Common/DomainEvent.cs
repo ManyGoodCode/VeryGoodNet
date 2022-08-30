@@ -1,3 +1,6 @@
+using System;
+using System.Collections.Generic;
+
 namespace CleanArchitecture.Blazor.Domain.Common
 {
     public interface IHasDomainEvent

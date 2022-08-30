@@ -1,3 +1,5 @@
+using System;
+
 namespace CleanArchitecture.Blazor.Domain.Exceptions
 {
 

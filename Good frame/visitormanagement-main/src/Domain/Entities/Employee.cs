@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Common;
 using CleanArchitecture.Blazor.Domain.Entities.Tenant;
 
 namespace CleanArchitecture.Blazor.Domain.Entities
@@ -20,7 +21,7 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public virtual Designation? Designation { get; set; }
         public string? About { get; set; }
         public string? Avatar { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
         public string? RelatedAccountId { get; set; }
         public int? SiteId { get; set; }
         public virtual Site? Site { get; set; }

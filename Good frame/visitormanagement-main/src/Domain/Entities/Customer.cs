@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Domain.Common;
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
     public partial class Customer : AuditableEntity, IHasDomainEvent, IAuditTrial
@@ -17,6 +18,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public string? PhoneNumber { get; set; }
         public string? Fax { get; set; }
         public string? Comments { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public System.Collections.Generic.List<DomainEvent> DomainEvents { get; set; } = new System.Collections.Generic.List<DomainEvent>();
     }
 }

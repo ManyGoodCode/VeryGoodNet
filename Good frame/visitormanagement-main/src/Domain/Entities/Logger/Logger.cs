@@ -1,3 +1,6 @@
+using System;
+using CleanArchitecture.Blazor.Domain.Common;
+
 namespace CleanArchitecture.Blazor.Domain.Entities.Log
 {
     public class Logger : IEntity

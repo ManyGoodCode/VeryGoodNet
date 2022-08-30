@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Common;
+using CleanArchitecture.Blazor.Domain.Entities.Tenant;
 
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
@@ -11,7 +13,7 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Status { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }
 
     public class Designation : AuditableEntity, IHasDomainEvent, IAuditTrial
@@ -19,6 +21,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Status { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }
 }

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Common;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Domain.Events
 {

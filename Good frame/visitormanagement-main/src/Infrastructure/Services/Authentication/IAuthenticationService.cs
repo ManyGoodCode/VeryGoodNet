@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Security;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication

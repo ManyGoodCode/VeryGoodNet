@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
@@ -15,6 +16,6 @@ namespace CleanArchitecture.Blazor.Domain.Entities
         public string? Comment { get; set; }
         public string? ApprovedBy { get; set; }
         public DateTime? ProcessingDate { get; set; }
-        public List<DomainEvent> DomainEvents { get; set; } = new();
+        public List<DomainEvent> DomainEvents { get; set; } = new List<DomainEvent>();
     }
 }

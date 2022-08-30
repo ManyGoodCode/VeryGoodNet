@@ -1,3 +1,5 @@
+using CleanArchitecture.Blazor.Domain.Common;
+
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
     public class DocumentType : AuditableEntity

@@ -8,36 +8,37 @@ using CleanArchitecture.Blazor.Application.Services.Picklist;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Application;
-
-public static class DependencyInjection
+namespace CleanArchitecture.Blazor.Application
 {
-    public static IServiceCollection AddApplication(this IServiceCollection services)
+
+    public static class DependencyInjection
     {
-        services.AddAutoMapper(Assembly.GetExecutingAssembly());
-        services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-        services.AddMediatR(Assembly.GetExecutingAssembly());
-        foreach (var assembly in new[] { Assembly.GetExecutingAssembly() }) // add all your assemblies here
+        public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            foreach (var createdEvent in assembly
-                .DefinedTypes
-                .Where(dt => !dt.IsAbstract && dt.IsSubclassOf(typeof(ApprovalHistoryCreatedEventHandler)))
-            )
+            services.AddAutoMapper(Assembly.GetExecutingAssembly());
+            services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+            services.AddMediatR(Assembly.GetExecutingAssembly());
+            foreach (var assembly in new[] { Assembly.GetExecutingAssembly() }) // add all your assemblies here
             {
-                services.AddTransient(typeof(INotificationHandler<>).MakeGenericType(createdEvent), typeof(ApprovalHistoryCreatedEventHandler));
+                foreach (var createdEvent in assembly
+                    .DefinedTypes
+                    .Where(dt => !dt.IsAbstract && dt.IsSubclassOf(typeof(ApprovalHistoryCreatedEventHandler)))
+                )
+                {
+                    services.AddTransient(typeof(INotificationHandler<>).MakeGenericType(createdEvent), typeof(ApprovalHistoryCreatedEventHandler));
+                }
             }
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehaviour<,>));
+            services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
+            services.AddLazyCache();
+            services.AddScoped<SMSMessageService>();
+            services.AddScoped<MailMessageService>();
+            services.AddScoped<IPicklistService, PicklistService>();
+            return services;
         }
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(UnhandledExceptionBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(AuthorizationBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(ValidationBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CachingBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(CacheInvalidationBehaviour<,>));
-        services.AddTransient(typeof(IPipelineBehavior<,>), typeof(PerformanceBehaviour<,>));
-        services.AddLazyCache();
-        services.AddScoped<SMSMessageService>();
-        services.AddScoped<MailMessageService>();
-        services.AddScoped<IPicklistService, PicklistService>();
-        return services;
     }
-   
 }

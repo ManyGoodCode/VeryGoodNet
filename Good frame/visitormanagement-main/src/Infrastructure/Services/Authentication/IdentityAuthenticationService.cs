@@ -3,6 +3,14 @@ using CleanArchitecture.Blazor.Application.Common.Security;
 using System.Text;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
 using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
+using Microsoft.AspNetCore.Components.Authorization;
+using System;
+using System.IO;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 {

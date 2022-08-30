@@ -1,8 +1,16 @@
 using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Application.Constants.Permission;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using CleanArchitecture.Blazor.Infrastructure.Constants.Role;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
 using HashidsNet;
+using Microsoft.AspNetCore.Identity;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
-
+using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence
 {
