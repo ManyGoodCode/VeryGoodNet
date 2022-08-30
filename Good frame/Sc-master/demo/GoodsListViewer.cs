@@ -279,18 +279,14 @@ namespace demo
             Sc.ScLabel label = (Sc.ScLabel)columnItem;
             if (label == null)
                 return;
+            bool isPair = (dataRowIdx % 2 == 0);
+            label.ForeColor = isPair
+                ? Color.FromArgb(255, 0, 0, 0)
+                : Color.FromArgb(255, 0, 0, 255);
 
-            if (dataRowIdx % 2 == 0)
-            {
-                label.ForeColor = Color.FromArgb(255, 0, 0, 0);
-                label.ForeFont = new Sc.D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular);
-            }
-            else
-            {
-                label.ForeColor = Color.FromArgb(255, 0, 0, 255);
-                label.ForeFont = new Sc.D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
-            }
-
+            label.ForeFont = isPair
+                ? new Sc.D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular)
+                : new Sc.D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
 
             label.Text = testDatalistFront[dataRowIdx].test;
             label.Value = label.Text;
@@ -320,9 +316,10 @@ namespace demo
             testDatalistBack.Clear();
             for (int i = 0; i < 106; i++)
             {
-                TestData testData = new TestData();
-                testData.test = "测试数据" + i;
-                testDatalistBack.Add(testData);
+                testDatalistBack.Add(new TestData()
+                {
+                    test = "测试数据" + i
+                });
             }
         }
 
