@@ -11,20 +11,19 @@ using Utils;
 
 namespace demo
 {
-    public class TestData
+    public class BindingData
     {
-        public string test;
+        public string Text;
     }
 
     public class GoodsListViewer : IDisposable
     {
         public Sc.ScMgr scMgr;
-        Sc.ScGridView gridView;
+        Sc.ScGridView GirdView;
         Sc.ScLayer rootLayer;
         Sc.ScListView listView;
 
-        List<TestData> testDatalistFront = new List<TestData>();
-        List<TestData> testDatalistBack = new List<TestData>();
+        List<BindingData> bindingDatas = new List<BindingData>();
 
         public GoodsListViewer(System.Windows.Forms.Control control)
         {
@@ -38,7 +37,7 @@ namespace demo
             rootLayer = scMgr.GetRootLayer();
             rootLayer.Dock = Sc.ScDockStyle.Fill;
 
-            gridView = new Sc.ScGridView(scMgr)
+            GirdView = new Sc.ScGridView(scMgr)
             {
                 Dock = ScDockStyle.Fill,
 
@@ -79,22 +78,16 @@ namespace demo
             };
 
             //列头标题
-            gridView.CreateHeaderTitleEvent += GridView_CreateHeaderTitleEvent;
-            gridView.CreateHeaderTitleLayer();
+            GirdView.CreateHeaderTitleEvent += GridView_CreateHeaderTitleEvent;
+            GirdView.CreateHeaderTitleLayer();
 
             //生成列
             CreateColumnSetting();
 
-            rootLayer.Add(gridView);
+            rootLayer.Add(GirdView);
 
             scMgr.ReBulid();
-            CreateBackDataList();
-
-            List<TestData> tmp = testDatalistFront;
-            testDatalistFront = testDatalistBack;
-            testDatalistBack = tmp;
-            testDatalistBack.Clear();
-
+            NewPostBindingData();
             UpdateDataSource();
         }
 
@@ -147,10 +140,10 @@ namespace demo
                 setting.CreateHeaderControl += CreateHeaderControlField;
                 setting.CreateItemControl += createControlHandler;
                 setting.DisplayItemValue += displayHandler;
-                gridView.AppendColumnSetting(setting);
+                GirdView.AppendColumnSetting(setting);
             }
 
-            gridView.AppendColumnSettingEnd();
+            GirdView.AppendColumnSettingEnd();
         }
 
         /// <summary>
@@ -260,7 +253,7 @@ namespace demo
                 ? new Sc.D2DFont("微软雅黑", 12, SharpDX.DirectWrite.FontWeight.Regular)
                 : new Sc.D2DFont("微软雅黑", 17, SharpDX.DirectWrite.FontWeight.Bold);
 
-            label.Value = label.Text = testDatalistFront[dataRowIdx].test;
+            label.Value = label.Text = bindingDatas[dataRowIdx].Text;
         }
 
         void DisplayItem1(ScLayer columnItem, int dataRowIdx)
@@ -275,21 +268,23 @@ namespace demo
                 listView = (Sc.ScListView)(columnItem.controls[1]);
             else
                 listView = (Sc.ScListView)(columnItem);
-            listView.ResetDataRowCount(testDatalistFront.Count());
+            //listView.ResetDataRowCount(dataRowCount: bindingDatas.Count());
+            listView.ResetDataRowCount(dataRowCount: 2);
         }
         public void UpdateDataSource()
         {
-            gridView.ResetDataRowCount(testDatalistFront.Count());
+            //GirdView.ResetDataRowCount(dataRowCount: bindingDatas.Count());
+            GirdView.ResetDataRowCount(dataRowCount: 3);
         }
 
-        public void CreateBackDataList()
+        public void NewPostBindingData()
         {
-            testDatalistBack.Clear();
+            bindingDatas.Clear();
             for (int i = 0; i < 106; i++)
             {
-                testDatalistBack.Add(new TestData()
+                bindingDatas.Add(new BindingData()
                 {
-                    test = "测试数据" + i
+                    Text = "测试数据" + i
                 });
             }
         }
