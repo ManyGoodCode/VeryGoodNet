@@ -121,73 +121,34 @@ namespace demo
         /// </summary>
         void CreateColumnSetting()
         {
-            Sc.ColumnSetting columnSetting = new Sc.ColumnSetting("Test", "测试列1", true, false, 200);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
+            for (int i = 1; i <= 10; i++)
+            {
+                ColumnSetting.CreateControlHandler createControlHandler = CreateItemControlField;
+                ColumnSetting.DisplayItemHandler displayHandler = DisplayItem;
+                // 控件
+                if (i == 2)
+                    createControlHandler = CreateItemControlField1;
+                else if (i == 3)
+                    createControlHandler = CreateItemControlField3;
 
+                // 显示
+                if (i == 2)
+                    displayHandler = DisplayItem1;
+                else if (i == 3)
+                    displayHandler = DisplayItem3;
 
-            columnSetting = new Sc.ColumnSetting("Test2", "测试列2", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField1;
-            columnSetting.DisplayItemValue += DisplayItem1;
-            gridView.AppendColumnSetting(columnSetting);
+                Sc.ColumnSetting setting = new Sc.ColumnSetting(
+                    name: string.Format("Test{0}", i),
+                    text: string.Format("测试列{0}", i),
+                    isHideText: true,
+                    isHideColoum: false,
+                    width: i == 1 ? 200 : 100);
 
-            columnSetting = new Sc.ColumnSetting("Test3", "测试列3", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField3;
-            columnSetting.DisplayItemValue += DisplayItem3;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test4", "测试列4", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test5", "测试列5", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test6", "测试列6", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test7", "测试列7", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test8", "测试列8", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test9", "测试列9", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
-
-
-            columnSetting = new Sc.ColumnSetting("Test10", "测试列10", false, false, 100);
-            columnSetting.CreateHeaderControl += CreateHeaderControlField;
-            columnSetting.CreateItemControl += CreateItemControlField;
-            columnSetting.DisplayItemValue += DisplayItem;
-            gridView.AppendColumnSetting(columnSetting);
+                setting.CreateHeaderControl += CreateHeaderControlField;
+                setting.CreateItemControl += createControlHandler;
+                setting.DisplayItemValue += displayHandler;
+                gridView.AppendColumnSetting(setting);
+            }
 
             gridView.AppendColumnSettingEnd();
         }
