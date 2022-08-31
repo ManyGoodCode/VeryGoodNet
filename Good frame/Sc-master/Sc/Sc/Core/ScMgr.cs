@@ -131,12 +131,13 @@ namespace Sc
                 height: logicSize.Height / pixelSize.Height);
 
 
+            // 此处赋值 ScMgr
             rootScLayer.ScMgr = this;
             rootScLayer.Dock = Sc.ScDockStyle.Fill;
             rootScLayer.Name = "__root__";
             rootScLayer.D2DPaint += RootScControl_D2DPaint;
 
-            rootParent = new Sc.ScLayer(this)
+            rootParent = new Sc.ScLayer(scmgr: this)
             {
                 DirectionRect = rootScLayer.DirectionRect,
                 DrawBox = rootScLayer.DirectionRect
@@ -215,7 +216,7 @@ namespace Sc
 
         private bool CreateD2D()
         {
-            foreach (KeyValuePair<string,Utils.Dot9BitmapD2D> item in dot9BitmaShadowDict)
+            foreach (KeyValuePair<string, Utils.Dot9BitmapD2D> item in dot9BitmaShadowDict)
             {
                 item.Value.Dispose();
             }
@@ -240,10 +241,9 @@ namespace Sc
                 return false;
             }
 
-            if (drawType == Sc.DrawType.NoImage)
-                graphics = new Sc.D2DGraphics(control: control);
-            else
-                graphics = new Sc.D2DGraphics(wicBitmap: wicBitmap);
+            graphics = (drawType == Sc.DrawType.NoImage)
+                ? new Sc.D2DGraphics(control: control)
+                : new Sc.D2DGraphics(wicBitmap: wicBitmap);
 
             foreach (Sc.ScLayer layer in rebulidLayerList)
             {

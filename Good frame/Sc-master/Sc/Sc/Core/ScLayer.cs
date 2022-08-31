@@ -708,7 +708,7 @@ namespace Sc
             suspendLayoutCount = parent.suspendLayoutCount;
             scMgr = parent.scMgr;
 
-            foreach (ScLayer clayer in controls)
+            foreach (Sc.ScLayer clayer in controls)
             {
                 clayer.CreateContextRelationInfo();
             }

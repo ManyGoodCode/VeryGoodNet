@@ -25,7 +25,6 @@ namespace Demo2
 
             ShadowLayer = shadow;
 
-
             SizeChanged += ScPanel_SizeChanged;
             D2DPaint += ScPanel_D2DPaint;
             MouseMove += TestLayer_MouseMove;
