@@ -7,13 +7,11 @@ namespace Demo2
 {
     public class App
     {
-        private Sc.ScMgr scMgr;
-        private Sc.ScLayer root;
+        private Sc.ScLayer rootLayer;
 
         public App(Sc.ScMgr scMgr)
         {
-            this.scMgr = scMgr;
-            root = scMgr.GetRootLayer();
+            rootLayer = scMgr.GetRootLayer();
 
             Demo2.TestLayer testLayer = new Demo2.TestLayer(scMgr)
             {
@@ -23,7 +21,7 @@ namespace Demo2
                 Height = 300,
                 BackgroundColor = System.Drawing.Color.FromArgb(255, 255, 0, 255),
             };
-            root.Add(testLayer);
+            rootLayer.Add(testLayer);
 
             Sc.ScTextBox text = new Sc.ScTextBox(scMgr)
             {
@@ -31,8 +29,7 @@ namespace Demo2
                 Width = 200,
                 Height = 30
             };
-
-            root.Add(text);
+            rootLayer.Add(text);
         }
     }
 }
