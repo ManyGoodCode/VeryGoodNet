@@ -4,12 +4,16 @@
 
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
-namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.AddEdit;
+using System.Threading.Tasks;
+using System.Threading;
 
-    public class AddEditCheckinPointCommand: CheckinPointDto,IRequest<Result<int>>, IMapFrom<CheckinPoint>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.AddEdit
+{
+
+    public class AddEditCheckinPointCommand : CheckinPointDto, IRequest<Result<int>>, IMapFrom<CheckinPoint>, ICacheInvalidator
     {
-      public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => CheckinPointCacheKey.SharedExpiryTokenSource();
+        public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => CheckinPointCacheKey.SharedExpiryTokenSource();
     }
 
     public class AddEditCheckinPointCommandHandler : IRequestHandler<AddEditCheckinPointCommand, Result<int>>
@@ -45,7 +49,8 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.A
                 await _context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-           
+
         }
     }
+}
 

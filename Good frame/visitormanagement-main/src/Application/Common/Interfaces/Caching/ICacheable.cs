@@ -3,10 +3,12 @@
 
 using Microsoft.Extensions.Caching.Memory;
 
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
-
-public interface ICacheable
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Caching
 {
-    string CacheKey { get=>String.Empty; }
-    MemoryCacheEntryOptions? Options { get; }
+
+    public interface ICacheable
+    {
+        string CacheKey { get => string.Empty; }
+        MemoryCacheEntryOptions? Options { get; }
+    }
 }

@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Caching;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.GetAll
+{
 
     public class GetAllApprovalHistoriesQuery : IRequest<IEnumerable<ApprovalHistoryDto>>, ICacheable
     {
-       public string CacheKey => ApprovalHistoryCacheKey.GetAllCacheKey;
-       public MemoryCacheEntryOptions? Options => ApprovalHistoryCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => ApprovalHistoryCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => ApprovalHistoryCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllApprovalHistoriesQueryHandler :
          IRequestHandler<GetAllApprovalHistoriesQuery, IEnumerable<ApprovalHistoryDto>>
     {
@@ -38,5 +42,6 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Querie
             return data;
         }
     }
+}
 
 

@@ -5,11 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
-public interface IUsersStateContainer
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 {
-    ConcurrentDictionary<string, string> UsersByConnectionId { get; }
-    event Action? OnChange;
-    void Update(string connectionId, string? name);
-    void Remove(string connectionId);
+    public interface IUsersStateContainer
+    {
+        ConcurrentDictionary<string, string> UsersByConnectionId { get; }
+        event Action? OnChange;
+        void Update(string connectionId, string? name);
+        void Remove(string connectionId);
+    }
 }

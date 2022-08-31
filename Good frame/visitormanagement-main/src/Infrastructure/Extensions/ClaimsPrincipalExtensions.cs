@@ -1,3 +1,7 @@
+using System.Linq;
+using System.Security.Claims;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions
 {
     public static class ClaimsPrincipalExtensions

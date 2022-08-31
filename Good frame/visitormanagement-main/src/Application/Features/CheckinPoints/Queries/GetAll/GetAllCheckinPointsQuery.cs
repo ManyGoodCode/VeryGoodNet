@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.GetAll
+{
 
     public class GetAllCheckinPointsQuery : IRequest<IEnumerable<CheckinPointDto>>, ICacheable
     {
-       public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => CheckinPointCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => CheckinPointCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllCheckinPointsQueryHandler :
          IRequestHandler<GetAllCheckinPointsQuery, IEnumerable<CheckinPointDto>>
     {
@@ -32,12 +36,13 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Ge
 
         public async Task<IEnumerable<CheckinPointDto>> Handle(GetAllCheckinPointsQuery request, CancellationToken cancellationToken)
         {
-    
-            var data = await _context.CheckinPoints.OrderBy(x=>x.Name)
+
+            var data = await _context.CheckinPoints.OrderBy(x => x.Name)
                          .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
     }
+}
 
 

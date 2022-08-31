@@ -1,28 +1,33 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
 
-public class ApprovalHistoryCreatedEventHandler :
-          INotificationHandler<DomainEventNotification<CreatedEvent<ApprovalHistory>>>
+namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventHandlers
 {
-    private readonly ILogger<ApprovalHistoryCreatedEventHandler> _logger;
 
-    public ApprovalHistoryCreatedEventHandler(
-        ILogger<ApprovalHistoryCreatedEventHandler> logger
-        )
+    public class ApprovalHistoryCreatedEventHandler :
+              INotificationHandler<DomainEventNotification<CreatedEvent<ApprovalHistory>>>
     {
-        _logger = logger;
-    }
-    public Task Handle(DomainEventNotification<CreatedEvent<ApprovalHistory>> notification, CancellationToken cancellationToken)
-    {
-        var domainEvent = notification.DomainEvent;
+        private readonly ILogger<ApprovalHistoryCreatedEventHandler> _logger;
 
-        _logger.LogInformation("{handler}: visitorId: {VisitorId}, {Outcome}",
-            nameof(ApprovalHistoryCreatedEventHandler),
-            domainEvent.Entity.VisitorId,
-            $"{domainEvent.Entity.Outcome} {domainEvent.Entity.Comment}");
+        public ApprovalHistoryCreatedEventHandler(
+            ILogger<ApprovalHistoryCreatedEventHandler> logger
+            )
+        {
+            _logger = logger;
+        }
+        public Task Handle(DomainEventNotification<CreatedEvent<ApprovalHistory>> notification, CancellationToken cancellationToken)
+        {
+            var domainEvent = notification.DomainEvent;
 
-        return Task.CompletedTask;
+            _logger.LogInformation("{handler}: visitorId: {VisitorId}, {Outcome}",
+                nameof(ApprovalHistoryCreatedEventHandler),
+                domainEvent.Entity.VisitorId,
+                $"{domainEvent.Entity.Outcome} {domainEvent.Entity.Comment}");
+
+            return Task.CompletedTask;
+        }
     }
 }

@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
+namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.Delete;
-
-    public class DeleteCheckinPointCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteCheckinPointCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => CheckinPointCacheKey.SharedExpiryTokenSource();
-      public DeleteCheckinPointCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => CheckinPointCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => CheckinPointCacheKey.SharedExpiryTokenSource();
+        public DeleteCheckinPointCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteCheckinPointCommandHandler : 
+    public class DeleteCheckinPointCommandHandler :
                  IRequestHandler<DeleteCheckinPointCommand, Result>
 
     {
@@ -48,4 +50,5 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.D
         }
 
     }
+}
 

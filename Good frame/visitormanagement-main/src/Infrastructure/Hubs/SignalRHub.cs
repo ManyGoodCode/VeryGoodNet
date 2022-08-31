@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using Microsoft.AspNetCore.SignalR;

@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Departments.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Departments.Caching;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
-namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.GetAll
+{
 
     public class GetAllDepartmentsQuery : IRequest<IEnumerable<DepartmentDto>>, ICacheable
     {
-       public string CacheKey => DepartmentCacheKey.GetAllCacheKey;
-       public MemoryCacheEntryOptions? Options => DepartmentCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => DepartmentCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => DepartmentCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllDepartmentsQueryHandler :
          IRequestHandler<GetAllDepartmentsQuery, IEnumerable<DepartmentDto>>
     {
@@ -38,5 +42,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.GetA
             return data;
         }
     }
+}
 
 

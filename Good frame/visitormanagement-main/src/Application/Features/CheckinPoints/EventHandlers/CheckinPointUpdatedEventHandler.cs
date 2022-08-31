@@ -1,7 +1,11 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.EventHandlers
+{
 
     public class CheckinPointUpdatedEventHandler : INotificationHandler<DomainEventNotification<CheckinPointUpdatedEvent>>
     {
@@ -22,3 +26,4 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.EventHandl
             return Task.CompletedTask;
         }
     }
+}

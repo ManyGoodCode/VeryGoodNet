@@ -1,12 +1,16 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Common.Interfaces;
+using System.Threading.Tasks;
 
-public interface ICurrentUserService
+namespace CleanArchitecture.Blazor.Application.Common.Interfaces
 {
-    Task<string> UserId();
-    Task<string> UserName();
-    Task<int?> SiteId();
-    Task<string> SiteName();
+
+    public interface ICurrentUserService
+    {
+        Task<string> UserId();
+        Task<string> UserName();
+        Task<int?> SiteId();
+        Task<string> SiteName();
+    }
 }

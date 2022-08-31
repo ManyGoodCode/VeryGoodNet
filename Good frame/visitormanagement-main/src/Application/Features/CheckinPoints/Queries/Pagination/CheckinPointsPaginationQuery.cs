@@ -3,15 +3,18 @@
 
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pagination;
+namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pagination
+{
 
     public class CheckinPointsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<CheckinPointDto>>, ICacheable
     {
         public string CacheKey => CheckinPointCacheKey.GetPagtionCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => CheckinPointCacheKey.MemoryCacheEntryOptions;
-}
-    
+    }
+
     public class CheckinPointsWithPaginationQueryHandler :
          IRequestHandler<CheckinPointsWithPaginationQuery, PaginatedData<CheckinPointDto>>
     {
@@ -32,11 +35,13 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pa
 
         public async Task<PaginatedData<CheckinPointDto>> Handle(CheckinPointsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           
-           var data = await _context.CheckinPoints.Where(x=>x.Name.Contains(request.Keyword)|| x.Description.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+
+            var data = await _context.CheckinPoints.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
+                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-   }
+    }
+
+}

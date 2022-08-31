@@ -5,31 +5,33 @@ using System;
 using System.Linq;
 using System.Reflection;
 
-namespace CleanArchitecture.Blazor.Application.Common.Mappings;
-
-public class MappingProfile : Profile
+namespace CleanArchitecture.Blazor.Application.Common.Mappings
 {
-    public MappingProfile()
-    {
-        ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
-    }
 
-    private void ApplyMappingsFromAssembly(Assembly assembly)
+    public class MappingProfile : Profile
     {
-        var types = assembly.GetExportedTypes()
-        .Where(t => t.GetInterfaces().Any(i =>
-            i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>)))
-        .ToList();
-
-        foreach (var type in types)
+        public MappingProfile()
         {
-            var instance = Activator.CreateInstance(type);
+            ApplyMappingsFromAssembly(Assembly.GetExecutingAssembly());
+        }
 
-            var methodInfo = type.GetMethod("Mapping")
-                ?? type.GetInterface("IMapFrom`1")!.GetMethod("Mapping");
+        private void ApplyMappingsFromAssembly(Assembly assembly)
+        {
+            var types = assembly.GetExportedTypes()
+            .Where(t => t.GetInterfaces().Any(i =>
+                i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>)))
+            .ToList();
 
-            methodInfo?.Invoke(instance, new object[] { this });
+            foreach (var type in types)
+            {
+                var instance = Activator.CreateInstance(type);
 
+                var methodInfo = type.GetMethod("Mapping")
+                    ?? type.GetInterface("IMapFrom`1")!.GetMethod("Mapping");
+
+                methodInfo?.Invoke(instance, new object[] { this });
+
+            }
         }
     }
 }

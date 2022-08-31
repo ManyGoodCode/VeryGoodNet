@@ -1,3 +1,5 @@
+using System.Linq;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using Microsoft.AspNetCore.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions

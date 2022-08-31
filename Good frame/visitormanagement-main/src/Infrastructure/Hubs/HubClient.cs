@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Infrastructure.Constants;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.SignalR.Client;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs

@@ -3,51 +3,54 @@
 
 using CleanArchitecture.Blazor.Application.Features.Departments.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Departments.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-
-namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Delete;
-
-public class DeleteDepartmentCommand : IRequest<Result>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Delete
 {
-    public int[] Id { get; }
-    public string CacheKey => DepartmentCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => DepartmentCacheKey.SharedExpiryTokenSource();
-    public DeleteDepartmentCommand(int[] id)
-    {
-        Id = id;
-    }
-}
 
-public class DeleteDepartmentCommandHandler :
-             IRequestHandler<DeleteDepartmentCommand, Result>
-
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<DeleteDepartmentCommandHandler> _localizer;
-    public DeleteDepartmentCommandHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<DeleteDepartmentCommandHandler> localizer,
-         IMapper mapper
-        )
+    public class DeleteDepartmentCommand : IRequest<Result>, ICacheInvalidator
     {
-        _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
-    }
-    public async Task<Result> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
-    {
-
-        var items = await _context.Departments.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-        foreach (var item in items)
+        public int[] Id { get; }
+        public string CacheKey => DepartmentCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => DepartmentCacheKey.SharedExpiryTokenSource();
+        public DeleteDepartmentCommand(int[] id)
         {
-            var deleteevent = new DepartmentDeletedEvent(item);
-            item.DomainEvents.Add(deleteevent);
-            _context.Departments.Remove(item);
+            Id = id;
         }
-        await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
     }
 
+    public class DeleteDepartmentCommandHandler :
+                 IRequestHandler<DeleteDepartmentCommand, Result>
+
+    {
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<DeleteDepartmentCommandHandler> _localizer;
+        public DeleteDepartmentCommandHandler(
+            IApplicationDbContext context,
+            IStringLocalizer<DeleteDepartmentCommandHandler> localizer,
+             IMapper mapper
+            )
+        {
+            _context = context;
+            _localizer = localizer;
+            _mapper = mapper;
+        }
+        public async Task<Result> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
+        {
+
+            var items = await _context.Departments.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (var item in items)
+            {
+                var deleteevent = new DepartmentDeletedEvent(item);
+                item.DomainEvents.Add(deleteevent);
+                _context.Departments.Remove(item);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
+
+    }
 }
 

@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Middlewares;
 using Microsoft.AspNetCore.Builder;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Extensions
