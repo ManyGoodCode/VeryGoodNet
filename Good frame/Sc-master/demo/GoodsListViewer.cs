@@ -149,7 +149,7 @@ namespace demo
         /// <summary>
         /// 创建头控件
         /// </summary>
-        ScLayer CreateHeaderControlField(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
+        Sc.ScLayer CreateHeaderControlField(Sc.ScMgr scmgr, Sc.ColumnSetting columnSetting)
         {
             Sc.ScLabel label = new Sc.ScLabel(scmgr)
             {
