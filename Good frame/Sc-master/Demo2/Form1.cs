@@ -17,9 +17,9 @@ namespace Demo2
     /// 创建一个模型 ScMgr
     /// 此 ScMgr 模型对应一个根图层  ScLayer 和 一个 ScLayerControl 控件。
     /// 
-    /// 任何图层都可以包含 子 图层 和 引用 ScMgr。图层类 有 List【ScLayer】 controls 属性，且图层是一个纯数据结构，非控件，所有的绘制都是基于ScMgr的ScLayerControl控件
+    /// 任何图层都包含 子 图层 和 引用 ScMgr。图层类 有 List【ScLayer】 controls 属性，且图层是一个纯数据结构，非控件，所有的绘制都是基于ScMgr的ScLayerControl控件
     /// 
-    /// 可以通过 Add函数将子图层挂载到 根图层中
+    /// 可以通过 ScLayer类的 Add函数将子图层挂载到 根图层中
     /// 
     /// 
     /// 
