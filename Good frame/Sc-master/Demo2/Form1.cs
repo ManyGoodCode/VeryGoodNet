@@ -34,6 +34,7 @@ namespace Demo2
         Sc.ScMgr scMgr;
         public Form1()
         {
+
             InitializeComponent();
         }
 
