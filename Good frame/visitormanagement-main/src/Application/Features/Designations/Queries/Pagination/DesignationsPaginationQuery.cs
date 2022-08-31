@@ -3,15 +3,18 @@
 
 using CleanArchitecture.Blazor.Application.Features.Designations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Designations.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pagination;
+namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pagination
+{
 
     public class DesignationsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DesignationDto>>, ICacheable
     {
         public string CacheKey => DesignationCacheKey.GetPagtionCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => DesignationCacheKey.MemoryCacheEntryOptions;
-}
-    
+    }
+
     public class DesignationsWithPaginationQueryHandler :
          IRequestHandler<DesignationsWithPaginationQuery, PaginatedData<DesignationDto>>
     {
@@ -32,11 +35,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pag
 
         public async Task<PaginatedData<DesignationDto>> Handle(DesignationsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-      
-           var data = await _context.Designations
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+
+            var data = await _context.Designations
+                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
+                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-   }
+    }
+}

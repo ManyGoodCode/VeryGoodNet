@@ -1,27 +1,33 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Designations.Caching;
+using System;
+using System.Threading;
 
-public static class DesignationCacheKey
+namespace CleanArchitecture.Blazor.Application.Features.Designations.Caching
 {
-    public const string GetAllCacheKey = "all-Designations";
-    public static string GetPagtionCacheKey(string parameters) {
-        return "DesignationsWithPaginationQuery,{parameters}";
-    }
+
+    public static class DesignationCacheKey
+    {
+        public const string GetAllCacheKey = "all-Designations";
+        public static string GetPagtionCacheKey(string parameters)
+        {
+            return "DesignationsWithPaginationQuery,{parameters}";
+        }
         static DesignationCacheKey()
-    {
-        _tokensource = new CancellationTokenSource(new TimeSpan(3,0,0));
-    }
-    private static CancellationTokenSource _tokensource;
-    public static CancellationTokenSource SharedExpiryTokenSource()
-    {
-        if (_tokensource.IsCancellationRequested)
         {
             _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
         }
-        return _tokensource;
+        private static CancellationTokenSource _tokensource;
+        public static CancellationTokenSource SharedExpiryTokenSource()
+        {
+            if (_tokensource.IsCancellationRequested)
+            {
+                _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+            }
+            return _tokensource;
+        }
+        public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
     }
-    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
 }
 

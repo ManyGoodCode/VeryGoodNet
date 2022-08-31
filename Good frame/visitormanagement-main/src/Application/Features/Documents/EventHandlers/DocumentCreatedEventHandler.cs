@@ -3,27 +3,32 @@
 
 
 
-namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
 
-public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotification<DocumentCreatedEvent>>
+namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers
 {
-    private readonly IApplicationDbContext _context;
-    private readonly ILogger<DocumentCreatedEventHandler> _logger;
 
-
-    public DocumentCreatedEventHandler(
-        IApplicationDbContext context,
-        ILogger<DocumentCreatedEventHandler> logger
-
-        )
+    public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotification<DocumentCreatedEvent>>
     {
-        _context = context;
-        _logger = logger;
+        private readonly IApplicationDbContext _context;
+        private readonly ILogger<DocumentCreatedEventHandler> _logger;
 
-    }
-    public async Task Handle(DomainEventNotification<DocumentCreatedEvent> notification, CancellationToken cancellationToken)
-    {
 
-        _logger.LogInformation($"Document Created");
+        public DocumentCreatedEventHandler(
+            IApplicationDbContext context,
+            ILogger<DocumentCreatedEventHandler> logger
+
+            )
+        {
+            _context = context;
+            _logger = logger;
+
+        }
+        public async Task Handle(DomainEventNotification<DocumentCreatedEvent> notification, CancellationToken cancellationToken)
+        {
+
+            _logger.LogInformation($"Document Created");
+        }
     }
 }

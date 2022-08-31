@@ -1,15 +1,20 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
+using System;
+using System.Threading;
 
-public static class DocumentTypeCacheKey
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching
 {
-    public const string GetAllCacheKey = "all-documenttypes";
-    static DocumentTypeCacheKey()
+
+    public static class DocumentTypeCacheKey
     {
-        SharedExpiryTokenSource = new CancellationTokenSource(new TimeSpan(12,0,0));
+        public const string GetAllCacheKey = "all-documenttypes";
+        static DocumentTypeCacheKey()
+        {
+            SharedExpiryTokenSource = new CancellationTokenSource(new TimeSpan(12, 0, 0));
+        }
+        public static CancellationTokenSource SharedExpiryTokenSource { get; private set; }
+        public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource.Token));
     }
-    public static CancellationTokenSource SharedExpiryTokenSource { get; private set; }
-    public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource.Token));
 }

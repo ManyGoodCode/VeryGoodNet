@@ -1,13 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete;
-
-public class DeleteDocumentCommandValidator : AbstractValidator<DeleteDocumentCommand>
+namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 {
-    public DeleteDocumentCommandValidator()
+
+    public class DeleteDocumentCommandValidator : AbstractValidator<DeleteDocumentCommand>
     {
-        RuleFor(x => x.Id).NotNull().NotEmpty();
+        public DeleteDocumentCommandValidator()
+        {
+            RuleFor(x => x.Id).NotNull().NotEmpty();
+        }
     }
 }
 

@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Designations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Designations.Caching;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
-namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.GetAll
+{
 
     public class GetAllDesignationsQuery : IRequest<IEnumerable<DesignationDto>>, ICacheable
     {
-       public string CacheKey => DesignationCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => DesignationCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => DesignationCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => DesignationCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllDesignationsQueryHandler :
          IRequestHandler<GetAllDesignationsQuery, IEnumerable<DesignationDto>>
     {
@@ -32,11 +36,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Get
 
         public async Task<IEnumerable<DesignationDto>> Handle(GetAllDesignationsQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.Designations.OrderBy(x=>x.Name)
-                         .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
-                         .ToListAsync(cancellationToken);
+            var data = await _context.Designations.OrderBy(x => x.Name)
+                          .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
+                          .ToListAsync(cancellationToken);
             return data;
         }
     }
+}
 
 

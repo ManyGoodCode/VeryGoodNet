@@ -3,37 +3,41 @@
 
 using CleanArchitecture.Blazor.Application.Features.Departments.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Departments.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.Pagination;
-
-public class DepartmentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DepartmentDto>>, ICacheable
+namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.Pagination
 {
-    public string CacheKey => DepartmentCacheKey.GetPagtionCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => DepartmentCacheKey.MemoryCacheEntryOptions;
-}
 
-public class DepartmentsWithPaginationQueryHandler :
-     IRequestHandler<DepartmentsWithPaginationQuery, PaginatedData<DepartmentDto>>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-
-    public DepartmentsWithPaginationQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper
-        )
+    public class DepartmentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DepartmentDto>>, ICacheable
     {
-        _context = context;
-        _mapper = mapper;
-
+        public string CacheKey => DepartmentCacheKey.GetPagtionCacheKey($"{this}");
+        public MemoryCacheEntryOptions? Options => DepartmentCacheKey.MemoryCacheEntryOptions;
     }
 
-    public async Task<PaginatedData<DepartmentDto>> Handle(DepartmentsWithPaginationQuery request, CancellationToken cancellationToken)
+    public class DepartmentsWithPaginationQueryHandler :
+         IRequestHandler<DepartmentsWithPaginationQuery, PaginatedData<DepartmentDto>>
     {
-        var data = await _context.Departments.Where(x => x.Name.Contains(request.Keyword))
-             .OrderBy($"{request.OrderBy} {request.SortDirection}")
-             .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
-             .PaginatedDataAsync(request.PageNumber, request.PageSize);
-        return data;
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public DepartmentsWithPaginationQueryHandler(
+            IApplicationDbContext context,
+            IMapper mapper
+            )
+        {
+            _context = context;
+            _mapper = mapper;
+
+        }
+
+        public async Task<PaginatedData<DepartmentDto>> Handle(DepartmentsWithPaginationQuery request, CancellationToken cancellationToken)
+        {
+            var data = await _context.Departments.Where(x => x.Name.Contains(request.Keyword))
+                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
+                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
+            return data;
+        }
     }
 }

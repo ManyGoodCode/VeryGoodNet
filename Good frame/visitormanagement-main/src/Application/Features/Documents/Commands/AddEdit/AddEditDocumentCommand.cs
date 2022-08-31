@@ -3,63 +3,67 @@
 
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit;
-
-public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 {
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource;
-    public UploadRequest? UploadRequest { get; set; }
-  
-}
 
-public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IUploadService _uploadService;
-
-    public AddEditDocumentCommandHandler(
-        IApplicationDbContext context,
-         IMapper mapper,
-         IUploadService uploadService
-        )
+    public class AddEditDocumentCommand : DocumentDto, IRequest<Result<int>>, ICacheInvalidator
     {
-        _context = context;
-        _mapper = mapper;
-        _uploadService = uploadService;
+        public CancellationTokenSource? SharedExpiryTokenSource => DocumentCacheKey.SharedExpiryTokenSource;
+        public UploadRequest? UploadRequest { get; set; }
+
     }
-    public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
+
+    public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
     {
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IUploadService _uploadService;
 
-        if (request.Id > 0)
+        public AddEditDocumentCommandHandler(
+            IApplicationDbContext context,
+             IMapper mapper,
+             IUploadService uploadService
+            )
         {
-            var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
-            _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
-            if (request.UploadRequest != null)
-            {
-                document.URL = await _uploadService.UploadAsync(request.UploadRequest);
-            }
-            document.Title = request.Title;
-            document.Description = request.Description;
-            document.IsPublic = request.IsPublic;
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(document.Id);
+            _context = context;
+            _mapper = mapper;
+            _uploadService = uploadService;
         }
-        else
+        public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
         {
-            var document = _mapper.Map<Document>(request);
-            if (request.UploadRequest != null)
+
+            if (request.Id > 0)
             {
-                document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
+                var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
+                _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
+                if (request.UploadRequest != null)
+                {
+                    document.URL = await _uploadService.UploadAsync(request.UploadRequest);
+                }
+                document.Title = request.Title;
+                document.Description = request.Description;
+                document.IsPublic = request.IsPublic;
+                await _context.SaveChangesAsync(cancellationToken);
+                return Result<int>.Success(document.Id);
             }
-            var createdevent = new DocumentCreatedEvent(document);
-            document.DomainEvents.Add(createdevent);
-            _context.Documents.Add(document);
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(document.Id);
+            else
+            {
+                var document = _mapper.Map<Document>(request);
+                if (request.UploadRequest != null)
+                {
+                    document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
+                }
+                var createdevent = new DocumentCreatedEvent(document);
+                document.DomainEvents.Add(createdevent);
+                _context.Documents.Add(document);
+                await _context.SaveChangesAsync(cancellationToken);
+                return Result<int>.Success(document.Id);
+            }
+
+
         }
-
-
     }
 }

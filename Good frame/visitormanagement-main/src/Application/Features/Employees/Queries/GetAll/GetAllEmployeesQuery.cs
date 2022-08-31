@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Employees.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Employees.Caching;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.GetAll
+{
 
     public class GetAllEmployeesQuery : IRequest<IEnumerable<EmployeeDto>>, ICacheable
     {
-       public string CacheKey => EmployeeCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => EmployeeCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => EmployeeCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => EmployeeCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllEmployeesQueryHandler :
          IRequestHandler<GetAllEmployeesQuery, IEnumerable<EmployeeDto>>
     {
@@ -32,11 +36,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.GetAll
 
         public async Task<IEnumerable<EmployeeDto>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Employees.OrderBy(x=>x.Name)
+            var data = await _context.Employees.OrderBy(x => x.Name)
                          .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
     }
-
+}
 

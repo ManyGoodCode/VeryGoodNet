@@ -1,12 +1,14 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import;
-
-public class ImportDocumentTypesCommandValidator : AbstractValidator<ImportDocumentTypesCommand>
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import
 {
-    public ImportDocumentTypesCommandValidator()
+
+    public class ImportDocumentTypesCommandValidator : AbstractValidator<ImportDocumentTypesCommand>
     {
-        RuleFor(x => x.Data).NotNull().NotEmpty();
+        public ImportDocumentTypesCommandValidator()
+        {
+            RuleFor(x => x.Data).NotNull().NotEmpty();
+        }
     }
 }

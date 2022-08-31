@@ -4,38 +4,43 @@
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery;
-
-public class DocumentTypesGetAllQuery : IRequest<IEnumerable<DocumentTypeDto>>, ICacheable
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery
 {
 
-    public string CacheKey => DocumentTypeCacheKey.GetAllCacheKey;
-
-    public MemoryCacheEntryOptions? Options => DocumentTypeCacheKey.MemoryCacheEntryOptions;
-}
-public class DocumentTypesGetAllQueryHandler : IRequestHandler<DocumentTypesGetAllQuery, IEnumerable<DocumentTypeDto>>
-{
-
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-
-    public DocumentTypesGetAllQueryHandler(
-
-        IApplicationDbContext context,
-        IMapper mapper
-        )
+    public class DocumentTypesGetAllQuery : IRequest<IEnumerable<DocumentTypeDto>>, ICacheable
     {
 
-        _context = context;
-        _mapper = mapper;
+        public string CacheKey => DocumentTypeCacheKey.GetAllCacheKey;
+
+        public MemoryCacheEntryOptions? Options => DocumentTypeCacheKey.MemoryCacheEntryOptions;
     }
-    public async Task<IEnumerable<DocumentTypeDto>> Handle(DocumentTypesGetAllQuery request, CancellationToken cancellationToken)
+    public class DocumentTypesGetAllQueryHandler : IRequestHandler<DocumentTypesGetAllQuery, IEnumerable<DocumentTypeDto>>
     {
-        var data = await _context.DocumentTypes
-            .OrderBy(x => x.Name)
-            .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
-            .ToListAsync(cancellationToken);
-        return data;
+
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+
+        public DocumentTypesGetAllQueryHandler(
+
+            IApplicationDbContext context,
+            IMapper mapper
+            )
+        {
+
+            _context = context;
+            _mapper = mapper;
+        }
+        public async Task<IEnumerable<DocumentTypeDto>> Handle(DocumentTypesGetAllQuery request, CancellationToken cancellationToken)
+        {
+            var data = await _context.DocumentTypes
+                .OrderBy(x => x.Name)
+                .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
+                .ToListAsync(cancellationToken);
+            return data;
+        }
     }
 }

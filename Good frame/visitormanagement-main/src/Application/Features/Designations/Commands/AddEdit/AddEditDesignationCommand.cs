@@ -4,52 +4,57 @@
 
 using CleanArchitecture.Blazor.Application.Features.Designations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Designations.Caching;
-namespace CleanArchitecture.Blazor.Application.Features.Designations.Commands.AddEdit;
+using System.Threading;
+using System.Threading.Tasks;
 
-public class AddEditDesignationCommand : DesignationDto, IRequest<Result<int>>, IMapFrom<Designation>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.Designations.Commands.AddEdit
 {
-    public string CacheKey => DesignationCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => DesignationCacheKey.SharedExpiryTokenSource();
-}
 
-public class AddEditDesignationCommandHandler : IRequestHandler<AddEditDesignationCommand, Result<int>>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<AddEditDesignationCommandHandler> _localizer;
-    public AddEditDesignationCommandHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<AddEditDesignationCommandHandler> localizer,
-        IMapper mapper
-        )
+    public class AddEditDesignationCommand : DesignationDto, IRequest<Result<int>>, IMapFrom<Designation>, ICacheInvalidator
     {
-        _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
+        public string CacheKey => DesignationCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => DesignationCacheKey.SharedExpiryTokenSource();
     }
-    public async Task<Result<int>> Handle(AddEditDesignationCommand request, CancellationToken cancellationToken)
+
+    public class AddEditDesignationCommandHandler : IRequestHandler<AddEditDesignationCommand, Result<int>>
     {
-
-        if (request.Id > 0)
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<AddEditDesignationCommandHandler> _localizer;
+        public AddEditDesignationCommandHandler(
+            IApplicationDbContext context,
+            IStringLocalizer<AddEditDesignationCommandHandler> localizer,
+            IMapper mapper
+            )
         {
-            var item = await _context.Designations.FindAsync(new object[] { request.Id }, cancellationToken);
-            _ = item ?? throw new NotFoundException("Designation {request.Id} Not Found.");
-            item = _mapper.Map(request, item);
-            var updateevent = new DesignationUpdatedEvent(item);
-            item.DomainEvents.Add(updateevent);
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(item.Id);
+            _context = context;
+            _localizer = localizer;
+            _mapper = mapper;
         }
-        else
+        public async Task<Result<int>> Handle(AddEditDesignationCommand request, CancellationToken cancellationToken)
         {
-            var item = _mapper.Map<Designation>(request);
-            _context.Designations.Add(item);
-            var careateevent = new DesignationCreatedEvent(item);
-            item.DomainEvents.Add(careateevent);
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result<int>.Success(item.Id);
-        }
 
+            if (request.Id > 0)
+            {
+                var item = await _context.Designations.FindAsync(new object[] { request.Id }, cancellationToken);
+                _ = item ?? throw new NotFoundException("Designation {request.Id} Not Found.");
+                item = _mapper.Map(request, item);
+                var updateevent = new DesignationUpdatedEvent(item);
+                item.DomainEvents.Add(updateevent);
+                await _context.SaveChangesAsync(cancellationToken);
+                return Result<int>.Success(item.Id);
+            }
+            else
+            {
+                var item = _mapper.Map<Designation>(request);
+                _context.Designations.Add(item);
+                var careateevent = new DesignationCreatedEvent(item);
+                item.DomainEvents.Add(careateevent);
+                await _context.SaveChangesAsync(cancellationToken);
+                return Result<int>.Success(item.Id);
+            }
+
+        }
     }
 }
 

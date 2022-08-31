@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Devices.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Devices.Caching;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll
+{
 
     public class GetAllDevicesQuery : IRequest<IEnumerable<DeviceDto>>, ICacheable
     {
-       public string CacheKey => DeviceCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => DeviceCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => DeviceCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => DeviceCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllDevicesQueryHandler :
          IRequestHandler<GetAllDevicesQuery, IEnumerable<DeviceDto>>
     {
@@ -32,12 +36,13 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll;
 
         public async Task<IEnumerable<DeviceDto>> Handle(GetAllDevicesQuery request, CancellationToken cancellationToken)
         {
-      
-            var data = await _context.Devices.OrderBy(x=>x.Name)
+
+            var data = await _context.Devices.OrderBy(x => x.Name)
                          .ProjectTo<DeviceDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
     }
+}
 
 
