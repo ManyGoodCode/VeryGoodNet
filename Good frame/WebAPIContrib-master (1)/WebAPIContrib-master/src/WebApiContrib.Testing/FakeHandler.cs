@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApiContrib.Testing
 {
-    public class FakeHandler : DelegatingHandler
+    public class FakeHandler : System.Net.Http.DelegatingHandler
     {
         private readonly Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> f;
 
