@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs;
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.Caching;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.GetAll
+{
 
     public class GetAllMessageTemplatesQuery : IRequest<IEnumerable<MessageTemplateDto>>, ICacheable
     {
-       public string CacheKey => MessageTemplateCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => MessageTemplateCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => MessageTemplateCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => MessageTemplateCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllMessageTemplatesQueryHandler :
          IRequestHandler<GetAllMessageTemplatesQuery, IEnumerable<MessageTemplateDto>>
     {
@@ -32,12 +36,13 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries
 
         public async Task<IEnumerable<MessageTemplateDto>> Handle(GetAllMessageTemplatesQuery request, CancellationToken cancellationToken)
         {
-        
-            var data = await _context.MessageTemplates.OrderBy(x=>x.SiteId)
+
+            var data = await _context.MessageTemplates.OrderBy(x => x.SiteId)
                          .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
     }
 
+}
 

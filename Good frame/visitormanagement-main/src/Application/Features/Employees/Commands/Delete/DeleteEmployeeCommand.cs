@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.Employees.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Employees.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
+namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delete;
-
-    public class DeleteEmployeeCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteEmployeeCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => EmployeeCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => EmployeeCacheKey.SharedExpiryTokenSource();
-      public DeleteEmployeeCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => EmployeeCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => EmployeeCacheKey.SharedExpiryTokenSource();
+        public DeleteEmployeeCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteEmployeeCommandHandler : 
+    public class DeleteEmployeeCommandHandler :
                  IRequestHandler<DeleteEmployeeCommand, Result>
 
     {
@@ -37,12 +39,12 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delet
         }
         public async Task<Result> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
         {
-           
+
             var items = await _context.Employees.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-            var deleteevent = new EmployeeDeletedEvent(item);
-            item.DomainEvents.Add(deleteevent);
+                var deleteevent = new EmployeeDeletedEvent(item);
+                item.DomainEvents.Add(deleteevent);
                 _context.Employees.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);
@@ -50,4 +52,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delet
         }
 
     }
-
+}

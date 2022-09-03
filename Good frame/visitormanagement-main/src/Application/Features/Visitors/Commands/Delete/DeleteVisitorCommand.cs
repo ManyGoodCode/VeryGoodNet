@@ -3,61 +3,64 @@
 
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete;
-
-public class DeleteVisitorCommand : IRequest<Result>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete
 {
-    public int[] Id { get; }
-    public string CacheKey => VisitorCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
-    public DeleteVisitorCommand(int[] id)
-    {
-        Id = id;
-    }
-}
 
-public class DeleteVisitorCommandHandler :
-             IRequestHandler<DeleteVisitorCommand, Result>
-
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<DeleteVisitorCommandHandler> _localizer;
-    public DeleteVisitorCommandHandler(
-        IApplicationDbContext context,
-        IStringLocalizer<DeleteVisitorCommandHandler> localizer,
-         IMapper mapper
-        )
+    public class DeleteVisitorCommand : IRequest<Result>, ICacheInvalidator
     {
-        _context = context;
-        _localizer = localizer;
-        _mapper = mapper;
-    }
-    public async Task<Result> Handle(DeleteVisitorCommand request, CancellationToken cancellationToken)
-    {
-
-        var items = await _context.Visitors.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-        foreach (var item in items)
+        public int[] Id { get; }
+        public string CacheKey => VisitorCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
+        public DeleteVisitorCommand(int[] id)
         {
-            var deleteevent = new DeletedEvent<Visitor>(item);
-            item.DomainEvents.Add(deleteevent);
-            var companions = await _context.Companions.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
-            foreach (var companion in companions)
-            {
-                _context.Companions.Remove(companion);
-            }
-            var approvalhistories = await _context.ApprovalHistories.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
-            foreach (var approvalhistory in approvalhistories)
-            {
-                _context.ApprovalHistories.Remove(approvalhistory);
-            }
-            _context.Visitors.Remove(item);
+            Id = id;
         }
-        await _context.SaveChangesAsync(cancellationToken);
-        return Result.Success();
     }
 
+    public class DeleteVisitorCommandHandler :
+                 IRequestHandler<DeleteVisitorCommand, Result>
+
+    {
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<DeleteVisitorCommandHandler> _localizer;
+        public DeleteVisitorCommandHandler(
+            IApplicationDbContext context,
+            IStringLocalizer<DeleteVisitorCommandHandler> localizer,
+             IMapper mapper
+            )
+        {
+            _context = context;
+            _localizer = localizer;
+            _mapper = mapper;
+        }
+        public async Task<Result> Handle(DeleteVisitorCommand request, CancellationToken cancellationToken)
+        {
+
+            var items = await _context.Visitors.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (var item in items)
+            {
+                var deleteevent = new DeletedEvent<Visitor>(item);
+                item.DomainEvents.Add(deleteevent);
+                var companions = await _context.Companions.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
+                foreach (var companion in companions)
+                {
+                    _context.Companions.Remove(companion);
+                }
+                var approvalhistories = await _context.ApprovalHistories.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
+                foreach (var approvalhistory in approvalhistories)
+                {
+                    _context.ApprovalHistories.Remove(approvalhistory);
+                }
+                _context.Visitors.Remove(item);
+            }
+            await _context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
+
+    }
 }
 

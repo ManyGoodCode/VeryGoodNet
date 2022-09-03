@@ -3,15 +3,18 @@
 
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.Pagination;
+namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.Pagination
+{
 
     public class VisitorHistoriesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<VisitorHistoryDto>>, ICacheable
     {
         public string CacheKey => VisitorHistoryCacheKey.GetPagtionCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
+        public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class VisitorHistoriesWithPaginationQueryHandler :
          IRequestHandler<VisitorHistoriesWithPaginationQuery, PaginatedData<VisitorHistoryDto>>
     {
@@ -32,10 +35,11 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries
 
         public async Task<PaginatedData<VisitorHistoryDto>> Handle(VisitorHistoriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-           var data = await _context.VisitorHistories.Where(x=>x.Visitor.Name.Contains(request.Keyword) || x.Visitor.CompanyName.Contains(request.Keyword) || x.Comment.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+            var data = await _context.VisitorHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.Visitor.CompanyName.Contains(request.Keyword) || x.Comment.Contains(request.Keyword))
+                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
+                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-   }
+    }
+}

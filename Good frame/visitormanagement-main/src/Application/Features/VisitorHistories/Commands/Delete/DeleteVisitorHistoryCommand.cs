@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
+namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Delete;
-
-    public class DeleteVisitorHistoryCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteVisitorHistoryCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => VisitorHistoryCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => VisitorHistoryCacheKey.SharedExpiryTokenSource();
-      public DeleteVisitorHistoryCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => VisitorHistoryCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => VisitorHistoryCacheKey.SharedExpiryTokenSource();
+        public DeleteVisitorHistoryCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteVisitorHistoryCommandHandler : 
+    public class DeleteVisitorHistoryCommandHandler :
                  IRequestHandler<DeleteVisitorHistoryCommand, Result>
 
     {
@@ -47,4 +49,5 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
         }
 
     }
+}
 

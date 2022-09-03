@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll
+{
 
     public class GetAllVisitorHistoriesQuery : IRequest<IEnumerable<VisitorHistoryDto>>, ICacheable
     {
-       public string CacheKey => VisitorHistoryCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => VisitorHistoryCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllVisitorHistoriesQueryHandler :
          IRequestHandler<GetAllVisitorHistoriesQuery, IEnumerable<VisitorHistoryDto>>
     {
@@ -38,5 +42,5 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries
             return data;
         }
     }
-
+}
 
