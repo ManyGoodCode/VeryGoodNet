@@ -2,7 +2,6 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <!-- Enable the restore command to run before builds -->
-    <RestorePackages Condition=" '$(RestorePackages)' == '' ">true</RestorePackages>
     <!-- Download Paket.exe if it does not already exist -->
     <DownloadPaket Condition=" '$(DownloadPaket)' == '' ">true</DownloadPaket>
     <PaketToolsPath>$(MSBuildThisFileDirectory)</PaketToolsPath>
@@ -30,9 +29,7 @@
     <MsBuild Targets="DownloadPaket" Projects="$(MSBuildThisFileFullPath)" Properties="Configuration=NOT_IMPORTANT;DownloadPaket=$(DownloadPaket)" />
   </Target>
   <Target Name="DownloadPaket">
-    <Exec Command="$(DownloadPaketCommand)" Condition=" '$(DownloadPaket)' == 'true' AND !Exists('$(PaketExePath)')" />
   </Target>
   <Target Name="RestorePackages" DependsOnTargets="CheckPrerequisites">
-    <Exec Command="$(RestoreCommand)" WorkingDirectory="$(PaketRootPath)" Condition="Exists('$(PaketReferences)')" />
   </Target>
 </Project>

@@ -16,7 +16,7 @@ namespace WebApiContrib.Configuration
 
         public static void UseWebConfigCustomErrors(this HttpConfiguration configuration)
         {
-            var config = (CustomErrorsSection)ConfigurationManager.GetSection("system.web/customErrors");
+            CustomErrorsSection config = (CustomErrorsSection)ConfigurationManager.GetSection("system.web/customErrors");
 
             configuration.IncludeErrorDetailPolicy = policyLookup[config.Mode];
         }

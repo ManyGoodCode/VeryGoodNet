@@ -1,4 +1,4 @@
-﻿-using System;
+﻿using System;
 using System.Net;
 using System.Net.Http;
 using System.Threading;
@@ -42,7 +42,7 @@ namespace WebApiContrib.MessageHandlers
                 return CreateResponse(request, HttpStatusCode.Forbidden, "Could not identify client.");
             }
 
-            int maxRequests = _maxRequestsForUserIdentifier(identifier);
+            long maxRequests = _maxRequestsForUserIdentifier(identifier);
 
             ThrottleEntry entry = null;
             if (_store.TryGetValue(identifier, out entry))
@@ -70,7 +70,7 @@ namespace WebApiContrib.MessageHandlers
 
             return response.ContinueWith(task =>
                 {
-                    int remaining = maxRequests - entry.Requests;
+                    long remaining = maxRequests - entry.Requests;
                     if (remaining < 0)
                     {
                         remaining = 0;

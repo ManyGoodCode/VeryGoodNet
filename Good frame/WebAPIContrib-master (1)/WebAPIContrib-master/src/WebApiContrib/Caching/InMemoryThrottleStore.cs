@@ -4,16 +4,16 @@ namespace WebApiContrib.Caching
 {
     public class InMemoryThrottleStore : IThrottleStore
     {
-        private readonly ConcurrentDictionary<string, ThrottleEntry> _throttleStore = new ConcurrentDictionary<string, ThrottleEntry>();
+        private readonly ConcurrentDictionary<string, ThrottleEntry> throttleStore = new ConcurrentDictionary<string, ThrottleEntry>();
 
         public bool TryGetValue(string key, out ThrottleEntry entry)
         {
-            return _throttleStore.TryGetValue(key, out entry);
+            return throttleStore.TryGetValue(key, out entry);
         }
 
         public void IncrementRequests(string key)
         {
-            _throttleStore.AddOrUpdate(key,
+           throttleStore.AddOrUpdate(key,
                                        k =>
                                            {
                                                return new ThrottleEntry() {Requests = 1};
@@ -28,12 +28,12 @@ namespace WebApiContrib.Caching
         public void Rollover(string key)
         {
             ThrottleEntry dummy;
-            _throttleStore.TryRemove(key, out dummy);
+            throttleStore.TryRemove(key, out dummy);
         }
 
         public void Clear()
         {
-            _throttleStore.Clear();
+            throttleStore.Clear();
         }
     }
 }
