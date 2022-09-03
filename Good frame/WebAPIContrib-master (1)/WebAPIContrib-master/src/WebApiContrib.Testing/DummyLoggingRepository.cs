@@ -24,7 +24,11 @@ namespace WebApiContrib.Testing
 				HasRequestMessageTypeBeenReceived = true;
 			}
 
-			Trace.WriteLine(string.Format("Message: Type:{0}, Uri:{1}, Method:{2}", loggingInfo.MessageType, loggingInfo.UriAccessed, loggingInfo.HttpMethod));
+			Trace.WriteLine(
+				string.Format("Message: Type:{0}, Uri:{1}, Method:{2}", 
+				loggingInfo.MessageType,
+				loggingInfo.UriAccessed,
+				loggingInfo.HttpMethod));
 		}
 	}
 }

@@ -5,23 +5,25 @@ namespace WebApiContrib.Testing
 {
     public static class TestFactory
     {
-        public static HttpRequestMessage GetDefaultRequest()
+        public static System.Net.Http.HttpRequestMessage GetDefaultRequest()
         {
-            var request = new HttpRequestMessage(HttpMethod.Get, "http://test/");
-
+            System.Net.Http.HttpRequestMessage request = new System.Net.Http.HttpRequestMessage(
+               method: HttpMethod.Get, 
+               requestUri:  "http://test/");
             return request;
         }
 
-        public static HttpConfiguration GetDefaultConfiguration()
+        public static System.Web.Http.HttpConfiguration GetDefaultConfiguration()
         {
-            var httpConfig = new HttpConfiguration();
-
+            System.Web.Http.HttpConfiguration httpConfig = new System.Web.Http.HttpConfiguration();
             return httpConfig;
         }
 
-        public static HttpServer GetDefaultServer()
+        public static System.Web.Http.HttpServer GetDefaultServer()
         {
-            return new HttpServer(GetDefaultConfiguration(), new FakeHandler(req => new HttpResponseMessage()));
+            return new System.Web.Http.HttpServer(
+                configuration: GetDefaultConfiguration(), 
+                dispatcher: new FakeHandler(req => new System.Net.Http.HttpResponseMessage()));
         }
     }
 }

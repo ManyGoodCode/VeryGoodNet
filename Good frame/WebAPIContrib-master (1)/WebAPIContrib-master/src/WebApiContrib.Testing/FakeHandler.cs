@@ -7,14 +7,16 @@ namespace WebApiContrib.Testing
 {
     public class FakeHandler : DelegatingHandler
     {
-        private readonly Func<HttpRequestMessage, HttpResponseMessage> f;
+        private readonly Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> f;
 
-        public FakeHandler(Func<HttpRequestMessage, HttpResponseMessage> f)
+        public FakeHandler(Func<System.Net.Http.HttpRequestMessage, System.Net.Http.HttpResponseMessage> f)
         {
             this.f = f;
         }
 
-        protected override Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken cancellationToken)
+        protected override Task<HttpResponseMessage> SendAsync(
+            System.Net.Http.HttpRequestMessage request,
+            System.Threading.CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(() => f(request));
         }

@@ -2,7 +2,7 @@
 
 namespace WebApiContrib.Testing
 {
-    public class DummyController : ApiController
+    public class DummyController : System.Web.Http.ApiController
     {
         public string Get()
         {

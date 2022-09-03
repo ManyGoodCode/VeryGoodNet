@@ -10,33 +10,43 @@ using System.Web.Http.Routing;
 
 namespace WebApiContrib.Testing
 {
-    //Credits to the following individuals for their posts which inspired this code
-    //Pablo Cibraro: http://weblogs.asp.net/cibrax/archive/2012/10/10/unit-testing-asp-net-web-api-controllers-that-rely-on-the-urlhelper.aspx
-    //Peter Provost: http://www.peterprovost.org/blog/2012/06/16/unit-testing-asp-dot-net-web-api
     public static class ApiControllerExtensions
     {
-        public static void ConfigureForTesting(this ApiController controller, HttpMethod method, string uri, 
-                                               string routeName = null, IHttpRoute route = null)
+        public static void ConfigureForTesting(
+            this System.Web.Http.ApiController controller,
+            System.Net.Http.HttpMethod method, 
+            string uri, 
+            string routeName = null,
+            System.Web.Http.Routing.IHttpRoute route = null)
         {
-            var request = new HttpRequestMessage(method, uri);
+            System.Net.Http.HttpRequestMessage request = new HttpRequestMessage(method, uri);
             ConfigureForTesting(controller, request, routeName, route);
         }
 
-        public static void ConfigureForTesting(this ApiController controller, HttpRequestMessage request, string routeName = null, IHttpRoute route = null)
+        public static void ConfigureForTesting(
+            this System.Web.Http.ApiController controller,
+            System.Net.Http.HttpRequestMessage request, 
+            string routeName = null,
+            System.Web.Http.Routing.IHttpRoute route = null)
         {
-            var config = new HttpConfiguration();
+            HttpConfiguration config = new HttpConfiguration();
             controller.Configuration = config;
             if (routeName != null && route != null)
                 config.Routes.Add(routeName, route);
             else
                 route = config.Routes.MapHttpRoute("DefaultApi", "{controller}/{id}", new { id = RouteParameter.Optional });
 
-            var controllerTypeName = controller.GetType().Name;
-            var controllerName = controllerTypeName.Substring(0, controllerTypeName.IndexOf("Controller")).ToLower();
-            var routeData = new HttpRouteData(route, new HttpRouteValueDictionary { { "controller", controllerName } });
+            string controllerTypeName = controller.GetType().Name;
+            string controllerName = controllerTypeName.Substring(0, controllerTypeName.IndexOf("Controller")).ToLower();
+            System.Web.Http.Routing.HttpRouteData routeData = new HttpRouteData(
+                route, new HttpRouteValueDictionary 
+                {
+                    { "controller", controllerName } 
+                });
+
             request.Properties[HttpPropertyKeys.HttpConfigurationKey] = config;
             request.Properties[HttpPropertyKeys.HttpRouteDataKey] = routeData;
-            controller.ControllerContext = new HttpControllerContext(config, routeData, request);
+            controller.ControllerContext = new System.Web.Http.Controllers.HttpControllerContext(config, routeData, request);
             controller.ControllerContext.ControllerDescriptor = new HttpControllerDescriptor(config, controllerName, controller.GetType());
         }
     }

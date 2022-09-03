@@ -7,6 +7,9 @@ namespace WebApiContrib.Testing.Internal.Extensions
 {
     internal static class MemberInfoExtensions
     {
+        /// <summary>
+        /// OfType扩展转换为集合
+        /// </summary>
         public static IEnumerable<T> GetAttribute<T>(this MemberInfo member)
             where T : class
         {
