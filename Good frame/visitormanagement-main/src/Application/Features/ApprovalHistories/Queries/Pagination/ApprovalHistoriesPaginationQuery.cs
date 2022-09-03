@@ -5,6 +5,13 @@ using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Caching;
 using System.Threading.Tasks;
 using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.Pagination
 {
