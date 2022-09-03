@@ -1,7 +1,11 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers
+{
 
     public class ProductUpdatedEventHandler : INotificationHandler<DomainEventNotification<UpdatedEvent<Product>>>
     {
@@ -22,3 +26,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers;
             return Task.CompletedTask;
         }
     }
+
+}
+

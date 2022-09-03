@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
+namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Commands.Delete;
-
-    public class DeleteSiteConfigurationCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteSiteConfigurationCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => SiteConfigurationCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => SiteConfigurationCacheKey.SharedExpiryTokenSource();
-      public DeleteSiteConfigurationCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => SiteConfigurationCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => SiteConfigurationCacheKey.SharedExpiryTokenSource();
+        public DeleteSiteConfigurationCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteSiteConfigurationCommandHandler : 
+    public class DeleteSiteConfigurationCommandHandler :
                  IRequestHandler<DeleteSiteConfigurationCommand, Result>
 
     {
@@ -37,12 +39,12 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Comma
         }
         public async Task<Result> Handle(DeleteSiteConfigurationCommand request, CancellationToken cancellationToken)
         {
-          
+
             var items = await _context.SiteConfigurations.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-			    // add delete domain events if this entity implement the IHasDomainEvent interface
-				// item.DomainEvents.Add(new DeletedEvent<SiteConfiguration>(item));
+                // add delete domain events if this entity implement the IHasDomainEvent interface
+                // item.DomainEvents.Add(new DeletedEvent<SiteConfiguration>(item));
                 _context.SiteConfigurations.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);
@@ -50,4 +52,5 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Comma
         }
 
     }
+}
 

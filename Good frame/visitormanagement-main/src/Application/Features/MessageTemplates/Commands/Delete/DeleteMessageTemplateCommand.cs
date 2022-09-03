@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs;
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.Caching;
+using System.Threading;
+using System.Threading.Tasks;
 
+namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Commands.Delete;
-
-    public class DeleteMessageTemplateCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteMessageTemplateCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => MessageTemplateCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => MessageTemplateCacheKey.SharedExpiryTokenSource();
-      public DeleteMessageTemplateCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => MessageTemplateCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => MessageTemplateCacheKey.SharedExpiryTokenSource();
+        public DeleteMessageTemplateCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteMessageTemplateCommandHandler : 
+    public class DeleteMessageTemplateCommandHandler :
                  IRequestHandler<DeleteMessageTemplateCommand, Result>
 
     {
@@ -37,12 +39,12 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Command
         }
         public async Task<Result> Handle(DeleteMessageTemplateCommand request, CancellationToken cancellationToken)
         {
-     
+
             var items = await _context.MessageTemplates.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-			    // add delete domain events if this entity implement the IHasDomainEvent interface
-				item.DomainEvents.Add(new DeletedEvent<MessageTemplate>(item));
+                // add delete domain events if this entity implement the IHasDomainEvent interface
+                item.DomainEvents.Add(new DeletedEvent<MessageTemplate>(item));
                 _context.MessageTemplates.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);
@@ -50,4 +52,5 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Command
         }
 
     }
+}
 

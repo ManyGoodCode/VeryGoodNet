@@ -3,15 +3,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching;
+using System.Threading.Tasks;
+using System.Threading;
+using System.Collections.Generic;
 
-namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.GetAll
+{
 
     public class GetAllSiteConfigurationsQuery : IRequest<IEnumerable<SiteConfigurationDto>>, ICacheable
     {
-       public string CacheKey => SiteConfigurationCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => SiteConfigurationCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => SiteConfigurationCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => SiteConfigurationCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllSiteConfigurationsQueryHandler :
          IRequestHandler<GetAllSiteConfigurationsQuery, IEnumerable<SiteConfigurationDto>>
     {
@@ -32,11 +36,12 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queri
 
         public async Task<IEnumerable<SiteConfigurationDto>> Handle(GetAllSiteConfigurationsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.SiteConfigurations.OrderBy(x=>x.SiteId)
+            var data = await _context.SiteConfigurations.OrderBy(x => x.SiteId)
                          .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
     }
+}
 
 

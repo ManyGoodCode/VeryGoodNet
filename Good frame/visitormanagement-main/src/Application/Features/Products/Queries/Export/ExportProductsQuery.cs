@@ -2,17 +2,22 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using System;
+using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 
-namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
+namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
+{
 
     public class ExportProductsQuery : IRequest<byte[]>
     {
-    public string OrderBy { get; set; } = "Id";
-    public string SortDirection { get; set; } = "Desc";
-    public string Keyword { get; set; } = String.Empty;
-}
-    
+        public string OrderBy { get; set; } = "Id";
+        public string SortDirection { get; set; } = "Desc";
+        public string Keyword { get; set; } = String.Empty;
+    }
+
     public class ExportProductsQueryHandler :
          IRequestHandler<ExportProductsQuery, byte[]>
     {
@@ -36,7 +41,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
 
         public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Products.Where(x=>x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            var data = await _context.Products.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                        .OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
@@ -54,3 +59,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export;
             return result;
         }
     }
+}

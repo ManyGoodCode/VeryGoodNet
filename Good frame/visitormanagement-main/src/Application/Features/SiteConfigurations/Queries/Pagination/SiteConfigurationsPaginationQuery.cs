@@ -3,15 +3,18 @@
 
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.Pagination;
+namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.Pagination
+{
 
     public class SiteConfigurationsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<SiteConfigurationDto>>, ICacheable
     {
         public string CacheKey => SiteConfigurationCacheKey.GetPagtionCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => SiteConfigurationCacheKey.MemoryCacheEntryOptions;
+        public MemoryCacheEntryOptions? Options => SiteConfigurationCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class SiteConfigurationsWithPaginationQueryHandler :
          IRequestHandler<SiteConfigurationsWithPaginationQuery, PaginatedData<SiteConfigurationDto>>
     {
@@ -32,12 +35,13 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queri
 
         public async Task<PaginatedData<SiteConfigurationDto>> Handle(SiteConfigurationsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-          
-           var data = await _context.SiteConfigurations.Where(x=>x.Site.Name.Contains(request.Keyword))
-                 .Include(x=>x.Site)
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+
+            var data = await _context.SiteConfigurations.Where(x => x.Site.Name.Contains(request.Keyword))
+                  .Include(x => x.Site)
+                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
+                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-   }
+    }
+}

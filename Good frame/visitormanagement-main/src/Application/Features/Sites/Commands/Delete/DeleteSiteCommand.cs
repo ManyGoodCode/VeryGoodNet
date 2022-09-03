@@ -3,22 +3,24 @@
 
 using CleanArchitecture.Blazor.Application.Features.Sites.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Sites.Caching;
+using System.Threading.Tasks;
+using System.Threading;
 
+namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete
+{
 
-namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete;
-
-    public class DeleteSiteCommand: IRequest<Result>, ICacheInvalidator
+    public class DeleteSiteCommand : IRequest<Result>, ICacheInvalidator
     {
-      public int[] Id {  get; }
-      public string CacheKey => SiteCacheKey.GetAllCacheKey;
-      public CancellationTokenSource? SharedExpiryTokenSource => SiteCacheKey.SharedExpiryTokenSource();
-      public DeleteSiteCommand(int[] id)
-      {
-        Id = id;
-      }
+        public int[] Id { get; }
+        public string CacheKey => SiteCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => SiteCacheKey.SharedExpiryTokenSource();
+        public DeleteSiteCommand(int[] id)
+        {
+            Id = id;
+        }
     }
 
-    public class DeleteSiteCommandHandler : 
+    public class DeleteSiteCommandHandler :
                  IRequestHandler<DeleteSiteCommand, Result>
 
     {
@@ -40,8 +42,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete;
             var items = await _context.Sites.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-            var deleteevent=new SiteDeletedEvent(item);
-            item.DomainEvents.Add(deleteevent);
+                var deleteevent = new SiteDeletedEvent(item);
+                item.DomainEvents.Add(deleteevent);
                 _context.Sites.Remove(item);
             }
             await _context.SaveChangesAsync(cancellationToken);
@@ -49,4 +51,5 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete;
         }
 
     }
+}
 
