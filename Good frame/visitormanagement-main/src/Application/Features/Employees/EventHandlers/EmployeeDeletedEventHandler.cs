@@ -1,7 +1,15 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Employees.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
+
+namespace CleanArchitecture.Blazor.Application.Features.Employees.EventHandlers
+{
 
     public class EmployeeDeletedEventHandler : INotificationHandler<DomainEventNotification<EmployeeDeletedEvent>>
     {
@@ -22,3 +30,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.EventHandlers;
             return Task.CompletedTask;
         }
     }
+}

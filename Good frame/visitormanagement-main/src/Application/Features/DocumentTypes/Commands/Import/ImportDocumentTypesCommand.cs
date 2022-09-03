@@ -1,23 +1,29 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit;
+using MediatR;
 
-namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import;
-
-public class ImportDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import
 {
-    public string FileName { get; set; } = default!;
-    public byte[] Data { get; set; } = default!;
-    public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
-    public ImportDocumentTypesCommand(string fileName,byte[] data)
+
+    public class ImportDocumentTypesCommand : IRequest<Result>, ICacheInvalidator
     {
-        FileName=fileName;
-        Data=data;
+        public string FileName { get; set; } = default!;
+        public byte[] Data { get; set; } = default!;
+        public CancellationTokenSource? SharedExpiryTokenSource => DocumentTypeCacheKey.SharedExpiryTokenSource;
+        public ImportDocumentTypesCommand(string fileName, byte[] data)
+        {
+            FileName = fileName;
+            Data = data;
+        }
     }
-}
-public record CreateDocumentTypeTemplateCommand : IRequest<byte[]>
+    public record CreateDocumentTypeTemplateCommand : IRequest<byte[]>
 {
     
 }
@@ -99,4 +105,5 @@ public class ImportDocumentTypesCommandHandler :
         var result = await _excelService.CreateTemplateAsync(fields, _localizer["DocumentTypes"]);
         return result;
     }
+}
 }

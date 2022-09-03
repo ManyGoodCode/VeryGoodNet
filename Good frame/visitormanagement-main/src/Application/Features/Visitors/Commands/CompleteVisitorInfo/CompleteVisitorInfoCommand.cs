@@ -4,75 +4,90 @@
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Domain.Events;
+using CleanArchitecture.Blazor.Domain.Entities;
+using System;
+using CleanArchitecture.Blazor.Domain;
+using System.Threading.Tasks;
+using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using Microsoft.Extensions.Localization;
+using AutoMapper;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.CompleteVisitorInfo;
-
-public class CompleteVisitorInfoCommand : VisitorDto, IRequest<Result>, IMapFrom<Visitor>, ICacheInvalidator
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.CompleteVisitorInfo
 {
-    public string CacheKey => VisitorCacheKey.GetAllCacheKey;
-    public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
-}
 
-public class CompleteVisitorInfoCommandHandler : IRequestHandler<CompleteVisitorInfoCommand, Result>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly ICurrentUserService _currentUserService;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<CompleteVisitorInfoCommandHandler> _localizer;
-    public CompleteVisitorInfoCommandHandler(
-        IApplicationDbContext context,
-        ICurrentUserService currentUserService,
-        IStringLocalizer<CompleteVisitorInfoCommandHandler> localizer,
-         IMapper mapper
-        )
+    public class CompleteVisitorInfoCommand : VisitorDto, IRequest<Result>, IMapFrom<Visitor>, ICacheInvalidator
     {
-        _context = context;
-        _currentUserService = currentUserService;
-        _localizer = localizer;
-        _mapper = mapper;
+        public string CacheKey => VisitorCacheKey.GetAllCacheKey;
+        public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
     }
-    public async Task<Result> Handle(CompleteVisitorInfoCommand request, CancellationToken cancellationToken)
+
+    public class CompleteVisitorInfoCommandHandler : IRequestHandler<CompleteVisitorInfoCommand, Result>
     {
-        var userName = await _currentUserService.UserName();
-        var item = await _context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
-        if (item != null)
+        private readonly IApplicationDbContext _context;
+        private readonly ICurrentUserService _currentUserService;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<CompleteVisitorInfoCommandHandler> _localizer;
+        public CompleteVisitorInfoCommandHandler(
+            IApplicationDbContext context,
+            ICurrentUserService currentUserService,
+            IStringLocalizer<CompleteVisitorInfoCommandHandler> localizer,
+             IMapper mapper
+            )
         {
-            item = _mapper.Map(request, item);
-            item.Status = VisitorStatus.PendingApproval;
-            foreach (var companiondto in request.Companions)
-            {
-                switch (companiondto.TrackingState)
-                {
-                    case TrackingState.Added:
-                        var companionToAdd = _mapper.Map<Companion>(companiondto);
-                        companionToAdd.VisitorId = item.Id;
-                        _context.Companions.Add(companionToAdd);
-                        break;
-                    case TrackingState.Modified:
-                        var companionToUpdate = await _context.Companions.FindAsync(new object[] { companiondto.Id }, cancellationToken);
-                        if (companionToUpdate is null) continue;
-                        _ = _mapper.Map(companiondto, companionToUpdate);
-                        break;
-                    case TrackingState.Deleted:
-                        var companionToDelete = await _context.Companions.FindAsync(new object[] { companiondto.Id }, cancellationToken);
-                        if (companionToDelete is null) continue;
-                        _context.Companions.Remove(companionToDelete);
-                        break;
-                }
-            }
-            var approval = new ApprovalHistory()
-            {
-                Comment = _localizer[VisitorProcess.CompleteInfo],
-                VisitorId = item.Id,
-                ProcessingDate = DateTime.Now,
-                ApprovedBy = userName,
-            };
-            approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
-            _context.ApprovalHistories.Add(approval);
-            item.DomainEvents.Add(new UpdatedEvent<Visitor>(item));
-            await _context.SaveChangesAsync(cancellationToken);
+            _context = context;
+            _currentUserService = currentUserService;
+            _localizer = localizer;
+            _mapper = mapper;
         }
-        return Result.Success();
+        public async Task<Result> Handle(CompleteVisitorInfoCommand request, CancellationToken cancellationToken)
+        {
+            var userName = await _currentUserService.UserName();
+            var item = await _context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null)
+            {
+                item = _mapper.Map(request, item);
+                item.Status = VisitorStatus.PendingApproval;
+                foreach (var companiondto in request.Companions)
+                {
+                    switch (companiondto.TrackingState)
+                    {
+                        case TrackingState.Added:
+                            var companionToAdd = _mapper.Map<Companion>(companiondto);
+                            companionToAdd.VisitorId = item.Id;
+                            _context.Companions.Add(companionToAdd);
+                            break;
+                        case TrackingState.Modified:
+                            var companionToUpdate = await _context.Companions.FindAsync(new object[] { companiondto.Id }, cancellationToken);
+                            if (companionToUpdate is null) continue;
+                            _ = _mapper.Map(companiondto, companionToUpdate);
+                            break;
+                        case TrackingState.Deleted:
+                            var companionToDelete = await _context.Companions.FindAsync(new object[] { companiondto.Id }, cancellationToken);
+                            if (companionToDelete is null) continue;
+                            _context.Companions.Remove(companionToDelete);
+                            break;
+                    }
+                }
+                var approval = new ApprovalHistory()
+                {
+                    Comment = _localizer[VisitorProcess.CompleteInfo],
+                    VisitorId = item.Id,
+                    ProcessingDate = DateTime.Now,
+                    ApprovedBy = userName,
+                };
+                approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
+                _context.ApprovalHistories.Add(approval);
+                item.DomainEvents.Add(new UpdatedEvent<Visitor>(item));
+                await _context.SaveChangesAsync(cancellationToken);
+            }
+            return Result.Success();
+        }
     }
 }
 

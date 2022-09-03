@@ -3,9 +3,16 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
 using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Products.Queries.Specification;
+using MediatR;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 {

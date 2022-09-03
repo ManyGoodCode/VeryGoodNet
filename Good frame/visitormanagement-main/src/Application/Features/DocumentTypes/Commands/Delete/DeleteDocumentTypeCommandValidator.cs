@@ -1,12 +1,16 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Delete;
+using FluentValidation;
 
-public class DeleteDocumentTypeCommandValidator : AbstractValidator<DeleteDocumentTypeCommand>
+namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Delete
 {
-    public DeleteDocumentTypeCommandValidator()
+
+    public class DeleteDocumentTypeCommandValidator : AbstractValidator<DeleteDocumentTypeCommand>
     {
-        RuleFor(x => x.Id).NotNull().NotEmpty();
+        public DeleteDocumentTypeCommandValidator()
+        {
+            RuleFor(x => x.Id).NotNull().NotEmpty();
+        }
     }
 }
