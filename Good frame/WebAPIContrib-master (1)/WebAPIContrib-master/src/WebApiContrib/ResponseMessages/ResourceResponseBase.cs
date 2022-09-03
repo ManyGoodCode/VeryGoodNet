@@ -24,8 +24,8 @@ namespace WebApiContrib.ResponseMessages
     }
 
 	public abstract class ResourceResponseBase<T> 
-        : HttpResponseMessage
-	{
+        : System.Net.Http.HttpResponseMessage
+    {
 		protected ResourceResponseBase(HttpStatusCode httpStatusCode, T resource, IEnumerable<MediaTypeWithQualityHeaderValue> accept, IEnumerable<MediaTypeFormatter> formatters)
 			: base(httpStatusCode)
 		{

@@ -14,14 +14,14 @@ using System.Web.Http.ValueProviders.Providers;
 
 namespace WebApiContrib.ModelBinders
 {
-    public class MvcActionValueBinder : DefaultActionValueBinder
+    public class MvcActionValueBinder : System.Web.Http.ModelBinding.DefaultActionValueBinder
     {
         private const string Key = "{5DC187FB-BFA0-462A-AB93-9E8036871EC8}";
 
-        public override HttpActionBinding GetBinding(HttpActionDescriptor actionDescriptor)
+        public override System.Web.Http.Controllers.HttpActionBinding GetBinding(System.Web.Http.Controllers.HttpActionDescriptor actionDescriptor)
         {
             MvcActionBinding actionBinding = new MvcActionBinding();
-            HttpParameterDescriptor[] parameters = actionDescriptor.GetParameters().ToArray();
+            System.Web.Http.Controllers.HttpParameterDescriptor[] parameters = actionDescriptor.GetParameters().ToArray();
             // 数组批量转化。传递函数方法当中Converter委托
             HttpParameterBinding[] binders = Array.ConvertAll(
                 array: parameters,
@@ -31,7 +31,7 @@ namespace WebApiContrib.ModelBinders
             return actionBinding;
         }
 
-        private HttpParameterBinding DetermineBinding(HttpParameterDescriptor parameter)
+        private HttpParameterBinding DetermineBinding(System.Web.Http.Controllers.HttpParameterDescriptor parameter)
         {
             System.Web.Http.HttpConfiguration config = parameter.Configuration;
             System.Web.Http.ModelBinding.ModelBinderAttribute attr = new ModelBinderAttribute();
@@ -48,7 +48,7 @@ namespace WebApiContrib.ModelBinders
             return new ModelBinderParameterBinding(parameter, binder, vpfs);
         }
 
-        private class MvcActionBinding : HttpActionBinding
+        private class MvcActionBinding : System.Web.Http.Controllers.HttpActionBinding
         {
             public override Task ExecuteBindingAsync(
                 HttpActionContext actionContext, 

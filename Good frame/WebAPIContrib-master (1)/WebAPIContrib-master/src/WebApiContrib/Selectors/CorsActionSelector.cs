@@ -13,7 +13,7 @@ using WebApiContrib.Filters;
 
 namespace WebApiContrib.Selectors
 {
-    public class CorsActionSelector : ApiControllerActionSelector
+    public class CorsActionSelector : System.Web.Http.Controllers.ApiControllerActionSelector
     {
         private const string origin = "Origin";
         private const string accessControlRequestMethod = "Access-Control-Request-Method";
@@ -21,7 +21,7 @@ namespace WebApiContrib.Selectors
         private const string accessControlAllowMethods = "Access-Control-Allow-Methods";
         private const string accessControlAllowHeaders = "Access-Control-Allow-Headers";
 
-        public override HttpActionDescriptor SelectAction(HttpControllerContext controllerContext)
+        public override System.Web.Http.Controllers.HttpActionDescriptor SelectAction(System.Web.Http.Controllers.HttpControllerContext controllerContext)
         {
             HttpRequestMessage originalRequest = controllerContext.Request;
             bool isCorsRequest = originalRequest.Headers.Contains(origin);

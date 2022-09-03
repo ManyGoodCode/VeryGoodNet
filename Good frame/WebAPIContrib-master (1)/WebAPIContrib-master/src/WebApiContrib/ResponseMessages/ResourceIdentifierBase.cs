@@ -4,7 +4,7 @@ using System.Net.Http;
 
 namespace WebApiContrib.ResponseMessages
 {
-    public abstract class ResourceIdentifierBase : HttpResponseMessage
+    public abstract class ResourceIdentifierBase : System.Net.Http.HttpResponseMessage
     {
         protected ResourceIdentifierBase(HttpStatusCode httpStatusCode) : 
             base(httpStatusCode)

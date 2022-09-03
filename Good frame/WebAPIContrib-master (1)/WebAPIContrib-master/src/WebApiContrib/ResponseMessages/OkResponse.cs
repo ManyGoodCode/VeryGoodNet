@@ -6,8 +6,8 @@ using System.Net.Http.Headers;
 
 namespace WebApiContrib.ResponseMessages
 {
-    public class OkResponse : HttpResponseMessage
-    {
+    public class OkResponse : System.Net.Http.HttpResponseMessage
+	{
         public OkResponse() : 
 			base(HttpStatusCode.OK)
         {

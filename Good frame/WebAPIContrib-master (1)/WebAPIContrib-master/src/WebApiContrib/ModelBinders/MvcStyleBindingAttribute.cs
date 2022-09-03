@@ -8,10 +8,12 @@ namespace WebApiContrib.ModelBinders
         System.Web.Http.Controllers.IControllerConfiguration
     {
         public void Initialize(
-        HttpControllerSettings controllerSettings,
-        HttpControllerDescriptor controllerDescriptor)
+        System.Web.Http.Controllers.HttpControllerSettings controllerSettings,
+        System.Web.Http.Controllers.HttpControllerDescriptor controllerDescriptor)
         {
-            controllerSettings.Services.Replace(typeof(IActionValueBinder), new MvcActionValueBinder());
+            controllerSettings.Services.Replace(
+                typeof(System.Web.Http.Controllers.IActionValueBinder), 
+                new MvcActionValueBinder());
         }
     }
 }
