@@ -1,11 +1,17 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
+using MediatR;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export
 {

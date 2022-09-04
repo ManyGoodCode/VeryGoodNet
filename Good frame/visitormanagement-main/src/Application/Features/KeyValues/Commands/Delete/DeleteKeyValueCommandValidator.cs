@@ -1,12 +1,16 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete;
+using FluentValidation;
 
-public class DeleteKeyValueCommandValidator : AbstractValidator<DeleteKeyValueCommand>
+namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
 {
-    public DeleteKeyValueCommandValidator()
+
+    public class DeleteKeyValueCommandValidator : AbstractValidator<DeleteKeyValueCommand>
     {
-        RuleFor(x => x.Id).NotNull().NotEmpty();
+        public DeleteKeyValueCommandValidator()
+        {
+            RuleFor(x => x.Id).NotNull().NotEmpty();
+        }
     }
 }

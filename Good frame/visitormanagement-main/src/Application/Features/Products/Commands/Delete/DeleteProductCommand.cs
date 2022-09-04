@@ -5,7 +5,13 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
+using MediatR;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 {

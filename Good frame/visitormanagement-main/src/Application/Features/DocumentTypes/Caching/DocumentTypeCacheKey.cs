@@ -3,6 +3,8 @@
 
 using System;
 using System.Threading;
+using Microsoft.Extensions.Caching.Memory;
+using Microsoft.Extensions.Primitives;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching
 {

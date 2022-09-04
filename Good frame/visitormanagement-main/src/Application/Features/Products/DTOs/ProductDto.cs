@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.DTOs
 {

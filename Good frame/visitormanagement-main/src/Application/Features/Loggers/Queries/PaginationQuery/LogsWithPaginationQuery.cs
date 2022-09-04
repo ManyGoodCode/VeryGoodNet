@@ -3,8 +3,12 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
+using MediatR;
 
 namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
 {
