@@ -13,6 +13,8 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Events;
 using CleanArchitecture.Blazor.Domain.Entities;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete
 {

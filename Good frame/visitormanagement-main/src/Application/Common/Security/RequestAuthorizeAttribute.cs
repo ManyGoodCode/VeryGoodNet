@@ -1,3 +1,5 @@
+using System;
+
 namespace CleanArchitecture.Blazor.Application.Common.Security
 {
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]

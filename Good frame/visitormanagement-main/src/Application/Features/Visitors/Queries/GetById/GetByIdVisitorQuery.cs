@@ -11,6 +11,9 @@ using Microsoft.Extensions.Localization;
 using MediatR;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetById
 {

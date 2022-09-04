@@ -15,6 +15,8 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Events;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Approve
 {

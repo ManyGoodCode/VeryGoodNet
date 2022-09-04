@@ -19,6 +19,8 @@ using CleanArchitecture.Blazor.Application.Common.Models;
 using MediatR;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Create
 {

@@ -15,6 +15,10 @@ using MediatR;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Search
 {

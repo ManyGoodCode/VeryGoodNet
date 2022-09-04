@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+
 namespace CleanArchitecture.Blazor.Application.Common.Exceptions
 {
     public class InternalServerException : CustomException

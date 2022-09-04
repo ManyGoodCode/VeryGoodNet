@@ -11,6 +11,8 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Delete
 {

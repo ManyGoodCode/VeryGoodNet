@@ -13,6 +13,9 @@ using Microsoft.Extensions.Localization;
 using AutoMapper;
 using CleanArchitecture.Blazor.Domain.Events;
 using CleanArchitecture.Blazor.Domain.Entities;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Commands.Delete
 {

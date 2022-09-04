@@ -11,6 +11,9 @@ using CleanArchitecture.Blazor.Application.Features.KeyValues.Caching;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 {

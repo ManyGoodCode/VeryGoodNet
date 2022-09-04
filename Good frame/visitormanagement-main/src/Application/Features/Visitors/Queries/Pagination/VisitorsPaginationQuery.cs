@@ -15,6 +15,8 @@ using System.Threading;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Pagination
 {

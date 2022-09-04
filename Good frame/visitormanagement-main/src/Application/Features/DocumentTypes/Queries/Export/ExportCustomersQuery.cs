@@ -10,6 +10,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.DTOs;
 using MediatR;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.Export
 {

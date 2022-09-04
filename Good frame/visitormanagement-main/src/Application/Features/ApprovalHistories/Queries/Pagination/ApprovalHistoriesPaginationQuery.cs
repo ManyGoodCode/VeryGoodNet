@@ -12,6 +12,8 @@ using Microsoft.Extensions.Caching.Memory;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.Pagination
 {

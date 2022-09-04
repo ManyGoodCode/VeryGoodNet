@@ -3,10 +3,22 @@
 
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Domain.Events;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Entities;
+using System.Threading;
+using Microsoft.Extensions.Localization;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update;
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
+{
 
-    public class UpdateVisitorCommand: VisitorDto,IRequest<Result>, IMapFrom<Visitor>, ICacheInvalidator
+    public class UpdateVisitorCommand : VisitorDto, IRequest<Result>, IMapFrom<Visitor>, ICacheInvalidator
     {
         public string CacheKey => VisitorCacheKey.GetAllCacheKey;
         public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
@@ -29,16 +41,17 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
         }
         public async Task<Result> Handle(UpdateVisitorCommand request, CancellationToken cancellationToken)
         {
-           
-           var item =await _context.Visitors.FindAsync( new object[] { request.Id }, cancellationToken);
-           if (item != null)
-           {
+
+            var item = await _context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
+            if (item != null)
+            {
                 item = _mapper.Map(request, item);
-            var updateevent=new UpdatedEvent<Visitor>(item);
-            item.DomainEvents.Add(updateevent);
+                var updateevent = new UpdatedEvent<Visitor>(item);
+                item.DomainEvents.Add(updateevent);
                 await _context.SaveChangesAsync(cancellationToken);
-           }
-           return Result.Success();
+            }
+            return Result.Success();
         }
     }
+}
 

@@ -11,6 +11,9 @@ using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Commands.Delete
 {

@@ -5,6 +5,10 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Entities.Audit;
+using CleanArchitecture.Blazor.Domain.Entities.Log;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces

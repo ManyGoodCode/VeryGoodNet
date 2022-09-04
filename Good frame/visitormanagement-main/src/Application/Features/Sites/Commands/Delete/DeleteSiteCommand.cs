@@ -12,6 +12,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Events;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete
 {

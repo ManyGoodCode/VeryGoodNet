@@ -12,6 +12,9 @@ using CleanArchitecture.Blazor.Application.Features.Products.DTOs;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll
 {

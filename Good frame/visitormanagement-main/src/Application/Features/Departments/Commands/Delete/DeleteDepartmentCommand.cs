@@ -12,6 +12,7 @@ using Microsoft.Extensions.Localization;
 using MediatR;
 using CleanArchitecture.Blazor.Domain.Events;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Delete
 {

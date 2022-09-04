@@ -8,6 +8,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using MediatR;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 {

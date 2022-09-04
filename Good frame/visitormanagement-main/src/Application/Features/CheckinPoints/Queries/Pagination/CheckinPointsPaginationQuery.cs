@@ -12,6 +12,7 @@ using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using Microsoft.Extensions.Localization;
 using AutoMapper;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pagination
 {

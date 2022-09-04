@@ -12,6 +12,8 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Domain.Events;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.Delete
 {

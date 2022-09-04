@@ -13,6 +13,9 @@ using System.Threading.Tasks;
 using System.Threading;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Related
 {

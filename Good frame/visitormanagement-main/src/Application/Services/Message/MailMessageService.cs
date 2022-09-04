@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FluentEmail.Core;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Services.MessageService
 {

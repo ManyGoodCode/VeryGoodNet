@@ -10,6 +10,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using System.Collections.Generic;
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Application.Services.Picklist
 {

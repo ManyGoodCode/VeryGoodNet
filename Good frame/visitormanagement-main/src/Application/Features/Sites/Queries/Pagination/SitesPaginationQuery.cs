@@ -12,6 +12,8 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.Queries.Pagination
 {
