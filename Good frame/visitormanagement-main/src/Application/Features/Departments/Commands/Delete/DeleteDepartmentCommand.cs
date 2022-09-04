@@ -5,6 +5,13 @@ using CleanArchitecture.Blazor.Application.Features.Departments.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Departments.Caching;
 using System.Threading.Tasks;
 using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using MediatR;
+using CleanArchitecture.Blazor.Domain.Events;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Delete
 {

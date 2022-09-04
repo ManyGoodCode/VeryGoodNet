@@ -6,6 +6,12 @@ using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Caching;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Threading;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using Microsoft.Extensions.Localization;
+using AutoMapper;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.GetAll
 {

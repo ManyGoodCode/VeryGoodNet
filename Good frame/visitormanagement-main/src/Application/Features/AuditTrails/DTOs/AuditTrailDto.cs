@@ -3,6 +3,8 @@
 
 using System;
 using System.Text.Json;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs

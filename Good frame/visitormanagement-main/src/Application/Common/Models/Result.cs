@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {

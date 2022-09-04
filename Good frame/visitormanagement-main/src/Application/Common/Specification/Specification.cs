@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Application.Common.Specification

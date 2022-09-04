@@ -3,7 +3,10 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Features.Devices.DTOs;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs
 {

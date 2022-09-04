@@ -5,8 +5,13 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
+using MediatR;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export
 {

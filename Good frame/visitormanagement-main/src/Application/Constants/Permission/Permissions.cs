@@ -293,7 +293,7 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
                 var propertyValue = prop.GetValue(null);
-                if (propertyValue is not null)
+                if (propertyValue != null)
                     permissions.Add((string)propertyValue);
             }
             return permissions;
