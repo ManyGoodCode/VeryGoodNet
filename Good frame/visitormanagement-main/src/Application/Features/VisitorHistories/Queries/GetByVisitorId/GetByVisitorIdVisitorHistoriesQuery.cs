@@ -3,44 +3,55 @@
 
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using Microsoft.Extensions.Caching.Memory;
 
-namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll;
-
-public class GetByVisitorIdVisitorHistoriesQuery : IRequest<IEnumerable<VisitorHistoryDto>>, ICacheable
+namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll
 {
-    public int? VisitorId { get; private set; }
-    public string CacheKey => VisitorHistoryCacheKey.GetByVisitorIdCacheKey(VisitorId);
-    public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
-    public GetByVisitorIdVisitorHistoriesQuery(int? visitorId)
-    {
-        VisitorId = visitorId;
-    }
-}
 
-public class GetByVisitorIdVisitorHistoriesQueryHandler :
-     IRequestHandler<GetByVisitorIdVisitorHistoriesQuery, IEnumerable<VisitorHistoryDto>>
-{
-    private readonly IApplicationDbContext _context;
-    private readonly IMapper _mapper;
-    private readonly IStringLocalizer<GetAllVisitorHistoriesQueryHandler> _localizer;
-
-    public GetByVisitorIdVisitorHistoriesQueryHandler(
-        IApplicationDbContext context,
-        IMapper mapper,
-        IStringLocalizer<GetAllVisitorHistoriesQueryHandler> localizer
-        )
+    public class GetByVisitorIdVisitorHistoriesQuery : IRequest<IEnumerable<VisitorHistoryDto>>, ICacheable
     {
-        _context = context;
-        _mapper = mapper;
-        _localizer = localizer;
+        public int? VisitorId { get; private set; }
+        public string CacheKey => VisitorHistoryCacheKey.GetByVisitorIdCacheKey(VisitorId);
+        public MemoryCacheEntryOptions? Options => VisitorHistoryCacheKey.MemoryCacheEntryOptions;
+        public GetByVisitorIdVisitorHistoriesQuery(int? visitorId)
+        {
+            VisitorId = visitorId;
+        }
     }
 
-    public async Task<IEnumerable<VisitorHistoryDto>> Handle(GetByVisitorIdVisitorHistoriesQuery request, CancellationToken cancellationToken)
+    public class GetByVisitorIdVisitorHistoriesQueryHandler :
+         IRequestHandler<GetByVisitorIdVisitorHistoriesQuery, IEnumerable<VisitorHistoryDto>>
     {
-        var data = await _context.VisitorHistories.Where(x => x.VisitorId == request.VisitorId)
-                         .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
-                         .ToListAsync(cancellationToken);
-        return data;
+        private readonly IApplicationDbContext _context;
+        private readonly IMapper _mapper;
+        private readonly IStringLocalizer<GetAllVisitorHistoriesQueryHandler> _localizer;
+
+        public GetByVisitorIdVisitorHistoriesQueryHandler(
+            IApplicationDbContext context,
+            IMapper mapper,
+            IStringLocalizer<GetAllVisitorHistoriesQueryHandler> localizer
+            )
+        {
+            _context = context;
+            _mapper = mapper;
+            _localizer = localizer;
+        }
+
+        public async Task<IEnumerable<VisitorHistoryDto>> Handle(GetByVisitorIdVisitorHistoriesQuery request, CancellationToken cancellationToken)
+        {
+            var data = await _context.VisitorHistories.Where(x => x.VisitorId == request.VisitorId)
+                             .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
+                             .ToListAsync(cancellationToken);
+            return data;
+        }
     }
 }
 

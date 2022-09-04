@@ -3,15 +3,25 @@
 
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using MediatR;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetAll;
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetAll
+{
 
     public class GetAllVisitorsQuery : IRequest<IEnumerable<VisitorDto>>, ICacheable
     {
-       public string CacheKey => VisitorCacheKey.GetAllCacheKey;
-    public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
+        public string CacheKey => VisitorCacheKey.GetAllCacheKey;
+        public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class GetAllVisitorsQueryHandler :
          IRequestHandler<GetAllVisitorsQuery, IEnumerable<VisitorDto>>
     {
@@ -38,5 +48,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetAll;
             return data;
         }
     }
+}
 
 
