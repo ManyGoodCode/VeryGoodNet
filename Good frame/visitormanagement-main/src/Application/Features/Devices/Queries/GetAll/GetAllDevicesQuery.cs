@@ -6,6 +6,12 @@ using CleanArchitecture.Blazor.Application.Features.Devices.Caching;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Threading;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll
 {

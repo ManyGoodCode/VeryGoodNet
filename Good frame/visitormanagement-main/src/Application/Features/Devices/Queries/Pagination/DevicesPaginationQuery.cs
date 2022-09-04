@@ -1,6 +1,14 @@
 using CleanArchitecture.Blazor.Application.Features.Devices.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Devices.Caching;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using System.Threading;
+using Microsoft.Extensions.Localization;
+using AutoMapper;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using MediatR;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.Pagination
 {

@@ -25,7 +25,6 @@ namespace EasyHttp.Http.Injection
         private string _responseBody;
         private IHttpWebResponse _response;
 
-        /// <inheritdoc />
         public Func<HttpRequest, bool> Matches { get; private set; }
 
         public HttpRequestInterception(Func<HttpRequest, bool> requestPredicate)
@@ -43,7 +42,6 @@ namespace EasyHttp.Http.Injection
         {
         }
 
-        /// <inheritdoc />
         public void InjectResponse(HttpStatusCode injectedResponseCode, string contentType, string injectedResponseBody)
         {
             InjectResponse(
@@ -56,7 +54,6 @@ namespace EasyHttp.Http.Injection
             );
         }
 
-        /// <inheritdoc />
         public void InjectResponse(HttpStatusCode injectedResponseCode, Dictionary<HttpResponseHeader, string> injectedResponseHeaders, string injectedResponseBody)
         {
             _statusCode = injectedResponseCode;
@@ -64,13 +61,11 @@ namespace EasyHttp.Http.Injection
             _responseBody = injectedResponseBody;
         }
 
-        /// <inheritdoc />
         public void InjectResponse(IHttpWebResponse response)
         {
             _response = response;
         }
 
-        /// <inheritdoc />
         public IHttpWebResponse GetInjectedResponse()
         {
             return _response ?? new StubbedHttpWebResponse(_statusCode, _responseHeaders, _responseBody);

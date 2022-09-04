@@ -10,8 +10,8 @@ namespace EasyHttp.Http
 {
     public class HttpResponse
     {
-        readonly IDecoder decoder;
-        IHttpWebResponse response;
+        readonly EasyHttp.Codecs.IDecoder decoder;
+        EasyHttp.Http.Abstractions.IHttpWebResponse response;
         public virtual string CharacterSet { get; private set; }
         public virtual string ContentType { get; private set; }
         public virtual HttpStatusCode StatusCode { get; private set; }
@@ -35,18 +35,12 @@ namespace EasyHttp.Http
         public virtual WebHeaderCollection RawHeaders { get; private set; }
         public virtual Stream ResponseStream
         {
-            get
-            {
-                return response.GetResponseStream();
-            }
+            get { return response.GetResponseStream(); }
         }
 
         public virtual dynamic DynamicBody
         {
-            get 
-            {
-                return decoder.DecodeToDynamic(RawText, ContentType);
-            }
+            get { return decoder.DecodeToDynamic(RawText, ContentType); }
         }
 
         public virtual string RawText { get; private set; }
@@ -61,7 +55,8 @@ namespace EasyHttp.Http
             return decoder.DecodeToStatic<T>(RawText, ContentType);
         }
 
-        public HttpResponse() : this(null)
+        public HttpResponse()
+            : this(null)
         {
         }
 
@@ -93,7 +88,7 @@ namespace EasyHttp.Http
                 return;
             using (Stream stream = response.GetResponseStream())
             {
-                if (stream == null) 
+                if (stream == null)
                     return;
                 if (!string.IsNullOrEmpty(filename))
                 {

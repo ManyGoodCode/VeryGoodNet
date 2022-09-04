@@ -66,20 +66,19 @@ namespace EasyHttp.Infrastructure
     {
         public string PropertyName { get; private set; }
 
-        public PropertyNotFoundException()
-        {
-        }
+        public PropertyNotFoundException() { }
 
-        public PropertyNotFoundException(string propertyName) : base(propertyName)
+        public PropertyNotFoundException(string propertyName) 
+            : base(propertyName)
         {
             PropertyName = propertyName;
         }
 
-        public PropertyNotFoundException(string message, Exception innerException) : base(message, innerException)
-        {
-        }
+        public PropertyNotFoundException(string message, Exception innerException)
+            : base(message, innerException) { }
 
-        protected PropertyNotFoundException(SerializationInfo info, StreamingContext context) : base(info, context)
+        protected PropertyNotFoundException(SerializationInfo info, StreamingContext context) 
+            : base(info, context)
         {
         }		
     }

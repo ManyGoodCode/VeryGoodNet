@@ -109,8 +109,9 @@ namespace EasyHttp.Http
                 "Content-Type: {2}\r\n" +
                 "Content-Transfer-Encoding: {3}\r\n\r\n"
                 , fileData.FieldName
-                , Path.GetFileName(fileData.Filename), fileData.ContentType,
-                fileData.ContentTransferEncoding);
+                , Path.GetFileName(fileData.Filename)
+                , fileData.ContentType
+                , fileData.ContentTransferEncoding);
         }
 
         static string CreateFormBoundaryHeader(string name, object value)

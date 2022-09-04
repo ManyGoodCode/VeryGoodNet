@@ -6,6 +6,13 @@ using CleanArchitecture.Blazor.Application.Common.Specification;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
 using System.Threading.Tasks;
 using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using System.Reflection.Metadata;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 {

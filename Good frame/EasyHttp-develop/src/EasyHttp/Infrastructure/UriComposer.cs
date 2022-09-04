@@ -16,6 +16,7 @@ namespace EasyHttp.Infrastructure
         public string Compose(string baseuri, string uri, object query, bool parametersAsSegments)
         {
             string returnUri = uri;
+            // 函数 String Concat(params String[] values) 形式像 String.Join 。意思是 将一系列字符串组合
             if (!string.IsNullOrEmpty(baseuri))
             {
                 returnUri = baseuri.EndsWith("/") ? baseuri : string.Concat(baseuri, "/");
