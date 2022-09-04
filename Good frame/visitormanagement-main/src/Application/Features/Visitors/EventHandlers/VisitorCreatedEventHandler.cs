@@ -1,55 +1,66 @@
 // Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
+using System;
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
 using CleanArchitecture.Blazor.Application.Services.MessageService;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers;
-
-public class VisitorCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Visitor>>>
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers
 {
-    private readonly IApplicationDbContext _context;
-    private readonly SMSMessageService _sms;
-    private readonly MailMessageService _mail;
-    private readonly ILogger<VisitorCreatedEventHandler> _logger;
 
-    public VisitorCreatedEventHandler(
-        IApplicationDbContext context,
-        SMSMessageService sms,
-        MailMessageService mail,
-        ILogger<VisitorCreatedEventHandler> logger
-        )
+    public class VisitorCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<Visitor>>>
     {
-        _context = context;
-        _sms = sms;
-        _mail = mail;
-        _logger = logger;
-    }
-    public async Task Handle(DomainEventNotification<CreatedEvent<Visitor>> notification, CancellationToken cancellationToken)
-    {
-        var domainEvent = notification.DomainEvent;
-        var visitor = domainEvent.Entity;
-        if (visitor.PhoneNumber != null)
+        private readonly IApplicationDbContext _context;
+        private readonly SMSMessageService _sms;
+        private readonly MailMessageService _mail;
+        private readonly ILogger<VisitorCreatedEventHandler> _logger;
+
+        public VisitorCreatedEventHandler(
+            IApplicationDbContext context,
+            SMSMessageService sms,
+            MailMessageService mail,
+            ILogger<VisitorCreatedEventHandler> logger
+            )
         {
-            var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
-                  x.SiteId == visitor.SiteId &&
-                  x.MessageType == MessageType.Sms &&
-                  x.ForStatus == visitor.Status, cancellationToken);
-            if (template is not null)
-            {
-                
-                await _sms.Send(visitor.PhoneNumber, new string[] { String.Format(template.Body,visitor.PassCode) }, template.Subject);
-            }
+            _context = context;
+            _sms = sms;
+            _mail = mail;
+            _logger = logger;
         }
-        if (visitor.Email != null)
+        public async Task Handle(DomainEventNotification<CreatedEvent<Visitor>> notification, CancellationToken cancellationToken)
         {
-            var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
-                  x.SiteId == visitor.SiteId &&
-                  x.MessageType == MessageType.Email &&
-                  x.ForStatus == visitor.Status, cancellationToken);
-            if (template is not null)
+            var domainEvent = notification.DomainEvent;
+            var visitor = domainEvent.Entity;
+            if (visitor.PhoneNumber != null)
             {
-                await _mail.Send(visitor.Email, template.Subject, string.Format(template.Body, visitor.PassCode));
+                var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
+                      x.SiteId == visitor.SiteId &&
+                      x.MessageType == MessageType.Sms &&
+                      x.ForStatus == visitor.Status, cancellationToken);
+                if (template != null)
+                {
+
+                    await _sms.Send(visitor.PhoneNumber, new string[] { String.Format(template.Body, visitor.PassCode) }, template.Subject);
+                }
+            }
+            if (visitor.Email != null)
+            {
+                var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
+                      x.SiteId == visitor.SiteId &&
+                      x.MessageType == MessageType.Email &&
+                      x.ForStatus == visitor.Status, cancellationToken);
+                if (template != null)
+                {
+                    await _mail.Send(visitor.Email, template.Subject, string.Format(template.Body, visitor.PassCode));
+                }
             }
         }
     }

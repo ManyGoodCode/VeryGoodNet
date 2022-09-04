@@ -14,6 +14,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Exceptions;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Commands.AddEdit
 {

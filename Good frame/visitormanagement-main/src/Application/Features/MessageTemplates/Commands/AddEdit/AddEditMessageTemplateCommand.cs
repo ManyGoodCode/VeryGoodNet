@@ -15,6 +15,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Domain.Events;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
+using CleanArchitecture.Blazor.Application.Common.Exceptions;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Commands.AddEdit
 {
@@ -45,7 +46,8 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Command
 
             if (request.Id > 0)
             {
-                var item = await _context.MessageTemplates.FindAsync(new object[] { request.Id }, cancellationToken) ?? throw new NotFoundException("MessageTemplate {request.Id} Not Found.");
+                var item = await _context.MessageTemplates.FindAsync(new object[] { request.Id }, cancellationToken) ??
+                    throw new NotFoundException("MessageTemplate {request.Id} Not Found.");
                 item = _mapper.Map(request, item);
                 // add update domain events if this entity implement the IHasDomainEvent interface
                 item.DomainEvents.Add(new UpdatedEvent<MessageTemplate>(item));

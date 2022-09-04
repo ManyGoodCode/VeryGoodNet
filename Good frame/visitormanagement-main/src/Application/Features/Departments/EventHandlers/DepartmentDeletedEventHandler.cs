@@ -3,6 +3,10 @@
 
 using System.Threading;
 using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.EventHandlers
 {

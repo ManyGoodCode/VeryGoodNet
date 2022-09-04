@@ -31,11 +31,11 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Specifi
             {
                 And(x => x.Brand == query.Brand);
             }
-            if (query.MinPrice is not null)
+            if (query.MinPrice != null)
             {
                 And(x => x.Price >= query.MinPrice);
             }
-            if (query.MaxPrice is not null)
+            if (query.MaxPrice != null)
             {
                 And(x => x.Price <= query.MaxPrice);
             }

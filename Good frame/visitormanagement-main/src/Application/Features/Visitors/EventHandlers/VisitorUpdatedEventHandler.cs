@@ -2,76 +2,86 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
 using CleanArchitecture.Blazor.Application.Services.MessageService;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers;
-
-public class VisitorUpdatedEventHandler : INotificationHandler<DomainEventNotification<UpdatedEvent<Visitor>>>
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers
 {
-    private readonly IApplicationDbContext _context;
-    private readonly SMSMessageService _sms;
-    private readonly MailMessageService _mail;
-    private readonly ILogger<VisitorUpdatedEventHandler> _logger;
 
-    public VisitorUpdatedEventHandler(
-        IApplicationDbContext context,
-        SMSMessageService sms,
-        MailMessageService mail,
-        ILogger<VisitorUpdatedEventHandler> logger
-        )
+    public class VisitorUpdatedEventHandler : INotificationHandler<DomainEventNotification<UpdatedEvent<Visitor>>>
     {
-        _context = context;
-        _sms = sms;
-        _mail = mail;
-        _logger = logger;
-    }
-    public async Task Handle(DomainEventNotification<UpdatedEvent<Visitor>> notification, CancellationToken cancellationToken)
-    {
-        var domainEvent = notification.DomainEvent;
-        var visitor = domainEvent.Entity;
-        if (visitor.PhoneNumber != null)
+        private readonly IApplicationDbContext _context;
+        private readonly SMSMessageService _sms;
+        private readonly MailMessageService _mail;
+        private readonly ILogger<VisitorUpdatedEventHandler> _logger;
+
+        public VisitorUpdatedEventHandler(
+            IApplicationDbContext context,
+            SMSMessageService sms,
+            MailMessageService mail,
+            ILogger<VisitorUpdatedEventHandler> logger
+            )
         {
-            var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
-                  x.SiteId == visitor.SiteId &&
-                  x.MessageType == MessageType.Sms &&
-                  x.ForStatus == visitor.Status, cancellationToken);
-            if (template is not null)
-            {
-                if (visitor.Status == VisitorStatus.PendingApproval || visitor.Status == VisitorStatus.PendingConfirm)
-                {
-                    var emp = _context.Employees.FirstOrDefault(x => x.Id == visitor.EmployeeId);
-                    if(emp is not null)
-                    {
-                        await _sms.Send(emp.PhoneNumber, new string[] { string.Format(template.Body, visitor.PassCode) }, template.Subject);
-                    }
-                }
-                else
-                {
-                    await _sms.Send(visitor.PhoneNumber, new string[] { string.Format(template.Body, visitor.PassCode) }, template.Subject);
-                }
-                
-            }
+            _context = context;
+            _sms = sms;
+            _mail = mail;
+            _logger = logger;
         }
-        if (visitor.Email != null)
+        public async Task Handle(DomainEventNotification<UpdatedEvent<Visitor>> notification, CancellationToken cancellationToken)
         {
-            var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
-                  x.SiteId == visitor.SiteId &&
-                  x.MessageType == MessageType.Email &&
-                  x.ForStatus == visitor.Status, cancellationToken);
-            if (template is not null)
+            var domainEvent = notification.DomainEvent;
+            var visitor = domainEvent.Entity;
+            if (visitor.PhoneNumber != null)
             {
-                if (visitor.Status == VisitorStatus.PendingApproval || visitor.Status == VisitorStatus.PendingConfirm)
+                var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
+                      x.SiteId == visitor.SiteId &&
+                      x.MessageType == MessageType.Sms &&
+                      x.ForStatus == visitor.Status, cancellationToken);
+                if (template != null)
                 {
-                    var emp = _context.Employees.FirstOrDefault(x => x.Id == visitor.EmployeeId);
-                    if (emp is not null)
+                    if (visitor.Status == VisitorStatus.PendingApproval || visitor.Status == VisitorStatus.PendingConfirm)
                     {
-                        await _mail.Send(emp.Email, template.Subject, string.Format(template.Body,visitor.PassCode));
+                        var emp = _context.Employees.FirstOrDefault(x => x.Id == visitor.EmployeeId);
+                        if (emp != null)
+                        {
+                            await _sms.Send(emp.PhoneNumber, new string[] { string.Format(template.Body, visitor.PassCode) }, template.Subject);
+                        }
                     }
+                    else
+                    {
+                        await _sms.Send(visitor.PhoneNumber, new string[] { string.Format(template.Body, visitor.PassCode) }, template.Subject);
+                    }
+
                 }
-                else
+            }
+            if (visitor.Email != null)
+            {
+                var template = await _context.MessageTemplates.FirstOrDefaultAsync(x =>
+                      x.SiteId == visitor.SiteId &&
+                      x.MessageType == MessageType.Email &&
+                      x.ForStatus == visitor.Status, cancellationToken);
+                if (template != null)
                 {
-                    await _mail.Send(visitor.Email, template.Subject, string.Format(template.Body, visitor.PassCode));
+                    if (visitor.Status == VisitorStatus.PendingApproval || visitor.Status == VisitorStatus.PendingConfirm)
+                    {
+                        var emp = _context.Employees.FirstOrDefault(x => x.Id == visitor.EmployeeId);
+                        if (emp != null)
+                        {
+                            await _mail.Send(emp.Email, template.Subject, string.Format(template.Body, visitor.PassCode));
+                        }
+                    }
+                    else
+                    {
+                        await _mail.Send(visitor.Email, template.Subject, string.Format(template.Body, visitor.PassCode));
+                    }
                 }
             }
         }

@@ -1,7 +1,15 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-namespace CleanArchitecture.Blazor.Application.Features.Sites.EventHandlers;
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
+
+namespace CleanArchitecture.Blazor.Application.Features.Sites.EventHandlers
+{
 
     public class SiteUpdatedEventHandler : INotificationHandler<DomainEventNotification<SiteUpdatedEvent>>
     {
@@ -22,3 +30,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.EventHandlers;
             return Task.CompletedTask;
         }
     }
+}

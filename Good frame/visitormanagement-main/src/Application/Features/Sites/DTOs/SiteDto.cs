@@ -2,9 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 using System.Collections.Generic;
-using System.Security.Policy;
+using System.Linq;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.DTOs
 {

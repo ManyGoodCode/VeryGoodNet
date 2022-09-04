@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventHandlers
 {
-
     public class ApprovalHistoryCreatedEventHandler :
               INotificationHandler<DomainEventNotification<CreatedEvent<ApprovalHistory>>>
     {

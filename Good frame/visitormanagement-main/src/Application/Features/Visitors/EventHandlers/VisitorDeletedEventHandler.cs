@@ -2,9 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 
 
+using System.Threading;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Services.MessageService;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Events;
+using MediatR;
+using Microsoft.Extensions.Logging;
 
-namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers;
+namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers
+{
 
     public class VisitorDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<Visitor>>>
     {
@@ -28,3 +37,4 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.EventHandlers;
             return Task.CompletedTask;
         }
     }
+}

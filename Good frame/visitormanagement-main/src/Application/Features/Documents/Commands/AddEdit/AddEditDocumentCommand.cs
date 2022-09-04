@@ -7,12 +7,12 @@ using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Common.Exceptions;
-using System.Reflection.Metadata;
 using CleanArchitecture.Blazor.Domain.Events;
 using MediatR;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEdit
 {
