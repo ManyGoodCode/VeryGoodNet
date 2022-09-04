@@ -4,6 +4,19 @@
 
 using CleanArchitecture.Blazor.Application.Features.Devices.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Devices.Caching;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Exceptions;
+using CleanArchitecture.Blazor.Domain.Events;
+
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.AddEdit
 {
 

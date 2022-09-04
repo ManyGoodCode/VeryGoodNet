@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
+using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Create
 {

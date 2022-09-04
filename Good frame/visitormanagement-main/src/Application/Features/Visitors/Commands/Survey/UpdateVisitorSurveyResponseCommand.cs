@@ -7,6 +7,14 @@ using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
 using System;
 using System.Threading.Tasks;
 using System.Threading;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using Microsoft.Extensions.Localization;
+using AutoMapper;
+using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Domain.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
 {

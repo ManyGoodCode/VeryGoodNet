@@ -3,15 +3,25 @@
 
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs;
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.Caching;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
+using System.Threading.Tasks;
+using System.Threading;
 
-namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.Pagination;
+namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.Pagination
+{
 
     public class MessageTemplatesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<MessageTemplateDto>>, ICacheable
     {
         public string CacheKey => MessageTemplateCacheKey.GetPagtionCacheKey($"{this}");
-    public MemoryCacheEntryOptions? Options => MessageTemplateCacheKey.MemoryCacheEntryOptions;
+        public MemoryCacheEntryOptions? Options => MessageTemplateCacheKey.MemoryCacheEntryOptions;
     }
-    
+
     public class MessageTemplatesWithPaginationQueryHandler :
          IRequestHandler<MessageTemplatesWithPaginationQuery, PaginatedData<MessageTemplateDto>>
     {
@@ -32,13 +42,14 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries
 
         public async Task<PaginatedData<MessageTemplateDto>> Handle(MessageTemplatesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-        var data = await _context.MessageTemplates.Where(x =>
-                          x.Subject.Contains(request.Keyword) ||
-                          x.Body.Contains(request.Keyword) ||
-                          x.Description.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+            var data = await _context.MessageTemplates.Where(x =>
+                              x.Subject.Contains(request.Keyword) ||
+                              x.Body.Contains(request.Keyword) ||
+                              x.Description.Contains(request.Keyword))
+                    .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                    .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
+                    .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-   }
+    }
+}

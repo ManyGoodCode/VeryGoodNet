@@ -5,6 +5,13 @@ using CleanArchitecture.Blazor.Application.Features.Designations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Designations.Caching;
 using System.Threading.Tasks;
 using System.Threading;
+using CleanArchitecture.Blazor.Application.Common.Models;
+using MediatR;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using Microsoft.Extensions.Caching.Memory;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using AutoMapper;
+using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pagination
 {

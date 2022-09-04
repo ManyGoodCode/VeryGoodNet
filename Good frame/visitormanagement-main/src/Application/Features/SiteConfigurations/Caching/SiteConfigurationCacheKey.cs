@@ -3,6 +3,7 @@
 
 using System;
 using System.Threading;
+using Microsoft.Extensions.Caching.Memory;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching
 {

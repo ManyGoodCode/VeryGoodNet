@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Constants;
+using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Create
 {
