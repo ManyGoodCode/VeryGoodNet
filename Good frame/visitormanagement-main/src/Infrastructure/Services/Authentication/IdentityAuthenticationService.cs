@@ -12,6 +12,7 @@ using System;
 using System.IO;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using System.Threading;
+using System.Linq;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 {

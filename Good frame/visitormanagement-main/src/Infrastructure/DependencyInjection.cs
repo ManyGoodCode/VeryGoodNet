@@ -8,6 +8,18 @@ using HashidsNet;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
 using Microsoft.Extensions.DependencyInjection;
 using CleanArchitecture.Blazor.Infrastructure.Persistence;
+using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Services;
+using CleanArchitecture.Blazor.Infrastructure.Constants.Localization;
+using System.Linq;
+using CleanArchitecture.Blazor.Infrastructure.Middlewares;
+using Microsoft.AspNetCore.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Application.Constants.Permission;
+using System;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 
 namespace CleanArchitecture.Blazor.Infrastructure
 {
@@ -32,6 +44,7 @@ namespace CleanArchitecture.Blazor.Infrastructure
                         b => b.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
                     options.EnableSensitiveDataLogging();
                 });
+
                 services.AddDatabaseDeveloperPageExceptionFilter();
             }
             services.AddSingleton(sp => new Hashids("Blazor.net"));
@@ -113,16 +126,6 @@ namespace CleanArchitecture.Blazor.Infrastructure
                 EnableSsl = mailSettings.UseSsl,
                 Credentials = new System.Net.NetworkCredential(mailSettings.UserName, mailSettings.Password)
             });
-            //.AddMailKitSender(new FluentEmail.MailKitSmtp.SmtpClientOptions()
-            //{
-            //    RequiresAuthentication = !string.IsNullOrEmpty(mailSettings.UserName),
-            //    UsePickupDirectory = false,
-            //    Password = mailSettings.Password,
-            //    Port = mailSettings.Port,
-            //    Server = mailSettings.Host,
-            //    User = mailSettings.UserName,
-            //    UseSsl = mailSettings.UseSsl,
-            //});
 
             services.AddControllers();
             services.AddSingleton<IUsersStateContainer, UsersStateContainer>();
