@@ -1,3 +1,4 @@
+using CleanArchitecture.Blazor.Infrastructure.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

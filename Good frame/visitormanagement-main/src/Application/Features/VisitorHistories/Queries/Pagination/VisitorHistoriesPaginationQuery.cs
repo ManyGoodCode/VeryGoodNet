@@ -13,6 +13,8 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.Pagination
 {
@@ -44,7 +46,7 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries
         public async Task<PaginatedData<VisitorHistoryDto>> Handle(VisitorHistoriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var data = await _context.VisitorHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.Visitor.CompanyName.Contains(request.Keyword) || x.Comment.Contains(request.Keyword))
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

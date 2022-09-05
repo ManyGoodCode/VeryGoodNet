@@ -12,6 +12,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using Microsoft.Extensions.Localization;
 using AutoMapper;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.GetAll
 {

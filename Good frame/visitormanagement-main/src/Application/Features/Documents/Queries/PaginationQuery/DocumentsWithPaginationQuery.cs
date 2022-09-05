@@ -13,6 +13,10 @@ using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using CleanArchitecture.Blazor.Domain.Entities;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 {
@@ -45,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.Pagina
             var data = await _context.Documents
                 .Specify(new DocumentsQuery(await _currentUserService.UserId()))
                 .Where(x => x.Description.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
 

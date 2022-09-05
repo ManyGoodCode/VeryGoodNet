@@ -2,6 +2,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Domain.Common;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence
 {

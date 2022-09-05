@@ -7,11 +7,13 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export
@@ -50,7 +52,7 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Expo
             var filters = PredicateBuilder.FromFilter<AuditTrail>(request.filterRules);
             var data = await _context.AuditTrails
                 .Where(filters)
-                .OrderBy($"{request.sort} {request.order}")
+                //.OrderBy($"{request.sort} {request.order}")
                 .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

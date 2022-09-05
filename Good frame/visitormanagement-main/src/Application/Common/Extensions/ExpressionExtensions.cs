@@ -10,6 +10,7 @@ using System.Reflection;
 using System;
 using System.Linq;
 using System.Collections.Generic;
+using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions
 {

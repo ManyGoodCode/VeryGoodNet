@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
@@ -39,7 +41,7 @@ namespace CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQue
         {
             var data = await _context.AuditTrails
                 .Where(x => x.TableName.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                     .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
                     .PaginatedDataAsync(request.PageNumber, request.PageSize);
 

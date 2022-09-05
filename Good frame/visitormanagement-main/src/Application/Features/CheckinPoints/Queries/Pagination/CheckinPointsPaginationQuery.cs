@@ -13,6 +13,8 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using Microsoft.Extensions.Localization;
 using AutoMapper;
 using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pagination
 {
@@ -45,7 +47,7 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pa
         {
 
             var data = await _context.CheckinPoints.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

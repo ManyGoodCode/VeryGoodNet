@@ -12,6 +12,8 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using CleanArchitecture.Blazor.Domain.Events;
 using Microsoft.Extensions.Localization;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delete
 {

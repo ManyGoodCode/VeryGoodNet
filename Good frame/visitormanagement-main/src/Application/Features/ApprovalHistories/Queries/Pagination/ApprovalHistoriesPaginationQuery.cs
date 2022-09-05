@@ -14,6 +14,8 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Queries.Pagination
 {
@@ -47,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Querie
 
             var data = await _context.ApprovalHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.ApprovedBy.Contains(request.Keyword))
                  .Include(x => x.Visitor)
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<ApprovalHistoryDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

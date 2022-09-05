@@ -30,7 +30,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
                 _cache.Remove(request.CacheKey);
             }
 
-            request.SharedExpiryTokenSource?.TryReset();
+            //request.SharedExpiryTokenSource?.TryReset();
             return response;
         }
     }

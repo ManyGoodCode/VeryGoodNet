@@ -14,6 +14,8 @@ using System.Threading.Tasks;
 using System.Threading;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.Queries.Pagination
 {
@@ -48,7 +50,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.Queries.Pagination
 
             var data = await _context.Sites.Where(x => x.Name.Contains(request.Keyword) || x.Address.Contains(request.Keyword))
                  .Include(x => x.CheckinPoints)
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<SiteDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

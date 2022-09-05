@@ -15,6 +15,7 @@ using Microsoft.Extensions.Localization;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.Pagination
 {
@@ -48,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queri
 
             var data = await _context.SiteConfigurations.Where(x => x.Site.Name.Contains(request.Keyword))
                   .Include(x => x.Site)
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

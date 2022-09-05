@@ -49,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Export
         public async Task<byte[]> Handle(ExportProductsQuery request, CancellationToken cancellationToken)
         {
             var data = await _context.Products.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
-                       .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                       //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                        .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
                        .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

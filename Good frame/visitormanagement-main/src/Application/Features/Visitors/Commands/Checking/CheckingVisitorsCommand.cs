@@ -15,6 +15,8 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Events;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using System.Linq;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Checking
 {

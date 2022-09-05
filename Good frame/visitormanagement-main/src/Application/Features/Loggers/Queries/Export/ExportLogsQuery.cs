@@ -3,14 +3,17 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Extensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export
@@ -49,7 +52,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export
             var filters = PredicateBuilder.FromFilter<Logger>(request.filterRules);
             var data = await _context.Loggers
                 .Where(filters)
-                .OrderBy($"{request.sort} {request.order}")
+                //.OrderBy($"{request.sort} {request.order}")
                 .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,

@@ -5,7 +5,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Logs.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
@@ -41,7 +43,7 @@ namespace CleanArchitecture.Blazor.Application.Logs.Queries.PaginationQuery
 
             var data = await _context.Loggers
                 .Where(x => x.Message.Contains(request.Keyword) || x.Exception.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                     .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
                     .PaginatedDataAsync(request.PageNumber, request.PageSize);
 

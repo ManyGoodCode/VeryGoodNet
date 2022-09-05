@@ -12,6 +12,9 @@ using MediatR;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.PaginationQuery
 {
@@ -42,7 +45,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Pagina
         {
 
             var data = await _context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
 

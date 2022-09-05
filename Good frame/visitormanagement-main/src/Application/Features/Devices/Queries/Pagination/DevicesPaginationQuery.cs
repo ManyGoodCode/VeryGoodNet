@@ -9,6 +9,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.Pagination
 {
@@ -41,7 +44,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.Paginati
         {
 
             var data = await _context.Devices.Where(x => x.Name.Contains(request.Keyword))
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<DeviceDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

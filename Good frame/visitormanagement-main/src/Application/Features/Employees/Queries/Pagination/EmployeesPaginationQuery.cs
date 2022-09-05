@@ -14,6 +14,10 @@ using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
+using CleanArchitecture.Blazor.Application.Common.Extensions;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagination
 {
@@ -55,7 +59,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
         {
             var data = await _context.Employees.Specify(new SearchEmployeeSpecification(request))
 
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

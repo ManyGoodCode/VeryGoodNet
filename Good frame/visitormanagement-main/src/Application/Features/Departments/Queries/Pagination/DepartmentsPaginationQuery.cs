@@ -11,6 +11,9 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using Microsoft.Extensions.Caching.Memory;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using AutoMapper;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.Pagination
 {
@@ -40,7 +43,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.Pagi
         public async Task<PaginatedData<DepartmentDto>> Handle(DepartmentsWithPaginationQuery request, CancellationToken cancellationToken)
         {
             var data = await _context.Departments.Where(x => x.Name.Contains(request.Keyword))
-                 .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

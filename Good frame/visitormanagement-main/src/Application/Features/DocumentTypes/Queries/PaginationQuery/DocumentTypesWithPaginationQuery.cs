@@ -15,6 +15,7 @@ using AutoMapper;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery
 {
@@ -45,7 +46,7 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.Pa
         {
 
             var data = await _context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
 

@@ -12,6 +12,9 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using Microsoft.Extensions.Caching.Memory;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll
 {

@@ -12,6 +12,9 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Threading.Tasks;
 using System.Threading;
+using System.Linq;
+using AutoMapper.QueryableExtensions;
+using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.Pagination
 {
@@ -46,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries
                               x.Subject.Contains(request.Keyword) ||
                               x.Body.Contains(request.Keyword) ||
                               x.Description.Contains(request.Keyword))
-                    .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                    //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                     .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
                     .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;

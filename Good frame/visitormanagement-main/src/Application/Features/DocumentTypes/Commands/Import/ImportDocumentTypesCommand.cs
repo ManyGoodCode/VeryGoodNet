@@ -16,6 +16,7 @@ using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEd
 using CleanArchitecture.Blazor.Domain.Entities;
 using FluentValidation;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Import

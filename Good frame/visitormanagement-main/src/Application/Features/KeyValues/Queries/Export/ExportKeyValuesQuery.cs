@@ -3,12 +3,15 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
@@ -45,7 +48,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
         {
 
             var data = await _context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
-                .OrderBy($"{request.OrderBy} {request.SortDirection}")
+                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                 .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
             var result = await _excelService.ExportAsync(data,
