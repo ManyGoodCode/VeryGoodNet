@@ -16,8 +16,7 @@ namespace CleanArchitecture.Application.IntegrationTests.Documents.Commands
         [Test]
         public void ShouldRequireValidDocumentTypeId()
         {
-            var command = new DeleteDocumentTypeCommand(new int[] { 1});
-
+            DeleteDocumentTypeCommand command = new DeleteDocumentTypeCommand(new int[] { 1 });
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().ThrowAsync<NotFoundException>();
         }
@@ -25,19 +24,18 @@ namespace CleanArchitecture.Application.IntegrationTests.Documents.Commands
         [Test]
         public async Task ShouldDeleteDocumentType()
         {
-            var addcommand = new AddEditDocumentTypeCommand()
+            AddEditDocumentTypeCommand addcommand = new AddEditDocumentTypeCommand()
             {
                 Name = "Word",
                 Description = "For Test"
             };
-           var result= await SendAsync(addcommand);
-             
+
+            var result = await SendAsync(addcommand);
             await SendAsync(new DeleteDocumentTypeCommand(new int[] { result.Data }));
 
-            var item = await FindAsync<Document>(result.Data);
-
+            Document item = await FindAsync<Document>(result.Data);
             item.Should().BeNull();
         }
-         
+
     }
 }

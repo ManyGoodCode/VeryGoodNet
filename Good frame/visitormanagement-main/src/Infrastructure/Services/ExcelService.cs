@@ -100,7 +100,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
             {
                 if (!workbook.Worksheets.Contains(sheetName))
                 {
-                    return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(_localizer["Sheet with name {0} does not exist!"], sheetName) });
+                    return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(localizer["Sheet with name {0} does not exist!"], sheetName) });
                 }
                 var ws = workbook.Worksheet(sheetName);
                 var dt = new DataTable();
@@ -148,7 +148,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
                     }
                     catch (Exception e)
                     {
-                        return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(_localizer["Sheet name {0}:{1}"], sheetName, e.Message) });
+                        return await Result<IEnumerable<TEntity>>.FailureAsync(new string[] { string.Format(localizer["Sheet name {0}:{1}"], sheetName, e.Message) });
                     }
                 }
 

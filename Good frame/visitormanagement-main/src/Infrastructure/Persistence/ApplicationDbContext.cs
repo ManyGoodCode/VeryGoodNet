@@ -1,11 +1,14 @@
+using System.Reflection;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Domain;
 using CleanArchitecture.Blazor.Domain.Common;
 using CleanArchitecture.Blazor.Domain.Entities;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
 using CleanArchitecture.Blazor.Domain.Entities.Log;
 using CleanArchitecture.Blazor.Infrastructure.Identity;
-using Microsoft.AspNet.Identity.EntityFramework;
+using CleanArchitecture.Blazor.Infrastructure.Persistence.Extensions;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Persistence

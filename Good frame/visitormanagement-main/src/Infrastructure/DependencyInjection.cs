@@ -20,6 +20,9 @@ using CleanArchitecture.Blazor.Application.Constants.Permission;
 using System;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Infrastructure.Configurations;
+using Microsoft.Extensions.Options;
+using Microsoft.AspNetCore.Components.Authorization;
+using CleanArchitecture.Blazor.Infrastructure.Services.Identity;
 
 namespace CleanArchitecture.Blazor.Infrastructure
 {

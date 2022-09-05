@@ -15,7 +15,7 @@ namespace CleanArchitecture.Application.IntegrationTests.Documents.Commands
         [Test]
         public void ShouldRequireMinimumFields()
         {
-            var command = new AddEditDocumentTypeCommand();
+            AddEditDocumentTypeCommand command = new AddEditDocumentTypeCommand();
 
             FluentActions.Invoking(() =>
                 SendAsync(command)).Should().ThrowAsync<ValidationException>();
@@ -24,15 +24,15 @@ namespace CleanArchitecture.Application.IntegrationTests.Documents.Commands
         [Test]
         public async Task ShouldCreateDocumentType()
         {
-            var userId = await RunAsDefaultUserAsync();
-            var command = new AddEditDocumentTypeCommand()
+            string userId = await RunAsDefaultUserAsync();
+            AddEditDocumentTypeCommand command = new AddEditDocumentTypeCommand()
             {
                 Name = "Word",
                 Description = "For Test"
             };
+
             var result = await SendAsync(command);
-            
-            var item = await FindAsync<DocumentType>(result.Data);
+            DocumentType item = await FindAsync<DocumentType>(result.Data);
 
             item.Should().NotBeNull();
             item.Id.Should().Be(result.Data);

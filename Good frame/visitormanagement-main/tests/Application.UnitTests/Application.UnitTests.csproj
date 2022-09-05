@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
     <RootNamespace>CleanArchitecture.Blazor.Application.UnitTests</RootNamespace>
     <AssemblyName>CleanArchitecture.Blazor.Application.UnitTests</AssemblyName>
 
@@ -21,7 +21,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\Application\Application.csproj" />
-    <ProjectReference Include="..\..\src\Infrastructure\Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
