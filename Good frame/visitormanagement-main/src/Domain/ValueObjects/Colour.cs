@@ -17,7 +17,7 @@ namespace CleanArchitecture.Blazor.Domain.ValueObjects
 
         public static Colour From(string code)
         {
-            var colour = new Colour { Code = code };
+            Colour colour = new Colour { Code = code };
             if (!SupportedColours.Contains(colour))
             {
                 throw new UnsupportedColourException(code);
@@ -25,6 +25,7 @@ namespace CleanArchitecture.Blazor.Domain.ValueObjects
 
             return colour;
         }
+
         public static Colour White => new Colour("#FFFFFF");
         public static Colour Red => new Colour("#FF5733");
         public static Colour Orange => new Colour("#FFC300");
