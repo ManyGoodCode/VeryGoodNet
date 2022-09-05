@@ -10,7 +10,6 @@ namespace CleanArchitecture.Blazor.Application.Constants
 
     public static class ButtonText
     {
-
         public static string REFRESH => ConstantStringLocalizer.Localize("Refresh");
         public static string EDIT => ConstantStringLocalizer.Localize("Edit");
         public static string DELETE => ConstantStringLocalizer.Localize("Delete");
@@ -34,9 +33,7 @@ namespace CleanArchitecture.Blazor.Application.Constants
         public static string PREVIOUS => ConstantStringLocalizer.Localize("Previous");
         public static string UPLOADING => ConstantStringLocalizer.Localize("Uploading...");
         public static string DOWNLOADING => ConstantStringLocalizer.Localize("Downloading...");
-
         public static string NOALLOWED => ConstantStringLocalizer.Localize("No Allowed");
-
         public static string SIGNINWITH => ConstantStringLocalizer.Localize("Sign in with {0}");
         public static string LOGOUT => ConstantStringLocalizer.Localize("Logout");
         public static string SIGNIN => ConstantStringLocalizer.Localize("Sign In");

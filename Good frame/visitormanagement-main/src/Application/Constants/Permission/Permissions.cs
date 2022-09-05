@@ -289,10 +289,10 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
         /// <returns></returns>
         public static List<string> GetRegisteredPermissions()
         {
-            var permissions = new List<string>();
-            foreach (var prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+            List<string> permissions = new List<string>();
+            foreach (FieldInfo prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
-                var propertyValue = prop.GetValue(null);
+                object? propertyValue = prop.GetValue(null);
                 if (propertyValue != null)
                     permissions.Add((string)propertyValue);
             }

@@ -18,50 +18,51 @@ namespace CleanArchitecture.Blazor.Application.Services.Picklist
     public class PicklistService : IPicklistService
     {
         private const string PicklistCacheKey = "PicklistCache";
-        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
-        private readonly IAppCache _cache;
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+        private readonly IAppCache cache;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public event Action? OnChange;
         public List<KeyValueDto> DataSource { get; private set; } = new List<KeyValueDto>();
 
         public PicklistService(
-          IAppCache cache,
-        IApplicationDbContext context, IMapper mapper)
+                       IAppCache cache,
+                       IApplicationDbContext context, IMapper mapper
+        )
         {
-            _cache = cache;
-            _context = context;
-            _mapper = mapper;
+            this.cache = cache;
+            this.context = context;
+            this.mapper = mapper;
         }
+
         public async Task Initialize()
         {
-            //if (DataSource.Count > 0) return;
-            await _semaphore.WaitAsync();
+            await semaphore.WaitAsync();
             try
             {
-                DataSource = await _cache.GetOrAddAsync(PicklistCacheKey,
-                    () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                        .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                DataSource = await cache.GetOrAddAsync(PicklistCacheKey,
+                    () => context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
+                        .ProjectTo<KeyValueDto>(mapper.ConfigurationProvider)
                         .ToListAsync(),
                       KeyValueCacheKey.MemoryCacheEntryOptions);
 
             }
             finally
             {
-                _semaphore.Release();
+                semaphore.Release();
             }
 
         }
         public async Task Refresh()
         {
-            await _semaphore.WaitAsync();
+            await semaphore.WaitAsync();
             try
             {
-                _cache.Remove(PicklistCacheKey);
-                DataSource = await _cache.GetOrAddAsync(PicklistCacheKey,
-                    () => _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-                        .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                cache.Remove(PicklistCacheKey);
+                DataSource = await cache.GetOrAddAsync(PicklistCacheKey,
+                    () => context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
+                        .ProjectTo<KeyValueDto>(mapper.ConfigurationProvider)
                         .ToListAsync(),
                     KeyValueCacheKey.MemoryCacheEntryOptions
                       );
@@ -69,9 +70,8 @@ namespace CleanArchitecture.Blazor.Application.Services.Picklist
             }
             finally
             {
-                _semaphore.Release();
+                semaphore.Release();
             }
-
         }
     }
 }

@@ -8,22 +8,25 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Services.MessageService
 {
+    /// <summary>
+    /// 邮件发送服务
+    /// </summary>
     public class MailMessageService
     {
-        private readonly ILogger<MailMessageService> _logger;
-        private readonly IFluentEmail _fluentEmail;
+        private readonly ILogger<MailMessageService> logger;
+        private readonly IFluentEmail fluentEmail;
 
         public MailMessageService(ILogger<MailMessageService> logger,
             IFluentEmail fluentEmail)
         {
-            _logger = logger;
-            _fluentEmail = fluentEmail;
+            this.logger = logger;
+            this.fluentEmail = fluentEmail;
         }
         public async Task Send(string to, string subject, string body)
         {
-            await _fluentEmail.To(to)
-                              .Subject(subject)
-                              .Body(body).SendAsync();
+            await fluentEmail.To(emailAddress: to)
+                              .Subject(subject: subject)
+                              .Body(body: body).SendAsync();
         }
     }
 }

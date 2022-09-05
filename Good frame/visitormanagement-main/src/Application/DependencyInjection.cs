@@ -22,9 +22,9 @@ namespace CleanArchitecture.Blazor.Application
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
             services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
             services.AddMediatR(Assembly.GetExecutingAssembly());
-            foreach (var assembly in new[] { Assembly.GetExecutingAssembly() }) // add all your assemblies here
+            foreach (Assembly assembly in new[] { Assembly.GetExecutingAssembly() }) // add all your assemblies here
             {
-                foreach (var createdEvent in assembly
+                foreach (TypeInfo createdEvent in assembly
                     .DefinedTypes
                     .Where(dt => !dt.IsAbstract && dt.IsSubclassOf(typeof(ApprovalHistoryCreatedEventHandler)))
                 )
