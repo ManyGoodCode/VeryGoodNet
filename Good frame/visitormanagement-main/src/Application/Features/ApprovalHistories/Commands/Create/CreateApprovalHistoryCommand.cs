@@ -21,25 +21,25 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Comman
 
     public class CreateApprovalHistoryCommandHandler : IRequestHandler<CreateApprovalHistoryCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CreateApprovalHistoryCommand> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<CreateApprovalHistoryCommand> localizer;
         public CreateApprovalHistoryCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<CreateApprovalHistoryCommand> localizer,
             IMapper mapper
             )
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result<int>> Handle(CreateApprovalHistoryCommand request, CancellationToken cancellationToken)
         {
-            var item = _mapper.Map<ApprovalHistory>(request);
+            ApprovalHistory? item = mapper.Map<ApprovalHistory>(request);
             item.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(item));
-            _context.ApprovalHistories.Add(item);
-            await _context.SaveChangesAsync(cancellationToken);
+            context.ApprovalHistories.Add(item);
+            await context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(item.Id);
         }
     }

@@ -14,19 +14,18 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventH
     public class ApprovalHistoryCreatedEventHandler :
               INotificationHandler<DomainEventNotification<CreatedEvent<ApprovalHistory>>>
     {
-        private readonly ILogger<ApprovalHistoryCreatedEventHandler> _logger;
+        private readonly ILogger<ApprovalHistoryCreatedEventHandler> logger;
 
         public ApprovalHistoryCreatedEventHandler(
             ILogger<ApprovalHistoryCreatedEventHandler> logger
             )
         {
-            _logger = logger;
+            this.logger = logger;
         }
         public Task Handle(DomainEventNotification<CreatedEvent<ApprovalHistory>> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("{handler}: visitorId: {VisitorId}, {Outcome}",
+            CreatedEvent<ApprovalHistory> domainEvent = notification.DomainEvent;
+            logger.LogInformation("{handler}: visitorId: {VisitorId}, {Outcome}",
                 nameof(ApprovalHistoryCreatedEventHandler),
                 domainEvent.Entity.VisitorId,
                 $"{domainEvent.Entity.Outcome} {domainEvent.Entity.Comment}");

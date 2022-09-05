@@ -1,4 +1,7 @@
 using System.Security.Claims;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using CleanArchitecture.Blazor.Infrastructure.Identity;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 

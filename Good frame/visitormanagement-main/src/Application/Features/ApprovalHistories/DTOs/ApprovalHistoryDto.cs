@@ -8,8 +8,6 @@ using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.DTOs
 {
-
-
     public class ApprovalHistoryDto : IMapFrom<ApprovalHistory>
     {
         public void Mapping(Profile profile)
