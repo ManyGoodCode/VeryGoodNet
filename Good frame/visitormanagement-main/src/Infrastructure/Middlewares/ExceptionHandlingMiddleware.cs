@@ -36,7 +36,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
             }
             catch (Exception exception)
             {
-                string? userId = await currentUserService.UserId();
+                string userId = await currentUserService.UserId();
                 if (!string.IsNullOrEmpty(userId))
                     LogContext.PushProperty("UserId", userId);
                 string errorId = Guid.NewGuid().ToString();
@@ -56,6 +56,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
                         exception = exception.InnerException;
                     }
                 }
+
                 if (!string.IsNullOrEmpty(exception.Message))
                 {
                     responseModel.Errors = new string[] { exception.Message };

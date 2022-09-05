@@ -36,7 +36,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Picklist
         }
         public async Task Initialize()
         {
-            //if (DataSource.Count > 0) return;
             await _semaphore.WaitAsync();
             try
             {

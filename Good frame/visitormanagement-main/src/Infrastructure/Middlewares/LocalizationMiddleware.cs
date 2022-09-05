@@ -7,6 +7,9 @@ using Microsoft.AspNetCore.Http;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 {
+    /// <summary>
+    /// Middleware 中间键
+    /// </summary>
     public class LocalizationMiddleware : IMiddleware
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)

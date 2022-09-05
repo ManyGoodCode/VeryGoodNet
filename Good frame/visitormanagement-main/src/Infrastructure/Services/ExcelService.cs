@@ -1,6 +1,13 @@
 using Microsoft.Extensions.Localization;
 using System.Data;
 using ClosedXML.Excel;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+using System.IO;
+using System;
+using System.Linq;
+using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services
 {
@@ -15,7 +22,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
 
         public async Task<byte[]> CreateTemplateAsync(IEnumerable<string> fields, string sheetName = "Sheet1")
         {
-            using (var workbook = new XLWorkbook())
+            using (XLWorkbook workbook = new XLWorkbook())
             {
                 workbook.Properties.Author = "";
                 var ws = workbook.Worksheets.Add(sheetName);

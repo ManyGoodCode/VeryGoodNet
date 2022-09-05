@@ -69,7 +69,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
 
         }
 
-
         private void HandleReceiveMessage(string userId, string message)
         {
             MessageReceived?.Invoke(this, new MessageReceivedEventArgs(userId, message));

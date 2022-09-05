@@ -8,7 +8,9 @@ using Microsoft.Extensions.Options;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 {
-
+    /// <summary>
+    /// Middleware 中间键
+    /// </summary>
     public class LocalizationCookiesMiddleware : IMiddleware
     {
         public CookieRequestCultureProvider Provider { get; }
@@ -28,8 +30,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
                 IRequestCultureFeature feature = context.Features.Get<IRequestCultureFeature>();
                 if (feature != null)
                 {
-                    context.Response.Cookies
-                        .Append(
+                    context.Response.Cookies.Append(
                             Provider.CookieName,
                             CookieRequestCultureProvider.MakeCookieValue(feature.RequestCulture),
                             new CookieOptions()

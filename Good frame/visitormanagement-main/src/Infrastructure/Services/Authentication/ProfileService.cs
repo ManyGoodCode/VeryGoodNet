@@ -26,7 +26,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
                 UserId = principal.GetUserId(),
                 UserName = principal.GetUserName(),
                 Department = principal.GetDepartment(),
-
             };
 
             OnChange?.Invoke();

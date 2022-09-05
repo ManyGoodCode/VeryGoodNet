@@ -13,16 +13,16 @@ using System.IO;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
 using System.Threading;
 using System.Linq;
+using System.Collections.Generic;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 {
-
     public class IdentityAuthenticationService : AuthenticationStateProvider, IAuthenticationService
     {
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
-        private readonly ProtectedLocalStorage _protectedLocalStorage;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<ApplicationRole> _roleManager;
+        private readonly SemaphoreSlim semaphore = new SemaphoreSlim(1, 1);
+        private readonly ProtectedLocalStorage protectedLocalStorage;
+        private readonly UserManager<ApplicationUser> userManager;
+        private readonly RoleManager<ApplicationRole> roleManager;
         private const string KEY = "Basic";
 
         public IdentityAuthenticationService(
@@ -31,23 +31,23 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
             UserManager<ApplicationUser> userManager
             )
         {
-            _protectedLocalStorage = protectedLocalStorage;
-            _userManager = userManager;
-            _roleManager = roleManager;
+            this.protectedLocalStorage = protectedLocalStorage;
+            this.userManager = userManager;
+            this.roleManager = roleManager;
         }
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var principal = new ClaimsPrincipal(new ClaimsIdentity());
+            ClaimsPrincipal principal = new ClaimsPrincipal(new ClaimsIdentity());
             try
             {
-                var storedClaimsIdentity = await _protectedLocalStorage.GetAsync<string>(LocalStorage.CLAIMSIDENTITY);
+                var storedClaimsIdentity = await protectedLocalStorage.GetAsync<string>(LocalStorage.CLAIMSIDENTITY);
                 if (storedClaimsIdentity.Success && storedClaimsIdentity.Value is not null)
                 {
-                    var buffer = Convert.FromBase64String(storedClaimsIdentity.Value);
-                    using (var deserializationStream = new MemoryStream(buffer))
+                    byte[] buffer = Convert.FromBase64String(storedClaimsIdentity.Value);
+                    using (MemoryStream deserializationStream = new MemoryStream(buffer))
                     {
-                        var identity = new ClaimsIdentity(new BinaryReader(deserializationStream, Encoding.UTF8));
-                        principal = new(identity);
+                        ClaimsIdentity identity = new ClaimsIdentity(new BinaryReader(deserializationStream, Encoding.UTF8));
+                        principal = new ClaimsPrincipal(identity);
                     }
                 }
             }
@@ -55,19 +55,20 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
             {
                 Console.WriteLine(e);
             }
+
             return new AuthenticationState(principal);
         }
 
         private async Task<ClaimsIdentity> createIdentityFromApplicationUser(ApplicationUser user)
         {
-
-            var result = new ClaimsIdentity(KEY);
-            result.AddClaim(new(ClaimTypes.NameIdentifier, user.Id));
+            ClaimsIdentity result = new ClaimsIdentity(KEY);
+            result.AddClaim(new Claim(ClaimTypes.NameIdentifier, user.Id));
             if (!string.IsNullOrEmpty(user.UserName))
             {
-                result.AddClaims(new[] {
-                new Claim(ClaimTypes.Name, user.UserName)
-            });
+                result.AddClaims(new[]
+                {
+                 new Claim(ClaimTypes.Name, user.UserName)
+                });
             }
             if (!string.IsNullOrEmpty(user.Site))
             {
@@ -113,19 +114,22 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
             }
             if (!string.IsNullOrEmpty(user.Designation))
             {
-                result.AddClaims(new[] {
+                result.AddClaims(new[]
+                {
                 new Claim(ApplicationClaimTypes.Designation, user.Designation)
             });
             }
-            var roles = await _userManager.GetRolesAsync(user);
-            foreach (var rolename in roles)
+
+            IList<string> roles = await userManager.GetRolesAsync(user);
+            foreach (string rolename in roles)
             {
-                var role = await _roleManager.FindByNameAsync(rolename);
-                var claims = await _roleManager.GetClaimsAsync(role);
-                foreach (var claim in claims)
+                ApplicationRole role = await roleManager.FindByNameAsync(rolename);
+                IList<Claim> claims = await roleManager.GetClaimsAsync(role);
+                foreach (Claim claim in claims)
                 {
                     result.AddClaim(claim);
                 }
+
                 result.AddClaims(new[] {
                 new Claim(ClaimTypes.Role, rolename) });
 
@@ -136,11 +140,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 
         public async Task<bool> Login(LoginFormModel request)
         {
-            await _semaphore.WaitAsync();
+            await semaphore.WaitAsync();
             try
             {
-                var user = await _userManager.FindByNameAsync(request.UserName);
-                var valid = await _userManager.CheckPasswordAsync(user, request.Password);
+                var user = await userManager.FindByNameAsync(request.UserName);
+                var valid = await userManager.CheckPasswordAsync(user, request.Password);
                 if (valid)
                 {
 
@@ -150,34 +154,37 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
                     {
                         identity.WriteTo(binaryWriter);
                         var base64 = Convert.ToBase64String(memoryStream.ToArray());
-                        await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
+                        await protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                     }
-                    await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
-                    await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
+
+                    await protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
+                    await protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
                     if (user.Site is not null)
                     {
-                        await _protectedLocalStorage.SetAsync(LocalStorage.SITE, user.Site);
+                        await protectedLocalStorage.SetAsync(LocalStorage.SITE, user.Site);
                     }
                     if (user.SiteId is not null)
                     {
-                        await _protectedLocalStorage.SetAsync(LocalStorage.SITEID, user.SiteId);
+                        await protectedLocalStorage.SetAsync(LocalStorage.SITEID, user.SiteId);
                     }
-                    var principal = new ClaimsPrincipal(identity);
+
+                    ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                     NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
                 }
+
                 return valid;
             }
             finally
             {
-                _semaphore.Release();
+                semaphore.Release();
             }
         }
         public async Task<bool> ExternalLogin(string provider, string userName, string name, string accessToken)
         {
-            await _semaphore.WaitAsync();
+            await semaphore.WaitAsync();
             try
             {
-                var user = await _userManager.FindByNameAsync(userName);
+                ApplicationUser user = await userManager.FindByNameAsync(userName);
                 if (user is null)
                 {
                     user = new ApplicationUser
@@ -190,56 +197,60 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
                         Site = provider,
                         DisplayName = name,
                     };
-                    var result = await _userManager.CreateAsync(user);
+
+                    IdentityResult result = await userManager.CreateAsync(user);
                     if (!result.Succeeded)
                     {
                         return false;
                     }
                     if (user.Email.ToLower().Contains("voith.com"))
                     {
-                        await _userManager.AddToRoleAsync(user, RoleConstants.UserRole);
+                        await userManager.AddToRoleAsync(user, RoleConstants.UserRole);
                     }
                     else
                     {
-                        await _userManager.AddToRoleAsync(user, RoleConstants.GuestRole);
+                        await userManager.AddToRoleAsync(user, RoleConstants.GuestRole);
                     }
 
                 }
-                var identity = await createIdentityFromApplicationUser(user);
+
+                ClaimsIdentity identity = await createIdentityFromApplicationUser(user);
                 using (MemoryStream memoryStream = new MemoryStream())
                 using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
                 {
                     identity.WriteTo(binaryWriter);
-                    var base64 = Convert.ToBase64String(memoryStream.ToArray());
-                    await _protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
+                    string base64 = Convert.ToBase64String(memoryStream.ToArray());
+                    await protectedLocalStorage.SetAsync(LocalStorage.CLAIMSIDENTITY, base64);
                 }
-                await _protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
-                await _protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
+
+                await protectedLocalStorage.SetAsync(LocalStorage.USERID, user.Id);
+                await protectedLocalStorage.SetAsync(LocalStorage.USERNAME, user.UserName);
                 if (user.Site is not null)
                 {
-                    await _protectedLocalStorage.SetAsync(LocalStorage.SITE, user.Site);
+                    await protectedLocalStorage.SetAsync(LocalStorage.SITE, user.Site);
                 }
                 if (user.SiteId is not null)
                 {
-                    await _protectedLocalStorage.SetAsync(LocalStorage.SITEID, user.SiteId);
+                    await protectedLocalStorage.SetAsync(LocalStorage.SITEID, user.SiteId);
                 }
-                var principal = new ClaimsPrincipal(identity);
+
+                ClaimsPrincipal principal = new ClaimsPrincipal(identity);
                 NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
                 return true;
             }
             finally
             {
-                _semaphore.Release();
+                semaphore.Release();
             }
         }
         public async Task Logout()
         {
-            await _protectedLocalStorage.DeleteAsync(LocalStorage.CLAIMSIDENTITY);
-            await _protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
-            await _protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
-            await _protectedLocalStorage.DeleteAsync(LocalStorage.SITE);
-            await _protectedLocalStorage.DeleteAsync(LocalStorage.SITEID);
-            var principal = new ClaimsPrincipal();
+            await protectedLocalStorage.DeleteAsync(LocalStorage.CLAIMSIDENTITY);
+            await protectedLocalStorage.DeleteAsync(LocalStorage.USERID);
+            await protectedLocalStorage.DeleteAsync(LocalStorage.USERNAME);
+            await protectedLocalStorage.DeleteAsync(LocalStorage.SITE);
+            await protectedLocalStorage.DeleteAsync(LocalStorage.SITEID);
+            ClaimsPrincipal principal = new ClaimsPrincipal();
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(principal)));
         }
     }

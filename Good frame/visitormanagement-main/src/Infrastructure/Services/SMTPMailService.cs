@@ -1,3 +1,7 @@
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
+using CleanArchitecture.Blazor.Application.Settings;
+using CleanArchitecture.Blazor.Infrastructure.Configurations;
 using MailKit.Net.Smtp;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
