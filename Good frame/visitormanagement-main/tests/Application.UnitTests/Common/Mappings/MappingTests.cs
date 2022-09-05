@@ -50,6 +50,7 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
         {
             object instance = GetInstanceOf(source);
             object result = mapper.Map(instance, source, destination);
+            Assert.IsNotNull(result);
         }
 
         private object GetInstanceOf(Type type)
