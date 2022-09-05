@@ -41,6 +41,9 @@ namespace CleanArchitecture.Blazor.Domain.ValueObjects
             return colour.ToString();
         }
 
+        /// <summary>
+        /// 显示转换
+        /// </summary>
         public static explicit operator Colour(string code)
         {
             return From(code);
