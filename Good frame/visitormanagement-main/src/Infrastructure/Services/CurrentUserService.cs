@@ -1,3 +1,6 @@
+using System;
+using System.Threading.Tasks;
+using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Infrastructure.Constants.LocalStorage;
 using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage;
 
@@ -5,21 +8,20 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
 {
     public class CurrentUserService : ICurrentUserService
     {
-        private readonly ProtectedLocalStorage _protectedLocalStorage;
+        private readonly ProtectedLocalStorage protectedLocalStorage;
 
         public CurrentUserService(
-            ProtectedLocalStorage protectedLocalStorage
-           )
+            ProtectedLocalStorage protectedLocalStorage)
         {
-            _protectedLocalStorage = protectedLocalStorage;
+            this.protectedLocalStorage = protectedLocalStorage;
         }
 
         public async Task<string> UserId()
         {
             try
             {
-                var userId = string.Empty;
-                var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.USERID);
+                string userId = string.Empty;
+                var storedPrincipal = await protectedLocalStorage.GetAsync<string>(LocalStorage.USERID);
                 if (storedPrincipal.Success && storedPrincipal.Value is not null)
                 {
                     userId = storedPrincipal.Value;
@@ -36,8 +38,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
         {
             try
             {
-                var userName = string.Empty;
-                var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.USERNAME);
+                string userName = string.Empty;
+                var storedPrincipal = await protectedLocalStorage.GetAsync<string>(LocalStorage.USERNAME);
                 if (storedPrincipal.Success && storedPrincipal.Value is not null)
                 {
                     userName = storedPrincipal.Value;
@@ -55,7 +57,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
             try
             {
                 int? siteId = null;
-                var storedPrincipal = await _protectedLocalStorage.GetAsync<int?>(LocalStorage.SITEID);
+                var storedPrincipal = await protectedLocalStorage.GetAsync<int?>(LocalStorage.SITEID);
                 if (storedPrincipal.Success && storedPrincipal.Value is not null)
                 {
                     siteId = storedPrincipal.Value;
@@ -73,7 +75,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
             try
             {
                 var siteName = string.Empty;
-                var storedPrincipal = await _protectedLocalStorage.GetAsync<string>(LocalStorage.SITE);
+                var storedPrincipal = await protectedLocalStorage.GetAsync<string>(LocalStorage.SITE);
                 if (storedPrincipal.Success && storedPrincipal.Value is not null)
                 {
                     siteName = storedPrincipal.Value;

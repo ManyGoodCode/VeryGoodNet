@@ -10,19 +10,19 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services
 {
     public class DomainEventService : IDomainEventService
     {
-        private readonly ILogger<DomainEventService> _logger;
-        private readonly IPublisher _mediator;
+        private readonly ILogger<DomainEventService> logger;
+        private readonly MediatR.IPublisher mediator;
 
         public DomainEventService(ILogger<DomainEventService> logger, IPublisher mediator)
         {
-            _logger = logger;
-            _mediator = mediator;
+            this.logger = logger;
+            this.mediator = mediator;
         }
 
         public async Task Publish(DomainEvent domainEvent)
         {
-            _logger.LogInformation("Publishing domain event. Event - {event}", nameof(domainEvent));
-            await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
+            logger.LogInformation("Publishing domain event. Event - {event}", nameof(domainEvent));
+            await mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
         }
 
         private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
