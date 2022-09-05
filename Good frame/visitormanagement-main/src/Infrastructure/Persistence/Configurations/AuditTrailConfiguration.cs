@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.Json;
@@ -14,6 +15,7 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
         {
             builder.Property(t => t.AuditType)
                .HasConversion<string>();
+
             builder.Property(e => e.AffectedColumns)
                .HasConversion(
                      v => JsonSerializer.Serialize(v, (JsonSerializerOptions)null),
@@ -28,11 +30,13 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
                     d => JsonSerializer.Serialize(d, (JsonSerializerOptions)null),
                     s => JsonSerializer.Deserialize<Dictionary<string, object>>(s, (JsonSerializerOptions)null)
                 );
+
             builder.Property(u => u.NewValues)
                 .HasConversion(
                     d => JsonSerializer.Serialize(d, (JsonSerializerOptions)null),
                     s => JsonSerializer.Deserialize<Dictionary<string, object>>(s, (JsonSerializerOptions)null)
                 );
+
             builder.Property(u => u.PrimaryKey)
                 .HasConversion(
                     d => JsonSerializer.Serialize(d, (JsonSerializerOptions)null),

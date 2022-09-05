@@ -19,11 +19,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence
     {
         public static async Task SeedDefaultUserAsync(UserManager<ApplicationUser> userManager, RoleManager<ApplicationRole> roleManager)
         {
-            var administratorRole = new ApplicationRole(RoleConstants.AdministratorRole) { Description = "Admin Group" };
-            var userRole = new ApplicationRole(RoleConstants.BasicRole) { Description = "Basic Group" };
-            var guestRole = new ApplicationRole(RoleConstants.GuestRole) { Description = "Guest Group" };
-            var guardRole = new ApplicationRole(RoleConstants.GuardRole) { Description = "Guard Group" };
-            var usersRole = new ApplicationRole(RoleConstants.UserRole) { Description = "Guard Group" };
+            ApplicationRole administratorRole = new ApplicationRole(RoleConstants.AdministratorRole) { Description = "Admin Group" };
+            ApplicationRole userRole = new ApplicationRole(RoleConstants.BasicRole) { Description = "Basic Group" };
+            ApplicationRole guestRole = new ApplicationRole(RoleConstants.GuestRole) { Description = "Guest Group" };
+            ApplicationRole guardRole = new ApplicationRole(RoleConstants.GuardRole) { Description = "Guard Group" };
+            ApplicationRole usersRole = new ApplicationRole(RoleConstants.UserRole) { Description = "Guard Group" };
             if (roleManager.Roles.All(r => r.Name != administratorRole.Name))
             {
                 await roleManager.CreateAsync(administratorRole);
@@ -31,8 +31,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence
                 await roleManager.CreateAsync(guestRole);
                 await roleManager.CreateAsync(usersRole);
                 await roleManager.CreateAsync(guardRole);
-                var Permissions = GetAllPermissions();
-                foreach (var permission in Permissions)
+                IEnumerable<string> Permissions = GetAllPermissions();
+                foreach (string permission in Permissions)
                 {
                     await roleManager.AddClaimAsync(administratorRole, new Claim(ApplicationClaimTypes.Permission, permission));
                     if (permission.StartsWith("Permissions.Products"))
@@ -40,11 +40,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence
                 }
             }
 
-            var administrator = new ApplicationUser { UserName = "administrator", IsActive = true, Site = "Blazor", DisplayName = "Administrator", Email = "administrator@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
-            var demo = new ApplicationUser { UserName = "Demo", IsActive = true, Site = "Blazor", DisplayName = "Demo", Email = "demo@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
-            var user = new ApplicationUser { UserName = "Test", IsActive = true, Site = "Blazor", DisplayName = "Test", Email = "test@126.com", EmailConfirmed = true };
-            var guest = new ApplicationUser { UserName = "Guest", IsActive = true, Site = "Blazor", DisplayName = "Guest", Email = "guest@126.com", EmailConfirmed = true };
-            var guard = new ApplicationUser { UserName = "Guard", IsActive = true, Site = "Blazor", DisplayName = "Guard", Email = "guard@126.com", EmailConfirmed = true };
+            ApplicationUser administrator = new ApplicationUser { UserName = "administrator", IsActive = true, Site = "Blazor", DisplayName = "Administrator", Email = "administrator@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/78be68221020124c23c665ac54e07074?s=80" };
+            ApplicationUser demo = new ApplicationUser { UserName = "Demo", IsActive = true, Site = "Blazor", DisplayName = "Demo", Email = "demo@163.com", EmailConfirmed = true, ProfilePictureDataUrl = $"https://s.gravatar.com/avatar/ea753b0b0f357a41491408307ade445e?s=80" };
+            ApplicationUser user = new ApplicationUser { UserName = "Test", IsActive = true, Site = "Blazor", DisplayName = "Test", Email = "test@126.com", EmailConfirmed = true };
+            ApplicationUser guest = new ApplicationUser { UserName = "Guest", IsActive = true, Site = "Blazor", DisplayName = "Guest", Email = "guest@126.com", EmailConfirmed = true };
+            ApplicationUser guard = new ApplicationUser { UserName = "Guard", IsActive = true, Site = "Blazor", DisplayName = "Guard", Email = "guard@126.com", EmailConfirmed = true };
             if (userManager.Users.All(u => u.UserName != administrator.UserName))
             {
                 await userManager.CreateAsync(administrator, RoleConstants.DefaultPassword);
@@ -62,20 +62,18 @@ namespace CleanArchitecture.Blazor.Infrastructure.Persistence
         }
         private static IEnumerable<string> GetAllPermissions()
         {
-            var allPermissions = new List<string>();
-            var modules = typeof(Permissions).GetNestedTypes();
+            List<string> allPermissions = new List<string>();
+            Type[] modules = typeof(Permissions).GetNestedTypes();
 
-            foreach (var module in modules)
+            foreach (Type module in modules)
             {
-                var moduleName = string.Empty;
-                var moduleDescription = string.Empty;
+                string moduleName = string.Empty;
+                string moduleDescription = string.Empty;
 
-                var fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
-
-                foreach (var fi in fields)
+                FieldInfo[] fields = module.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy);
+                foreach (FieldInfo fi in fields)
                 {
-                    var propertyValue = fi.GetValue(null);
-
+                    object? propertyValue = fi.GetValue(null);
                     if (propertyValue is not null)
                         allPermissions.Add(propertyValue.ToString());
                 }

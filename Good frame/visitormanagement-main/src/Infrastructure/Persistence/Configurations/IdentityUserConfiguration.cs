@@ -8,14 +8,6 @@ namespace CleanArchitecture.Infrastructure.Persistence.Configurations
     {
         public void Configure(EntityTypeBuilder<ApplicationUser> builder)
         {
-            // Each User can have many UserClaims
-            // duplicate definition 
-            //builder.HasMany(e => e.UserClaims)
-            //    .WithOne()
-            //    .HasForeignKey(uc => uc.UserId)
-            //    .IsRequired();
-
-            // Each User can have many UserLogins
             builder.HasMany(e => e.Logins)
                 .WithOne()
                 .HasForeignKey(ul => ul.UserId)

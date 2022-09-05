@@ -1,3 +1,4 @@
+using System;
 using CleanArchitecture.Blazor.Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
