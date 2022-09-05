@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Concurrent;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Identity;
@@ -11,8 +12,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
     public class SignalRHub : Hub
     {
 
-        private static readonly ConcurrentDictionary<string, string> _onlineUsers = new();
-
+        private static readonly ConcurrentDictionary<string, string> onlineUsers = new();
 
         public SignalRHub()
         {
@@ -26,21 +26,20 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
         public override async Task OnDisconnectedAsync(Exception? exception)
         {
             string id = Context.ConnectionId;
-            //try to remove key from dictionary
-            if (_onlineUsers.TryRemove(id, out string? userId))
+            if (onlineUsers.TryRemove(id, out string? userId))
             {
                 await Clients.All.SendAsync(SignalR.DisconnectUser, userId);
             }
+
             await base.OnDisconnectedAsync(exception);
         }
 
         public async Task OnConnectUser(string userId)
         {
-            var id = Context.ConnectionId;
-            if (!_onlineUsers.ContainsKey(id))
+            string id = Context.ConnectionId;
+            if (!onlineUsers.ContainsKey(id))
             {
-                // maintain a lookup of connectionId-to-username
-                if (_onlineUsers.TryAdd(id, userId))
+                if (onlineUsers.TryAdd(id, userId))
                 {
                     // re-use existing message for now
                     await Clients.All.SendAsync(SignalR.ConnectUser, userId);

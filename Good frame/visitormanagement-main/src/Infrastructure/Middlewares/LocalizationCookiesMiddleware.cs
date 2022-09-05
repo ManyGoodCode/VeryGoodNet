@@ -1,3 +1,6 @@
+using System;
+using System.Linq;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Localization;
@@ -12,9 +15,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 
         public LocalizationCookiesMiddleware(IOptions<RequestLocalizationOptions> requestLocalizationOptions)
         {
-            Provider =
-                requestLocalizationOptions
-                    .Value
+            Provider = requestLocalizationOptions.Value
                     .RequestCultureProviders
                     .Where(x => x is CookieRequestCultureProvider)
                     .Cast<CookieRequestCultureProvider>()
@@ -25,17 +26,17 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
         {
             if (Provider != null)
             {
-                var feature = context.Features.Get<IRequestCultureFeature>();
-
+                IRequestCultureFeature feature = context.Features.Get<IRequestCultureFeature>();
                 if (feature != null)
                 {
-                    // remember culture across request
-                    context.Response
-                        .Cookies
+                    context.Response.Cookies
                         .Append(
                             Provider.CookieName,
                             CookieRequestCultureProvider.MakeCookieValue(feature.RequestCulture),
-                            new CookieOptions() { Expires = new DateTimeOffset(DateTime.Now.AddMonths(3)) }
+                            new CookieOptions()
+                            {
+                                Expires = new DateTimeOffset(DateTime.Now.AddMonths(3))
+                            }
                         );
                 }
             }

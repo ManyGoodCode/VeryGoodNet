@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 using System.Linq;
 using System.Threading;
@@ -10,12 +11,12 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
     {
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
         {
-            var cultureKey = context.Request.Headers["Accept-Language"];
+            string cultureKey = context.Request.Headers["Accept-Language"];
             if (!string.IsNullOrEmpty(cultureKey))
             {
                 if (DoesCultureExist(cultureKey))
                 {
-                    var culture = new CultureInfo(cultureKey);
+                    CultureInfo culture = new CultureInfo(cultureKey);
                     Thread.CurrentThread.CurrentCulture = culture;
                     Thread.CurrentThread.CurrentUICulture = culture;
                 }

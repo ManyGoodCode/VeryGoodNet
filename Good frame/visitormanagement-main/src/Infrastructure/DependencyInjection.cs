@@ -6,6 +6,8 @@ using CleanArchitecture.Blazor.Infrastructure.Services.Authentication;
 using Microsoft.AspNetCore.Components.Server.Circuits;
 using HashidsNet;
 using CleanArchitecture.Blazor.Infrastructure.Hubs;
+using Microsoft.Extensions.DependencyInjection;
+using CleanArchitecture.Blazor.Infrastructure.Persistence;
 
 namespace CleanArchitecture.Blazor.Infrastructure
 {

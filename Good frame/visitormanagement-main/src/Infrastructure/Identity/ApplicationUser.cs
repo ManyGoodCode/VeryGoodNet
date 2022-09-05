@@ -13,6 +13,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Identity
         public string? Designation { get; set; }
         public string? Site { get; set; }
         public int? SiteId { get; set; }
+
         [Column(TypeName = "text")]
         public string? ProfilePictureDataUrl { get; set; }
         public bool IsActive { get; set; }
