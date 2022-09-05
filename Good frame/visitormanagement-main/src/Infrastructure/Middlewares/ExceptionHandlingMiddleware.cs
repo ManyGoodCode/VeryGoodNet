@@ -19,7 +19,6 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
         private readonly IStringLocalizer<ExceptionHandlingMiddleware> localizer;
 
         public ExceptionHandlingMiddleware(
-
             ICurrentUserService currentUserService,
             ILogger<ExceptionHandlingMiddleware> logger,
             IStringLocalizer<ExceptionHandlingMiddleware> localizer)
