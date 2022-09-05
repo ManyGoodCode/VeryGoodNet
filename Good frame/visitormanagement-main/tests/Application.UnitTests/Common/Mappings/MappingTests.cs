@@ -12,7 +12,11 @@ using System.Runtime.Serialization;
 
 namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
 {
-
+    /// <summary>
+    ///  测试Map功能
+    ///  实现  Entities 与 Dto 数据之间的映射
+    ///  TestCase 特性填充测试数据
+    /// </summary>
     public class MappingTests
     {
         private readonly IConfigurationProvider configuration;
@@ -22,8 +26,7 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
         {
             configuration = new MapperConfiguration(cfg =>
             {
-            //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
-            cfg.AddProfile<MappingProfile>();
+                cfg.AddProfile<MappingProfile>();
             });
 
             mapper = configuration.CreateMapper();
@@ -35,6 +38,9 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
             configuration.AssertConfigurationIsValid();
         }
 
+        /// <summary>
+        /// TestCase 特性填充测试数据
+        /// </summary>
         [Test]
         [TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
         [TestCase(typeof(Document), typeof(DocumentDto))]
@@ -43,7 +49,7 @@ namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
         public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
         {
             object instance = GetInstanceOf(source);
-            mapper.Map(instance, source, destination);
+            object result = mapper.Map(instance, source, destination);
         }
 
         private object GetInstanceOf(Type type)
