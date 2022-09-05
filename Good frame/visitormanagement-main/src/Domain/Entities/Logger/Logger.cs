@@ -3,6 +3,9 @@ using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Log
 {
+    /// <summary>
+    /// 日志
+    /// </summary>
     public class Logger : IEntity
     {
         public int Id { get; set; }

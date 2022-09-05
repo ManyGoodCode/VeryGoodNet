@@ -7,6 +7,9 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Domain
 {
+    /// <summary>
+    /// Email/Sms
+    /// </summary>
     public enum MessageType
     {
         [Description("Email")]

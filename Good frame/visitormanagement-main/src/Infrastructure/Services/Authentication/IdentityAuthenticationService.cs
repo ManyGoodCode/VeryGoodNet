@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Components.Authorization;
 using System;
 using System.IO;
 using CleanArchitecture.Blazor.Infrastructure.Constants.ClaimTypes;
+using System.Threading;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 {
@@ -204,8 +205,8 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
 
                 }
                 var identity = await createIdentityFromApplicationUser(user);
-                using (var memoryStream = new MemoryStream())
-                using (var binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
+                using (MemoryStream memoryStream = new MemoryStream())
+                using (BinaryWriter binaryWriter = new BinaryWriter(memoryStream, Encoding.UTF8, true))
                 {
                     identity.WriteTo(binaryWriter);
                     var base64 = Convert.ToBase64String(memoryStream.ToArray());

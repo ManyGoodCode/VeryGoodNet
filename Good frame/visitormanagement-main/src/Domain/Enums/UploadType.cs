@@ -1,5 +1,8 @@
 using System.ComponentModel;
 
+/// <summary>
+/// Product/VisitorPricture/VisitHistoryPricture/ProfilePicture/EmployeePicture/Document
+/// </summary>
 namespace CleanArchitecture.Blazor.Domain
 {
     public enum UploadType : byte

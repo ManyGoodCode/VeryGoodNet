@@ -6,6 +6,9 @@ using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Audit
 {
+    /// <summary>
+    /// 审计流程
+    /// </summary>
     public class AuditTrail : IEntity
     {
         public int Id { get; set; }

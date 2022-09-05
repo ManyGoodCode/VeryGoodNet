@@ -6,6 +6,9 @@ namespace CleanArchitecture.Blazor.Domain.Common
     {
     }
 
+    /// <summary>
+    /// 可审计的 
+    /// </summary>
     public abstract class AuditableEntity : IEntity
     {
         public DateTime? Created { get; set; }

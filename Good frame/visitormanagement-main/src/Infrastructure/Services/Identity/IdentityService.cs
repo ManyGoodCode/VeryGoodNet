@@ -27,7 +27,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Identity
 
     public class IdentityService : IIdentityService
     {
-        private readonly SemaphoreSlim _semaphore = new(1, 1);
+        private readonly SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
         private readonly IServiceProvider _serviceProvider;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<ApplicationRole> _roleManager;

@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Domain.Entities.Tenant
 {
+    /// <summary>
+    /// 必须有租户
+    /// </summary>
     public interface IMustHaveTenant
     {
         int? SiteId { get; set; }

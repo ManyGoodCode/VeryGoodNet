@@ -13,52 +13,58 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
 {
     public class HubClient : IAsyncDisposable
     {
-        private HubConnection _hubConnection;
-        private string _hubUrl;
-        private string _userId;
-        private readonly NavigationManager _navigationManager;
-        private readonly AuthenticationStateProvider _authenticationStateProvider;
+        private HubConnection hubConnection;
+        private string hubUrl;
+        private string userId;
+        private readonly NavigationManager navigationManager;
+        private readonly AuthenticationStateProvider authenticationStateProvider;
         private bool _started = false;
-        public HubClient(NavigationManager navigationManager,
+
+        public HubClient(
+            NavigationManager navigationManager,
             AuthenticationStateProvider authenticationStateProvider)
         {
-            this._navigationManager = navigationManager;
-            _authenticationStateProvider = authenticationStateProvider;
+            this.navigationManager = navigationManager;
+            this.authenticationStateProvider = authenticationStateProvider;
         }
         public async Task StartAsync()
         {
-            _hubUrl = _navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
-            var state = await _authenticationStateProvider.GetAuthenticationStateAsync();
-            _userId = state.User.GetUserId();
+            this.hubUrl = navigationManager.BaseUri.TrimEnd('/') + SignalR.HubUrl;
+            AuthenticationState? state = await authenticationStateProvider.GetAuthenticationStateAsync();
+            userId = state.User.GetUserId();
             if (!_started)
             {
                 // create the connection using the .NET SignalR client
-                _hubConnection = new HubConnectionBuilder()
-                    .WithUrl(_hubUrl)
+                hubConnection = new HubConnectionBuilder()
+                    .WithUrl(hubUrl)
                     .Build();
+
                 // add handler for receiving messages
-                _hubConnection.On<string>(SignalR.ConnectUser, (userId) =>
+                hubConnection.On<string>(SignalR.ConnectUser, (userId) =>
                 {
                     LoggedIn?.Invoke(this, userId);
                 });
-                _hubConnection.On<string>(SignalR.DisconnectUser, (userId) =>
+
+                hubConnection.On<string>(SignalR.DisconnectUser, (userId) =>
                 {
                     LoggedOut?.Invoke(this, userId);
                 });
-                _hubConnection.On<string>(SignalR.SendNotification, (message) =>
+
+                hubConnection.On<string>(SignalR.SendNotification, (message) =>
                 {
                     NotificationReceived?.Invoke(this, message);
                 });
-                _hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
+
+                hubConnection.On<string, string>(SignalR.SendMessage, (userId, message) =>
                 {
                     HandleReceiveMessage(userId, message);
                 });
                 // start the connection
-                await _hubConnection.StartAsync();
+                await hubConnection.StartAsync();
 
 
                 // register user on hub to let other clients know they've joined
-                await _hubConnection.SendAsync(SignalR.ConnectUser, _userId);
+                await hubConnection.SendAsync(SignalR.ConnectUser, userId);
                 _started = true;
             }
 
@@ -72,18 +78,12 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
         }
         public async Task StopAsync()
         {
-
             if (_started)
             {
                 // disconnect the client
-                await _hubConnection.StopAsync();
-                // There is a bug in the mono/SignalR client that does not
-                // close connections even after stop/dispose
-                // see https://github.com/mono/mono/issues/18628
-                // this means the demo won't show "xxx left the chat" since 
-                // the connections are left open
-                await _hubConnection.DisposeAsync();
-                _hubConnection = null;
+                await hubConnection.StopAsync();
+                await hubConnection.DisposeAsync();
+                hubConnection = null;
                 _started = false;
             }
         }
@@ -93,7 +93,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
             if (!_started)
                 throw new InvalidOperationException("Client not started");
             // send the message
-            await _hubConnection.SendAsync(SignalR.SendMessage, _userId, message);
+            await hubConnection.SendAsync(SignalR.SendMessage, userId, message);
         }
         public async Task NotifyAsync(string message)
         {
@@ -101,7 +101,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
             if (!_started)
                 throw new InvalidOperationException("Client not started");
             // send the message
-            await _hubConnection.SendAsync(SignalR.SendNotification, message);
+            await hubConnection.SendAsync(SignalR.SendNotification, message);
         }
         public async ValueTask DisposeAsync()
         {
@@ -122,6 +122,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
                 Message = message;
             }
             public string UserId { get; set; }
+
             public string Message { get; set; }
         }
     }

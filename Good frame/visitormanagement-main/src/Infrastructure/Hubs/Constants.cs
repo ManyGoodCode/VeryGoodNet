@@ -1,6 +1,10 @@
 namespace CleanArchitecture.Blazor.Infrastructure.Constants
 {
 
+    /// <summary>
+    /// SignalR字符串常量
+    /// static 类定义 和 const 避免创建对象
+    /// </summary>
     public static class SignalR
     {
         public const string HubUrl = "/signalRHub";

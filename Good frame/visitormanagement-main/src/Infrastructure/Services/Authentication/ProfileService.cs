@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Infrastructure.Extensions;
@@ -9,7 +10,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
     public class ProfileService
     {
         public event Action? OnChange;
-        public UserModel Profile { get; private set; } = new();
+        public UserModel Profile { get; private set; } = new UserModel();
         public Task Set(ClaimsPrincipal principal)
         {
             Profile = new UserModel()
@@ -27,6 +28,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Services.Authentication
                 Department = principal.GetDepartment(),
 
             };
+
             OnChange?.Invoke();
             return Task.CompletedTask;
         }
