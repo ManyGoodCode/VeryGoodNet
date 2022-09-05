@@ -8,16 +8,13 @@ using Microsoft.AspNetCore.SignalR;
 
 namespace CleanArchitecture.Blazor.Infrastructure.Hubs
 {
-
     public class SignalRHub : Hub
     {
 
         private static readonly ConcurrentDictionary<string, string> onlineUsers = new();
 
-        public SignalRHub()
-        {
+        public SignalRHub() { }
 
-        }
         public override async Task OnConnectedAsync()
         {
             await base.OnConnectedAsync();
@@ -41,18 +38,19 @@ namespace CleanArchitecture.Blazor.Infrastructure.Hubs
             {
                 if (onlineUsers.TryAdd(id, userId))
                 {
-                    // re-use existing message for now
                     await Clients.All.SendAsync(SignalR.ConnectUser, userId);
                 }
             }
         }
+
         public async Task SendMessage(string userId, string message)
         {
-            await Clients.All.SendAsync(SignalR.SendMessage, userId, message);
+            await Clients.All.SendAsync(method: SignalR.SendMessage, arg1: userId, arg2: message);
         }
+
         public async Task SendNotification(string message)
         {
-            await Clients.All.SendAsync(SignalR.SendNotification, message);
+            await Clients.All.SendAsync(method: SignalR.SendNotification, arg1: message);
         }
     }
 }
