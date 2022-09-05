@@ -8,9 +8,11 @@ namespace CleanArchitecture.Blazor.Infrastructure.Constants
     public static class SignalR
     {
         public const string HubUrl = "/signalRHub";
+
         public const string SendUpdateDashboard = "UpdateDashboardAsync";
         public const string ReceiveUpdateDashboard = "UpdateDashboard";
         public const string ReceiveChatNotification = "ReceiveChatNotification";
+
         public const string SendNotification = "SendNotification";
         public const string ReceiveMessage = "ReceiveMessage";
         public const string SendMessage = "SendMessage";
@@ -18,6 +20,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Constants
         public const string ConnectUser = "OnConnectUser";
         public const string OnDisconnect = "OnDisconnectAsync";
         public const string DisconnectUser = "OnDisconnectUser";
+
         public const string OnChangeRolePermissions = "OnChangeRolePermissions";
         public const string LogoutUsersByRole = "LogoutUsersByRole";
         public const string PingRequest = "PingRequestAsync";
