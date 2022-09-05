@@ -14,9 +14,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 {
     internal class ExceptionHandlingMiddleware : IMiddleware
     {
-        private readonly ICurrentUserService _currentUserService;
-        private readonly ILogger<ExceptionHandlingMiddleware> _logger;
-        private readonly IStringLocalizer<ExceptionHandlingMiddleware> _localizer;
+        private readonly ICurrentUserService currentUserService;
+        private readonly ILogger<ExceptionHandlingMiddleware> logger;
+        private readonly IStringLocalizer<ExceptionHandlingMiddleware> localizer;
 
         public ExceptionHandlingMiddleware(
 
@@ -24,9 +24,9 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
             ILogger<ExceptionHandlingMiddleware> logger,
             IStringLocalizer<ExceptionHandlingMiddleware> localizer)
         {
-            _currentUserService = currentUserService;
-            _logger = logger;
-            _localizer = localizer;
+            this.currentUserService = currentUserService;
+            this.logger = logger;
+            this.localizer = localizer;
         }
 
         public async Task InvokeAsync(HttpContext context, RequestDelegate next)
@@ -37,13 +37,18 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
             }
             catch (Exception exception)
             {
-                var userId = await _currentUserService.UserId();
-                if (!string.IsNullOrEmpty(userId)) LogContext.PushProperty("UserId", userId);
+                string? userId = await currentUserService.UserId();
+                if (!string.IsNullOrEmpty(userId))
+                    LogContext.PushProperty("UserId", userId);
                 string errorId = Guid.NewGuid().ToString();
                 LogContext.PushProperty("ErrorId", errorId);
                 LogContext.PushProperty("StackTrace", exception.StackTrace);
-                var responseModel = await Result.FailureAsync(new string[] { exception.Message });
-                var response = context.Response;
+                Result? responseModel = await Result.FailureAsync(new string[]
+                {
+                    exception.Message
+                });
+
+                HttpResponse response = context.Response;
                 response.ContentType = "application/json";
                 if (exception is not CustomException && exception.InnerException != null)
                 {
@@ -56,6 +61,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
                 {
                     responseModel.Errors = new string[] { exception.Message };
                 }
+
                 switch (exception)
                 {
                     case CustomException e:
@@ -65,6 +71,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
                             responseModel.Errors = e.ErrorMessages.ToArray();
                         }
                         break;
+
                     case KeyNotFoundException:
                         response.StatusCode = (int)HttpStatusCode.NotFound;
                         break;
@@ -73,7 +80,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
                         response.StatusCode = (int)HttpStatusCode.InternalServerError;
                         break;
                 }
-                //_logger.LogError(exception, $"{exception}. Request failed with Status Code {response.StatusCode}");
+
                 await response.WriteAsync(System.Text.Json.JsonSerializer.Serialize(responseModel));
             }
         }

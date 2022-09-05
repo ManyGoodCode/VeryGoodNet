@@ -15,8 +15,7 @@ namespace CleanArchitecture.Blazor.Infrastructure.Middlewares
 
         public LocalizationCookiesMiddleware(IOptions<RequestLocalizationOptions> requestLocalizationOptions)
         {
-            Provider = requestLocalizationOptions.Value
-                    .RequestCultureProviders
+            Provider = requestLocalizationOptions.Value.RequestCultureProviders
                     .Where(x => x is CookieRequestCultureProvider)
                     .Cast<CookieRequestCultureProvider>()
                     .FirstOrDefault();
