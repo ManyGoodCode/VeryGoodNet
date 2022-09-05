@@ -10,49 +10,48 @@ using NUnit.Framework;
 using System;
 using System.Runtime.Serialization;
 
-namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings;
-
-public class MappingTests
+namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Mappings
 {
-    private readonly IConfigurationProvider _configuration;
-    private readonly IMapper _mapper;
 
-    public MappingTests()
+    public class MappingTests
     {
-        _configuration = new MapperConfiguration(cfg =>
+        private readonly IConfigurationProvider configuration;
+        private readonly IMapper mapper;
+
+        public MappingTests()
         {
-                //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
-                cfg.AddProfile<MappingProfile>();
-        });
+            configuration = new MapperConfiguration(cfg =>
+            {
+            //cfg.Advanced.AllowAdditiveTypeMapCreation = true;
+            cfg.AddProfile<MappingProfile>();
+            });
 
-        _mapper = _configuration.CreateMapper();
-    }
+            mapper = configuration.CreateMapper();
+        }
 
-    [Test]
-    public void ShouldHaveValidConfiguration()
-    {
-        _configuration.AssertConfigurationIsValid();
-    }
+        [Test]
+        public void ShouldHaveValidConfiguration()
+        {
+            configuration.AssertConfigurationIsValid();
+        }
 
-    [Test]
-    [TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
-    [TestCase(typeof(Document), typeof(DocumentDto))]
-    [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
-    [TestCase(typeof(Product), typeof(ProductDto))]
-    public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
-    {
-        var instance = GetInstanceOf(source);
+        [Test]
+        [TestCase(typeof(DocumentType), typeof(DocumentTypeDto))]
+        [TestCase(typeof(Document), typeof(DocumentDto))]
+        [TestCase(typeof(KeyValue), typeof(KeyValueDto))]
+        [TestCase(typeof(Product), typeof(ProductDto))]
+        public void ShouldSupportMappingFromSourceToDestination(Type source, Type destination)
+        {
+            object instance = GetInstanceOf(source);
+            mapper.Map(instance, source, destination);
+        }
 
-        _mapper.Map(instance, source, destination);
-    }
-
-    private object GetInstanceOf(Type type)
-    {
-        if (type.GetConstructor(Type.EmptyTypes) != null)
-            return Activator.CreateInstance(type);
-
-        // Type without parameterless constructor
-        return FormatterServices.GetUninitializedObject(type);
+        private object GetInstanceOf(Type type)
+        {
+            if (type.GetConstructor(Type.EmptyTypes) != null)
+                return Activator.CreateInstance(type);
+            return FormatterServices.GetUninitializedObject(type);
+        }
     }
 }
 

@@ -6,25 +6,23 @@ using CleanArchitecture.Blazor.Domain.ValueObjects;
 using FluentAssertions;
 using NUnit.Framework;
 
-namespace CleanArchitecture.Blazor.Domain.UnitTests.ValueObjects;
+namespace CleanArchitecture.Blazor.Domain.UnitTests.ValueObjects
+{
 
     public class ColourTests
     {
         [Test]
         public void ShouldReturnCorrectColourCode()
         {
-            var code = "#FFFFFF";
-
-            var colour = Colour.From(code);
-
+            string code = "#FFFFFF";
+            Colour colour = Colour.From(code);
             colour.Code.Should().Be(code);
         }
 
         [Test]
         public void ToStringReturnsCode()
         {
-            var colour = Colour.White;
-
+            Colour colour = Colour.White;
             colour.ToString().Should().Be(colour.Code);
         }
 
@@ -32,15 +30,13 @@ namespace CleanArchitecture.Blazor.Domain.UnitTests.ValueObjects;
         public void ShouldPerformImplicitConversionToColourCodeString()
         {
             string code = Colour.White;
-
             code.Should().Be("#FFFFFF");
         }
 
         [Test]
         public void ShouldPerformExplicitConversionGivenSupportedColourCode()
         {
-            var colour = (Colour)"#FFFFFF";
-
+            Colour colour = (Colour)"#FFFFFF";
             colour.Should().Be(Colour.White);
         }
 
@@ -51,4 +47,5 @@ namespace CleanArchitecture.Blazor.Domain.UnitTests.ValueObjects;
                 .Should().Throw<UnsupportedColourException>();
         }
     }
+}
 

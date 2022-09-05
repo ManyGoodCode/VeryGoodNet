@@ -5,30 +5,27 @@ using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 
-namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Exceptions;
-
-public class ValidationExceptionTests
+namespace CleanArchitecture.Blazor.Application.UnitTests.Common.Exceptions
 {
 
-
-    [Test]
-    public void SingleValidationFailureCreatesASingleElementErrorDictionary()
+    public class ValidationExceptionTests
     {
-        var failures = new List<ValidationFailure>
+        [Test]
+        public void SingleValidationFailureCreatesASingleElementErrorDictionary()
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure>
             {
                 new ValidationFailure("Age", "'Age' must be over 18"),
             };
 
-        var actual = new ValidationException(failures).ErrorMessages;
+            List<string> actual = new ValidationException(failures).ErrorMessages;
+            actual.Should().BeEquivalentTo(new List<string>() { "'Age' must be over 18" });
+        }
 
-        actual.Should().BeEquivalentTo(new List<string>() { "'Age' must be over 18" });
-        
-    }
-
-    [Test]
-    public void MulitpleValidationFailureForMultiplePropertiesCreatesAMultipleElementErrorDictionaryEachWithMultipleValues()
-    {
-        var failures = new List<ValidationFailure>
+        [Test]
+        public void MulitpleValidationFailureForMultiplePropertiesCreatesAMultipleElementErrorDictionaryEachWithMultipleValues()
+        {
+            List<ValidationFailure> failures = new List<ValidationFailure>
             {
                 new ValidationFailure("Age", "'Age' must be 18 or older"),
                 new ValidationFailure("Age", "'Age' must be 25 or younger"),
@@ -38,11 +35,10 @@ public class ValidationExceptionTests
                 new ValidationFailure("Password", "'Password' must contain lower case letter"),
             };
 
-        var actual = new ValidationException(failures).ErrorMessages;
-
-        actual.Count.Should().Equals(2);
-        actual.Should().Contain(r=>r.Equals("'Age' must be 18 or older, 'Age' must be 25 or younger"));
-
+            List<string> actual = new ValidationException(failures).ErrorMessages;
+            actual.Count.Should().Equals(2);
+            actual.Should().Contain(r => r.Equals("'Age' must be 18 or older, 'Age' must be 25 or younger"));
+        }
     }
 }
 
