@@ -7,7 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
+    /// <summary>
+    /// 往缓存中添加TRequest的键值
+    /// </summary>
     public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>, ICacheable
     {
@@ -28,9 +30,10 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
             {
                 logger.LogTrace("{Name} is caching with {@Request}.", nameof(request), request);
                 TResponse response = await cache.GetOrAddAsync(
-                    request.CacheKey,
-                    async () => await next(),
-                    request.Options);
+                    key: request.CacheKey,
+                    addItemFactory: async () => await next(),
+                    policy: request.Options);
+
                 return response;
             }
             else

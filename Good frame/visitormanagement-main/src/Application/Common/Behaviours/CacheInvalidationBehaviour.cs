@@ -7,8 +7,11 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
+    /// <summary>
+    /// 从缓存中移除某一个键值
+    /// </summary>
     public class CacheInvalidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
-          where TRequest : IRequest<TResponse>, ICacheInvalidator
+          where TRequest : MediatR.IRequest<TResponse>, ICacheInvalidator
     {
         private readonly IAppCache cache;
         private readonly ILogger<CacheInvalidationBehaviour<TRequest, TResponse>> logger;

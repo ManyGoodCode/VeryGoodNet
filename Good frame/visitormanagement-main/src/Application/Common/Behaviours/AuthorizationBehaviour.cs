@@ -11,7 +11,9 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
+    /// <summary>
+    /// 通过请求类的特性检查请求资源的权限和角色是否满足，如果不满足抛出异常否则执行下一个委托
+    /// </summary>
     public class AuthorizationBehaviour<TRequest, TResponse> :
         IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
