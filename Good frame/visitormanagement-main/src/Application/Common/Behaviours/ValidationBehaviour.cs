@@ -12,18 +12,18 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     {
-        private readonly IEnumerable<IValidator<TRequest>> _validators;
+        private readonly IEnumerable<IValidator<TRequest>> validators;
 
         public ValidationBehaviour(IEnumerable<IValidator<TRequest>> validators)
         {
-            _validators = validators;
+            this.validators = validators;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            if (_validators.Any())
+            if (validators.Any())
             {
-                foreach (var validator in _validators)
+                foreach (IValidator<TRequest> validator in validators)
                     validator.ValidateAndThrow(request);
             }
 

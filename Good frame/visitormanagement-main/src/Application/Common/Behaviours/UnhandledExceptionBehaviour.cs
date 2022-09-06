@@ -11,13 +11,13 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 
     public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly ILogger<TRequest> _logger;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly ILogger<TRequest> logger;
+        private readonly ICurrentUserService currentUserService;
 
         public UnhandledExceptionBehaviour(ILogger<TRequest> logger, ICurrentUserService currentUserService)
         {
-            _logger = logger;
-            _currentUserService = currentUserService;
+            this.logger = logger;
+            this.currentUserService = currentUserService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
@@ -28,9 +28,9 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
             }
             catch (Exception ex)
             {
-                var requestName = typeof(TRequest).Name;
-                var userName = await _currentUserService.UserName();
-                _logger.LogError(ex, "{Name}: {Exception} with {@Request} by {@UserName}", requestName, ex.Message, request, userName);
+                string requestName = typeof(TRequest).Name;
+                string userName = await currentUserService.UserName();
+                logger.LogError(ex, "{Name}: {Exception} with {@Request} by {@UserName}", requestName, ex.Message, request, userName);
                 throw;
             }
         }

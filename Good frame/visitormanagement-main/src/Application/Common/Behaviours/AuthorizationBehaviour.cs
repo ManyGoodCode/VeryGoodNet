@@ -15,42 +15,37 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
     public class AuthorizationBehaviour<TRequest, TResponse> :
         IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IIdentityService _identityService;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IIdentityService identityService;
 
         public AuthorizationBehaviour(
             ICurrentUserService currentUserService,
             IIdentityService identityService)
         {
-            _currentUserService = currentUserService;
-            _identityService = identityService;
+            this.currentUserService = currentUserService;
+            this.identityService = identityService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            var authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
-
+            IEnumerable<RequestAuthorizeAttribute> authorizeAttributes = request.GetType().GetCustomAttributes<RequestAuthorizeAttribute>();
             if (authorizeAttributes.Any())
             {
-                // Must be authenticated user
-                var userId = await _currentUserService.UserId();
+                string userId = await currentUserService.UserId();
                 if (string.IsNullOrEmpty(userId))
                 {
                     throw new UnauthorizedAccessException();
                 }
 
-                // Role-based authorization
-                var authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
-
+                IEnumerable<RequestAuthorizeAttribute> authorizeAttributesWithRoles = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Roles));
                 if (authorizeAttributesWithRoles.Any())
                 {
-                    var authorized = false;
-
-                    foreach (var roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
+                    bool authorized = false;
+                    foreach (string[] roles in authorizeAttributesWithRoles.Select(a => a.Roles.Split(',')))
                     {
-                        foreach (var role in roles)
+                        foreach (string role in roles)
                         {
-                            var isInRole = await _identityService.IsInRoleAsync(userId, role.Trim());
+                            bool isInRole = await identityService.IsInRoleAsync(userId, role.Trim());
                             if (isInRole)
                             {
                                 authorized = true;
@@ -59,21 +54,18 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
                         }
                     }
 
-                    // Must be a member of at least one role in roles
                     if (!authorized)
                     {
                         throw new ForbiddenAccessException("You are not authorized to access this resource.");
                     }
                 }
 
-                // Policy-based authorization
-                var authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
+                IEnumerable<RequestAuthorizeAttribute> authorizeAttributesWithPolicies = authorizeAttributes.Where(a => !string.IsNullOrWhiteSpace(a.Policy));
                 if (authorizeAttributesWithPolicies.Any())
                 {
-                    foreach (var policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
+                    foreach (string policy in authorizeAttributesWithPolicies.Select(a => a.Policy))
                     {
-                        var authorized = await _identityService.AuthorizeAsync(userId, policy);
-
+                        bool authorized = await identityService.AuthorizeAsync(userId, policy);
                         if (!authorized)
                         {
                             throw new ForbiddenAccessException("You are not authorized to access this resource.");
@@ -82,7 +74,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
                 }
             }
 
-            // User is authorized / authorization not required
             return await next();
         }
     }

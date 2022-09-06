@@ -11,23 +11,23 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
     public class CachingBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
         where TRequest : IRequest<TResponse>, ICacheable
     {
-        private readonly IAppCache _cache;
-        private readonly ILogger<CachingBehaviour<TRequest, TResponse>> _logger;
+        private readonly IAppCache cache;
+        private readonly ILogger<CachingBehaviour<TRequest, TResponse>> logger;
 
         public CachingBehaviour(
             IAppCache cache,
             ILogger<CachingBehaviour<TRequest, TResponse>> logger
             )
         {
-            _cache = cache;
-            _logger = logger;
+            this.cache = cache;
+            this.logger = logger;
         }
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
             if (!string.IsNullOrEmpty(request.CacheKey))
             {
-                _logger.LogTrace("{Name} is caching with {@Request}.", nameof(request), request);
-                var response = await _cache.GetOrAddAsync(
+                logger.LogTrace("{Name} is caching with {@Request}.", nameof(request), request);
+                TResponse response = await cache.GetOrAddAsync(
                     request.CacheKey,
                     async () => await next(),
                     request.Options);

@@ -11,34 +11,32 @@ namespace CleanArchitecture.Blazor.Application.Common.Behaviours
     public class PerformanceBehaviour<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
-        private readonly Stopwatch _timer;
-        private readonly ILogger<TRequest> _logger;
-        private readonly ICurrentUserService _currentUserService;
+        private readonly Stopwatch timer;
+        private readonly ILogger<TRequest> logger;
+        private readonly ICurrentUserService currentUserService;
 
         public PerformanceBehaviour(
             ILogger<TRequest> logger,
             ICurrentUserService currentUserService)
         {
-            _timer = new Stopwatch();
+            timer = new Stopwatch();
 
-            _logger = logger;
-            _currentUserService = currentUserService;
+            this.logger = logger;
+            this.currentUserService = currentUserService;
         }
 
         public async Task<TResponse> Handle(TRequest request, CancellationToken cancellationToken, RequestHandlerDelegate<TResponse> next)
         {
-            _timer.Start();
-            var response = await next();
-            _timer.Stop();
+            timer.Start();
+            TResponse response = await next();
+            timer.Stop();
 
-            var elapsedMilliseconds = _timer.ElapsedMilliseconds;
-
+            long elapsedMilliseconds = timer.ElapsedMilliseconds;
             if (elapsedMilliseconds > 500)
             {
-                var requestName = typeof(TRequest).Name;
-
-                var userName = await _currentUserService.UserName();
-                _logger.LogWarning("{Name} long running request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
+                string requestName = typeof(TRequest).Name;
+                string userName = await currentUserService.UserName();
+                logger.LogWarning("{Name} long running request ({ElapsedMilliseconds} milliseconds) with {@Request} {@UserName} ",
                     requestName, elapsedMilliseconds, request, userName);
             }
 
