@@ -38,8 +38,6 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
         }
         public async Task<Result<int>> Handle(AddEditKeyValueCommand request, CancellationToken cancellationToken)
         {
-
-
             if (request.Id > 0)
             {
                 var keyValue = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
