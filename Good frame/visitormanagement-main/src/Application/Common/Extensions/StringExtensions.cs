@@ -1,12 +1,12 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
 using System.Text;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions
 {
-
+    /// <summary>
+    /// 通过MD5对字符串进行加密形成新的字符串。[解密方法另外探究]
+    /// </summary>
     public static class StringExtensions
     {
         public static string ToMD5(this string input)

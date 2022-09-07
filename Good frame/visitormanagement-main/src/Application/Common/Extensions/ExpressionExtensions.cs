@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Linq.Expressions;
 using System.Text.Json.Serialization;
 using System.Text.Json;
@@ -14,7 +11,9 @@ using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace CleanArchitecture.Blazor.Application.Common.Extensions
 {
-
+    /// <summary>
+    /// 表达式创建组合等一系列操作
+    /// </summary>
     public static class PredicateBuilder
     {
         public static Expression<Func<T, bool>> FromFilter<T>(string filters)
@@ -22,18 +21,19 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
             Expression<Func<T, bool>> any = x => true;
             if (!string.IsNullOrEmpty(filters))
             {
-                var opts = new JsonSerializerOptions
+                JsonSerializerOptions opts = new JsonSerializerOptions
                 {
                     PropertyNameCaseInsensitive = true,
                 };
-                opts.Converters.Add(new AutoNumberToStringConverter());
-                var filterRules = JsonSerializer.Deserialize<FilterRule[]>(filters, opts);
 
-                foreach (var filter in filterRules)
+                opts.Converters.Add(new AutoNumberToStringConverter());
+                FilterRule[]? filterRules = JsonSerializer.Deserialize<FilterRule[]>(filters, opts);
+
+                foreach (FilterRule filter in filterRules)
                 {
-                    if (Enum.TryParse(filter.op, out OperationExpression op) && !string.IsNullOrEmpty(filter.value))
+                    if (Enum.TryParse(filter.op, out OperationExpressionKind op) && !string.IsNullOrEmpty(filter.value))
                     {
-                        var expression = GetCriteriaWhere<T>(filter.field, op, filter.value);
+                        Expression<Func<T, bool>> expression = GetCriteriaWhere<T>(fieldName: filter.field, operationExpressionKind: op, fieldValue: filter.value);
                         any = any.And(expression);
                     }
                 }
@@ -41,25 +41,26 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
 
             return any;
         }
+
         #region -- Public methods --
-        private static Expression<Func<T, bool>> GetCriteriaWhere<T>(Expression<Func<T, object>> e, OperationExpression selectedOperator, object fieldValue)
+        private static Expression<Func<T, bool>> GetCriteriaWhere<T>(Expression<Func<T, object>> e, OperationExpressionKind operationExpressionKind, object fieldValue)
         {
             var name = GetOperand<T>(e);
-            return GetCriteriaWhere<T>(name, selectedOperator, fieldValue);
+            return GetCriteriaWhere<T>(name, operationExpressionKind, fieldValue);
         }
 
-        private static Expression<Func<T, bool>> GetCriteriaWhere<T, T2>(Expression<Func<T, object>> e, OperationExpression selectedOperator, object fieldValue)
+        private static Expression<Func<T, bool>> GetCriteriaWhere<T, T2>(Expression<Func<T, object>> e, OperationExpressionKind operationExpressionKind, object fieldValue)
         {
-            var name = GetOperand<T>(e);
-            return GetCriteriaWhere<T, T2>(name, selectedOperator, fieldValue);
+            string name = GetOperand<T>(e);
+            return GetCriteriaWhere<T, T2>(name, operationExpressionKind, fieldValue);
         }
 
-        private static Expression<Func<T, bool>> GetCriteriaWhere<T>(string fieldName, OperationExpression selectedOperator, object fieldValue)
+        private static Expression<Func<T, bool>> GetCriteriaWhere<T>(string fieldName, OperationExpressionKind operationExpressionKind, object fieldValue)
         {
-            var props = TypeDescriptor.GetProperties(typeof(T));
-            var prop = GetProperty(props, fieldName, true);
-            var parameter = Expression.Parameter(typeof(T));
-            var expressionParameter = GetMemberExpression<T>(parameter, fieldName);
+            PropertyDescriptorCollection props = TypeDescriptor.GetProperties(typeof(T));
+            PropertyDescriptor prop = GetProperty(props, fieldName, true);
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression expressionParameter = GetMemberExpression<T>(parameter, fieldName);
             if (prop != null && fieldValue != null)
             {
                 BinaryExpression body = null;
@@ -76,42 +77,54 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
                         return x => false;
                     }
                 }
-                switch (selectedOperator)
+
+                switch (operationExpressionKind)
                 {
-                    case OperationExpression.equal:
+                    case OperationExpressionKind.equal:
                         body = Expression.Equal(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue.ToString() == "null" ? null : fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.notequal:
+
+                    case OperationExpressionKind.notequal:
                         body = Expression.NotEqual(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue.ToString() == "null" ? null : fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.less:
+
+                    case OperationExpressionKind.less:
                         body = Expression.LessThan(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.lessorequal:
+
+                    case OperationExpressionKind.lessorequal:
                         body = Expression.LessThanOrEqual(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.greater:
+
+                    case OperationExpressionKind.greater:
                         body = Expression.GreaterThan(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.greaterorequal:
+
+                    case OperationExpressionKind.greaterorequal:
                         body = Expression.GreaterThanOrEqual(expressionParameter, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(body, parameter);
-                    case OperationExpression.contains:
-                        var contains = typeof(string).GetMethod("Contains", new[] { typeof(string) });
-                        var bodyLike = Expression.Call(expressionParameter, contains, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
+
+                    case OperationExpressionKind.contains:
+                        MethodInfo? contains = typeof(string).GetMethod("Contains", new[] { typeof(string) });
+                        MethodCallExpression bodyLike = Expression.Call(expressionParameter, contains, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(bodyLike, parameter);
-                    case OperationExpression.endwith:
-                        var endswith = typeof(string).GetMethod("EndsWith", new[] { typeof(string) });
-                        var bodyendwith = Expression.Call(expressionParameter, endswith, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
+
+                    case OperationExpressionKind.endwith:
+                        MethodInfo? endswith = typeof(string).GetMethod("EndsWith", new[] { typeof(string) });
+                        MethodCallExpression bodyendwith = Expression.Call(expressionParameter, endswith, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(bodyendwith, parameter);
-                    case OperationExpression.beginwith:
-                        var startswith = typeof(string).GetMethod("StartsWith", new[] { typeof(string) });
-                        var bodystartswith = Expression.Call(expressionParameter, startswith, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
+
+                    case OperationExpressionKind.beginwith:
+                        MethodInfo? startswith = typeof(string).GetMethod("StartsWith", new[] { typeof(string) });
+                        MethodCallExpression bodystartswith = Expression.Call(expressionParameter, startswith, Expression.Constant(Convert.ChangeType(fieldValue, Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType), prop.PropertyType));
                         return Expression.Lambda<Func<T, bool>>(bodystartswith, parameter);
-                    case OperationExpression.includes:
+
+                    case OperationExpressionKind.includes:
                         return Includes<T>(fieldValue, parameter, expressionParameter, prop.PropertyType);
-                    case OperationExpression.between:
+
+                    case OperationExpressionKind.between:
                         return Between<T>(fieldValue, parameter, expressionParameter, prop.PropertyType);
+
                     default:
                         throw new ArgumentException("OperationExpression");
                 }
@@ -122,21 +135,19 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
             }
         }
 
-        private static Expression<Func<T, bool>> GetCriteriaWhere<T, T2>(string fieldName, OperationExpression selectedOperator, object fieldValue)
+        private static Expression<Func<T, bool>> GetCriteriaWhere<T, T2>(string fieldName, OperationExpressionKind selectedOperator, object fieldValue)
         {
+            PropertyDescriptorCollection props = TypeDescriptor.GetProperties(typeof(T));
+            PropertyDescriptor prop = GetProperty(props, fieldName, true);
 
-
-            var props = TypeDescriptor.GetProperties(typeof(T));
-            var prop = GetProperty(props, fieldName, true);
-
-            var parameter = Expression.Parameter(typeof(T));
-            var expressionParameter = GetMemberExpression<T>(parameter, fieldName);
+            ParameterExpression parameter = Expression.Parameter(typeof(T));
+            MemberExpression expressionParameter = GetMemberExpression<T>(parameter, fieldName);
 
             if (prop != null && fieldValue != null)
             {
                 switch (selectedOperator)
                 {
-                    case OperationExpression.any:
+                    case OperationExpressionKind.any:
                         return Any<T, T2>(fieldValue, parameter, expressionParameter);
 
                     default:
@@ -152,8 +163,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
 
 
 
-
-
         #endregion
         #region -- Private methods --
 
@@ -161,12 +170,11 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
         {
             if (!(exp.Body is MemberExpression body))
             {
-                var ubody = (UnaryExpression)exp.Body;
+                UnaryExpression ubody = (UnaryExpression)exp.Body;
                 body = ubody.Operand as MemberExpression;
             }
 
-            var operand = body.ToString();
-
+            string operand = body.ToString();
             return operand.Substring(2);
 
         }
@@ -178,7 +186,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
                 return null;
             }
 
-            var propertiesName = propName.Split('.');
+            string[] propertiesName = propName.Split('.');
             if (propertiesName.Length == 2)
             {
                 return Expression.Property(Expression.Property(parameter, propertiesName[0]), propertiesName[1]);
@@ -189,38 +197,44 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
 
         private static Expression<Func<T, bool>> Includes<T>(object fieldValue, ParameterExpression parameterExpression, MemberExpression memberExpression, Type type)
         {
-            var safetype = Nullable.GetUnderlyingType(type) ?? type;
+            Type? safetype = Nullable.GetUnderlyingType(type) ?? type;
 
             switch (safetype.Name.ToLower())
             {
                 case "string":
-                    var strlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
+                    List<string>? strlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).ToList();
                     if (strlist == null || strlist.Count == 0)
                     {
                         return x => true;
                     }
-                    var strmethod = typeof(List<string>).GetMethod("Contains", new Type[] { typeof(string) });
-                    var strcallexp = Expression.Call(Expression.Constant(strlist.ToList()), strmethod, memberExpression);
+
+                    MethodInfo? strmethod = typeof(List<string>).GetMethod("Contains", new Type[] { typeof(string) });
+                    MethodCallExpression strcallexp = Expression.Call(Expression.Constant(strlist.ToList()), strmethod, memberExpression);
                     return Expression.Lambda<Func<T, bool>>(strcallexp, parameterExpression);
+
+
                 case "int32":
-                    var intlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Int32.Parse).ToList();
+                    List<int> intlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Int32.Parse).ToList();
                     if (intlist == null || intlist.Count == 0)
                     {
                         return x => true;
                     }
-                    var intmethod = typeof(List<int>).GetMethod("Contains", new Type[] { typeof(int) });
-                    var intcallexp = Expression.Call(Expression.Constant(intlist.ToList()), intmethod, memberExpression);
+
+                    MethodInfo? intmethod = typeof(List<int>).GetMethod("Contains", new Type[] { typeof(int) });
+                    MethodCallExpression intcallexp = Expression.Call(Expression.Constant(intlist.ToList()), intmethod, memberExpression);
                     return Expression.Lambda<Func<T, bool>>(intcallexp, parameterExpression);
+
                 case "float":
                 case "decimal":
-                    var floatlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Decimal.Parse).ToList();
+                    List<decimal> floatlist = fieldValue.ToString().Split(',', StringSplitOptions.RemoveEmptyEntries).Select(Decimal.Parse).ToList();
                     if (floatlist == null || floatlist.Count == 0)
                     {
                         return x => true;
                     }
-                    var floatmethod = typeof(List<decimal>).GetMethod("Contains", new Type[] { typeof(decimal) });
-                    var floatcallexp = Expression.Call(Expression.Constant(floatlist.ToList()), floatmethod, memberExpression);
+                    MethodInfo? floatmethod = typeof(List<decimal>).GetMethod("Contains", new Type[] { typeof(decimal) });
+                    MethodCallExpression floatcallexp = Expression.Call(Expression.Constant(floatlist.ToList()), floatmethod, memberExpression);
                     return Expression.Lambda<Func<T, bool>>(floatcallexp, parameterExpression);
+
                 default:
                     return x => true;
             }
@@ -229,53 +243,58 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
         private static Expression<Func<T, bool>> Between<T>(object fieldValue, ParameterExpression parameterExpression, MemberExpression memberExpression, Type type)
         {
 
-            var safetype = Nullable.GetUnderlyingType(type) ?? type;
+            Type safetype = Nullable.GetUnderlyingType(type) ?? type;
             switch (safetype.Name.ToLower())
             {
                 case "datetime":
-                    var datearray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    var start = Convert.ToDateTime(datearray[0] + " 00:00:00", CultureInfo.CurrentCulture);
-                    var end = Convert.ToDateTime(datearray[1] + " 23:59:59", CultureInfo.CurrentCulture);
-                    var greater = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(start, type));
-                    var less = Expression.LessThanOrEqual(memberExpression, Expression.Constant(end, type));
+                    string[] datearray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    DateTime start = Convert.ToDateTime(datearray[0] + " 00:00:00", CultureInfo.CurrentCulture);
+                    DateTime end = Convert.ToDateTime(datearray[1] + " 23:59:59", CultureInfo.CurrentCulture);
+                    BinaryExpression greater = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(start, type));
+                    BinaryExpression less = Expression.LessThanOrEqual(memberExpression, Expression.Constant(end, type));
                     return Expression.Lambda<Func<T, bool>>(greater, parameterExpression)
                       .And(Expression.Lambda<Func<T, bool>>(less, parameterExpression));
+
                 case "int":
                 case "int32":
-                    var intarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    var min = Convert.ToInt32(intarray[0], CultureInfo.CurrentCulture);
-                    var max = Convert.ToInt32(intarray[1], CultureInfo.CurrentCulture);
-                    var maxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(min, type));
-                    var minthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(max, type));
+                    string[] intarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    int min = Convert.ToInt32(intarray[0], CultureInfo.CurrentCulture);
+                    int max = Convert.ToInt32(intarray[1], CultureInfo.CurrentCulture);
+                    BinaryExpression maxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(min, type));
+                    BinaryExpression minthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(max, type));
                     return Expression.Lambda<Func<T, bool>>(maxthen, parameterExpression)
                       .And(Expression.Lambda<Func<T, bool>>(minthen, parameterExpression));
+
                 case "decimal":
-                    var decarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    var dmin = Convert.ToDecimal(decarray[0], CultureInfo.CurrentCulture);
-                    var dmax = Convert.ToDecimal(decarray[1], CultureInfo.CurrentCulture);
-                    var dmaxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(dmin, type));
-                    var dminthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(dmax, type));
+                    string[] decarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    decimal dmin = Convert.ToDecimal(decarray[0], CultureInfo.CurrentCulture);
+                    decimal dmax = Convert.ToDecimal(decarray[1], CultureInfo.CurrentCulture);
+                    BinaryExpression dmaxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(dmin, type));
+                    BinaryExpression dminthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(dmax, type));
                     return Expression.Lambda<Func<T, bool>>(dmaxthen, parameterExpression)
                       .And(Expression.Lambda<Func<T, bool>>(dminthen, parameterExpression));
+
                 case "float":
-                    var farray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    var fmin = Convert.ToDecimal(farray[0], CultureInfo.CurrentCulture);
-                    var fmax = Convert.ToDecimal(farray[1], CultureInfo.CurrentCulture);
-                    var fmaxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(fmin, type));
-                    var fminthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(fmax, type));
+                    string[] farray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    decimal fmin = Convert.ToDecimal(farray[0], CultureInfo.CurrentCulture);
+                    decimal fmax = Convert.ToDecimal(farray[1], CultureInfo.CurrentCulture);
+                    BinaryExpression fmaxthen = Expression.GreaterThanOrEqual(memberExpression, Expression.Constant(fmin, type));
+                    BinaryExpression fminthen = Expression.LessThanOrEqual(memberExpression, Expression.Constant(fmax, type));
                     return Expression.Lambda<Func<T, bool>>(fmaxthen, parameterExpression)
                       .And(Expression.Lambda<Func<T, bool>>(fminthen, parameterExpression));
+
                 case "string":
-                    var strarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
-                    var strstart = strarray[0];
-                    var strend = strarray[1];
-                    var strmethod = typeof(string).GetMethod("CompareTo", new[] { typeof(string) });
-                    var callcomparetostart = Expression.Call(memberExpression, strmethod, Expression.Constant(strstart, type));
-                    var callcomparetoend = Expression.Call(memberExpression, strmethod, Expression.Constant(strend, type));
-                    var strgreater = Expression.GreaterThanOrEqual(callcomparetostart, Expression.Constant(0));
-                    var strless = Expression.LessThanOrEqual(callcomparetoend, Expression.Constant(0));
+                    string[] strarray = ((string)fieldValue).Split(new char[] { '-' }, StringSplitOptions.RemoveEmptyEntries);
+                    string strstart = strarray[0];
+                    string strend = strarray[1];
+                    MethodInfo? strmethod = typeof(string).GetMethod("CompareTo", new[] { typeof(string) });
+                    MethodCallExpression callcomparetostart = Expression.Call(memberExpression, strmethod, Expression.Constant(strstart, type));
+                    MethodCallExpression callcomparetoend = Expression.Call(memberExpression, strmethod, Expression.Constant(strend, type));
+                    BinaryExpression strgreater = Expression.GreaterThanOrEqual(callcomparetostart, Expression.Constant(0));
+                    BinaryExpression strless = Expression.LessThanOrEqual(callcomparetoend, Expression.Constant(0));
                     return Expression.Lambda<Func<T, bool>>(strgreater, parameterExpression)
                       .And(Expression.Lambda<Func<T, bool>>(strless, parameterExpression));
+
                 default:
                     return x => true;
             }
@@ -286,12 +305,11 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
 
         private static Expression<Func<T, bool>> Any<T, T2>(object fieldValue, ParameterExpression parameterExpression, MemberExpression memberExpression)
         {
-            var lambda = (Expression<Func<T2, bool>>)fieldValue;
-            var anyMethod = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
+            Expression<Func<T2, bool>> lambda = (Expression<Func<T2, bool>>)fieldValue;
+            MethodInfo? anyMethod = typeof(Enumerable).GetMethods(BindingFlags.Static | BindingFlags.Public)
             .First(m => m.Name == "Any" && m.GetParameters().Length == 2).MakeGenericMethod(typeof(T2));
 
-            var body = Expression.Call(anyMethod, memberExpression, lambda);
-
+            MethodCallExpression body = Expression.Call(anyMethod, memberExpression, lambda);
             return Expression.Lambda<Func<T, bool>>(body, parameterExpression);
         }
 
@@ -302,7 +320,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
                 return props.Find(fieldName, ignoreCase);
             }
 
-            var fieldNameProperty = fieldName.Split('.');
+            string[] fieldNameProperty = fieldName.Split('.');
             return props.Find(fieldNameProperty[0], ignoreCase).GetChildProperties().Find(fieldNameProperty[1], ignoreCase);
 
         }
@@ -347,6 +365,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
             return node;
         }
     }
+
     internal class SwapVisitor : ExpressionVisitor
     {
         private readonly Expression from, to;
@@ -357,6 +376,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
         }
         public override Expression Visit(Expression node) => node == from ? to : base.Visit(node);
     }
+
     internal sealed class AutoNumberToStringConverter : JsonConverter<object>
     {
         public override bool CanConvert(Type typeToConvert)
@@ -387,7 +407,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Extensions
         }
     }
 
-    internal enum OperationExpression
+    internal enum OperationExpressionKind
     {
         equal,
         notequal,
