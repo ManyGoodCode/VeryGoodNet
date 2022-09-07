@@ -8,7 +8,9 @@ using ValidationException = CleanArchitecture.Blazor.Application.Common.Exceptio
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
+    /// <summary>
+    /// 验证一个请求是否满足否则抛出异常，通过一系列验证器集合
+    /// </summary>
     public class ValidationBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
     {

@@ -12,7 +12,11 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-    public class DomainEventPublishingBehaviour<TRequest, TResponse> : IRequestPostProcessor<TRequest, TResponse> where TRequest : IRequest<TResponse>
+    /// <summary>
+    /// 查询数据库里面的 Domain 事件实体 属性 IsPublished 为False的，通过 IDomainEventService 发布出去并设置IsPublished
+    /// </summary>
+    public class DomainEventPublishingBehaviour<TRequest, TResponse> :
+        IRequestPostProcessor<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly ILogger logger;
         private readonly IApplicationDbContext dbContext;

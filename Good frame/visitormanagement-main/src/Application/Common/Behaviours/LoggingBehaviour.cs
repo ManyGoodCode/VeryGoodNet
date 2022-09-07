@@ -7,7 +7,9 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
+    /// <summary>
+    /// 记录请求的用户日志
+    /// </summary>
     public class LoggingBehaviour<TRequest> : IRequestPreProcessor<TRequest> where TRequest : notnull
     {
         private readonly ILogger logger;

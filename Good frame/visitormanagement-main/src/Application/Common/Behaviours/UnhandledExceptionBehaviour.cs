@@ -8,7 +8,9 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
-
+    /// <summary>
+    /// 监控一个用户请求并记录日志
+    /// </summary>
     public class UnhandledExceptionBehaviour<TRequest, TResponse> : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
         private readonly ILogger<TRequest> logger;

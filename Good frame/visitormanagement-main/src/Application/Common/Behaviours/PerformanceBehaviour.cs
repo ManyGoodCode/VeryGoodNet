@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 namespace CleanArchitecture.Blazor.Application.Common.Behaviours
 {
+    /// <summary>
+    /// 通过 Stopwatch 监控一个用户的请求耗时并记录日志
+    /// </summary>
     public class PerformanceBehaviour<TRequest, TResponse>
         : IPipelineBehavior<TRequest, TResponse> where TRequest : IRequest<TResponse>
     {
