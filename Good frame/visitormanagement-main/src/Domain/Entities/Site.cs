@@ -7,6 +7,9 @@ using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Domain.Entities
 {
+    /// <summary>
+    /// 场地。名称 / 公司名称 / 地址 / 等级点 / 事件集合
+    /// </summary>
     public class Site : AuditableEntity, IHasDomainEvent, IAuditTrial
     {
         public int Id { get; set; }

@@ -1,11 +1,10 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Domain;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
-
+    /// <summary>
+    /// 上传数据实体。文件夹 / 文件名称  / 扩展名 / 上传类型 / 源数据
+    /// </summary>
     public class UploadRequest
     {
         public string? Folder { get; set; }

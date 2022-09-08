@@ -29,7 +29,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces
         DbSet<ApprovalHistory> ApprovalHistories { get; set; }
         DbSet<SiteConfiguration> SiteConfigurations { get; set; }
         DbSet<MessageTemplate> MessageTemplates { get; set; }
-        ChangeTracker ChangeTracker { get; }
-        Task<int> SaveChangesAsync(CancellationToken cancellationToken);
+        Microsoft.EntityFrameworkCore.ChangeTracking.ChangeTracker ChangeTracker { get; }
+        Task<int> SaveChangesAsync(System.Threading.CancellationToken cancellationToken);
     }
 }

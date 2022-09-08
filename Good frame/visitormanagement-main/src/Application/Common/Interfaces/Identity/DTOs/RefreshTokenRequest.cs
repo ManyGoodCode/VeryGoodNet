@@ -1,7 +1,7 @@
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity.DTOs
 {
     /// <summary>
-    /// 刷新令牌请求
+    /// 刷新令牌请求。令牌/刷新令牌
     /// </summary>
     public class RefreshTokenRequest
     {
