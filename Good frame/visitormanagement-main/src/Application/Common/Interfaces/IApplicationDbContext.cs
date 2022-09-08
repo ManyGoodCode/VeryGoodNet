@@ -17,7 +17,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces
         DbSet<Document> Documents { get; set; }
         DbSet<KeyValue> KeyValues { get; set; }
         DbSet<Product> Products { get; set; }
-
         DbSet<Department> Departments { get; set; }
         DbSet<Designation> Designations { get; set; }
         DbSet<Employee> Employees { get; set; }
@@ -29,10 +28,8 @@ namespace CleanArchitecture.Blazor.Application.Common.Interfaces
         DbSet<Companion> Companions { get; set; }
         DbSet<ApprovalHistory> ApprovalHistories { get; set; }
         DbSet<SiteConfiguration> SiteConfigurations { get; set; }
-
         DbSet<MessageTemplate> MessageTemplates { get; set; }
         ChangeTracker ChangeTracker { get; }
-
         Task<int> SaveChangesAsync(CancellationToken cancellationToken);
     }
 }
