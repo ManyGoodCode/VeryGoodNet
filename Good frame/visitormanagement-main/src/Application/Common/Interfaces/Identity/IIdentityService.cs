@@ -5,7 +5,9 @@ using CleanArchitecture.Blazor.Application.Common.Models;
 
 namespace CleanArchitecture.Blazor.Application.Common.Interfaces.Identity
 {
-
+    /// <summary>
+    /// 用户服务。通过令牌登录，
+    /// </summary>
     public interface IIdentityService : IService
     {
         Task<Result<TokenResponse>> LoginAsync(TokenRequest request);
