@@ -6,7 +6,9 @@ using AutoMapper;
 
 namespace CleanArchitecture.Blazor.Application.Common.Mappings
 {
-
+    /// <summary>
+    ///  查找指定程序集里面实现映射接口IMapFrom的类型，通过反射创建类型对象，并调用 void Mapping[AutoMapper.Profile profile] 方法，传入的参数为this
+    /// </summary>
     public class MappingProfile : AutoMapper.Profile
     {
         public MappingProfile()
@@ -17,8 +19,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Mappings
         private void ApplyMappingsFromAssembly(Assembly assembly)
         {
             List<Type>? types = assembly.GetExportedTypes()
-            .Where(t => t.GetInterfaces()
-            .Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>)))
+            .Where(t => t.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IMapFrom<>)))
             .ToList();
 
             foreach (Type type in types)
