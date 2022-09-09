@@ -1,5 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 
 using System;
 using System.Collections.Generic;
@@ -9,6 +7,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
+    /// <summary>
+    /// 当前页 / 总项数 / 总页数 / 前页存在 / 后页存在 
+    /// </summary>
     public class PaginatedData<T>
     {
         public int CurrentPage { get; private set; }

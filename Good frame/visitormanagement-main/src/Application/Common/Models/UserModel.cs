@@ -2,6 +2,9 @@ using System;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
+    /// <summary>
+    /// 用户名 /  用户Id / 显示名称 / 邮件地址 / 电话号码 / 角色 / 是否在线 / 部门 / 最近登录时间
+    /// </summary>
 
     public class UserModel
     {

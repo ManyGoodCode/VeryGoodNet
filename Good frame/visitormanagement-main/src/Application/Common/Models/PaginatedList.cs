@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
-
+    /// <summary>
+    /// 项集 / 当前页 / 总页数 / 总数 / 前页是否存在 / 后页是否存在 / 
+    /// </summary>
     public class PaginatedList<T>
     {
         public List<T> Items { get; }
@@ -25,15 +24,21 @@ namespace CleanArchitecture.Blazor.Application.Common.Models
             Items = items;
         }
 
+        /// <summary>
+        /// 前页存在? (当前页是否大于1)
+        /// </summary>
         public bool HasPreviousPage => PageIndex > 1;
 
+
+        /// <summary>
+        /// 后页存在?(当前页是否小于总页)
+        /// </summary>
         public bool HasNextPage => PageIndex < TotalPages;
 
         public static async Task<PaginatedList<T>> CreateAsync(IQueryable<T> source, int pageIndex, int pageSize)
         {
-            var count = await source.CountAsync();
-            var items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
-
+            int count = await source.CountAsync();
+            List<T> items = await source.Skip((pageIndex - 1) * pageSize).Take(pageSize).ToListAsync();
             return new PaginatedList<T>(items, count, pageIndex, pageSize);
         }
     }

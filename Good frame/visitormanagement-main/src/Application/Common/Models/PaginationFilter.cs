@@ -3,7 +3,7 @@ using System.Collections.Generic;
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
     /// <summary>
-    /// Ò³Âë
+    /// Ò³Âë / Ò³´óÐ¡ / ÅÅÐò / ÅÅÐò·½Ïò 
     /// </summary>
     public partial class PaginationFilter : BaseFilter
     {
@@ -14,6 +14,9 @@ namespace CleanArchitecture.Blazor.Application.Common.Models
         public override string ToString() => $"PageNumber:{PageNumber},PageSize:{PageSize},OrderBy:{OrderBy},SortDirection:{SortDirection},Keyword:{Keyword}";
     }
 
+    /// <summary>
+    /// ¹Ø¼ü×Ö / ËÑË÷×Ö¶Î 
+    /// </summary>
     public class BaseFilter
     {
         public Search? AdvancedSearch { get; set; }
