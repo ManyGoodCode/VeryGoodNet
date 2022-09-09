@@ -1,9 +1,9 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
-
+    /// <summary>
+    /// 页码标记请求。页 / 行数 / 排序 / 排序方式【递增，递减】
+    /// </summary>
     public abstract class PaginationRequest
     {
         public string FilterRules { get; set; }

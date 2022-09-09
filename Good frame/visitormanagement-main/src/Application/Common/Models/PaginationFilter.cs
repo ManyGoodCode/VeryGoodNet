@@ -2,7 +2,9 @@ using System.Collections.Generic;
 
 namespace CleanArchitecture.Blazor.Application.Common.Models
 {
-
+    /// <summary>
+    /// Ò³Âë
+    /// </summary>
     public partial class PaginationFilter : BaseFilter
     {
         public int PageNumber { get; set; }
@@ -15,7 +17,6 @@ namespace CleanArchitecture.Blazor.Application.Common.Models
     public class BaseFilter
     {
         public Search? AdvancedSearch { get; set; }
-
         public string? Keyword { get; set; }
     }
 
@@ -23,6 +24,5 @@ namespace CleanArchitecture.Blazor.Application.Common.Models
     {
         public List<string> Fields { get; set; } = new List<string>();
         public string? Keyword { get; set; }
-
     }
 }

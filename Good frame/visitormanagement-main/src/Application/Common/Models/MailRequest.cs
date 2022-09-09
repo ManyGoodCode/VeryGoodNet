@@ -1,8 +1,9 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
 
 namespace CleanArchitecture.Blazor.Application.Settings
 {
+    /// <summary>
+    /// 邮件请求。 发件人 / 收件人 / 主题 / 内容
+    /// </summary>
     public class MailRequest
     {
         public string To { get; set; }
