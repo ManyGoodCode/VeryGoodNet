@@ -6,6 +6,9 @@ using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Common.Security
 {
+    /// <summary>
+    /// 注册用户表单模型验证器
+    /// </summary>
     public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
     {
         public RegisterFormModelFluentValidator()
@@ -32,7 +35,7 @@ namespace CleanArchitecture.Blazor.Application.Common.Security
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<RegisterFormModel>.CreateWithOptions((RegisterFormModel)model, x => x.IncludeProperties(propertyName)));
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<RegisterFormModel>.CreateWithOptions((RegisterFormModel)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);

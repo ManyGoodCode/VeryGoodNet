@@ -1,5 +1,8 @@
 namespace CleanArchitecture.Blazor.Application.Common.Security
 {
+    /// <summary>
+    /// 登录表单模型。用户名 / 密码 / 是否记住我
+    /// </summary>
     public class LoginFormModel
     {
         public string? UserName { get; set; }

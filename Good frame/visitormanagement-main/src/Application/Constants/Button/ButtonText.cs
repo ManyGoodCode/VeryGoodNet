@@ -7,7 +7,9 @@ using CleanArchitecture.Blazor.Application.Common.Helper;
 
 namespace CleanArchitecture.Blazor.Application.Constants
 {
-
+    /// <summary>
+    /// 按钮名称本地化
+    /// </summary>
     public static class ButtonText
     {
         public static string REFRESH => ConstantStringLocalizer.Localize("Refresh");
