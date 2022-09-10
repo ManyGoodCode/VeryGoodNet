@@ -1,5 +1,3 @@
-
-
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
@@ -7,11 +5,13 @@ using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application.Constants.Permission
 {
-
+    /// <summary>
+    /// 获取所有权限的字符串组合
+    /// </summary>
     public static class Permissions
     {
-        [DisplayName("AuditTrails")]
-        [Description("AuditTrails Permissions")]
+        [DisplayName(displayName: "AuditTrails")]
+        [Description(description: "AuditTrails Permissions")]
         public static class AuditTrails
         {
             public const string View = "Permissions.AuditTrails.View";
@@ -19,24 +19,26 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Export = "Permissions.AuditTrails.Export";
         }
 
-        [DisplayName("Logs")]
-        [Description("Logs Permissions")]
+        [DisplayName(displayName: "Logs")]
+        [Description(description: "Logs Permissions")]
         public static class Logs
         {
             public const string View = "Permissions.Logs.View";
             public const string Search = "Permissions.Logs.Search";
             public const string Export = "Permissions.Logs.Export";
         }
-        [DisplayName("VisitorHistories")]
-        [Description("VisitorHistories Permissions")]
+
+        [DisplayName(displayName: "VisitorHistories")]
+        [Description(description: "VisitorHistories Permissions")]
         public static class VisitorHistories
         {
             public const string View = "Permissions.VisitorHistories.View";
             public const string Delete = "Permissions.VisitorHistories.Delete";
             public const string Search = "Permissions.VisitorHistories.Search";
         }
-        [DisplayName("Visitors")]
-        [Description("Visitors Permissions")]
+
+        [DisplayName(displayName: "Visitors")]
+        [Description(description: "Visitors Permissions")]
         public static class Visitors
         {
             public const string Detail = "Permissions.Visitors.Detail";
@@ -56,11 +58,10 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Checkout = "Permissions.Visitors.Checkout";
             public const string PreRegisters = "Permissions.Visitors.PreRegisters";
             public const string PendingConfirm = "Permissions.Visitors.PendingConfirm";
-
-
         }
-        [DisplayName("Devices")]
-        [Description("Devices Permissions")]
+
+        [DisplayName(displayName: "Devices")]
+        [Description(description: "Devices Permissions")]
         public static class Devices
         {
             public const string View = "Permissions.Devices.View";
@@ -70,8 +71,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.Devices.Search";
 
         }
-        [DisplayName("CheckinPoints")]
-        [Description("CheckinPoints Permissions")]
+
+        [DisplayName(displayName: "CheckinPoints")]
+        [Description(description: "CheckinPoints Permissions")]
         public static class CheckinPoints
         {
             public const string View = "Permissions.CheckinPoints.View";
@@ -81,8 +83,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.CheckinPoints.Search";
 
         }
-        [DisplayName("MessageTemplates")]
-        [Description("MessageTemplates Permissions")]
+
+        [DisplayName(displayName: "MessageTemplates")]
+        [Description(description: "MessageTemplates Permissions")]
         public static class MessageTemplates
         {
             public const string View = "Permissions.MessageTemplates.View";
@@ -90,10 +93,10 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Edit = "Permissions.MessageTemplates.Edit";
             public const string Delete = "Permissions.MessageTemplates.Delete";
             public const string Search = "Permissions.MessageTemplates.Search";
-
         }
-        [DisplayName("SiteConfigurations")]
-        [Description("SiteConfigurations Permissions")]
+
+        [DisplayName(displayName: "SiteConfigurations")]
+        [Description(description: "SiteConfigurations Permissions")]
         public static class SiteConfigurations
         {
             public const string View = "Permissions.SiteConfigurations.View";
@@ -101,10 +104,10 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Edit = "Permissions.SiteConfigurations.Edit";
             public const string Delete = "Permissions.SiteConfigurations.Delete";
             public const string Search = "Permissions.SiteConfigurations.Search";
-
         }
-        [DisplayName("Sites")]
-        [Description("Sites Permissions")]
+
+        [DisplayName(displayName: "Sites")]
+        [Description(description: "Sites Permissions")]
         public static class Sites
         {
             public const string View = "Permissions.Sites.View";
@@ -114,8 +117,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.Sites.Search";
 
         }
-        [DisplayName("Employees")]
-        [Description("Employees Permissions")]
+
+        [DisplayName(displayName: "Employees")]
+        [Description(description: "Employees Permissions")]
         public static class Employees
         {
             public const string View = "Permissions.Employees.View";
@@ -125,8 +129,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.Employees.Search";
 
         }
-        [DisplayName("Designations")]
-        [Description("Designations Permissions")]
+
+        [DisplayName(displayName: "Designations")]
+        [Description(description: "Designations Permissions")]
         public static class Designations
         {
             public const string View = "Permissions.Designations.View";
@@ -134,10 +139,10 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Edit = "Permissions.Designations.Edit";
             public const string Delete = "Permissions.Designations.Delete";
             public const string Search = "Permissions.Designations.Search";
-
         }
-        [DisplayName("Departments")]
-        [Description("Departments Permissions")]
+
+        [DisplayName(displayName: "Departments")]
+        [Description(description: "Departments Permissions")]
         public static class Departments
         {
             public const string View = "Permissions.Departments.View";
@@ -147,8 +152,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.Departments.Search";
 
         }
-        [DisplayName("Products")]
-        [Description("Products Permissions")]
+
+        [DisplayName(displayName: "Products")]
+        [Description(description: "Products Permissions")]
         public static class Products
         {
             public const string View = "Permissions.Products.View";
@@ -159,8 +165,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Export = "Permissions.Products.Export";
             public const string Import = "Permissions.Products.Import";
         }
-        [DisplayName("Customers")]
-        [Description("Customers Permissions")]
+
+        [DisplayName(displayName: "Customers")]
+        [Description(description: "Customers Permissions")]
         public static class Customers
         {
             public const string View = "Permissions.Customers.View";
@@ -172,8 +179,8 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Import = "Permissions.Customers.Import";
         }
 
-        [DisplayName("Categories")]
-        [Description("Categories Permissions")]
+        [DisplayName(displayName: "Categories")]
+        [Description(description: "Categories Permissions")]
         public static class Categories
         {
             public const string View = "Permissions.Categories.View";
@@ -185,8 +192,8 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Import = "Permissions.Categories.Import";
         }
 
-        [DisplayName("Documents")]
-        [Description("Documents Permissions")]
+        [DisplayName(displayName: "Documents")]
+        [Description(description: "Documents Permissions")]
         public static class Documents
         {
             public const string View = "Permissions.Documents.View";
@@ -198,8 +205,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Import = "Permissions.Documents.Import";
             public const string Download = "Permissions.Documents.Download";
         }
-        [DisplayName("DocumentTypes")]
-        [Description("DocumentTypes Permissions")]
+
+        [DisplayName(displayName: "DocumentTypes")]
+        [Description(description: "DocumentTypes Permissions")]
         public static class DocumentTypes
         {
             public const string View = "Permissions.DocumentTypes.View";
@@ -210,8 +218,9 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Export = "Permissions.Documents.Export";
             public const string Import = "Permissions.Categories.Import";
         }
-        [DisplayName("Dictionaries")]
-        [Description("Dictionaries Permissions")]
+
+        [DisplayName(displayName: "Dictionaries")]
+        [Description(description: "Dictionaries Permissions")]
         public static class Dictionaries
         {
             public const string View = "Permissions.Dictionaries.View";
@@ -223,8 +232,8 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Import = "Permissions.Dictionaries.Import";
         }
 
-        [DisplayName("Users")]
-        [Description("Users Permissions")]
+        [DisplayName(displayName: "Users")]
+        [Description(description: "Users Permissions")]
         public static class Users
         {
             public const string View = "Permissions.Users.View";
@@ -239,8 +248,8 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Active = "Permissions.Users.Active";
         }
 
-        [DisplayName("Roles")]
-        [Description("Roles Permissions")]
+        [DisplayName(displayName: "Roles")]
+        [Description(description: "Roles Permissions")]
         public static class Roles
         {
             public const string View = "Permissions.Roles.View";
@@ -254,8 +263,8 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string ManageNavigation = "Permissions.Roles.Navigation";
         }
 
-        [DisplayName("Role Claims")]
-        [Description("Role Claims Permissions")]
+        [DisplayName(displayName: "Role Claims")]
+        [Description(description: "Role Claims Permissions")]
         public static class RoleClaims
         {
             public const string View = "Permissions.RoleClaims.View";
@@ -265,31 +274,27 @@ namespace CleanArchitecture.Blazor.Application.Constants.Permission
             public const string Search = "Permissions.RoleClaims.Search";
         }
 
-
-
-        [DisplayName("Dashboards")]
-        [Description("Dashboards Permissions")]
+        [DisplayName(displayName: "Dashboards")]
+        [Description(description: "Dashboards Permissions")]
         public static class Dashboards
         {
             public const string View = "Permissions.Dashboards.View";
         }
 
-        [DisplayName("Hangfire")]
-        [Description("Hangfire Permissions")]
+        [DisplayName(displayName: "Hangfire")]
+        [Description(description: "Hangfire Permissions")]
         public static class Hangfire
         {
             public const string View = "Permissions.Hangfire.View";
         }
 
 
-        /// <summary>
-        /// Returns a list of Permissions.
-        /// </summary>
-        /// <returns></returns>
         public static List<string> GetRegisteredPermissions()
         {
             List<string> permissions = new List<string>();
-            foreach (FieldInfo prop in typeof(Permissions).GetNestedTypes().SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
+            foreach (FieldInfo prop in typeof(Permissions)
+                .GetNestedTypes()
+                .SelectMany(c => c.GetFields(BindingFlags.Public | BindingFlags.Static | BindingFlags.FlattenHierarchy)))
             {
                 object? propertyValue = prop.GetValue(null);
                 if (propertyValue != null)
