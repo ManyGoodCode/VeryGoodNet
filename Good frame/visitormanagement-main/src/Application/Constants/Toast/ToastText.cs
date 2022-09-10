@@ -7,6 +7,9 @@ using CleanArchitecture.Blazor.Application.Common.Helper;
 
 namespace CleanArchitecture.Blazor.Application.Constants
 {
+    /// <summary>
+    /// 本地化面包屑弹框文本
+    /// </summary>
     public static class ToastText
     {
         public static string SAVESUCCESS => ConstantStringLocalizer.Localize("Save successfully");

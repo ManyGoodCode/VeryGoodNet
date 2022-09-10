@@ -7,6 +7,9 @@ using CleanArchitecture.Blazor.Application.Common.Helper;
 
 namespace CleanArchitecture.Blazor.Application.Constants
 {
+    /// <summary>
+    /// 本地化提示语句
+    /// </summary>
     public static class PromptText
     {
         public static string ADVANCEDSEARCH => ConstantStringLocalizer.Localize("Advanced Search");
@@ -22,11 +25,8 @@ namespace CleanArchitecture.Blazor.Application.Constants
         public static string DELETECONFIRMWITHSELECTED => ConstantStringLocalizer.Localize("Are you sure you want to delete the selected items: {0}?");
         public static string NOMACHING => ConstantStringLocalizer.Localize("No matching records found");
         public static string LOADING => ConstantStringLocalizer.Localize("Loading...");
-
         public static string DELETECONFIRMATIONTITLE => ConstantStringLocalizer.Localize("Delete Confirmation");
-
         public static string LOGOUTCONFIRMATIONTITLE => ConstantStringLocalizer.Localize("Logout Confirmation");
         public static string LOGOUTCONFIRMATION => ConstantStringLocalizer.Localize("You are attempting to log out of application. Do you really want to log out?");
-
     }
 }
