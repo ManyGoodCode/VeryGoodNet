@@ -7,7 +7,13 @@ using CleanArchitecture.Blazor.Domain.Common;
 
 namespace CleanArchitecture.Blazor.Application.Common.Specification
 {
-
+    /// <summary>
+    /// 规格接口【也就是定义满足条件的一系列规格】包括如下：
+    /// 1. 标准规格表达式
+    /// 2. 包含规格集表达式
+    /// 3. 添加‘且’规格表达式的函数契约
+    /// 4. 添加‘或’规格表达式的函数契约
+    /// </summary>
     public abstract class Specification<T> : ISpecification<T> where T : class, IEntity
     {
         public Expression<Func<T, bool>> Criteria { get; set; }

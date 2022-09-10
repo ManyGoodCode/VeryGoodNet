@@ -7,7 +7,7 @@ using FluentValidation;
 namespace CleanArchitecture.Blazor.Application.Common.Security
 {
     /// <summary>
-    /// 注册用户表单模型验证器
+    /// 注册用户表单模型验证�?
     /// </summary>
     public class RegisterFormModelFluentValidator : AbstractValidator<RegisterFormModel>
     {
