@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Models;
@@ -11,14 +8,17 @@ using Microsoft.Extensions.Logging;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventHandlers
 {
+    /// <summary>
+    /// 审批请求处理器
+    /// 目的：日志记录审批对象
+    /// </summary>
     public class ApprovalHistoryCreatedEventHandler :
               INotificationHandler<DomainEventNotification<CreatedEvent<ApprovalHistory>>>
     {
         private readonly ILogger<ApprovalHistoryCreatedEventHandler> logger;
 
         public ApprovalHistoryCreatedEventHandler(
-            ILogger<ApprovalHistoryCreatedEventHandler> logger
-            )
+            ILogger<ApprovalHistoryCreatedEventHandler> logger)
         {
             this.logger = logger;
         }
