@@ -10,24 +10,26 @@ using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Commands.Create
 {
-
+    /// <summary>
+    /// 审批请求验证器
+    /// </summary>
     public class CreateApprovalHistoryCommandValidator : AbstractValidator<CreateApprovalHistoryCommand>
     {
         public CreateApprovalHistoryCommandValidator()
         {
-
             RuleFor(v => v.Outcome)
-                 .MaximumLength(256)
+                 .MaximumLength(maximumLength: 256)
                  .NotEmpty();
-            RuleFor(v => v.VisitorId).NotNull().GreaterThan(0);
+            RuleFor(v => v.VisitorId).NotNull().GreaterThan(valueToCompare: 0);
         }
+
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-     {
-         var result = await ValidateAsync(ValidationContext<CreateApprovalHistoryCommand>.CreateWithOptions((CreateApprovalHistoryCommand)model, x => x.IncludeProperties(propertyName)));
-         if (result.IsValid)
-             return Array.Empty<string>();
-         return result.Errors.Select(e => e.ErrorMessage);
-     };
+        {
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<CreateApprovalHistoryCommand>.CreateWithOptions((CreateApprovalHistoryCommand)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
     }
 }
 

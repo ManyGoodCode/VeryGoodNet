@@ -22,7 +22,9 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventH
         {
             this.logger = logger;
         }
-        public Task Handle(DomainEventNotification<CreatedEvent<ApprovalHistory>> notification, CancellationToken cancellationToken)
+        public Task Handle(
+            DomainEventNotification<CreatedEvent<ApprovalHistory>> notification,
+            CancellationToken cancellationToken)
         {
             CreatedEvent<ApprovalHistory> domainEvent = notification.DomainEvent;
             logger.LogInformation("{handler}: visitorId: {VisitorId}, {Outcome}",
