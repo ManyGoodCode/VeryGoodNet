@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll
 {
-
     public class GetAllDevicesQuery : IRequest<IEnumerable<DeviceDto>>, ICacheable
     {
         public string CacheKey => DeviceCacheKey.GetAllCacheKey;
@@ -28,26 +27,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.GetAll
     public class GetAllDevicesQueryHandler :
          IRequestHandler<GetAllDevicesQuery, IEnumerable<DeviceDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllDevicesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllDevicesQueryHandler> localizer;
 
         public GetAllDevicesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllDevicesQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllDevicesQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<DeviceDto>> Handle(GetAllDevicesQuery request, CancellationToken cancellationToken)
         {
-
-            var data = await _context.Devices.OrderBy(x => x.Name)
-                         .ProjectTo<DeviceDto>(_mapper.ConfigurationProvider)
+            List<DeviceDto> data = await context.Devices.OrderBy(x => x.Name)
+                         .ProjectTo<DeviceDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

@@ -14,10 +14,10 @@ using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Domain.Events;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.Delete
 {
-
     public class DeleteDeviceCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -33,33 +33,32 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.Delete
                  IRequestHandler<DeleteDeviceCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteDeviceCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteDeviceCommandHandler> localizer;
         public DeleteDeviceCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteDeviceCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteDeviceCommand request, CancellationToken cancellationToken)
         {
-
-            var items = await _context.Devices.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Device> items = await context.Devices.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Device item in items)
             {
-                var deleteevent = new DeviceDeletedEvent(item);
+                DeviceDeletedEvent deleteevent = new DeviceDeletedEvent(item);
                 item.DomainEvents.Add(deleteevent);
-                _context.Devices.Remove(item);
+                context.Devices.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

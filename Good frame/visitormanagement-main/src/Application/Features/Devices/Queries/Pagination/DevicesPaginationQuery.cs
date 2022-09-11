@@ -12,6 +12,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.Pagination
 {
@@ -25,27 +26,27 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Queries.Paginati
     public class DevicesWithPaginationQueryHandler :
          IRequestHandler<DevicesWithPaginationQuery, PaginatedData<DeviceDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DevicesWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DevicesWithPaginationQueryHandler> localizer;
 
         public DevicesWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<DevicesWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<DevicesWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<PaginatedData<DeviceDto>> Handle(DevicesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedData<DeviceDto>> Handle(
+            DevicesWithPaginationQuery request,
+            CancellationToken cancellationToken)
         {
-
-            var data = await _context.Devices.Where(x => x.Name.Contains(request.Keyword))
+            PaginatedData<DeviceDto> data = await context.Devices.Where(x => x.Name.Contains(request.Keyword))
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<DeviceDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<DeviceDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

@@ -10,9 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.Delete
     {
         public DeleteDeviceCommandValidator()
         {
-
             RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(0));
-
         }
     }
 }

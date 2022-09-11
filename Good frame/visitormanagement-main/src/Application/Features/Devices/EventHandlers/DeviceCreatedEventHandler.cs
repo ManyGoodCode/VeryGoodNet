@@ -13,20 +13,17 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.EventHandlers
 
     public class DeviceCreatedEventHandler : INotificationHandler<DomainEventNotification<DeviceCreatedEvent>>
     {
-        private readonly ILogger<DeviceCreatedEventHandler> _logger;
+        private readonly ILogger<DeviceCreatedEventHandler> logger;
 
         public DeviceCreatedEventHandler(
-            ILogger<DeviceCreatedEventHandler> logger
-            )
+            ILogger<DeviceCreatedEventHandler> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
         public Task Handle(DomainEventNotification<DeviceCreatedEvent> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            DeviceCreatedEvent domainEvent = notification.DomainEvent;
+            logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Domain.Entities;
@@ -17,8 +14,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.DTOs
 
             profile.CreateMap<DeviceDto, Device>()
                    .ForMember(x => x.CheckinPoint, opt => opt.Ignore());
-
         }
+
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? IPAddress { get; set; }
@@ -26,9 +23,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.DTOs
         public string? Status { get; set; }
         public int? CheckinPointId { get; set; }
         public string? CheckinPoint { get; set; }
-
         public string? Site { get; set; }
-
     }
 }
 

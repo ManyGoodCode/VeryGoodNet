@@ -19,7 +19,6 @@ using CleanArchitecture.Blazor.Domain.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.AddEdit
 {
-
     public class AddEditDeviceCommand : DeviceDto, IRequest<Result<int>>, IMapFrom<Device>, ICacheInvalidator
     {
         public string CacheKey => DeviceCacheKey.GetAllCacheKey;
@@ -28,42 +27,40 @@ namespace CleanArchitecture.Blazor.Application.Features.Devices.Commands.AddEdit
 
     public class AddEditDeviceCommandHandler : IRequestHandler<AddEditDeviceCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditDeviceCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditDeviceCommandHandler> localizer;
         public AddEditDeviceCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditDeviceCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result<int>> Handle(AddEditDeviceCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Id > 0)
             {
-                var item = await _context.Devices.FindAsync(new object[] { request.Id }, cancellationToken);
+                Device item = await context.Devices.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = item ?? throw new NotFoundException($"Device {request.Id} Not Found.");
-                item = _mapper.Map(request, item);
-                var updateevent = new DeviceUpdatedEvent(item);
+                item = mapper.Map(request, item);
+                DeviceUpdatedEvent updateevent = new DeviceUpdatedEvent(item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<Device>(request);
-                var careateevent = new DeviceCreatedEvent(item);
+                Device item = mapper.Map<Device>(request);
+                DeviceCreatedEvent careateevent = new DeviceCreatedEvent(item);
                 item.DomainEvents.Add(careateevent);
-                _context.Devices.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.Devices.Add(item);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-
         }
     }
 }
