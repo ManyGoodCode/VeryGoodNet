@@ -14,10 +14,10 @@ using CleanArchitecture.Blazor.Domain.Events;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Delete
 {
-
     public class DeleteDepartmentCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -33,33 +33,32 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Del
                  IRequestHandler<DeleteDepartmentCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteDepartmentCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteDepartmentCommandHandler> localizer;
         public DeleteDepartmentCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteDepartmentCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteDepartmentCommand request, CancellationToken cancellationToken)
         {
-
-            var items = await _context.Departments.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Department> items = await context.Departments.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Department item in items)
             {
-                var deleteevent = new DepartmentDeletedEvent(item);
+                DepartmentDeletedEvent deleteevent = new DepartmentDeletedEvent(item);
                 item.DomainEvents.Add(deleteevent);
-                _context.Departments.Remove(item);
+                context.Departments.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

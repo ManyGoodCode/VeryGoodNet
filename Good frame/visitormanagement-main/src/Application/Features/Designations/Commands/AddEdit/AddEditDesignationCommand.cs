@@ -28,42 +28,42 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Commands.Ad
 
     public class AddEditDesignationCommandHandler : IRequestHandler<AddEditDesignationCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditDesignationCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditDesignationCommandHandler> localizer;
         public AddEditDesignationCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditDesignationCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
-        public async Task<Result<int>> Handle(AddEditDesignationCommand request, CancellationToken cancellationToken)
-        {
 
+        public async Task<Result<int>> Handle(
+            AddEditDesignationCommand request,
+            CancellationToken cancellationToken)
+        {
             if (request.Id > 0)
             {
-                var item = await _context.Designations.FindAsync(new object[] { request.Id }, cancellationToken);
+                Designation item = await context.Designations.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = item ?? throw new NotFoundException("Designation {request.Id} Not Found.");
-                item = _mapper.Map(request, item);
-                var updateevent = new DesignationUpdatedEvent(item);
+                item = mapper.Map(request, item);
+                DesignationUpdatedEvent updateevent = new DesignationUpdatedEvent(item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<Designation>(request);
-                _context.Designations.Add(item);
+                Designation item = mapper.Map<Designation>(request);
+                context.Designations.Add(item);
                 var careateevent = new DesignationCreatedEvent(item);
                 item.DomainEvents.Add(careateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-
         }
     }
 }

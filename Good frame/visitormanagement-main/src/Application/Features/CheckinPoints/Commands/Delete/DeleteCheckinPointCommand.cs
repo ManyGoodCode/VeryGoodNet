@@ -13,10 +13,10 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.Delete
 {
-
     public class DeleteCheckinPointCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -32,28 +32,28 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.D
                  IRequestHandler<DeleteCheckinPointCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteCheckinPointCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteCheckinPointCommandHandler> localizer;
         public DeleteCheckinPointCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteCheckinPointCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteCheckinPointCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing DeleteCheckedCheckinPointsCommandHandler method 
-            var items = await _context.CheckinPoints.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<CheckinPoint> items = await context.CheckinPoints.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (CheckinPoint item in items)
             {
-                _context.CheckinPoints.Remove(item);
+                context.CheckinPoints.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
 

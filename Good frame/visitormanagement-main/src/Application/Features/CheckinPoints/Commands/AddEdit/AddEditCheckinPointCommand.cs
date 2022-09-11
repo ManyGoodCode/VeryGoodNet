@@ -1,7 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
 using System.Threading.Tasks;
@@ -27,35 +23,37 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Commands.A
 
     public class AddEditCheckinPointCommandHandler : IRequestHandler<AddEditCheckinPointCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditCheckinPointCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditCheckinPointCommandHandler> localizer;
         public AddEditCheckinPointCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditCheckinPointCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result<int>> Handle(AddEditCheckinPointCommand request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing AddEditCheckinPointCommandHandler method 
             if (request.Id > 0)
             {
-                var item = await _context.CheckinPoints.FindAsync(new object[] { request.Id }, cancellationToken);
+                CheckinPoint item = await context.CheckinPoints.FindAsync(new object[]
+                {
+                    request.Id
+                }, cancellationToken);
                 _ = item ?? throw new NotFoundException("CheckinPoint {request.Id} Not Found.");
-                item = _mapper.Map(request, item);
-                await _context.SaveChangesAsync(cancellationToken);
+                item = mapper.Map(request, item);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<CheckinPoint>(request);
-                _context.CheckinPoints.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
+                CheckinPoint item = mapper.Map<CheckinPoint>(request);
+                context.CheckinPoints.Add(item);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
 

@@ -19,7 +19,6 @@ using CleanArchitecture.Blazor.Domain.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.AddEdit
 {
-
     public class AddEditDepartmentCommand : DepartmentDto, IRequest<Result<int>>, IMapFrom<Department>, ICacheInvalidator
     {
         public string CacheKey => DepartmentCacheKey.GetAllCacheKey;
@@ -28,41 +27,42 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Add
 
     public class AddEditDepartmentCommandHandler : IRequestHandler<AddEditDepartmentCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditDepartmentCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditDepartmentCommandHandler> localizer;
         public AddEditDepartmentCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditDepartmentCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
-        public async Task<Result<int>> Handle(AddEditDepartmentCommand request, CancellationToken cancellationToken)
+
+        public async Task<Result<int>> Handle(
+            AddEditDepartmentCommand request,
+            CancellationToken cancellationToken)
         {
             if (request.Id > 0)
             {
-                var item = await _context.Departments.FindAsync(new object[] { request.Id }, cancellationToken);
+                Department item = await context.Departments.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = item ?? throw new NotFoundException("Department {request.Id} Not Found.");
-                var updateevent = new DepartmentUpdatedEvent(item);
-                item = _mapper.Map(request, item);
+                DepartmentUpdatedEvent updateevent = new DepartmentUpdatedEvent(item);
+                item = mapper.Map(request, item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<Department>(request);
-                var createevent = new DepartmentCreatedEvent(item);
+                Department item = mapper.Map<Department>(request);
+                DepartmentCreatedEvent createevent = new DepartmentCreatedEvent(item);
                 item.DomainEvents.Add(createevent);
-                _context.Departments.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.Departments.Add(item);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-
         }
     }
 }

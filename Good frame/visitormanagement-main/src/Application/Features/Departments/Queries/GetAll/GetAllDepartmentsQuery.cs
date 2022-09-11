@@ -28,25 +28,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Queries.GetA
     public class GetAllDepartmentsQueryHandler :
          IRequestHandler<GetAllDepartmentsQuery, IEnumerable<DepartmentDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllDepartmentsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllDepartmentsQueryHandler> localizer;
 
         public GetAllDepartmentsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllDepartmentsQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllDepartmentsQueryHandler> localizer )
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<DepartmentDto>> Handle(GetAllDepartmentsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Departments.OrderBy(x => x.Name)
-                         .ProjectTo<DepartmentDto>(_mapper.ConfigurationProvider)
+            List<DepartmentDto> data = await context.Departments.OrderBy(x => x.Name)
+                         .ProjectTo<DepartmentDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

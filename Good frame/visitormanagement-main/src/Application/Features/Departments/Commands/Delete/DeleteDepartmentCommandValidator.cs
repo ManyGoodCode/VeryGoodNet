@@ -10,11 +10,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.Commands.Del
     {
         public DeleteDepartmentCommandValidator()
         {
-
-            RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(0));
-
+            RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(valueToCompare: 0));
         }
     }
 }
-    
+
 

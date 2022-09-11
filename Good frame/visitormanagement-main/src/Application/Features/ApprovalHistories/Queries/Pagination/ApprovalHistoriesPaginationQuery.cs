@@ -29,28 +29,31 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Querie
     public class ApprovalHistoriesWithPaginationQueryHandler :
          IRequestHandler<ApprovalHistoriesWithPaginationQuery, PaginatedData<ApprovalHistoryDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<ApprovalHistoriesWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<ApprovalHistoriesWithPaginationQueryHandler> localizer;
 
         public ApprovalHistoriesWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<ApprovalHistoriesWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<ApprovalHistoriesWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<PaginatedData<ApprovalHistoryDto>> Handle(ApprovalHistoriesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedData<ApprovalHistoryDto>> Handle(
+            ApprovalHistoriesWithPaginationQuery request,
+            CancellationToken cancellationToken)
         {
 
-            var data = await _context.ApprovalHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.ApprovedBy.Contains(request.Keyword))
+            PaginatedData<ApprovalHistoryDto> data = await context.ApprovalHistories.Where(
+                x => x.Visitor.Name.Contains(request.Keyword) ||
+                x.ApprovedBy.Contains(request.Keyword))
                  .Include(x => x.Visitor)
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<ApprovalHistoryDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<ApprovalHistoryDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

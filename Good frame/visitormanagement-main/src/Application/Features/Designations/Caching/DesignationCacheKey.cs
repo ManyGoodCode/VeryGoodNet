@@ -18,16 +18,19 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Caching
         }
         static DesignationCacheKey()
         {
-            _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+            tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
         }
-        private static CancellationTokenSource _tokensource;
+
+        private static CancellationTokenSource tokensource;
+
         public static CancellationTokenSource SharedExpiryTokenSource()
         {
-            if (_tokensource.IsCancellationRequested)
+            if (tokensource.IsCancellationRequested)
             {
-                _tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
+                tokensource = new CancellationTokenSource(new TimeSpan(3, 0, 0));
             }
-            return _tokensource;
+
+            return tokensource;
         }
         public static MemoryCacheEntryOptions MemoryCacheEntryOptions => new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
     }

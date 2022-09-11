@@ -15,12 +15,11 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs
         public void Mapping(Profile profile)
         {
             profile.CreateMap<AuditTrail, AuditTrailDto>()
-               .ForMember(x => x.AuditType, s => s.MapFrom(y => y.AuditType.ToString()))
-               .ForMember(x => x.OldValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, (JsonSerializerOptions)null)))
-               .ForMember(x => x.NewValues, s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, (JsonSerializerOptions)null)))
-               .ForMember(x => x.PrimaryKey, s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, (JsonSerializerOptions)null)))
-               .ForMember(x => x.AffectedColumns, s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, (JsonSerializerOptions)null)))
-               ;
+               .ForMember(destinationMember: x => x.AuditType, memberOptions: s => s.MapFrom(y => y.AuditType.ToString()))
+               .ForMember(destinationMember: x => x.OldValues, memberOptions: s => s.MapFrom(y => JsonSerializer.Serialize(y.OldValues, (JsonSerializerOptions)null)))
+               .ForMember(destinationMember: x => x.NewValues, memberOptions: s => s.MapFrom(y => JsonSerializer.Serialize(y.NewValues, (JsonSerializerOptions)null)))
+               .ForMember(destinationMember: x => x.PrimaryKey, memberOptions: s => s.MapFrom(y => JsonSerializer.Serialize(y.PrimaryKey, (JsonSerializerOptions)null)))
+               .ForMember(destinationMember: x => x.AffectedColumns, memberOptions: s => s.MapFrom(y => JsonSerializer.Serialize(y.AffectedColumns, (JsonSerializerOptions)null)));
 
         }
         public int Id { get; set; }

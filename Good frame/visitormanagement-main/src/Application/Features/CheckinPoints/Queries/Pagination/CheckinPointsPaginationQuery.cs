@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
 using System.Threading.Tasks;
@@ -28,27 +25,26 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Pa
     public class CheckinPointsWithPaginationQueryHandler :
          IRequestHandler<CheckinPointsWithPaginationQuery, PaginatedData<CheckinPointDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CheckinPointsWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<CheckinPointsWithPaginationQueryHandler> localizer;
 
         public CheckinPointsWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<CheckinPointsWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<CheckinPointsWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<CheckinPointDto>> Handle(CheckinPointsWithPaginationQuery request, CancellationToken cancellationToken)
         {
 
-            var data = await _context.CheckinPoints.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            PaginatedData<CheckinPointDto> data = await context.CheckinPoints.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<CheckinPointDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

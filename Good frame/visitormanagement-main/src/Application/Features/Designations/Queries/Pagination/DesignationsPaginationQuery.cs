@@ -18,7 +18,6 @@ using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pagination
 {
-
     public class DesignationsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DesignationDto>>, ICacheable
     {
         public string CacheKey => DesignationCacheKey.GetPagtionCacheKey($"{this}");
@@ -28,9 +27,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pag
     public class DesignationsWithPaginationQueryHandler :
          IRequestHandler<DesignationsWithPaginationQuery, PaginatedData<DesignationDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DesignationsWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DesignationsWithPaginationQueryHandler> localizer;
 
         public DesignationsWithPaginationQueryHandler(
             IApplicationDbContext context,
@@ -38,17 +37,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Pag
             IStringLocalizer<DesignationsWithPaginationQueryHandler> localizer
             )
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<DesignationDto>> Handle(DesignationsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-
-            var data = await _context.Designations
+            PaginatedData<DesignationDto> data = await context.Designations
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<DesignationDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

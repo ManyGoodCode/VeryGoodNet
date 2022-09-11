@@ -4,6 +4,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -13,12 +14,12 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.AuditTrails.DTOs;
 using CleanArchitecture.Blazor.Domain.Entities.Audit;
 using MediatR;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Export
 {
-
     public class ExportAuditTrailsQuery : IRequest<byte[]>
     {
         public string filterRules { get; set; }
@@ -29,44 +30,43 @@ namespace CleanArchitecture.Blazor.Application.Features.AuditTrails.Queries.Expo
     public class ExportAuditTrailsQueryHandler :
          IRequestHandler<ExportAuditTrailsQuery, byte[]>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IExcelService _excelService;
-        private readonly IStringLocalizer<ExportAuditTrailsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IExcelService excelService;
+        private readonly IStringLocalizer<ExportAuditTrailsQueryHandler> localizer;
 
         public ExportAuditTrailsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
             IExcelService excelService,
-            IStringLocalizer<ExportAuditTrailsQueryHandler> localizer
-            )
+            IStringLocalizer<ExportAuditTrailsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _excelService = excelService;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.excelService = excelService;
+            this.localizer = localizer;
         }
 
         public async Task<byte[]> Handle(ExportAuditTrailsQuery request, CancellationToken cancellationToken)
         {
-            var filters = PredicateBuilder.FromFilter<AuditTrail>(request.filterRules);
-            var data = await _context.AuditTrails
+            Expression<Func<AuditTrail, bool>> filters = PredicateBuilder.FromFilter<AuditTrail>(request.filterRules);
+            List<AuditTrailDto> data = await context.AuditTrails
                 .Where(filters)
                 //.OrderBy($"{request.sort} {request.order}")
-                .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<AuditTrailDto>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            var result = await _excelService.ExportAsync(data,
-                new Dictionary<string, Func<AuditTrailDto, object>>()
+            byte[]? result = await excelService.ExportAsync(
+                data: data,
+                mappers: new Dictionary<string, Func<AuditTrailDto, object>>()
                 {
-                    //{ _localizer["Id"], item => item.Id },
-                    { _localizer["Date Time"], item => item.DateTime.ToString("yyyy-MM-dd HH:mm:ss") },
-                    { _localizer["Table Name"], item => item.TableName },
-                    { _localizer["Audit Type"], item => item.AuditType },
-                    { _localizer["Old Values"], item => item.OldValues },
-                    { _localizer["New Values"], item => item.NewValues },
-                    { _localizer["Primary Key"], item => item.PrimaryKey },
-                }, _localizer["AuditTrails"]
-                );
+                    { localizer["Date Time"], item => item.DateTime.ToString("yyyy-MM-dd HH:mm:ss") },
+                    { localizer["Table Name"], item => item.TableName },
+                    { localizer["Audit Type"], item => item.AuditType },
+                    { localizer["Old Values"], item => item.OldValues },
+                    { localizer["New Values"], item => item.NewValues },
+                    { localizer["Primary Key"], item => item.PrimaryKey },
+                },
+               sheetName: localizer["AuditTrails"]);
             return result;
         }
     }

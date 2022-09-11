@@ -13,20 +13,18 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.EventHandler
 
     public class DepartmentDeletedEventHandler : INotificationHandler<DomainEventNotification<DepartmentDeletedEvent>>
     {
-        private readonly ILogger<DepartmentDeletedEventHandler> _logger;
+        private readonly ILogger<DepartmentDeletedEventHandler> logger;
 
         public DepartmentDeletedEventHandler(
-            ILogger<DepartmentDeletedEventHandler> logger
-            )
+            ILogger<DepartmentDeletedEventHandler> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
+
         public Task Handle(DomainEventNotification<DepartmentDeletedEvent> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            DepartmentDeletedEvent domainEvent = notification.DomainEvent;
+            logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

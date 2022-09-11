@@ -13,20 +13,17 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.EventHandl
 
     public class CheckinPointDeletedEventHandler : INotificationHandler<DomainEventNotification<CheckinPointDeletedEvent>>
     {
-        private readonly ILogger<CheckinPointDeletedEventHandler> _logger;
+        private readonly ILogger<CheckinPointDeletedEventHandler> logger;
 
         public CheckinPointDeletedEventHandler(
-            ILogger<CheckinPointDeletedEventHandler> logger
-            )
+            ILogger<CheckinPointDeletedEventHandler> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
         public Task Handle(DomainEventNotification<CheckinPointDeletedEvent> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            CheckinPointDeletedEvent domainEvent = notification.DomainEvent;
+            this.logger.LogInformation("CleanArchitecture Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

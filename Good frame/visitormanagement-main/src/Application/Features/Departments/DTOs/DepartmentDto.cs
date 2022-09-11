@@ -13,10 +13,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Departments.DTOs
         {
             profile.CreateMap<Department, DepartmentDto>().ReverseMap();
         }
+
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Status { get; set; }
-
     }
 }
 

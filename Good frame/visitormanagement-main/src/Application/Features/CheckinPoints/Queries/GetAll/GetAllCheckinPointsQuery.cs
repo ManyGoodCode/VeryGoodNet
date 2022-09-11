@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs;
 using CleanArchitecture.Blazor.Application.Features.CheckinPoints.Caching;
 using System.Threading.Tasks;
@@ -28,9 +25,9 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Ge
     public class GetAllCheckinPointsQueryHandler :
          IRequestHandler<GetAllCheckinPointsQuery, IEnumerable<CheckinPointDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllCheckinPointsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllCheckinPointsQueryHandler> localizer;
 
         public GetAllCheckinPointsQueryHandler(
             IApplicationDbContext context,
@@ -38,16 +35,18 @@ namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.Queries.Ge
             IStringLocalizer<GetAllCheckinPointsQueryHandler> localizer
             )
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<IEnumerable<CheckinPointDto>> Handle(GetAllCheckinPointsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<CheckinPointDto>> Handle(
+            GetAllCheckinPointsQuery request,
+            CancellationToken cancellationToken)
         {
 
-            var data = await _context.CheckinPoints.OrderBy(x => x.Name)
-                         .ProjectTo<CheckinPointDto>(_mapper.ConfigurationProvider)
+            IEnumerable<CheckinPointDto> data = await context.CheckinPoints.OrderBy(x => x.Name)
+                         .ProjectTo<CheckinPointDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

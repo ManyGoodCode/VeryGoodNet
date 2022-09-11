@@ -14,6 +14,7 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Events;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Designations.Commands.Delete
 {
@@ -33,33 +34,33 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Commands.De
                  IRequestHandler<DeleteDesignationCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteDesignationCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteDesignationCommandHandler> localizer;
         public DeleteDesignationCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteDesignationCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteDesignationCommand request, CancellationToken cancellationToken)
         {
 
-            var items = await _context.Designations.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Designation> items = await context.Designations.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Designation item in items)
             {
-                var deleteevent = new DesignationDeletedEvent(item);
+                DesignationDeletedEvent deleteevent = new DesignationDeletedEvent(item);
                 item.DomainEvents.Add(deleteevent);
-                _context.Designations.Remove(item);
+                context.Designations.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

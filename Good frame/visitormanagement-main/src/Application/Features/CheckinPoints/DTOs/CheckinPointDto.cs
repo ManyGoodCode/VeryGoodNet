@@ -10,19 +10,23 @@ using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.CheckinPoints.DTOs
 {
-
-
     public class CheckinPointDto : IMapFrom<CheckinPoint>
     {
         public void Mapping(Profile profile)
         {
             profile.CreateMap<CheckinPoint, CheckinPointDto>()
-                   .ForMember(x => x.Devices, s => s.MapFrom(y => y.Devices.Select(x => new DeviceDto() { Name = x.Name, Status = x.Status, IPAddress = x.IPAddress }).ToList()))
-                   .ForMember(x => x.Site, s => s.MapFrom(y => y.Site.Name))
-                   .ForMember(x => x.Address, s => s.MapFrom(y => y.Site.Address));
+                   .ForMember(destinationMember: x => x.Devices, memberOptions: s => s.MapFrom(y => y.Devices.Select(x =>
+                    new DeviceDto()
+                    {
+                       Name = x.Name,
+                       Status = x.Status,
+                       IPAddress = x.IPAddress
+                    }).ToList()))
+                   .ForMember(destinationMember: x => x.Site, memberOptions: s => s.MapFrom(y => y.Site.Name))
+                   .ForMember(destinationMember: x => x.Address, memberOptions: s => s.MapFrom(y => y.Site.Address));
             profile.CreateMap<CheckinPointDto, CheckinPoint>()
-                   .ForMember(x => x.Devices, opt => opt.Ignore())
-                   .ForMember(x => x.Site, opt => opt.Ignore());
+                   .ForMember(destinationMember: x => x.Devices, memberOptions: opt => opt.Ignore())
+                   .ForMember(destinationMember: x => x.Site, memberOptions: opt => opt.Ignore());
         }
 
         public int Id { get; set; }

@@ -18,31 +18,30 @@ namespace CleanArchitecture.Blazor.Application.AuditTrails.Queries.PaginationQue
 
     public class AuditTrailsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<AuditTrailDto>>
     {
-
-
     }
+
     public class AuditTrailsQueryHandler : IRequestHandler<AuditTrailsWithPaginationQuery, PaginatedData<AuditTrailDto>>
     {
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public AuditTrailsQueryHandler(
             ICurrentUserService currentUserService,
             IApplicationDbContext context,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _currentUserService = currentUserService;
-            _context = context;
-            _mapper = mapper;
+            this.currentUserService = currentUserService;
+            this.context = context;
+            this.mapper = mapper;
         }
+
         public async Task<PaginatedData<AuditTrailDto>> Handle(AuditTrailsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.AuditTrails
+            PaginatedData<AuditTrailDto> data = await context.AuditTrails
                 .Where(x => x.TableName.Contains(request.Keyword))
-                //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                    .ProjectTo<AuditTrailDto>(_mapper.ConfigurationProvider)
+                    //.OrderBy($"{request.OrderBy} {request.SortDirection}")
+                    .ProjectTo<AuditTrailDto>(mapper.ConfigurationProvider)
                     .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
             return data;

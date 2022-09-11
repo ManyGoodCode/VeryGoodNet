@@ -34,9 +34,9 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Querie
     public class GetByVisitorIdApprovalHistoriesQueryHandler :
          IRequestHandler<GetByVisitorIdApprovalHistoriesQuery, List<ApprovalHistoryDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetByVisitorIdApprovalHistoriesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetByVisitorIdApprovalHistoriesQueryHandler> localizer;
 
         public GetByVisitorIdApprovalHistoriesQueryHandler(
             IApplicationDbContext context,
@@ -44,16 +44,16 @@ namespace CleanArchitecture.Blazor.Application.Features.ApprovalHistories.Querie
             IStringLocalizer<GetByVisitorIdApprovalHistoriesQueryHandler> localizer
             )
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<List<ApprovalHistoryDto>> Handle(GetByVisitorIdApprovalHistoriesQuery request, CancellationToken cancellationToken)
         {
 
-            var data = await _context.ApprovalHistories.Where(x => x.VisitorId == request.Id)
-                             .ProjectTo<ApprovalHistoryDto>(_mapper.ConfigurationProvider)
+            List<ApprovalHistoryDto> data = await context.ApprovalHistories.Where(x => x.VisitorId == request.Id)
+                             .ProjectTo<ApprovalHistoryDto>(configuration:mapper.ConfigurationProvider)
                              .ToListAsync(cancellationToken);
             return data;
         }

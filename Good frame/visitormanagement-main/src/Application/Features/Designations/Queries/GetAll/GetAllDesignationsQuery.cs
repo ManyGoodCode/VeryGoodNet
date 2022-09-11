@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.GetAll
 {
-
     public class GetAllDesignationsQuery : IRequest<IEnumerable<DesignationDto>>, ICacheable
     {
         public string CacheKey => DesignationCacheKey.GetAllCacheKey;
@@ -28,25 +27,26 @@ namespace CleanArchitecture.Blazor.Application.Features.Designations.Queries.Get
     public class GetAllDesignationsQueryHandler :
          IRequestHandler<GetAllDesignationsQuery, IEnumerable<DesignationDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllDesignationsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllDesignationsQueryHandler> localizer;
 
         public GetAllDesignationsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllDesignationsQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllDesignationsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<IEnumerable<DesignationDto>> Handle(GetAllDesignationsQuery request, CancellationToken cancellationToken)
+        public async Task<IEnumerable<DesignationDto>> Handle(
+            GetAllDesignationsQuery request,
+            CancellationToken cancellationToken)
         {
-            var data = await _context.Designations.OrderBy(x => x.Name)
-                          .ProjectTo<DesignationDto>(_mapper.ConfigurationProvider)
+            IEnumerable<DesignationDto> data = await context.Designations.OrderBy(x => x.Name)
+                          .ProjectTo<DesignationDto>(mapper.ConfigurationProvider)
                           .ToListAsync(cancellationToken);
             return data;
         }
