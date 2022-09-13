@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
@@ -18,7 +15,6 @@ using CleanArchitecture.Blazor.Domain.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
 {
-
     public class UpdateVisitorSurveyResponseCommand : IRequest<Result>, ICacheInvalidator
     {
         public int Id { get; set; }
@@ -35,29 +31,29 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
 
     public class UpdateVisitorSurveyResponseCommandHandler : IRequestHandler<UpdateVisitorSurveyResponseCommand, Result>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<UpdateVisitorCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<UpdateVisitorCommandHandler> localizer;
         public UpdateVisitorSurveyResponseCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUserService,
             IStringLocalizer<UpdateVisitorCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _currentUserService = currentUserService;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.currentUserService = currentUserService;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(UpdateVisitorSurveyResponseCommand request, CancellationToken cancellationToken)
         {
-            var userName = await _currentUserService.UserName();
-            var item = await _context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
+            string userName = await currentUserService.UserName();
+            Visitor item = await context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
             if (item != null)
             {
-                var approval = new ApprovalHistory()
+                ApprovalHistory approval = new ApprovalHistory()
                 {
                     Comment = "Customer Survey Response",
                     Outcome = $"Response value: {request.ResponseValue}",
@@ -65,15 +61,16 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
                     ProcessingDate = DateTime.Now,
                     ApprovedBy = userName
                 };
-                approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
-                _context.ApprovalHistories.Add(approval);
 
+                approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
+                context.ApprovalHistories.Add(approval);
                 item.Status = VisitorStatus.Finished;
                 item.SurveyResponseValue = request.ResponseValue;
-                var updateevent = new UpdatedEvent<Visitor>(item);
+                UpdatedEvent<Visitor> updateevent = new UpdatedEvent<Visitor>(item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
             }
+
             return Result.Success();
         }
     }

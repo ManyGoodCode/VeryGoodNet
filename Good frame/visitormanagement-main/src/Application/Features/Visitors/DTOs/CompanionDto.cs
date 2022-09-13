@@ -19,8 +19,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.DTOs
                .ForMember(x => x.TrackingState, s => s.Ignore());
 
             profile.CreateMap<CompanionDto, Companion>(MemberList.None);
-
         }
+
         public bool Checked { get; set; }
         public int Id { get; set; }
         public string? Name { get; set; }

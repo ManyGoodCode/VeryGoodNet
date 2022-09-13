@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
@@ -18,7 +15,6 @@ using CleanArchitecture.Blazor.Domain.Events;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Create
 {
-
     public class VisitorRequestCommand : VisitorDto, IRequest<Result<int>>, ICacheInvalidator
     {
         public VisitorDto? Visitor { get; set; }
@@ -28,49 +24,49 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Create
 
     public class VisitorRequestCommandHandler : IRequestHandler<VisitorRequestCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<VisitorRequestCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<VisitorRequestCommandHandler> localizer;
         public VisitorRequestCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUserService,
             IStringLocalizer<VisitorRequestCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _currentUserService = currentUserService;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.currentUserService = currentUserService;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result<int>> Handle(VisitorRequestCommand request, CancellationToken cancellationToken)
         {
-            var userName = await _currentUserService.UserName();
-            var item = _mapper.Map<Visitor>(request);
+            string userName = await currentUserService.UserName();
+            Visitor item = mapper.Map<Visitor>(request);
             item.Status = VisitorStatus.PendingVisitor;
-            foreach (var companionDto in request.Companions)
+            foreach (CompanionDto companionDto in request.Companions)
             {
-                var companion = _mapper.Map<Companion>(companionDto);
+                Companion companion = mapper.Map<Companion>(companionDto);
                 companion.VisitorId = item.Id;
                 companion.Visitor = item;
                 item.Companions.Add(companion);
             }
-            var approval = new ApprovalHistory()
+
+            ApprovalHistory approval = new ApprovalHistory()
             {
-                Comment = _localizer[VisitorProcess.Request],
+                Comment = localizer[VisitorProcess.Request],
                 VisitorId = item.Id,
                 Visitor = item,
                 ProcessingDate = DateTime.Now,
                 ApprovedBy = userName
             };
 
-
             item.DomainEvents.Add(new CreatedEvent<Visitor>(item));
-            _context.Visitors.Add(item);
+            context.Visitors.Add(item);
             approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
-            _context.ApprovalHistories.Add(approval);
-            await _context.SaveChangesAsync(cancellationToken);
+            context.ApprovalHistories.Add(approval);
+            await context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(item.Id);
         }
     }

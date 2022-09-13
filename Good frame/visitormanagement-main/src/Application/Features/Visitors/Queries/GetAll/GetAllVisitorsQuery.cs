@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using System.Threading.Tasks;
@@ -17,7 +14,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetAll
 {
-
     public class GetAllVisitorsQuery : IRequest<IEnumerable<VisitorDto>>, ICacheable
     {
         public string CacheKey => VisitorCacheKey.GetAllCacheKey;
@@ -27,25 +23,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.GetAll
     public class GetAllVisitorsQueryHandler :
          IRequestHandler<GetAllVisitorsQuery, IEnumerable<VisitorDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllVisitorsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllVisitorsQueryHandler> localizer;
 
         public GetAllVisitorsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllVisitorsQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllVisitorsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<VisitorDto>> Handle(GetAllVisitorsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Visitors
-                         .ProjectTo<VisitorDto>(_mapper.ConfigurationProvider)
+            IEnumerable<VisitorDto> data = await context.Visitors
+                         .ProjectTo<VisitorDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

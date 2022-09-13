@@ -28,8 +28,7 @@ namespace CleanArchitecture.Blazor.Application.Services.Picklist
 
         public PicklistService(
                        IAppCache cache,
-                       IApplicationDbContext context, IMapper mapper
-        )
+                       IApplicationDbContext context, IMapper mapper)
         {
             this.cache = cache;
             this.context = context;

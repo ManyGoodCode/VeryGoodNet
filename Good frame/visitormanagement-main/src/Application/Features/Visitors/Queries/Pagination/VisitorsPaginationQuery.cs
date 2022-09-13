@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using System;
@@ -47,30 +44,28 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Paginat
     public class VisitorsWithPaginationQueryHandler :
          IRequestHandler<VisitorsWithPaginationQuery, PaginatedData<VisitorDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<VisitorsWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<VisitorsWithPaginationQueryHandler> localizer;
 
         public VisitorsWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<VisitorsWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<VisitorsWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<VisitorDto>> Handle(VisitorsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Visitors.Specify(new SearchVisitorSpecification(request))
+            PaginatedData<VisitorDto> data = await context.Visitors.Specify(new SearchVisitorSpecification(request))
               //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-              .ProjectTo<VisitorDto>(_mapper.ConfigurationProvider)
+              .ProjectTo<VisitorDto>(mapper.ConfigurationProvider)
               .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
-
     }
 
     public class SearchVisitorSpecification : Specification<Visitor>

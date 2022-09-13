@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete
@@ -12,7 +9,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete
         {
 
             RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(0));
-
         }
     }
 }

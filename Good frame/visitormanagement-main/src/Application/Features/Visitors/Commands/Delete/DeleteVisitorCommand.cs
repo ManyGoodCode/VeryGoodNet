@@ -34,43 +34,44 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Delete
                  IRequestHandler<DeleteVisitorCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteVisitorCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteVisitorCommandHandler> localizer;
         public DeleteVisitorCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteVisitorCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteVisitorCommand request, CancellationToken cancellationToken)
         {
-
-            var items = await _context.Visitors.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Visitor> items = await context.Visitors.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Visitor item in items)
             {
-                var deleteevent = new DeletedEvent<Visitor>(item);
+                DeletedEvent<Visitor> deleteevent = new DeletedEvent<Visitor>(item);
                 item.DomainEvents.Add(deleteevent);
-                var companions = await _context.Companions.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
-                foreach (var companion in companions)
+                List<Companion> companions = await context.Companions.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
+                foreach (Companion companion in companions)
                 {
-                    _context.Companions.Remove(companion);
+                    context.Companions.Remove(companion);
                 }
-                var approvalhistories = await _context.ApprovalHistories.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
-                foreach (var approvalhistory in approvalhistories)
+
+                List<ApprovalHistory> approvalhistories = await context.ApprovalHistories.Where(x => x.VisitorId == item.Id).ToListAsync(cancellationToken);
+                foreach (ApprovalHistory approvalhistory in approvalhistories)
                 {
-                    _context.ApprovalHistories.Remove(approvalhistory);
+                    context.ApprovalHistories.Remove(approvalhistory);
                 }
-                _context.Visitors.Remove(item);
+
+                context.Visitors.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

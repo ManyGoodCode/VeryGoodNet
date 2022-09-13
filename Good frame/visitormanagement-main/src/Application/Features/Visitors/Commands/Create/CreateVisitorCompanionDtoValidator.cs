@@ -18,9 +18,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Create
             RuleFor(v => v.TripCode).NotNull();
             RuleFor(v => v.HealthCode).NotNull();
         }
+
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<CompanionDto>.CreateWithOptions((CompanionDto)model, x => x.IncludeProperties(propertyName)));
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<CompanionDto>.CreateWithOptions((CompanionDto)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);

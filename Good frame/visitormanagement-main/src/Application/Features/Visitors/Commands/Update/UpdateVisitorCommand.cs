@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using CleanArchitecture.Blazor.Application.Common.Models;
@@ -26,30 +23,30 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
 
     public class UpdateVisitorCommandHandler : IRequestHandler<UpdateVisitorCommand, Result>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<UpdateVisitorCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<UpdateVisitorCommandHandler> localizer;
         public UpdateVisitorCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<UpdateVisitorCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(UpdateVisitorCommand request, CancellationToken cancellationToken)
         {
-
-            var item = await _context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
+            Visitor item = await context.Visitors.FindAsync(new object[] { request.Id }, cancellationToken);
             if (item != null)
             {
-                item = _mapper.Map(request, item);
-                var updateevent = new UpdatedEvent<Visitor>(item);
+                item = mapper.Map(request, item);
+                UpdatedEvent<Visitor> updateevent = new UpdatedEvent<Visitor>(item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
             }
+
             return Result.Success();
         }
     }

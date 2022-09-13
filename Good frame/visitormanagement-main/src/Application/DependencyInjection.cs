@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Common.Behaviours;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.ApprovalHistories.EventHandlers;
@@ -14,7 +11,6 @@ using System.Reflection;
 
 namespace CleanArchitecture.Blazor.Application
 {
-
     public static class DependencyInjection
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)

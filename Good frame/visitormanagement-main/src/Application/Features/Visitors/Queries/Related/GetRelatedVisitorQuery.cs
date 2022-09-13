@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Visitors.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Constant;
@@ -28,7 +25,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Related
             EmployeeId = employeeId;
         }
 
-
         public string CacheKey => VisitorCacheKey.GetRelatedCacheKey(EmployeeId);
         public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
     }
@@ -36,26 +32,27 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Related
     public class GetRelatedVisitorQueryHandler :
          IRequestHandler<GetRelatedVisitorQuery, List<VisitorDto>?>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetRelatedVisitorQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetRelatedVisitorQueryHandler> localizer;
 
         public GetRelatedVisitorQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetRelatedVisitorQueryHandler> localizer
-            )
+            IStringLocalizer<GetRelatedVisitorQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<List<VisitorDto>?> Handle(GetRelatedVisitorQuery request, CancellationToken cancellationToken)
+        public async Task<List<VisitorDto>?> Handle(
+            GetRelatedVisitorQuery request,
+            CancellationToken cancellationToken)
         {
-            var data = await _context.Visitors.Where(x => x.EmployeeId == request.EmployeeId && x.Status != VisitorStatus.Finished)
+            List<VisitorDto> data = await context.Visitors.Where(x => x.EmployeeId == request.EmployeeId && x.Status != VisitorStatus.Finished)
                                   .OrderByDescending(x => x.Id)
-                                  .ProjectTo<VisitorDto>(_mapper.ConfigurationProvider)
+                                  .ProjectTo<VisitorDto>(mapper.ConfigurationProvider)
                                   .ToListAsync(cancellationToken);
             return data;
         }

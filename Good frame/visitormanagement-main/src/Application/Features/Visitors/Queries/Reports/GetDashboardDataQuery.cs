@@ -1,7 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,6 +18,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Reports
         public string CacheKey => VisitorCacheKey.GetSummaryCacheKey;
         public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
     }
+
     public class GetVisitorCountedMonthlyDataQuery : IRequest<List<VisitorCountedMonth>?>, ICacheable
     {
         public string CacheKey => VisitorCacheKey.GetCountedMonthlyCacheKey;
@@ -39,28 +36,29 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Reports
          IRequestHandler<GetVisitorCountedMonthlyDataQuery, List<VisitorCountedMonth>?>,
          IRequestHandler<GetDashboardDataQuery, Tuple<int, int, int>>
     {
-        private readonly IApplicationDbContext _context;
 
-
-
+        private readonly IApplicationDbContext context;
         public GetDashboardDataQueryHandler(
-            IApplicationDbContext context
-            )
+            IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
 
         public async Task<Tuple<int, int, int>> Handle(GetDashboardDataQuery request, CancellationToken cancellationToken)
         {
-            var total = await _context.Visitors.CountAsync(cancellationToken);
-            var totalcheckin = await _context.Visitors.CountAsync(x => x.CheckinDate != null && x.CheckoutDate == null);
-            var totalcheckout = await _context.Visitors.CountAsync(x => x.CheckinDate != null && x.CheckoutDate != null);
+            int total = await context.Visitors.CountAsync(cancellationToken);
+            int totalcheckin = await context.Visitors.CountAsync(x => x.CheckinDate != null && x.CheckoutDate == null);
+            int totalcheckout = await context.Visitors.CountAsync(x => x.CheckinDate != null && x.CheckoutDate != null);
             return new Tuple<int, int, int>(total, totalcheckin, totalcheckout);
         }
 
         public async Task<List<VisitorCountedMonth>?> Handle(GetVisitorCountedMonthlyDataQuery request, CancellationToken cancellationToken)
         {
-            var result = await _context.Visitors.GroupBy(x => new { Month = x.Created.Value.Month, Year = x.Created.Value.Year })
+            List<VisitorCountedMonth> result = await context.Visitors.GroupBy(x => new
+            {
+                Month = x.Created.Value.Month,
+                Year = x.Created.Value.Year
+            })
                 .Select(x => new VisitorCountedMonth { Month = x.Key.Month, Year = x.Key.Year, Count = x.Count() })
                 .ToListAsync(cancellationToken: cancellationToken);
             return result;
@@ -68,7 +66,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Reports
 
         public async Task<Dictionary<string, int>?> Handle(GetVisitorCountedPurposeDataQuery request, CancellationToken cancellationToken)
         {
-            var result = await _context.Visitors.Where(x => x.Purpose != null).GroupBy(x => x.Purpose)
+            var result = await context.Visitors.Where(x => x.Purpose != null).GroupBy(x => x.Purpose)
                 .Select(x => new { Purpose = x.Key, Count = x.Count() })
                 .ToDictionaryAsync(x => x.Purpose, x => x.Count, cancellationToken: cancellationToken);
             return result;

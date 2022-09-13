@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +7,6 @@ using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
 {
-
     public class UpdateVisitorCommandValidator : AbstractValidator<UpdateVisitorCommand>
     {
         public UpdateVisitorCommandValidator()
@@ -37,13 +33,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Update
             RuleFor(v => v.Promise).Equal(true);
             RuleFor(v => v.ExpectedDate).NotNull().GreaterThan(DateTime.Now.Date);
         }
+
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-     {
-         var result = await ValidateAsync(ValidationContext<UpdateVisitorCommand>.CreateWithOptions((UpdateVisitorCommand)model, x => x.IncludeProperties(propertyName)));
-         if (result.IsValid)
-             return Array.Empty<string>();
-         return result.Errors.Select(e => e.ErrorMessage);
-     };
+        {
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<UpdateVisitorCommand>.CreateWithOptions((UpdateVisitorCommand)model, x => x.IncludeProperties(propertyName)));
+            if (result.IsValid)
+                return Array.Empty<string>();
+            return result.Errors.Select(e => e.ErrorMessage);
+        };
     }
 }
 

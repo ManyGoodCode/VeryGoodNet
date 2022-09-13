@@ -13,7 +13,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.DTOs
     {
         public void Mapping(Profile profile)
         {
-
             profile.CreateMap<Visitor, VisitorDto>()
                .ForMember(x => x.Designation, s => s.MapFrom(y => y.Designation.Name))
                .ForMember(x => x.Employee, s => s.MapFrom(y => y.Employee.Name))
