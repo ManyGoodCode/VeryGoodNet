@@ -16,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.Export
 {
-
     public class ExportDocumentTypesQuery : IRequest<byte[]>
     {
         public string Keyword { get; set; }
@@ -27,40 +26,37 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.Ex
     public class ExportDocumentTypesQueryHandler :
          IRequestHandler<ExportDocumentTypesQuery, byte[]>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IExcelService _excelService;
-        private readonly IStringLocalizer<ExportDocumentTypesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IExcelService excelService;
+        private readonly IStringLocalizer<ExportDocumentTypesQueryHandler> localizer;
 
         public ExportDocumentTypesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
             IExcelService excelService,
-            IStringLocalizer<ExportDocumentTypesQueryHandler> localizer
-            )
+            IStringLocalizer<ExportDocumentTypesQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _excelService = excelService;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.excelService = excelService;
+            this.localizer = localizer;
         }
+
         public async Task<byte[]> Handle(ExportDocumentTypesQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            List<DocumentTypeDto> data = await context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<DocumentTypeDto>(mapper.ConfigurationProvider)
                  .ToListAsync(cancellationToken);
-            var result = await _excelService.ExportAsync(data,
+            byte[] result = await excelService.ExportAsync(data,
                 new Dictionary<string, Func<DocumentTypeDto, object>>()
                 {
-                    { _localizer["Name"], item => item.Name },
-                    { _localizer["Description"], item => item.Description },
+                    { localizer["Name"], item => item.Name },
+                    { localizer["Description"], item => item.Description },
 
-                }, _localizer["DocumentTypes"]
-                );
+                }, localizer["DocumentTypes"]);
             return result;
         }
-
-
     }
 }

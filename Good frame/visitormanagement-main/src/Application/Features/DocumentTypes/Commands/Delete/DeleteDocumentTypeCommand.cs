@@ -11,10 +11,10 @@ using MediatR;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.Delete
 {
-
     public class DeleteDocumentTypeCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -25,28 +25,26 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.D
         }
     }
 
-
     public class DeleteDocumentTypeCommandHandler : IRequestHandler<DeleteDocumentTypeCommand, Result>
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public DeleteDocumentTypeCommandHandler(
-            IApplicationDbContext context
-            )
+            IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
+
         public async Task<Result> Handle(DeleteDocumentTypeCommand request, CancellationToken cancellationToken)
         {
-            var items = await _context.DocumentTypes.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<DocumentType> items = await context.DocumentTypes.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (DocumentType item in items)
             {
-                _context.DocumentTypes.Remove(item);
+                context.DocumentTypes.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
-
     }
 }

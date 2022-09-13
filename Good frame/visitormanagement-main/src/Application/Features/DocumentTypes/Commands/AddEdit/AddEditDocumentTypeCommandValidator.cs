@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit
@@ -11,11 +8,10 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.A
         public AddEditDocumentTypeCommandValidator()
         {
             RuleFor(v => v.Name)
-                .MaximumLength(256)
+                .MaximumLength(maximumLength: 256)
                 .NotEmpty();
             RuleFor(v => v.Description)
-                .MaximumLength(512);
-
+                .MaximumLength(maximumLength: 512);
         }
     }
 }

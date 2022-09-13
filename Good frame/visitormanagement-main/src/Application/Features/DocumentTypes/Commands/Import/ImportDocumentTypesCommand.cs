@@ -13,6 +13,7 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Caching;
 using CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.AddEdit;
+using CleanArchitecture.Blazor.Domain.Common;
 using CleanArchitecture.Blazor.Domain.Entities;
 using FluentValidation;
 using MediatR;
@@ -33,6 +34,7 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.I
             Data = data;
         }
     }
+
     public class CreateDocumentTypeTemplateCommand : IRequest<byte[]>
     {
 
@@ -41,11 +43,11 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.I
         IRequestHandler<CreateDocumentTypeTemplateCommand, byte[]>,
         IRequestHandler<ImportDocumentTypesCommand, Result>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IExcelService _excelService;
-        private readonly IStringLocalizer<ImportDocumentTypesCommandHandler> _localizer;
-        private readonly IValidator<AddEditDocumentTypeCommand> _addValidator;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IExcelService excelService;
+        private readonly IStringLocalizer<ImportDocumentTypesCommandHandler> localizer;
+        private readonly IValidator<AddEditDocumentTypeCommand> addValidator;
 
         public ImportDocumentTypesCommandHandler(
             IApplicationDbContext context,
@@ -55,34 +57,34 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.I
             IValidator<AddEditDocumentTypeCommand> addValidator
             )
         {
-            _context = context;
-            _mapper = mapper;
-            _excelService = excelService;
-            _localizer = localizer;
-            _addValidator = addValidator;
+            this.context = context;
+            this.mapper = mapper;
+            this.excelService = excelService;
+            this.localizer = localizer;
+            this.addValidator = addValidator;
         }
         public async Task<Result> Handle(ImportDocumentTypesCommand request, CancellationToken cancellationToken)
         {
-            var result = await _excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, DocumentType, object>>
+            IResult<IEnumerable<DocumentType>> result = await excelService.ImportAsync(request.Data, mappers: new Dictionary<string, Func<DataRow, DocumentType, object>>
             {
-                { _localizer["Name"], (row,item) => item.Name = row[_localizer["Name"]]?.ToString() },
-                { _localizer["Description"], (row,item) => item.Description =  row[_localizer["Description"]]?.ToString() }
-            }, _localizer["DocumentTypes"]);
+                { localizer["Name"], (row,item) => item.Name = row[localizer["Name"]]?.ToString() },
+                { localizer["Description"], (row,item) => item.Description =  row[localizer["Description"]]?.ToString() }
+            }, localizer["DocumentTypes"]);
 
             if (result.Succeeded)
             {
-                var importItems = result.Data;
-                var errors = new List<string>();
-                var errorsOccurred = false;
-                foreach (var item in importItems)
+                IEnumerable<DocumentType> importItems = result.Data;
+                List<string> errors = new List<string>();
+                bool errorsOccurred = false;
+                foreach (DocumentType item in importItems)
                 {
-                    var validationResult = await _addValidator.ValidateAsync(_mapper.Map<AddEditDocumentTypeCommand>(item), cancellationToken);
+                    FluentValidation.Results.ValidationResult validationResult = await addValidator.ValidateAsync(mapper.Map<AddEditDocumentTypeCommand>(item), cancellationToken);
                     if (validationResult.IsValid)
                     {
-                        var exist = await _context.DocumentTypes.AnyAsync(x => x.Name == item.Name, cancellationToken);
+                        bool exist = await context.DocumentTypes.AnyAsync(x => x.Name == item.Name, cancellationToken);
                         if (!exist)
                         {
-                            await _context.DocumentTypes.AddAsync(item, cancellationToken);
+                            await context.DocumentTypes.AddAsync(item, cancellationToken);
                         }
                     }
                     else
@@ -97,7 +99,7 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.I
                     return await Result.FailureAsync(errors);
                 }
 
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return await Result.SuccessAsync();
             }
             else
@@ -108,11 +110,8 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Commands.I
 
         public async Task<byte[]> Handle(CreateDocumentTypeTemplateCommand request, CancellationToken cancellationToken)
         {
-            var fields = new string[] {
-                _localizer["Name"],
-                _localizer["Description"]
-                };
-            var result = await _excelService.CreateTemplateAsync(fields, _localizer["DocumentTypes"]);
+            string[] fields = new string[] { localizer["Name"], localizer["Description"] };
+            byte[] result = await excelService.CreateTemplateAsync(fields, localizer["DocumentTypes"]);
             return result;
         }
     }

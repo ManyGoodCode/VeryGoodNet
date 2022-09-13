@@ -16,6 +16,7 @@ using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.PaginationQuery
 {
@@ -29,25 +30,26 @@ namespace CleanArchitecture.Blazor.Application.Features.DocumentTypes.Queries.Pa
     public class DocumentTypesQueryHandler : IRequestHandler<DocumentTypesWithPaginationQuery, PaginatedData<DocumentTypeDto>>
     {
 
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public DocumentTypesQueryHandler(
 
             IApplicationDbContext context,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
 
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
-        public async Task<PaginatedData<DocumentTypeDto>> Handle(DocumentTypesWithPaginationQuery request, CancellationToken cancellationToken)
+        public async Task<PaginatedData<DocumentTypeDto>> Handle(
+            DocumentTypesWithPaginationQuery request,
+            CancellationToken cancellationToken)
         {
 
-            var data = await _context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
+            PaginatedData<DocumentTypeDto> data = await context.DocumentTypes.Where(x => x.Name.Contains(request.Keyword) || x.Description.Contains(request.Keyword))
                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<DocumentTypeDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<DocumentTypeDto>(mapper.ConfigurationProvider)
                 .PaginatedDataAsync(request.PageNumber, request.PageSize);
 
             return data;

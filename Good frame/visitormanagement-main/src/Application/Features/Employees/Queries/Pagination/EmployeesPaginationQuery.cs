@@ -40,9 +40,9 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
     public class EmployeesWithPaginationQueryHandler :
          IRequestHandler<EmployeesWithPaginationQuery, PaginatedData<EmployeeDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<EmployeesWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<EmployeesWithPaginationQueryHandler> localizer;
 
         public EmployeesWithPaginationQueryHandler(
             IApplicationDbContext context,
@@ -50,17 +50,17 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
             IStringLocalizer<EmployeesWithPaginationQueryHandler> localizer
             )
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<EmployeeDto>> Handle(EmployeesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Employees.Specify(new SearchEmployeeSpecification(request))
+            PaginatedData<EmployeeDto> data = await context.Employees.Specify(new SearchEmployeeSpecification(request))
 
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<EmployeeDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<EmployeeDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }
@@ -90,7 +90,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
             {
                 And(x => x.DepartmentId == query.DepartmentId);
             }
-
         }
     }
 }
