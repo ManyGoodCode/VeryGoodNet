@@ -15,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.GetAll
 {
-
     public class GetByVisitorIdVisitorHistoriesQuery : IRequest<IEnumerable<VisitorHistoryDto>>, ICacheable
     {
         public int? VisitorId { get; private set; }

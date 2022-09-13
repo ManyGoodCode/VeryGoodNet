@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +7,6 @@ using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.CompleteVisitorInfo
 {
-
     public class CompleteVisitorInfoCommandValidator : AbstractValidator<CompleteVisitorInfoCommand>
     {
         public CompleteVisitorInfoCommandValidator()
@@ -37,13 +33,14 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Comple
             RuleFor(v => v.Promise).Equal(true);
             RuleFor(v => v.ExpectedDate).NotNull().GreaterThan(DateTime.Now.Date);
         }
+
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
-     {
-         var result = await ValidateAsync(ValidationContext<CompleteVisitorInfoCommand>.CreateWithOptions((CompleteVisitorInfoCommand)model, x => x.IncludeProperties(propertyName)));
-         if (result.IsValid)
-             return Array.Empty<string>();
-         return result.Errors.Select(e => e.ErrorMessage);
-     };
+        {
+             FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<CompleteVisitorInfoCommand>.CreateWithOptions((CompleteVisitorInfoCommand)model, x => x.IncludeProperties(propertyName)));
+             if (result.IsValid)
+                 return Array.Empty<string>();
+             return result.Errors.Select(e => e.ErrorMessage);
+        };
     }
 }
 

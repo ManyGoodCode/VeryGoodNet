@@ -20,7 +20,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Checking
 {
-
     public class CheckingVisitorsCommand : IRequest<Result<int>>, ICacheInvalidator
     {
         public int[] VisitorId { get; private set; }
@@ -32,33 +31,33 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Checki
             VisitorId = visitorId;
             Comment = comment;
         }
+
         public string CacheKey => VisitorCacheKey.GetAllCacheKey;
         public CancellationTokenSource? SharedExpiryTokenSource => VisitorCacheKey.SharedExpiryTokenSource();
     }
 
     public class CheckingVisitorsCommandHandler : IRequestHandler<CheckingVisitorsCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CheckingVisitorsCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<CheckingVisitorsCommandHandler> localizer;
         public CheckingVisitorsCommandHandler(
             IApplicationDbContext context,
             ICurrentUserService currentUserService,
             IStringLocalizer<CheckingVisitorsCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _currentUserService = currentUserService;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.currentUserService = currentUserService;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result<int>> Handle(CheckingVisitorsCommand request, CancellationToken cancellationToken)
         {
-            var userName = await _currentUserService.UserName();
-            var items = await _context.Visitors.Where(x => request.VisitorId.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            string userName = await currentUserService.UserName();
+            List<Visitor> items = await context.Visitors.Where(x => request.VisitorId.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Visitor item in items)
             {
                 item.ApprovalOutcome = request.Outcome;
                 item.ApprovalComment = request.Comment;
@@ -71,7 +70,8 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Checki
                 {
                     item.Status = VisitorStatus.Canceled;
                 }
-                var approval = new ApprovalHistory()
+
+                ApprovalHistory approval = new ApprovalHistory()
                 {
                     Comment = request.Comment,
                     Outcome = request.Outcome,
@@ -79,11 +79,13 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.Checki
                     ProcessingDate = DateTime.Now,
                     ApprovedBy = userName
                 };
+
                 approval.DomainEvents.Add(new CreatedEvent<ApprovalHistory>(approval));
-                _context.ApprovalHistories.Add(approval);
+                context.ApprovalHistories.Add(approval);
                 item.DomainEvents.Add(new UpdatedEvent<Visitor>(item));
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result<int>.Success(items.Count);
         }
     }

@@ -10,7 +10,6 @@ using FluentValidation;
 
 namespace CleanArchitecture.Blazor.Application.Features.Visitors.Commands.AddEdit
 {
-
     public class AddEditVisitorCommandValidator : AbstractValidator<AddEditVisitorCommand>
     {
         public AddEditVisitorCommandValidator()

@@ -15,7 +15,6 @@ using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries.Pagination
 {
-
     public class VisitorHistoriesWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<VisitorHistoryDto>>, ICacheable
     {
         public string CacheKey => VisitorHistoryCacheKey.GetPagtionCacheKey($"{this}");

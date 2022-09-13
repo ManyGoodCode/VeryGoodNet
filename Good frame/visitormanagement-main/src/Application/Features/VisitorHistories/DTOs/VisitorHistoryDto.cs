@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using AutoMapper;
@@ -10,8 +7,6 @@ using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs
 {
-
-
     public class VisitorHistoryDto : IMapFrom<VisitorHistory>
     {
         public void Mapping(Profile profile)
@@ -28,6 +23,7 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs
                   .ForMember(x => x.Visitor, s => s.Ignore())
                   .ForMember(x => x.CheckinPoint, s => s.Ignore());
         }
+
         public int Id { get; set; }
         public int? VisitorId { get; set; }
         public string? Avatar { get; set; }
@@ -45,7 +41,6 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs
         public string? Photo { get; set; }
         public string[]? Attachments { get; set; }
         public List<CompanionDto> Companions { get; set; } = new List<CompanionDto>();
-
     }
 }
 
