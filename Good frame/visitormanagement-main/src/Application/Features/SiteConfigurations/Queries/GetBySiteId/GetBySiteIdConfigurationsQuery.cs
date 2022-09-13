@@ -14,10 +14,10 @@ using Microsoft.Extensions.Localization;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.GetAll
 {
-
     public class GetBySiteIdConfigurationsQuery : IRequest<SiteConfigurationDto?>, ICacheable
     {
         public int? SiteId { get; private set; }
@@ -32,25 +32,26 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queri
     public class GetBySiteIdConfigurationsQueryHandler :
          IRequestHandler<GetBySiteIdConfigurationsQuery, SiteConfigurationDto?>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetBySiteIdConfigurationsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetBySiteIdConfigurationsQueryHandler> localizer;
 
         public GetBySiteIdConfigurationsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetBySiteIdConfigurationsQueryHandler> localizer
-            )
+            IStringLocalizer<GetBySiteIdConfigurationsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
-        public async Task<SiteConfigurationDto?> Handle(GetBySiteIdConfigurationsQuery request, CancellationToken cancellationToken)
+        public async Task<SiteConfigurationDto?> Handle(
+            GetBySiteIdConfigurationsQuery request,
+            CancellationToken cancellationToken)
         {
-            var data = await _context.SiteConfigurations.Where(x => x.SiteId == request.SiteId)
-                         .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
+            SiteConfigurationDto data = await context.SiteConfigurations.Where(x => x.SiteId == request.SiteId)
+                         .ProjectTo<SiteConfigurationDto>(mapper.ConfigurationProvider)
                          .FirstOrDefaultAsync(cancellationToken);
             return data;
         }

@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Sites.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Sites.Caching;
 using System.Threading.Tasks;
@@ -14,10 +11,10 @@ using Microsoft.Extensions.Localization;
 using CleanArchitecture.Blazor.Domain.Events;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete
 {
-
     public class DeleteSiteCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -33,32 +30,32 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.Commands.Delete
                  IRequestHandler<DeleteSiteCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteSiteCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteSiteCommandHandler> localizer;
         public DeleteSiteCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteSiteCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
-        }
-        public async Task<Result> Handle(DeleteSiteCommand request, CancellationToken cancellationToken)
-        {
-            var items = await _context.Sites.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
-            {
-                var deleteevent = new SiteDeletedEvent(item);
-                item.DomainEvents.Add(deleteevent);
-                _context.Sites.Remove(item);
-            }
-            await _context.SaveChangesAsync(cancellationToken);
-            return Result.Success();
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
 
+        public async Task<Result> Handle(DeleteSiteCommand request, CancellationToken cancellationToken)
+        {
+            List<Site> items = await context.Sites.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Site item in items)
+            {
+                SiteDeletedEvent deleteevent = new SiteDeletedEvent(item);
+                item.DomainEvents.Add(deleteevent);
+                context.Sites.Remove(item);
+            }
+
+            await context.SaveChangesAsync(cancellationToken);
+            return Result.Success();
+        }
     }
 }
 

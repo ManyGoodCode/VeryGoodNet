@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching;
 using System.Threading.Tasks;
@@ -18,7 +15,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queries.GetAll
 {
-
     public class GetAllSiteConfigurationsQuery : IRequest<IEnumerable<SiteConfigurationDto>>, ICacheable
     {
         public string CacheKey => SiteConfigurationCacheKey.GetAllCacheKey;
@@ -28,25 +24,24 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Queri
     public class GetAllSiteConfigurationsQueryHandler :
          IRequestHandler<GetAllSiteConfigurationsQuery, IEnumerable<SiteConfigurationDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllSiteConfigurationsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllSiteConfigurationsQueryHandler> localizer;
 
         public GetAllSiteConfigurationsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllSiteConfigurationsQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllSiteConfigurationsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<SiteConfigurationDto>> Handle(GetAllSiteConfigurationsQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.SiteConfigurations.OrderBy(x => x.SiteId)
-                         .ProjectTo<SiteConfigurationDto>(_mapper.ConfigurationProvider)
+            IEnumerable<SiteConfigurationDto> data = await context.SiteConfigurations.OrderBy(x => x.SiteId)
+                         .ProjectTo<SiteConfigurationDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

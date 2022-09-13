@@ -14,20 +14,18 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.EventHa
 
     public class MessageTemplateCreatedEventHandler : INotificationHandler<DomainEventNotification<CreatedEvent<MessageTemplate>>>
     {
-        private readonly ILogger<MessageTemplateCreatedEventHandler> _logger;
+        private readonly ILogger<MessageTemplateCreatedEventHandler> logger;
 
         public MessageTemplateCreatedEventHandler(
-            ILogger<MessageTemplateCreatedEventHandler> logger
-            )
+            ILogger<MessageTemplateCreatedEventHandler> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
+
         public Task Handle(DomainEventNotification<CreatedEvent<MessageTemplate>> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            CreatedEvent<MessageTemplate> domainEvent = notification.DomainEvent;
+            logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

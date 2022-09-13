@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
 using CleanArchitecture.Blazor.Domain;
@@ -8,8 +5,6 @@ using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs
 {
-
-
     public class MessageTemplateDto : IMapFrom<MessageTemplate>
     {
         public void Mapping(Profile profile)
@@ -19,6 +14,7 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs
                    .ForMember(x => x.SiteName, y => y.MapFrom(z => z.Site.Name));
             profile.CreateMap<MessageTemplateDto, MessageTemplate>(MemberList.None);
         }
+
         public int Id { get; set; }
         public MessageType MessageType { get; set; } = MessageType.Email;
         public string? ForStatus { get; set; }
@@ -28,7 +24,6 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs
         public string? SiteName { get; set; }
         public string? CompanyName { get; set; }
         public string? Description { get; set; }
-
     }
 }
 

@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Employees.DTOs;
 using CleanArchitecture.Blazor.Application.Features.Employees.Caching;
 using CleanArchitecture.Blazor.Application.Common.Models;
@@ -33,6 +30,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
         {
             return $"{base.ToString()},Name:{Name},Email:{Email},DepartmentId:{DepartmentId}";
         }
+
         public string CacheKey => EmployeeCacheKey.GetPagtionCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => EmployeeCacheKey.MemoryCacheEntryOptions;
     }
@@ -47,8 +45,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
         public EmployeesWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<EmployeesWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<EmployeesWithPaginationQueryHandler> localizer)
         {
             this.context = context;
             this.mapper = mapper;
@@ -58,7 +55,6 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.Pagina
         public async Task<PaginatedData<EmployeeDto>> Handle(EmployeesWithPaginationQuery request, CancellationToken cancellationToken)
         {
             PaginatedData<EmployeeDto> data = await context.Employees.Specify(new SearchEmployeeSpecification(request))
-
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
                  .ProjectTo<EmployeeDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);

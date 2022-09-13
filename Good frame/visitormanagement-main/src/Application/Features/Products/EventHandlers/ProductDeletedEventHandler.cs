@@ -14,20 +14,18 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.EventHandlers
 
     public class ProductDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<Product>>>
     {
-        private readonly ILogger<ProductDeletedEventHandler> _logger;
+        private readonly ILogger<ProductDeletedEventHandler> logger;
 
         public ProductDeletedEventHandler(
-            ILogger<ProductDeletedEventHandler> logger
-            )
+            ILogger<ProductDeletedEventHandler> logger)
         {
-            _logger = logger;
+            this.logger = logger;
         }
+
         public Task Handle(DomainEventNotification<DeletedEvent<Product>> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            DeletedEvent<Product> domainEvent = notification.DomainEvent;
+            logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

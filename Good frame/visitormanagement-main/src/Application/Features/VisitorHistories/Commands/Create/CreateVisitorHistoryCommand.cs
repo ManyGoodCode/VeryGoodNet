@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
 using CleanArchitecture.Blazor.Application.Features.Visitors.Caching;
@@ -24,7 +21,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Create
 {
-
     public class CreateVisitorHistoryCommand : VisitorHistoryDto, IRequest<Result<int>>, ICacheInvalidator
     {
         public int? CompanionCount { get; set; }
@@ -39,28 +35,30 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
 
     public class CreateVisitorHistoryCommandHandler : IRequestHandler<CreateVisitorHistoryCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<CreateVisitorHistoryCommand> _localizer;
-        private readonly ILogger<CreateVisitorHistoryCommandHandler> _logger;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<CreateVisitorHistoryCommand> localizer;
+        private readonly ILogger<CreateVisitorHistoryCommandHandler> logger;
 
         public CreateVisitorHistoryCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<CreateVisitorHistoryCommand> localizer,
             ILogger<CreateVisitorHistoryCommandHandler> logger,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _logger = logger;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.logger = logger;
+            this.mapper = mapper;
         }
-        public async Task<Result<int>> Handle(CreateVisitorHistoryCommand request, CancellationToken cancellationToken)
+
+        public async Task<Result<int>> Handle(
+            CreateVisitorHistoryCommand request,
+            CancellationToken cancellationToken)
         {
-            var item = _mapper.Map<VisitorHistory>(request);
-            _context.VisitorHistories.Add(item);
-            var visitor = await _context.Visitors.FirstAsync(x => x.Id == request.VisitorId);
+            VisitorHistory item = mapper.Map<VisitorHistory>(request);
+            context.VisitorHistories.Add(item);
+            Visitor visitor = await context.Visitors.FirstAsync(x => x.Id == request.VisitorId);
             visitor.DomainEvents.Add(new UpdatedEvent<Visitor>(visitor));
             if (item.Stage == CheckStage.Checkin)
             {
@@ -74,7 +72,6 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
                             visitor.Status = VisitorStatus.PendingConfirm;
                         }
                     }
-
                 }
                 else
                 {
@@ -99,11 +96,11 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
                 }
             }
 
-            var companionId = request.Companions.Where(x => x.Checked).Select(x => x.Id).ToArray();
+            int[] companionId = request.Companions.Where(x => x.Checked).Select(x => x.Id).ToArray();
             if (companionId != null && companionId.Any())
             {
-                var companions = _context.Companions.Where(x => companionId.Contains(x.Id)).ToList();
-                foreach (var comp in companions)
+                List<Companion> companions = context.Companions.Where(x => companionId.Contains(x.Id)).ToList();
+                foreach (Companion comp in companions)
                 {
                     if (item.Stage == CheckStage.Checkin)
                     {
@@ -119,12 +116,14 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
                             comp.CheckoutDateTime = item.TransitDateTime;
                         }
                     }
-                    _context.Companions.Update(comp);
+
+                    context.Companions.Update(comp);
                 }
             }
+
             VisitorCacheKey.SharedExpiryTokenSource().Cancel();
-            await _context.SaveChangesAsync(cancellationToken);
-            _logger.LogInformation("{handler}: {Stage}: {TransitDateTime}", nameof(CreateVisitorHistoryCommandHandler), item.Stage, item.TransitDateTime);
+            await context.SaveChangesAsync(cancellationToken);
+            logger.LogInformation("{handler}: {Stage}: {TransitDateTime}", nameof(CreateVisitorHistoryCommandHandler), item.Stage, item.TransitDateTime);
             return Result<int>.Success(item.Id);
         }
     }

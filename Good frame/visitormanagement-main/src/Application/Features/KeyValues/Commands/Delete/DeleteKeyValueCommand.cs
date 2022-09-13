@@ -12,10 +12,10 @@ using MediatR;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delete
 {
-
     public class DeleteKeyValueCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -27,28 +27,27 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Delet
         }
     }
 
-
     public class DeleteKeyValueCommandHandler : IRequestHandler<DeleteKeyValueCommand, Result>
-
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public DeleteKeyValueCommandHandler(
-            IApplicationDbContext context
-            )
+            IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
+
         public async Task<Result> Handle(DeleteKeyValueCommand request, CancellationToken cancellationToken)
         {
-            var items = await _context.KeyValues.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<KeyValue> items = await context.KeyValues.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (KeyValue item in items)
             {
-                var changeEvent = new KeyValueChangedEvent(item);
+                KeyValueChangedEvent changeEvent = new KeyValueChangedEvent(item);
                 item.DomainEvents.Add(changeEvent);
-                _context.KeyValues.Remove(item);
+                context.KeyValues.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
     }

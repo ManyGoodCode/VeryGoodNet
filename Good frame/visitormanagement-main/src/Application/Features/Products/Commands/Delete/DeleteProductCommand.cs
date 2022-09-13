@@ -11,15 +11,14 @@ using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Common.Interfaces.Caching;
 using CleanArchitecture.Blazor.Application.Common.Models;
 using CleanArchitecture.Blazor.Application.Features.Products.Caching;
+using CleanArchitecture.Blazor.Domain.Entities;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
 {
-
     public class DeleteProductCommand : IRequest<Result>, ICacheInvalidator
-
     {
         public int[] Id { get; }
         public string CacheKey => ProductCacheKey.GetAllCacheKey;
@@ -30,31 +29,31 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Commands.Delete
         }
     }
 
-
     public class DeleteProductCommandHandler :
                  IRequestHandler<DeleteProductCommand, Result>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteProductCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteProductCommandHandler> localizer;
         public DeleteProductCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteProductCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result> Handle(DeleteProductCommand request, CancellationToken cancellationToken)
         {
-            var items = await _context.Products.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Product> items = await context.Products.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Product item in items)
             {
-                _context.Products.Remove(item);
+                context.Products.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
     }

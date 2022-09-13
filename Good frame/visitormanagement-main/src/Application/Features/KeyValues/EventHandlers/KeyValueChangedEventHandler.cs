@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -14,23 +11,24 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.EventHandlers
 
     public class KeyValueChangedEventHandler : INotificationHandler<DomainEventNotification<KeyValueChangedEvent>>
     {
-        private readonly IPicklistService _picklistService;
-        private readonly ILogger<KeyValueChangedEventHandler> _logger;
+        private readonly IPicklistService picklistService;
+        private readonly ILogger<KeyValueChangedEventHandler> logger;
 
         public KeyValueChangedEventHandler(
             IPicklistService picklistService,
-            ILogger<KeyValueChangedEventHandler> logger
-            )
+            ILogger<KeyValueChangedEventHandler> logger)
         {
-            _picklistService = picklistService;
-            _logger = logger;
+            this.picklistService = picklistService;
+            this.logger = logger;
         }
-        public async Task Handle(DomainEventNotification<KeyValueChangedEvent> notification, CancellationToken cancellationToken)
-        {
-            var domainEvent = notification.DomainEvent;
-            _logger.LogInformation("KeyValue Changed {DomainEvent}", domainEvent.GetType().Name);
-            await _picklistService.Refresh();
 
+        public async Task Handle(
+            DomainEventNotification<KeyValueChangedEvent> notification,
+            CancellationToken cancellationToken)
+        {
+            KeyValueChangedEvent domainEvent = notification.DomainEvent;
+            logger.LogInformation("KeyValue Changed {DomainEvent}", domainEvent.GetType().Name);
+            await picklistService.Refresh();
         }
     }
 }

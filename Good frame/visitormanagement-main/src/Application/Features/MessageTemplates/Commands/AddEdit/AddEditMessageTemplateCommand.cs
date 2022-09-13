@@ -28,42 +28,39 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Command
 
     public class AddEditMessageTemplateCommandHandler : IRequestHandler<AddEditMessageTemplateCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditMessageTemplateCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditMessageTemplateCommandHandler> localizer;
         public AddEditMessageTemplateCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditMessageTemplateCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
+
         public async Task<Result<int>> Handle(AddEditMessageTemplateCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Id > 0)
             {
-                var item = await _context.MessageTemplates.FindAsync(new object[] { request.Id }, cancellationToken) ??
+                MessageTemplate item = await context.MessageTemplates.FindAsync(new object[] { request.Id }, cancellationToken) ??
                     throw new NotFoundException("MessageTemplate {request.Id} Not Found.");
-                item = _mapper.Map(request, item);
-                // add update domain events if this entity implement the IHasDomainEvent interface
+                item = mapper.Map(request, item);
                 item.DomainEvents.Add(new UpdatedEvent<MessageTemplate>(item));
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<MessageTemplate>(request);
-                // add create domain events if this entity implement the IHasDomainEvent interface
+                MessageTemplate item = mapper.Map<MessageTemplate>(request);
                 item.DomainEvents.Add(new CreatedEvent<MessageTemplate>(item));
-                _context.MessageTemplates.Add(item);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.MessageTemplates.Add(item);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-
         }
     }
 }

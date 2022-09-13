@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Models;
@@ -14,20 +11,18 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.EventHa
 
     public class MessageTemplateDeletedEventHandler : INotificationHandler<DomainEventNotification<DeletedEvent<MessageTemplate>>>
     {
-        private readonly ILogger<MessageTemplateDeletedEventHandler> _logger;
+        private readonly ILogger<MessageTemplateDeletedEventHandler> logger;
 
         public MessageTemplateDeletedEventHandler(
-            ILogger<MessageTemplateDeletedEventHandler> logger
-            )
+            ILogger<MessageTemplateDeletedEventHandler> logger)
         {
-            _logger = logger;
+           this.logger = logger;
         }
+
         public Task Handle(DomainEventNotification<DeletedEvent<MessageTemplate>> notification, CancellationToken cancellationToken)
         {
-            var domainEvent = notification.DomainEvent;
-
-            _logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
-
+            DeletedEvent<MessageTemplate> domainEvent = notification.DomainEvent;
+            logger.LogInformation("Domain Event: {DomainEvent}", domainEvent.GetType().Name);
             return Task.CompletedTask;
         }
     }

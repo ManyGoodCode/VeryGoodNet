@@ -28,42 +28,40 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.AddEd
 
     public class AddEditEmployeeCommandHandler : IRequestHandler<AddEditEmployeeCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<AddEditEmployeeCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<AddEditEmployeeCommandHandler> localizer;
         public AddEditEmployeeCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<AddEditEmployeeCommandHandler> localizer,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result<int>> Handle(AddEditEmployeeCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Id > 0)
             {
-                var item = await _context.Employees.FindAsync(new object[] { request.Id }, cancellationToken);
+                Employee item = await context.Employees.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = item ?? throw new NotFoundException("Employee {request.Id} Not Found.");
-                item = _mapper.Map(request, item);
-                var updateevent = new EmployeeUpdatedEvent(item);
+                item = mapper.Map(request, item);
+                EmployeeUpdatedEvent updateevent = new EmployeeUpdatedEvent(item);
                 item.DomainEvents.Add(updateevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
             else
             {
-                var item = _mapper.Map<Employee>(request);
-                _context.Employees.Add(item);
-                var createevent = new EmployeeCreatedEvent(item);
+                Employee item = mapper.Map<Employee>(request);
+                context.Employees.Add(item);
+                EmployeeCreatedEvent createevent = new EmployeeCreatedEvent(item);
                 item.DomainEvents.Add(createevent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(item.Id);
             }
-
         }
     }
 }

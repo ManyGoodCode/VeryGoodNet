@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.DTOs;
 using CleanArchitecture.Blazor.Application.Features.MessageTemplates.Caching;
 using System.Threading;
@@ -19,7 +16,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Commands.Delete
 {
-
     public class DeleteMessageTemplateCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -33,35 +29,32 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Command
 
     public class DeleteMessageTemplateCommandHandler :
                  IRequestHandler<DeleteMessageTemplateCommand, Result>
-
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteMessageTemplateCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteMessageTemplateCommandHandler> localizer;
         public DeleteMessageTemplateCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteMessageTemplateCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result> Handle(DeleteMessageTemplateCommand request, CancellationToken cancellationToken)
         {
 
-            var items = await _context.MessageTemplates.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<MessageTemplate> items = await context.MessageTemplates.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (MessageTemplate item in items)
             {
-                // add delete domain events if this entity implement the IHasDomainEvent interface
                 item.DomainEvents.Add(new DeletedEvent<MessageTemplate>(item));
-                _context.MessageTemplates.Remove(item);
+                context.MessageTemplates.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

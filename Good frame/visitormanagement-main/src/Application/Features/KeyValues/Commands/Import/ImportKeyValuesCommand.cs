@@ -23,7 +23,6 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Import
 {
-
     public class ImportKeyValuesCommand : IRequest<Result>, ICacheInvalidator
     {
         public string FileName { get; set; }
@@ -35,10 +34,12 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Impor
             Data = data;
         }
     }
+
     public class CreateKeyValueTemplateCommand : IRequest<byte[]>
     {
 
     }
+
     public class ImportKeyValuesCommandHandler :
         IRequestHandler<CreateKeyValueTemplateCommand, byte[]>,
         IRequestHandler<ImportKeyValuesCommand, Result>
@@ -54,8 +55,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Impor
             IMapper mapper,
             IExcelService excelService,
             IStringLocalizer<ImportKeyValuesCommandHandler> localizer,
-            IValidator<AddEditKeyValueCommand> addValidator
-            )
+            IValidator<AddEditKeyValueCommand> addValidator)
         {
             _context = context;
             _mapper = mapper;
@@ -63,6 +63,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Impor
             _localizer = localizer;
             _addValidator = addValidator;
         }
+
         public async Task<Result> Handle(ImportKeyValuesCommand request, CancellationToken cancellationToken)
         {
             var result = await _excelService.ImportAsync(
@@ -120,8 +121,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.Impor
                 _localizer["Name"],
                 _localizer["Value"],
                 _localizer["Text"],
-                _localizer["Description"],
-                };
+                _localizer["Description"], };
             var result = await _excelService.CreateTemplateAsync(fields, _localizer["KeyValues"]);
             return result;
         }

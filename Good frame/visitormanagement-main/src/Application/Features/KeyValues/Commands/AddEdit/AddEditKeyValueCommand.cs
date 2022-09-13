@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -25,40 +22,37 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
 
     public class AddEditKeyValueCommandHandler : IRequestHandler<AddEditKeyValueCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public AddEditKeyValueCommandHandler(
             IApplicationDbContext context,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
         public async Task<Result<int>> Handle(AddEditKeyValueCommand request, CancellationToken cancellationToken)
         {
             if (request.Id > 0)
             {
-                var keyValue = await _context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
+                KeyValue keyValue = await context.KeyValues.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = keyValue ?? throw new NotFoundException($"KeyValue Pair  {request.Id} Not Found.");
-                keyValue = _mapper.Map(request, keyValue);
-                var changeEvent = new KeyValueChangedEvent(keyValue);
+                keyValue = mapper.Map(request, keyValue);
+                KeyValueChangedEvent changeEvent = new KeyValueChangedEvent(keyValue);
                 keyValue.DomainEvents.Add(changeEvent);
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(keyValue.Id);
             }
             else
             {
-                var keyValue = _mapper.Map<KeyValue>(request);
-                var changeEvent = new KeyValueChangedEvent(keyValue);
+                KeyValue keyValue = mapper.Map<KeyValue>(request);
+                KeyValueChangedEvent changeEvent = new KeyValueChangedEvent(keyValue);
                 keyValue.DomainEvents.Add(changeEvent);
-                _context.KeyValues.Add(keyValue);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.KeyValues.Add(keyValue);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(keyValue.Id);
             }
-
-
         }
     }
 }

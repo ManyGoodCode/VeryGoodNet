@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries.GetAll
 {
-
     public class GetAllMessageTemplatesQuery : IRequest<IEnumerable<MessageTemplateDto>>, ICacheable
     {
         public string CacheKey => MessageTemplateCacheKey.GetAllCacheKey;
@@ -28,26 +27,25 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries
     public class GetAllMessageTemplatesQueryHandler :
          IRequestHandler<GetAllMessageTemplatesQuery, IEnumerable<MessageTemplateDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllMessageTemplatesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllMessageTemplatesQueryHandler> localizer;
 
         public GetAllMessageTemplatesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllMessageTemplatesQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllMessageTemplatesQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<MessageTemplateDto>> Handle(GetAllMessageTemplatesQuery request, CancellationToken cancellationToken)
         {
 
-            var data = await _context.MessageTemplates.OrderBy(x => x.SiteId)
-                         .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
+            IEnumerable<MessageTemplateDto> data = await context.MessageTemplates.OrderBy(x => x.SiteId)
+                         .ProjectTo<MessageTemplateDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

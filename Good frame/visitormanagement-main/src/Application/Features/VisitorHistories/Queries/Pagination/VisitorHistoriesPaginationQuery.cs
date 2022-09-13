@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
 using System.Threading.Tasks;
@@ -28,26 +25,25 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Queries
     public class VisitorHistoriesWithPaginationQueryHandler :
          IRequestHandler<VisitorHistoriesWithPaginationQuery, PaginatedData<VisitorHistoryDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<VisitorHistoriesWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<VisitorHistoriesWithPaginationQueryHandler> localizer;
 
         public VisitorHistoriesWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<VisitorHistoriesWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<VisitorHistoriesWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<VisitorHistoryDto>> Handle(VisitorHistoriesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.VisitorHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.Visitor.CompanyName.Contains(request.Keyword) || x.Comment.Contains(request.Keyword))
+            PaginatedData<VisitorHistoryDto> data = await context.VisitorHistories.Where(x => x.Visitor.Name.Contains(request.Keyword) || x.Visitor.CompanyName.Contains(request.Keyword) || x.Comment.Contains(request.Keyword))
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<VisitorHistoryDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<VisitorHistoryDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

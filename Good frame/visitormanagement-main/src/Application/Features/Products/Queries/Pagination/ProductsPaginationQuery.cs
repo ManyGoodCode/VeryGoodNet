@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -20,7 +17,6 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Pagination
 {
-
     public class ProductsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<ProductDto>>, ICacheable
     {
         public string? Name { get; set; }
@@ -32,6 +28,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
         {
             return $"{base.ToString()},Name:{Name},Brand:{Brand},Unit:{Unit},MinPrice:{MinPrice},MaxPrice:{MaxPrice}";
         }
+
         public string CacheKey => ProductCacheKey.GetPagtionCacheKey($"{this}");
         public MemoryCacheEntryOptions? Options => ProductCacheKey.MemoryCacheEntryOptions;
     }
@@ -39,26 +36,25 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.Paginat
     public class ProductsWithPaginationQueryHandler :
              IRequestHandler<ProductsWithPaginationQuery, PaginatedData<ProductDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<ProductsWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<ProductsWithPaginationQueryHandler> localizer;
 
         public ProductsWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<ProductsWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<ProductsWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<ProductDto>> Handle(ProductsWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.Products.Specify(new SearchProductSpecification(request))
+            PaginatedData<ProductDto> data = await context.Products.Specify(new SearchProductSpecification(request))
                  //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                 .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+                 .ProjectTo<ProductDto>(mapper.ConfigurationProvider)
                  .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

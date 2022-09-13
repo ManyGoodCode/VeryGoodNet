@@ -7,7 +7,6 @@ using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Employees.DTOs
 {
-
     public class EmployeeDto : IMapFrom<Employee>
     {
         public void Mapping(Profile profile)

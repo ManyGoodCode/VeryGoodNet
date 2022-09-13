@@ -33,6 +33,7 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Caching
 
             return tokensource;
         }
+
         public static MemoryCacheEntryOptions MemoryCacheEntryOptions =>
             new MemoryCacheEntryOptions().AddExpirationToken(new CancellationChangeToken(SharedExpiryTokenSource().Token));
     }

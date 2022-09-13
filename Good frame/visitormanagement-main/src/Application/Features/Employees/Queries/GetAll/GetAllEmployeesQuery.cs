@@ -32,8 +32,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Queries.GetAll
         public GetAllEmployeesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllEmployeesQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllEmployeesQueryHandler> localizer)
         {
             this.context = context;
             this.mapper = mapper;

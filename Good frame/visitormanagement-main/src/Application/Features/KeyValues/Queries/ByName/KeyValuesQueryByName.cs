@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 {
-
     public class KeyValuesQueryByName : IRequest<IEnumerable<KeyValueDto>>, ICacheable
     {
         public string Name { get; set; }
@@ -30,25 +29,26 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
             Name = name;
         }
     }
+
     public class KeyValuesQueryByNameHandler : IRequestHandler<KeyValuesQueryByName, IEnumerable<KeyValueDto>>
     {
 
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public KeyValuesQueryByNameHandler(
             IApplicationDbContext context,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
+
         public async Task<IEnumerable<KeyValueDto>> Handle(KeyValuesQueryByName request, CancellationToken cancellationToken)
         {
-            var data = await _context.KeyValues.Where(x => x.Name == request.Name)
+            IEnumerable<KeyValueDto> data = await context.KeyValues.Where(x => x.Name == request.Name)
                 .OrderBy(x => x.Text)
-               .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+               .ProjectTo<KeyValueDto>(mapper.ConfigurationProvider)
                .ToListAsync(cancellationToken);
             return data;
         }

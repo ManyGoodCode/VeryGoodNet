@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -11,12 +8,12 @@ using AutoMapper.QueryableExtensions;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
 using CleanArchitecture.Blazor.Application.Features.KeyValues.DTOs;
 using MediatR;
+using Microsoft.CodeAnalysis;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
 {
-
     public class ExportKeyValuesQuery : IRequest<byte[]>
     {
         public string Keyword { get; set; }
@@ -27,41 +24,39 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.Export
     public class ExportKeyValuesQueryHandler :
          IRequestHandler<ExportKeyValuesQuery, byte[]>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IExcelService _excelService;
-        private readonly IStringLocalizer<ExportKeyValuesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IExcelService excelService;
+        private readonly IStringLocalizer<ExportKeyValuesQueryHandler> localizer;
 
         public ExportKeyValuesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
             IExcelService excelService,
-            IStringLocalizer<ExportKeyValuesQueryHandler> localizer
-            )
+            IStringLocalizer<ExportKeyValuesQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _excelService = excelService;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.excelService = excelService;
+            this.localizer = localizer;
         }
+
         public async Task<byte[]> Handle(ExportKeyValuesQuery request, CancellationToken cancellationToken)
         {
-
-            var data = await _context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
+            List<KeyValueDto> data = await context.KeyValues.Where(x => x.Name.Contains(request.Keyword) || x.Value.Contains(request.Keyword) || x.Text.Contains(request.Keyword))
                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<KeyValueDto>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            var result = await _excelService.ExportAsync(data,
-                new Dictionary<string, Func<KeyValueDto, object>>()
+            byte[] result = await excelService.ExportAsync(
+                data: data,
+                mappers: new Dictionary<string, Func<KeyValueDto, object>>()
                 {
                     //{ _localizer["Id"], item => item.Id },
-                    { _localizer["Name"], item => item.Name },
-                    { _localizer["Value"], item => item.Value },
-                    { _localizer["Text"], item => item.Text },
-                    { _localizer["Description"], item => item.Description },
-
-                }, _localizer["Data"]
-                );
+                    { localizer["Name"], item => item.Name },
+                    { localizer["Value"], item => item.Value },
+                    { localizer["Text"], item => item.Text },
+                    { localizer["Description"], item => item.Description },},
+                sheetName: localizer["Data"]);
             return result;
         }
     }

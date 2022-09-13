@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.DTOs;
 using CleanArchitecture.Blazor.Application.Features.VisitorHistories.Caching;
 using System.Threading.Tasks;
@@ -13,6 +10,7 @@ using AutoMapper;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Commands.Delete
 {
@@ -32,30 +30,29 @@ namespace CleanArchitecture.Blazor.Application.Features.VisitorHistories.Command
                  IRequestHandler<DeleteVisitorHistoryCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteVisitorHistoryCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteVisitorHistoryCommandHandler> localizer;
         public DeleteVisitorHistoryCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteVisitorHistoryCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result> Handle(DeleteVisitorHistoryCommand request, CancellationToken cancellationToken)
         {
-            var items = await _context.VisitorHistories.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<VisitorHistory> items = await context.VisitorHistories.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (VisitorHistory item in items)
             {
-                _context.VisitorHistories.Remove(item);
+                context.VisitorHistories.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }
 

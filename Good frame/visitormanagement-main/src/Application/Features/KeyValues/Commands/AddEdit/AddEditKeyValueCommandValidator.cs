@@ -16,7 +16,6 @@ namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Commands.AddEd
             RuleFor(v => v.Value)
                 .MaximumLength(256)
                 .NotEmpty();
-
         }
     }
 }

@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,26 +25,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Products.Queries.GetAll
     public class GetAllProductsQueryHandler :
          IRequestHandler<GetAllProductsQuery, IEnumerable<ProductDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllProductsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllProductsQueryHandler> localizer;
 
         public GetAllProductsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllProductsQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllProductsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+           this.context = context;
+           this.mapper = mapper;
+           this.localizer = localizer;
         }
 
         public async Task<IEnumerable<ProductDto>> Handle(GetAllProductsQuery request, CancellationToken cancellationToken)
         {
-            //TODO:Implementing GetAllProductsQueryHandler method 
-            var data = await _context.Products
-                         .ProjectTo<ProductDto>(_mapper.ConfigurationProvider)
+            IEnumerable<ProductDto> data = await context.Products
+                         .ProjectTo<ProductDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }

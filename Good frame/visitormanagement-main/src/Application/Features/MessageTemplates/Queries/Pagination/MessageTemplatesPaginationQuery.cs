@@ -28,29 +28,28 @@ namespace CleanArchitecture.Blazor.Application.Features.MessageTemplates.Queries
     public class MessageTemplatesWithPaginationQueryHandler :
          IRequestHandler<MessageTemplatesWithPaginationQuery, PaginatedData<MessageTemplateDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<MessageTemplatesWithPaginationQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<MessageTemplatesWithPaginationQueryHandler> localizer;
 
         public MessageTemplatesWithPaginationQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<MessageTemplatesWithPaginationQueryHandler> localizer
-            )
+            IStringLocalizer<MessageTemplatesWithPaginationQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<PaginatedData<MessageTemplateDto>> Handle(MessageTemplatesWithPaginationQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.MessageTemplates.Where(x =>
+            PaginatedData<MessageTemplateDto> data = await context.MessageTemplates.Where(x =>
                               x.Subject.Contains(request.Keyword) ||
                               x.Body.Contains(request.Keyword) ||
                               x.Description.Contains(request.Keyword))
                     //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                    .ProjectTo<MessageTemplateDto>(_mapper.ConfigurationProvider)
+                    .ProjectTo<MessageTemplateDto>(mapper.ConfigurationProvider)
                     .PaginatedDataAsync(request.PageNumber, request.PageSize);
             return data;
         }

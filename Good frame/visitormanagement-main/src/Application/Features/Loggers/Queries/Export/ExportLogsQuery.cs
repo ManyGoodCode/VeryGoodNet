@@ -1,9 +1,7 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using AutoMapper;
@@ -18,7 +16,6 @@ using Microsoft.Extensions.Localization;
 
 namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export
 {
-
     public class ExportLogsQuery : IRequest<byte[]>
     {
         public string filterRules { get; set; }
@@ -29,45 +26,46 @@ namespace CleanArchitecture.Blazor.Application.Features.Logs.Queries.Export
     public class ExportLogsQueryHandler :
          IRequestHandler<ExportLogsQuery, byte[]>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IExcelService _excelService;
-        private readonly IStringLocalizer<ExportLogsQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IExcelService excelService;
+        private readonly IStringLocalizer<ExportLogsQueryHandler> localizer;
 
         public ExportLogsQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
             IExcelService excelService,
-            IStringLocalizer<ExportLogsQueryHandler> localizer
-            )
+            IStringLocalizer<ExportLogsQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _excelService = excelService;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.excelService = excelService;
+            this.localizer = localizer;
         }
 
         public async Task<byte[]> Handle(ExportLogsQuery request, CancellationToken cancellationToken)
         {
-            var filters = PredicateBuilder.FromFilter<Logger>(request.filterRules);
-            var data = await _context.Loggers
+            Expression<Func<Logger, bool>> filters = PredicateBuilder.FromFilter<Logger>(request.filterRules);
+            List<LogDto> data = await context.Loggers
                 .Where(filters)
                 //.OrderBy($"{request.sort} {request.order}")
-                .ProjectTo<LogDto>(_mapper.ConfigurationProvider)
+                .ProjectTo<LogDto>(mapper.ConfigurationProvider)
                 .ToListAsync(cancellationToken);
-            var result = await _excelService.ExportAsync(data,
-                new Dictionary<string, Func<LogDto, object>>()
+
+            byte[] result = await excelService.ExportAsync(
+               data: data,
+               mappers: new Dictionary<string, Func<LogDto, object>>()
                 {
                     //{ _localizer["Id"], item => item.Id },
-                    { _localizer["Time Stamp"], item => item.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss") },
-                    { _localizer["Level"], item => item.Level },
-                    { _localizer["Message"], item => item.Message },
-                    { _localizer["Exception"], item => item.Exception },
-                    { _localizer["User Name"], item => item.UserName },
-                    { _localizer["Message Template"], item => item.MessageTemplate },
-                    { _localizer["Properties"], item => item.Properties },
-                }, _localizer["Logs"]
-                );
+                    { localizer["Time Stamp"], item => item.TimeStamp.ToString("yyyy-MM-dd HH:mm:ss") },
+                    { localizer["Level"], item => item.Level },
+                    { localizer["Message"], item => item.Message },
+                    { localizer["Exception"], item => item.Exception },
+                    { localizer["User Name"], item => item.UserName },
+                    { localizer["Message Template"], item => item.MessageTemplate },
+                    { localizer["Properties"], item => item.Properties },
+                },
+               sheetName: localizer["Logs"]);
             return result;
         }
     }

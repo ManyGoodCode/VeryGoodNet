@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
@@ -17,32 +14,31 @@ using Microsoft.Extensions.Caching.Memory;
 
 namespace CleanArchitecture.Blazor.Application.Features.KeyValues.Queries.ByName
 {
-
     public class GetAllKeyValuesQuery : IRequest<IEnumerable<KeyValueDto>>, ICacheable
     {
-
         public string CacheKey => KeyValueCacheKey.GetAllCacheKey;
 
         public MemoryCacheEntryOptions? Options => KeyValueCacheKey.MemoryCacheEntryOptions;
     }
+
     public class GetAllKeyValuesQueryHandler : IRequestHandler<GetAllKeyValuesQuery, IEnumerable<KeyValueDto>>
     {
 
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public GetAllKeyValuesQueryHandler(
             IApplicationDbContext context,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _context = context;
-            _mapper = mapper;
+            this.context = context;
+            this.mapper = mapper;
         }
+
         public async Task<IEnumerable<KeyValueDto>> Handle(GetAllKeyValuesQuery request, CancellationToken cancellationToken)
         {
-            var data = await _context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
-               .ProjectTo<KeyValueDto>(_mapper.ConfigurationProvider)
+            IEnumerable<KeyValueDto> data = await context.KeyValues.OrderBy(x => x.Name).ThenBy(x => x.Value)
+               .ProjectTo<KeyValueDto>(mapper.ConfigurationProvider)
                .ToListAsync(cancellationToken);
             return data;
         }

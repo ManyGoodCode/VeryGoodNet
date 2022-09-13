@@ -14,6 +14,7 @@ using CleanArchitecture.Blazor.Domain.Events;
 using Microsoft.Extensions.Localization;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delete
 {
@@ -33,32 +34,31 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delet
                  IRequestHandler<DeleteEmployeeCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteEmployeeCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteEmployeeCommandHandler> localizer;
         public DeleteEmployeeCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteEmployeeCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
         public async Task<Result> Handle(DeleteEmployeeCommand request, CancellationToken cancellationToken)
         {
 
-            var items = await _context.Employees.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+            List<Employee> items = await context.Employees.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (Employee item in items)
             {
-                var deleteevent = new EmployeeDeletedEvent(item);
+                EmployeeDeletedEvent deleteevent = new EmployeeDeletedEvent(item);
                 item.DomainEvents.Add(deleteevent);
-                _context.Employees.Remove(item);
+                context.Employees.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
-
     }
 }

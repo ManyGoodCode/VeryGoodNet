@@ -10,9 +10,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Employees.Commands.Delet
     {
         public DeleteEmployeeCommandValidator()
         {
-
             RuleFor(v => v.Id).NotNull().ForEach(v => v.GreaterThan(0));
-
         }
     }
 }

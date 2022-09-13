@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs;
 using CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Caching;
 using System.Threading.Tasks;
@@ -14,10 +11,10 @@ using Microsoft.Extensions.Localization;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Commands.Delete
 {
-
     public class DeleteSiteConfigurationCommand : IRequest<Result>, ICacheInvalidator
     {
         public int[] Id { get; }
@@ -33,30 +30,30 @@ namespace CleanArchitecture.Blazor.Application.Features.SiteConfigurations.Comma
                  IRequestHandler<DeleteSiteConfigurationCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<DeleteSiteConfigurationCommandHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<DeleteSiteConfigurationCommandHandler> localizer;
         public DeleteSiteConfigurationCommandHandler(
             IApplicationDbContext context,
             IStringLocalizer<DeleteSiteConfigurationCommandHandler> localizer,
-             IMapper mapper
-            )
+             IMapper mapper)
         {
-            _context = context;
-            _localizer = localizer;
-            _mapper = mapper;
+            this.context = context;
+            this.localizer = localizer;
+            this.mapper = mapper;
         }
-        public async Task<Result> Handle(DeleteSiteConfigurationCommand request, CancellationToken cancellationToken)
-        {
 
-            var items = await _context.SiteConfigurations.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
-            foreach (var item in items)
+        public async Task<Result> Handle(
+            DeleteSiteConfigurationCommand request,
+            CancellationToken cancellationToken)
+        {
+            List<SiteConfiguration> items = await context.SiteConfigurations.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            foreach (SiteConfiguration item in items)
             {
-                // add delete domain events if this entity implement the IHasDomainEvent interface
-                // item.DomainEvents.Add(new DeletedEvent<SiteConfiguration>(item));
-                _context.SiteConfigurations.Remove(item);
+                context.SiteConfigurations.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
 

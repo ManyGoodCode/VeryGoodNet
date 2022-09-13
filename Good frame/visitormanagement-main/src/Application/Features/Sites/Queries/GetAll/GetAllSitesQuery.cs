@@ -18,7 +18,6 @@ using Microsoft.EntityFrameworkCore;
 
 namespace CleanArchitecture.Blazor.Application.Features.Sites.Queries.GetAll
 {
-
     public class GetAllSitesQuery : IRequest<IEnumerable<SiteDto>>, ICacheable
     {
         public string CacheKey => SiteCacheKey.GetAllCacheKey;
@@ -28,26 +27,24 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.Queries.GetAll
     public class GetAllSitesQueryHandler :
          IRequestHandler<GetAllSitesQuery, IEnumerable<SiteDto>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IStringLocalizer<GetAllSitesQueryHandler> _localizer;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IStringLocalizer<GetAllSitesQueryHandler> localizer;
 
         public GetAllSitesQueryHandler(
             IApplicationDbContext context,
             IMapper mapper,
-            IStringLocalizer<GetAllSitesQueryHandler> localizer
-            )
+            IStringLocalizer<GetAllSitesQueryHandler> localizer)
         {
-            _context = context;
-            _mapper = mapper;
-            _localizer = localizer;
+            this.context = context;
+            this.mapper = mapper;
+            this.localizer = localizer;
         }
 
         public async Task<IEnumerable<SiteDto>> Handle(GetAllSitesQuery request, CancellationToken cancellationToken)
         {
-
-            var data = await _context.Sites.OrderBy(x => x.Name)
-                         .ProjectTo<SiteDto>(_mapper.ConfigurationProvider)
+            IEnumerable<SiteDto> data = await context.Sites.OrderBy(x => x.Name)
+                         .ProjectTo<SiteDto>(mapper.ConfigurationProvider)
                          .ToListAsync(cancellationToken);
             return data;
         }
