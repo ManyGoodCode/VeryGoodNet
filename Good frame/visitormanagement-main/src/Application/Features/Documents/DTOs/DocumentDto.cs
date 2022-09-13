@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System;
 using AutoMapper;
 using CleanArchitecture.Blazor.Application.Common.Mappings;
@@ -14,9 +11,10 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.DTOs
         public void Mapping(Profile profile)
         {
             profile.CreateMap<Document, DocumentDto>()
-               .ForMember(x => x.DocumentTypeName, s => s.MapFrom(y => y.DocumentType.Name));
+               .ForMember(destinationMember: x => x.DocumentTypeName, memberOptions: s => s.MapFrom(y => y.DocumentType.Name));
             profile.CreateMap<DocumentDto, Document>(MemberList.None);
         }
+
         public int Id { get; set; }
         public string? Title { get; set; }
         public string? Description { get; set; }

@@ -1,8 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
-
-
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -16,24 +11,23 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.EventHandlers
 
     public class DocumentCreatedEventHandler : INotificationHandler<DomainEventNotification<DocumentCreatedEvent>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly ILogger<DocumentCreatedEventHandler> _logger;
+        private readonly IApplicationDbContext context;
+        private readonly ILogger<DocumentCreatedEventHandler> logger;
 
 
         public DocumentCreatedEventHandler(
             IApplicationDbContext context,
-            ILogger<DocumentCreatedEventHandler> logger
-
-            )
+            ILogger<DocumentCreatedEventHandler> logger)
         {
-            _context = context;
-            _logger = logger;
+            this.context = context;
+            this.logger = logger;
 
         }
-        public async Task Handle(DomainEventNotification<DocumentCreatedEvent> notification, CancellationToken cancellationToken)
+        public async Task Handle(
+            DomainEventNotification<DocumentCreatedEvent> notification,
+            CancellationToken cancellationToken)
         {
-
-            _logger.LogInformation($"Document Created");
+            logger.LogInformation($"Document Created");
         }
     }
 }

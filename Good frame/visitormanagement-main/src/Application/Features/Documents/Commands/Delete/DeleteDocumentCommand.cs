@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using System.Threading;
 using System.Threading.Tasks;
 using CleanArchitecture.Blazor.Application.Common.Interfaces;
@@ -11,6 +8,7 @@ using MediatR;
 using System.Linq;
 using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
+using CleanArchitecture.Blazor.Domain.Entities;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delete
 {
@@ -25,26 +23,26 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.Delet
         }
     }
 
-
     public class DeleteDocumentCommandHandler : IRequestHandler<DeleteDocumentCommand, Result>
 
     {
-        private readonly IApplicationDbContext _context;
+        private readonly IApplicationDbContext context;
 
         public DeleteDocumentCommandHandler(
-            IApplicationDbContext context
-            )
+            IApplicationDbContext context)
         {
-            _context = context;
+            this.context = context;
         }
+
         public async Task<Result> Handle(DeleteDocumentCommand request, CancellationToken cancellationToken)
         {
-            var items = await _context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
+            List<Document> items = await context.Documents.Where(x => request.Id.Contains(x.Id)).ToListAsync(cancellationToken);
             foreach (var item in items)
             {
-                _context.Documents.Remove(item);
+                context.Documents.Remove(item);
             }
-            await _context.SaveChangesAsync(cancellationToken);
+
+            await context.SaveChangesAsync(cancellationToken);
             return Result.Success();
         }
     }

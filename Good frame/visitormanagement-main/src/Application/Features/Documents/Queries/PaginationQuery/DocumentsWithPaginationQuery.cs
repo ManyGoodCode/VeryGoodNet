@@ -1,6 +1,3 @@
-// Licensed to the .NET Foundation under one or more agreements.
-// The .NET Foundation licenses this file to you under the MIT license.
-
 using CleanArchitecture.Blazor.Application.Features.Documents.DTOs;
 using CleanArchitecture.Blazor.Application.Common.Specification;
 using CleanArchitecture.Blazor.Application.Features.Documents.Caching;
@@ -20,38 +17,39 @@ using CleanArchitecture.Blazor.Application.Common.Mappings;
 
 namespace CleanArchitecture.Blazor.Application.Features.Documents.Queries.PaginationQuery
 {
-
     public class DocumentsWithPaginationQuery : PaginationFilter, IRequest<PaginatedData<DocumentDto>>, ICacheable
     {
         public string CacheKey => $"{nameof(DocumentsWithPaginationQuery)},{this}";
         public MemoryCacheEntryOptions? Options => DocumentCacheKey.MemoryCacheEntryOptions;
-
     }
+
     public class DocumentsQueryHandler : IRequestHandler<DocumentsWithPaginationQuery, PaginatedData<DocumentDto>>
     {
-        private readonly ICurrentUserService _currentUserService;
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
+        private readonly ICurrentUserService currentUserService;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
 
         public DocumentsQueryHandler(
             ICurrentUserService currentUserService,
             IApplicationDbContext context,
-            IMapper mapper
-            )
+            IMapper mapper)
         {
-            _currentUserService = currentUserService;
-            _context = context;
-            _mapper = mapper;
+            this.currentUserService = currentUserService;
+            this.context = context;
+            this.mapper = mapper;
         }
-        public async Task<PaginatedData<DocumentDto>> Handle(DocumentsWithPaginationQuery request, CancellationToken cancellationToken)
+
+        public async Task<PaginatedData<DocumentDto>> Handle(
+            DocumentsWithPaginationQuery request,
+            CancellationToken cancellationToken)
         {
 
-            var data = await _context.Documents
-                .Specify(new DocumentsQuery(await _currentUserService.UserId()))
+            PaginatedData<DocumentDto> data = await context.Documents
+                .Specify(new DocumentsQuery(await currentUserService.UserId()))
                 .Where(x => x.Description.Contains(request.Keyword))
                 //.OrderBy($"{request.OrderBy} {request.SortDirection}")
-                .ProjectTo<DocumentDto>(_mapper.ConfigurationProvider)
-                .PaginatedDataAsync(request.PageNumber, request.PageSize);
+                .ProjectTo<DocumentDto>(mapper.ConfigurationProvider)
+                .PaginatedDataAsync(pageNumber: request.PageNumber, pageSize: request.PageSize);
 
             return data;
         }

@@ -26,52 +26,51 @@ namespace CleanArchitecture.Blazor.Application.Features.Documents.Commands.AddEd
 
     public class AddEditDocumentCommandHandler : IRequestHandler<AddEditDocumentCommand, Result<int>>
     {
-        private readonly IApplicationDbContext _context;
-        private readonly IMapper _mapper;
-        private readonly IUploadService _uploadService;
+        private readonly IApplicationDbContext context;
+        private readonly IMapper mapper;
+        private readonly IUploadService uploadService;
 
         public AddEditDocumentCommandHandler(
             IApplicationDbContext context,
              IMapper mapper,
-             IUploadService uploadService
-            )
+             IUploadService uploadService)
         {
-            _context = context;
-            _mapper = mapper;
-            _uploadService = uploadService;
+            this.context = context;
+            this.mapper = mapper;
+            this.uploadService = uploadService;
         }
         public async Task<Result<int>> Handle(AddEditDocumentCommand request, CancellationToken cancellationToken)
         {
 
             if (request.Id > 0)
             {
-                var document = await _context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
+                Document document = await context.Documents.FindAsync(new object[] { request.Id }, cancellationToken);
                 _ = document ?? throw new NotFoundException($"Document {request.Id} Not Found.");
                 if (request.UploadRequest != null)
                 {
-                    document.URL = await _uploadService.UploadAsync(request.UploadRequest);
+                    document.URL = await uploadService.UploadAsync(request.UploadRequest);
                 }
+
                 document.Title = request.Title;
                 document.Description = request.Description;
                 document.IsPublic = request.IsPublic;
-                await _context.SaveChangesAsync(cancellationToken);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(document.Id);
             }
             else
             {
-                var document = _mapper.Map<Document>(request);
+                Document document = mapper.Map<Document>(request);
                 if (request.UploadRequest != null)
                 {
-                    document.URL = await _uploadService.UploadAsync(request.UploadRequest); ;
+                    document.URL = await uploadService.UploadAsync(request.UploadRequest); ;
                 }
-                var createdevent = new DocumentCreatedEvent(document);
+
+                DocumentCreatedEvent createdevent = new DocumentCreatedEvent(document);
                 document.DomainEvents.Add(createdevent);
-                _context.Documents.Add(document);
-                await _context.SaveChangesAsync(cancellationToken);
+                context.Documents.Add(document);
+                await context.SaveChangesAsync(cancellationToken);
                 return Result<int>.Success(document.Id);
             }
-
-
         }
     }
 }
