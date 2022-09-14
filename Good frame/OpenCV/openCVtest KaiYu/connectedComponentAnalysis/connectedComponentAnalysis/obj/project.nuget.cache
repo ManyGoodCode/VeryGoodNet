@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "dgSpecHash": "+cZSi5WvQJ2yLcfREL6gifJc8A6lGcv9QDh1onggai/n25dFkgSNvtfZ6Ap7Pi0edO2aMuRo7ioqcKdt1dG0og==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\H474357\\Desktop\\openCVtest\\connectedComponentAnalysis\\connectedComponentAnalysis\\connectedComponentAnalysis.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\H474357\\.nuget\\packages\\opencvsharp4\\4.6.0.20220608\\opencvsharp4.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\H474357\\.nuget\\packages\\opencvsharp4.runtime.win\\4.6.0.20220608\\opencvsharp4.runtime.win.4.6.0.20220608.nupkg.sha512",
+    "C:\\Users\\H474357\\.nuget\\packages\\system.memory\\4.5.4\\system.memory.4.5.4.nupkg.sha512",
+    "C:\\Users\\H474357\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\6.0.0\\system.runtime.compilerservices.unsafe.6.0.0.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1803",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "You are running the 'restore' operation with an 'HTTP' source, 'http://api.nuget.org/v3/index.json'. Non-HTTPS access will be removed in a future version. Consider migrating to an 'HTTPS' source."
+    }
+  ]
+}

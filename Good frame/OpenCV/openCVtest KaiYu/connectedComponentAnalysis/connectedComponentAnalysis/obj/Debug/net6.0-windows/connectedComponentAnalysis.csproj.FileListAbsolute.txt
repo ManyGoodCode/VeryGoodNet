@@ -1,0 +1,46 @@
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.exe
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.deps.json
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.runtimeconfig.json
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.pdb
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\OpenCvSharp.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.AssemblyReference.cache
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.Form1.resources
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.GenerateResource.cache
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.GeneratedMSBuildEditorConfig.editorconfig
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.AssemblyInfoInputs.cache
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.AssemblyInfo.cs
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.CoreCompileInputs.cache
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.CopyComplete
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\refint\connectedComponentAnalysis.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.pdb
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.genruntimeconfig.cache
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\ref\connectedComponentAnalysis.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x64\native\OpenCvSharpExtern.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x64\native\opencv_videoio_ffmpeg460_64.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x86\native\OpenCvSharpExtern.dll
+C:\AH494469\02_test\A picture process\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x86\native\opencv_videoio_ffmpeg460.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.exe
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.deps.json
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.runtimeconfig.json
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\connectedComponentAnalysis.pdb
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\OpenCvSharp.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x64\native\OpenCvSharpExtern.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x64\native\opencv_videoio_ffmpeg460_64.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x86\native\OpenCvSharpExtern.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\bin\Debug\net6.0-windows\runtimes\win-x86\native\opencv_videoio_ffmpeg460.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.AssemblyReference.cache
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.Form1.resources
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.GenerateResource.cache
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.AssemblyInfoInputs.cache
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.AssemblyInfo.cs
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.CoreCompileInputs.cache
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.csproj.CopyComplete
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\refint\connectedComponentAnalysis.dll
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.pdb
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\connectedComponentAnalysis.genruntimeconfig.cache
+C:\Users\H474357\Desktop\openCVtest\connectedComponentAnalysis\connectedComponentAnalysis\obj\Debug\net6.0-windows\ref\connectedComponentAnalysis.dll

@@ -18,12 +18,12 @@ public class RoleFormModelValidator : AbstractValidator<RoleFormModel>
              .MaximumLength(256)
              .NotEmpty();
     }
+
     public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
     {
-        var result = await ValidateAsync(ValidationContext<RoleFormModel>.CreateWithOptions((RoleFormModel)model, x => x.IncludeProperties(propertyName)));
+        FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<RoleFormModel>.CreateWithOptions((RoleFormModel)model, x => x.IncludeProperties(propertyName)));
         if (result.IsValid)
             return Array.Empty<string>();
         return result.Errors.Select(e => e.ErrorMessage);
     };
-
 }

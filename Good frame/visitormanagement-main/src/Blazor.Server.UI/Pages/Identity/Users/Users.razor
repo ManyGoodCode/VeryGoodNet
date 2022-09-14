@@ -199,91 +199,92 @@
 
 @code {
     [Inject]
-    private IUsersStateContainer _usersStateContainer { get; set; }
+    private IUsersStateContainer usersStateContainer { get; set; }
     private List<UserModel> UserList = new List<UserModel>();
     private HashSet<UserModel> SelectItems = new HashSet<UserModel>();
-    private string _searchString = string.Empty;
-    private bool _sortNameByLength;
+    private string searchString = string.Empty;
+    private bool sortNameByLength;
     public string Title { get; private set; } = "Users";
 
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
+
+    private UserManager<ApplicationUser> userManager { get; set; } = default!;
     [Inject]
     public CircuitHandler circuitHandler { get; set; } = default!;
+
     [Inject]
     private ProfileService _profileService { get; set; } = default!;
-    private bool _canCreate;
-    private bool _canSearch;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canActive;
-    private bool _canManageRoles;
-    private bool _canRestPassword;
-    private bool _canImport;
-    private bool _canExport;
-    private bool _loading;
+    private bool canCreate;
+    private bool canSearch;
+    private bool canEdit;
+    private bool canDelete;
+    private bool canActive;
+    private bool canManageRoles;
+    private bool canRestPassword;
+    private bool canImport;
+    private bool canExport;
+    private bool loading;
     protected override async Task OnInitializedAsync()
     {
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-
+        userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
         Title = L["Users"];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
-        _canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
-        _canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
-        _canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
-        _canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
-        _canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
+        AuthenticationState state = await AuthState;
+        canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Create)).Succeeded;
+        canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Search)).Succeeded;
+        canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Edit)).Succeeded;
+        canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Delete)).Succeeded;
+        canActive = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Active)).Succeeded;
+        canManageRoles = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.ManageRoles)).Succeeded;
+        canRestPassword = (await AuthService.AuthorizeAsync(state.User, Permissions.Users.RestPassword)).Succeeded;
+        canImport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Import)).Succeeded;
+        canExport = false; // (await AuthService.AuthorizeAsync(state.User, Permissions.Users.Export)).Succeeded;
         await LoadData();
-        _usersStateContainer.OnChange += HandleCircuitsChanged;
-
-
+        usersStateContainer.OnChange += HandleCircuitsChanged;
     }
+
     public void Dispose()
     {
-        _usersStateContainer.OnChange -= HandleCircuitsChanged;
+        usersStateContainer.OnChange -= HandleCircuitsChanged;
     }
+
     public void HandleCircuitsChanged()
     {
         InvokeAsync(() =>
         {
-            foreach (var session in _usersStateContainer.UsersByConnectionId)
+            foreach (KeyValuePair<string, string> session in usersStateContainer.UsersByConnectionId)
             {
                 Snackbar.Add(L[$"{session.Value} session changed."], MudBlazor.Severity.Info);
             }
-
         });
     }
 
-    private Func<UserModel, bool> _quickFilter => x =>
+    private Func<UserModel, bool> quickFilter => x =>
     {
-        if (string.IsNullOrWhiteSpace(_searchString))
+        if (string.IsNullOrWhiteSpace(searchString))
             return true;
-        if (x.UserName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.UserName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if (x.DisplayName.Contains(_searchString, StringComparison.OrdinalIgnoreCase))
+        if (x.DisplayName.Contains(searchString, StringComparison.OrdinalIgnoreCase))
             return true;
-        if ($"{x.Email} {x.PhoneNumber} {x.Site}".Contains(_searchString))
+        if ($"{x.Email} {x.PhoneNumber} {x.Site}".Contains(searchString))
             return true;
         return false;
     };
+
     private async Task OnRefresh()
     {
-
         await LoadData();
-
     }
+
     private async Task LoadData()
     {
-        if (_loading) return;
+        if (loading)
+            return;
         try
         {
-            _loading = true;
-            UserList = await _userManager.Users.Select(x => new UserModel()
+            loading = true;
+            UserList = await userManager.Users.Select(x => new UserModel()
                 {
                     Avatar = x.ProfilePictureDataUrl,
                     DisplayName = x.DisplayName,
@@ -294,7 +295,7 @@
                     Department = x.Department,
                     Designation = x.Designation,
                     Site = x.Site,
-                    SiteId= x.SiteId,
+                    SiteId = x.SiteId,
                     UserId = x.Id,
                     UserName = x.UserName,
                     LockoutEnd = x.LockoutEnd,
@@ -303,19 +304,26 @@
         }
         finally
         {
-            _loading = false;
+            loading = false;
         }
     }
+
     private async Task OnCreate()
     {
-        var model = new UserFormModel() { AssignRoles = new string[] { RoleConstants.BasicRole } };
-        var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
-        var result = await dialog.Result;
+        UserFormModel model = new UserFormModel() { AssignRoles = new string[] { RoleConstants.BasicRole } };
+        DialogParameters parameters = new DialogParameters { ["model"] = model };
+        DialogOptions options = new DialogOptions
+        {
+            CloseOnEscapeKey = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        IDialogReference dialog = DialogService.Show<_UserFormDialog>(L["Create a new user"], parameters, options);
+        DialogResult result = await dialog.Result;
         if (!result.Cancelled)
         {
-            var applicationUser = new ApplicationUser()
+            ApplicationUser applicationUser = new ApplicationUser()
                 {
                     Site = model.Site,
                     SiteId = model.SiteId,
@@ -328,18 +336,19 @@
                     ProfilePictureDataUrl = model.ProfilePictureDataUrl,
                     IsActive = model.IsActive,
                 };
-            var password = model.Password;
-            var state = await _userManager.CreateAsync(applicationUser, password);
+
+            string password = model.Password;
+            IdentityResult state = await userManager.CreateAsync(applicationUser, password);
 
             if (state.Succeeded)
             {
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
-                    await _userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
+                    await userManager.AddToRolesAsync(applicationUser, model.AssignRoles);
                 }
                 else
                 {
-                    await _userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
+                    await userManager.AddToRoleAsync(applicationUser, RoleConstants.BasicRole);
                 }
                 UserList.Add(new UserModel()
                     {
@@ -367,14 +376,14 @@
 
     private async Task OnEdit(UserModel item)
     {
-        var user = await _userManager.FindByIdAsync(item.UserId);
-        var userName = user.UserName;
-        var roles = await _userManager.GetRolesAsync(user);
-        var model = new UserFormModel()
+        ApplicationUser user = await userManager.FindByIdAsync(item.UserId);
+        string userName = user.UserName;
+        IList<string> roles = await userManager.GetRolesAsync(user);
+        UserFormModel model = new UserFormModel()
             {
                 Id = item.UserId,
                 Site = item.Site,
-                SiteId=item.SiteId,
+                SiteId = item.SiteId,
                 DisplayName = item.DisplayName,
                 UserName = item.UserName,
                 Email = item.Email,
@@ -385,13 +394,14 @@
                 Designation = item.Designation,
                 AssignRoles = roles.ToArray()
             };
+
         var parameters = new DialogParameters { ["model"] = model };
         var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
         var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            if(userName.ToLower()=="administrator" || userName.ToLower()=="demo")
+            if (userName.ToLower() == "administrator" || userName.ToLower() == "demo")
             {
                 Snackbar.Add($"Can't edit administrator", MudBlazor.Severity.Error);
                 return;
@@ -407,7 +417,8 @@
             item.IsActive = model.IsActive;
             item.Department = model.Department;
             item.Designation = model.Designation;
-            if(state.User.GetUserId()==item.UserId){
+            if (state.User.GetUserId() == item.UserId)
+            {
                 await _profileService.Update(item);
             }
 
@@ -422,7 +433,7 @@
             user.IsActive = model.IsActive;
             user.Department = model.Department;
             user.Designation = model.Designation;
-            var identityResult = await _userManager.UpdateAsync(user);
+            var identityResult = await userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
@@ -448,10 +459,10 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            
+
             var deleteId = SelectItems.Select(x => x.UserId).ToArray();
             var deleteusers = await _userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
-            if(deleteusers.Any(x=>x.UserName.ToLower()=="administrator" || x.UserName.ToLower()=="demo"))
+            if (deleteusers.Any(x => x.UserName.ToLower() == "administrator" || x.UserName.ToLower() == "demo"))
             {
                 Snackbar.Add($"Can't delete administrator", MudBlazor.Severity.Error);
                 return;
@@ -495,7 +506,7 @@
         var result = await dialog.Result;
         if (!result.Cancelled)
         {
-            if(item.UserName.ToLower()=="administrator" || item.UserName.ToLower()=="demo")
+            if (item.UserName.ToLower() == "administrator" || item.UserName.ToLower() == "demo")
             {
                 Snackbar.Add($"Can't reset password", MudBlazor.Severity.Error);
                 return;

@@ -9,48 +9,39 @@ namespace Blazor.Server.UI.Pages.CheckinPoints
 {
     public class CheckinPointAutocomplete : MudAutocomplete<int?>
     {
-
         [Inject]
-        private ISender _mediator { get; set; } = default!;
+        private ISender mediator { get; set; } = default!;
+        private List<CheckinPointDto> checkinpoints = new();
 
-
-        private List<CheckinPointDto> _checkinpoints = new();
-
-        // supply default parameters, but leave the possibility to override them
         public override Task SetParametersAsync(ParameterView parameters)
         {
-
-
             Dense = true;
-            //ResetValueOnEmptyText = true;
             SearchFunc = Search;
             ToStringFunc = GetName;
             Clearable = true;
             return base.SetParametersAsync(parameters);
         }
 
-        // when the value parameter is set, we have to load that one brand to be able to show the name
-        // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
         protected override async Task OnAfterRenderAsync(bool firstRender)
         {
             if (firstRender)
             {
-                _checkinpoints = (await _mediator.Send(new GetAllCheckinPointsQuery())).ToList();
+                checkinpoints = (await mediator.Send(new GetAllCheckinPointsQuery())).ToList();
                 ForceRender(true);
             }
         }
 
         private Task<IEnumerable<int?>> Search(string value)
         {
-            var list = new List<int?>();
+            List<int?> list = new List<int?>();
             if (string.IsNullOrEmpty(value))
             {
-                var result = _checkinpoints.Select(x => new int?(x.Id)).AsEnumerable();
+                IEnumerable<int?> result = checkinpoints.Select(x => new int?(x.Id)).AsEnumerable();
                 return Task.FromResult(result);
             }
             else
             {
-                var result = _checkinpoints.Where(x => value.Contains(x.Name)).Select(x => new int?(x.Id)).AsEnumerable();
+                IEnumerable<int?> result = checkinpoints.Where(x => value.Contains(x.Name)).Select(x => new int?(x.Id)).AsEnumerable();
                 return Task.FromResult(result);
             }
 
@@ -58,10 +49,10 @@ namespace Blazor.Server.UI.Pages.CheckinPoints
 
         private string GetName(int? id)
         {
-            var chpoint = _checkinpoints.Find(b => b.Id == id);
+            CheckinPointDto chpoint = checkinpoints.Find(b => b.Id == id);
             if (chpoint is null)
             {
-                return String.Empty;
+                return string.Empty;
             }
             else
             {

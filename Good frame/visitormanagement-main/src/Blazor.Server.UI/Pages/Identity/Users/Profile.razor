@@ -61,7 +61,7 @@
                                            ValueChanged="SiteIdChanged"
                                            Text="@model.Site"
                                            Value="@model.SiteId">
-                                    @foreach (var item in _sites)
+                                    @foreach (var item in sites)
                                     {
                                         <MudSelectItem T="int?" Value="@item.Id">@item.Name</MudSelectItem>
                                     }
@@ -150,28 +150,38 @@
     </ErrorBoundary>
 </MudContainer>
 @code {
+
     private SiteDto? siteDto { get; set; }
     private MudForm form = default!;
     private MudForm passwordform = default!;
     public string Title { get; set; } = "Profile";
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
-    [Inject] private ProtectedLocalStorage _protectedLocalStorage { get; set; }
+
     [Inject]
-    private ProfileService _profileService { get; set; } = default!;
-    private UserModel model { get; set; } = new();
-    private UserFluentValidator userValidator = new();
-    private UserManager<ApplicationUser> _userManager { get; set; } = default!;
-    private ChangePasswordModel changepassword { get; set; } = new();
+    private IUploadService uploadService { get; set; } = default!;
+
+    [Inject]
+    private ProtectedLocalStorage protectedLocalStorage { get; set; }
+
+    [Inject]
+    private ProfileService profileService { get; set; } = default!;
+
+    private UserModel model { get; set; } = new UserModel();
+    private UserFluentValidator userValidator = new UserFluentValidator();
+    private UserManager<ApplicationUser> userManager { get; set; } = default!;
+    private ChangePasswordModel changepassword { get; set; } = new ChangePasswordModel();
     private PasswordFluentValidator passwordValidator = new PasswordFluentValidator();
-    private List<SiteDto> _sites = new();
+    private List<SiteDto> sites = new List<SiteDto>();
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
     bool PasswordVisibility;
     InputType PasswordInput = InputType.Password;
 
     string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
     void TogglePasswordVisibility()
     {
         @if (PasswordVisibility)
@@ -190,10 +200,9 @@
     protected override async Task OnInitializedAsync()
     {
         Title = L["Profile"];
-        _userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
-        model = _profileService.Profile;
-        _sites = (await _mediator.Send(new GetAllSitesQuery())).ToList();
-
+        userManager = ScopedServices.GetRequiredService<UserManager<ApplicationUser>>();
+        model = profileService.Profile;
+        sites = (await mediator.Send(new GetAllSitesQuery())).ToList();
     }
 
     private Task SiteTextChanged(string s)
@@ -201,38 +210,43 @@
         model.Site = s;
         return Task.CompletedTask;
     }
+
     private void SiteIdChanged(int? id)
     {
         model.SiteId = id;
-        model.Site = _sites.FirstOrDefault(x => x.Id == id)?.Name;
+        model.Site = sites.FirstOrDefault(x => x.Id == id)?.Name;
     }
-
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
-        var filestream = e.File.OpenReadStream();
-        var imgstream = new MemoryStream();
+        Stream filestream = e.File.OpenReadStream();
+        MemoryStream imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;
-        using (var outStream = new MemoryStream())
+        using (MemoryStream outStream = new MemoryStream())
         {
-            using (var image = Image.Load(imgstream, out IImageFormat format))
+            using (Image image = Image.Load(imgstream, out IImageFormat format))
             {
                 image.Mutate(
-                   i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
+                   i => i.Resize(new ResizeOptions()
+                       {
+                           Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop,
+                           Size = new SixLabors.ImageSharp.Size(128, 128)
+                       }));
+
                 image.Save(outStream, format);
-                var filename = e.File.Name;
-                var fi = new FileInfo(filename);
-                var ext = fi.Extension;
-                var result = await _uploadService.UploadAsync(new UploadRequest()
+                string filename = e.File.Name;
+                FileInfo fi = new FileInfo(filename);
+                string ext = fi.Extension;
+                string result = await uploadService.UploadAsync(new UploadRequest()
                     {
                         Data = outStream.ToArray(),
                         FileName = Guid.NewGuid().ToString() + ext,
                         Extension = ext,
                         UploadType = UploadType.ProfilePicture
                     });
+
                 model.Avatar = result;
-                //Do your validations here
                 Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
             }
         }
@@ -242,45 +256,51 @@
         await form.Validate();
         if (form.IsValid)
         {
-            var state = await AuthState;
-            var user = await _userManager.FindByIdAsync(model.UserId);
+            AuthenticationState state = await AuthState;
+            ApplicationUser user = await userManager.FindByIdAsync(model.UserId);
             user.PhoneNumber = model.PhoneNumber;
             user.DisplayName = model.DisplayName;
             user.ProfilePictureDataUrl = model.Avatar;
             user.Site = model.Site;
             user.SiteId = model.SiteId;
             user.Department = model.Department;
-            await _userManager.UpdateAsync(user);
+            await userManager.UpdateAsync(user);
+
             if (model.DisplayName is not null)
                 state.User.SetDisplayName(model.DisplayName);
+
             if (model.Avatar is not null)
                 state.User.SetProfilePictureUrl(model.Avatar);
+
             if (model.PhoneNumber is not null)
                 state.User.SetPhoneNumber(model.PhoneNumber);
-            if (model.Site is not null){
+
+            if (model.Site is not null)
+            {
                 state.User.SetSite(model.Site);
-                await _protectedLocalStorage.SetAsync(LocalStorage.SITE, model.Site);                
+                await protectedLocalStorage.SetAsync(LocalStorage.SITE, model.Site);
             }
-                
-            if (model.SiteId is not null){
+
+            if (model.SiteId is not null)
+            {
                 state.User.SetSiteId(model.SiteId);
-                await _protectedLocalStorage.SetAsync(LocalStorage.SITEID, model.SiteId);                    
+                await protectedLocalStorage.SetAsync(LocalStorage.SITEID, model.SiteId);
             }
-                
+
             if (model.Department is not null)
                 state.User.SetDepartment(model.Department);
-            await _profileService.Update(model);
+            await profileService.Update(model);
             Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
         }
-
     }
+
     private async Task ChangePassword()
     {
         await passwordform.Validate();
         if (passwordform.IsValid)
         {
-            var user = await _userManager.FindByIdAsync(model.UserId);
-            var result = await _userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
+            ApplicationUser user = await userManager.FindByIdAsync(model.UserId);
+            IdentityResult result = await userManager.ChangePasswordAsync(user, changepassword.CurrentPassword, changepassword.NewPassword);
             if (result.Succeeded)
             {
                 Snackbar.Add($"{L["Changed password successfully."]}", MudBlazor.Severity.Info);
@@ -291,6 +311,7 @@
             }
         }
     }
+
     public class UserFluentValidator : AbstractValidator<UserModel>
     {
         public UserFluentValidator()
@@ -308,12 +329,11 @@
                 .NotEmpty();
             RuleFor(x => x.PhoneNumber)
                 .MaximumLength(128);
-
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<UserModel>.CreateWithOptions((UserModel)model, x => x.IncludeProperties(propertyName)));
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<UserModel>.CreateWithOptions((UserModel)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);
@@ -340,12 +360,11 @@
                 .Matches(@"[\!\?\*\.]+").WithMessage("Your password must contain at least one (!? *.).");
             RuleFor(x => x.ConfirmPassword)
                  .Equal(x => x.NewPassword);
-
         }
 
         public Func<object, string, Task<IEnumerable<string>>> ValidateValue => async (model, propertyName) =>
         {
-            var result = await ValidateAsync(ValidationContext<ChangePasswordModel>.CreateWithOptions((ChangePasswordModel)model, x => x.IncludeProperties(propertyName)));
+            FluentValidation.Results.ValidationResult result = await ValidateAsync(ValidationContext<ChangePasswordModel>.CreateWithOptions((ChangePasswordModel)model, x => x.IncludeProperties(propertyName)));
             if (result.IsValid)
                 return Array.Empty<string>();
             return result.Errors.Select(e => e.ErrorMessage);

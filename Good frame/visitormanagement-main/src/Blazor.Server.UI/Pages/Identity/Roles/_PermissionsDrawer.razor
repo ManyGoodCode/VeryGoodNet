@@ -41,15 +41,30 @@
 </MudDrawer>
 
 @code {
-    [EditorRequired] [Parameter] public List<PermissionModel> Permissions { get; set; } = new()!;
-    [EditorRequired] [Parameter] public bool Open { get; set; } = default!;
-    [EditorRequired] [Parameter] public EventCallback<PermissionModel> OnAssignChanged { get; set; }
-    [EditorRequired] [Parameter] public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
-    [EditorRequired] [Parameter] public EventCallback<bool> OnOpenChanged { get; set; }
+    [EditorRequired]
+    [Parameter]
+    public List<PermissionModel> Permissions { get; set; } = new()!;
+
+    [EditorRequired]
+    [Parameter]
+    public bool Open { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<PermissionModel> OnAssignChanged { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<List<PermissionModel>> OnAssignAllChanged { get; set; }
+
+    [EditorRequired]
+    [Parameter]
+    public EventCallback<bool> OnOpenChanged { get; set; }
+
     private async Task OnAssignAll(string? groupName)
     {
-        var list = new List<PermissionModel>();
-        for(var i = 0; i < Permissions.Count; i++)
+        List<PermissionModel> list = new List<PermissionModel>();
+        for(int i = 0; i < Permissions.Count; i++)
         {
             if (Permissions[i].Group == groupName)
             {
@@ -57,6 +72,7 @@
                 list.Add(Permissions[i]);
             }
         }
+
         await  OnAssignAllChanged.InvokeAsync(list);
     }
 }

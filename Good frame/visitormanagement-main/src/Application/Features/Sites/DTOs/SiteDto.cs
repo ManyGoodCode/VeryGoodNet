@@ -15,6 +15,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Sites.DTOs
                    .ForMember(x => x.CheckinPoints, s => s.MapFrom(y => y.CheckinPoints.Select(x => x.Name).ToArray()));
             profile.CreateMap<SiteDto, Site>().ForMember(x => x.CheckinPoints, opt => opt.Ignore());
         }
+
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? CompanyName { get; set; }

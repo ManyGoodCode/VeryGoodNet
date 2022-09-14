@@ -48,10 +48,15 @@
 
 @code {
     MudForm form = default!;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
+
     AddEditDeviceCommandValidator modelValidator = new AddEditDeviceCommandValidator();
-    [EditorRequired] [Parameter] public AddEditDeviceCommand model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditDeviceCommand model { get; set; } = default!;
 
     async Task Submit()
     {
@@ -62,5 +67,6 @@
         }
 
     }
+
     void Cancel() => MudDialog.Cancel();
 }

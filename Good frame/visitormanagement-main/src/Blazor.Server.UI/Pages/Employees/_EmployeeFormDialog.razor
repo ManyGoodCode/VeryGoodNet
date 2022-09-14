@@ -41,22 +41,20 @@
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <Blazor.Server.UI.Pages.Sites.SiteAutocomplete @bind-Value="model.SiteId"
-                                            For="@(() => model.SiteId)"
-                                            Label="@L["Select Site"]"
-                                            Required="true"
-                                            RequiredError="@L["site is required!"]"
-                                            Clearable="true"
-                                            >
+                                                                   For="@(() => model.SiteId)"
+                                                                   Label="@L["Select Site"]"
+                                                                   Required="true"
+                                                                   RequiredError="@L["site is required!"]"
+                                                                   Clearable="true">
                     </Blazor.Server.UI.Pages.Sites.SiteAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="6">
                     <Blazor.Server.UI.Pages.Departments.DepartmentAutocomplete @bind-Value="model.DepartmentId"
-                                            For="@(() => model.DepartmentId)"
-                                            Label="@L["Select Department"]"
-                                            Required="true"
-                                            RequiredError="@L["department is required!"]"
-                                            Clearable="true"
-                                            >
+                                                                               For="@(() => model.DepartmentId)"
+                                                                               Label="@L["Select Department"]"
+                                                                               Required="true"
+                                                                               RequiredError="@L["department is required!"]"
+                                                                               Clearable="true">
                     </Blazor.Server.UI.Pages.Departments.DepartmentAutocomplete>
                 </MudItem>
                 <MudItem xs="12" sm="6">
@@ -73,22 +71,21 @@
                                   For="@(() => model.Email)"
                                   @bind-Value="model.Email"></MudTextField>
                 </MudItem>
-             @* <MudItem xs="12" sm="6">
-                    <PicklistAutocomplete Picklist="Picklist.Gender"
-                                          Label="@L["Gender"]"
-                                          For="@(() => model.Gender)"
-                                          ResetValueOnEmptyText="true"
-                                          @bind-Value="model.Gender"></PicklistAutocomplete>
+                @* <MudItem xs="12" sm="6">
+                <PicklistAutocomplete Picklist="Picklist.Gender"
+                Label="@L["Gender"]"
+                For="@(() => model.Gender)"
+                ResetValueOnEmptyText="true"
+                @bind-Value="model.Gender"></PicklistAutocomplete>
                 </MudItem>*@
                 <MudItem xs="12" sm="6">
                     <Blazor.Server.UI.Pages.Designations.DesignationAutocomplete @bind-Value="model.DesignationId"
-                                            For="@(() => model.DesignationId)"
-                                            Label="@L["Select Designation"]"
-                                            Clearable="true"
-                                            >
+                                                                                 For="@(() => model.DesignationId)"
+                                                                                 Label="@L["Select Designation"]"
+                                                                                 Clearable="true">
                     </Blazor.Server.UI.Pages.Designations.DesignationAutocomplete>
                 </MudItem>
-                 <MudItem xs="12">
+                <MudItem xs="12">
                     <MudTextField Label="@L["About"]"
                                   Lines="2"
                                   For="@(() => model.About)"
@@ -105,42 +102,54 @@
 
 @code {
     MudForm form = default!;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
-    AddEditEmployeeCommandValidator modelValidator = new AddEditEmployeeCommandValidator();
-    [EditorRequired][Parameter] public AddEditEmployeeCommand model { get; set; } = default!;
 
+    [Inject]
+    private IUploadService uploadService { get; set; } = default!;
+
+    AddEditEmployeeCommandValidator modelValidator = new AddEditEmployeeCommandValidator();
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditEmployeeCommand model { get; set; } = default!;
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
-        var filestream = e.File.OpenReadStream();
-        var imgstream = new MemoryStream();
+        Stream filestream = e.File.OpenReadStream();
+        MemoryStream imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;
-        using (var outStream = new MemoryStream())
+        using (MemoryStream outStream = new MemoryStream())
         {
-            using (var image = Image.Load(imgstream, out IImageFormat format))
+            using (Image image = Image.Load(imgstream, out IImageFormat format))
             {
                 image.Mutate(
-                   i => i.Resize(new ResizeOptions() { Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop, Size = new SixLabors.ImageSharp.Size(128, 128) }));
+                   i => i.Resize(new ResizeOptions()
+                       {
+                           Mode = SixLabors.ImageSharp.Processing.ResizeMode.Crop,
+                           Size = new SixLabors.ImageSharp.Size(128, 128)
+                       }));
+
                 image.Save(outStream, format);
-                var filename = e.File.Name;
-                var fi = new FileInfo(filename);
-                var ext = fi.Extension;
-                var result = await _uploadService.UploadAsync(new UploadRequest()
+                string filename = e.File.Name;
+                FileInfo fi = new FileInfo(filename);
+                string ext = fi.Extension;
+                string result = await uploadService.UploadAsync(new UploadRequest()
                     {
                         Data = outStream.ToArray(),
                         FileName = Guid.NewGuid().ToString() + ext,
                         Extension = ext,
                         UploadType = UploadType.EmployeePicture
                     });
+
                 model.Avatar = result;
-                //Do your validations here
                 Snackbar.Add($"{L["Upload photo successfully"]}", MudBlazor.Severity.Info);
             }
         }
     }
+
     async Task Submit()
     {
         await form.Validate();
@@ -148,7 +157,7 @@
         {
             MudDialog.Close(DialogResult.Ok(true));
         }
-
     }
+
     void Cancel() => MudDialog.Cancel();
 }

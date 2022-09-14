@@ -9,18 +9,13 @@ namespace Blazor.Server.UI.Pages.Departments;
 
 public class DepartmentAutocomplete : MudAutocomplete<int?>
 {
-
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
 
+    private List<DepartmentDto> departments = new();
 
-    private List<DepartmentDto> _departments = new();
-
-    // supply default parameters, but leave the possibility to override them
     public override Task SetParametersAsync(ParameterView parameters)
     {
-
-
         Dense = true;
         ResetValueOnEmptyText = true;
         SearchFunc = Search;
@@ -29,31 +24,29 @@ public class DepartmentAutocomplete : MudAutocomplete<int?>
         return base.SetParametersAsync(parameters);
     }
 
-    // when the value parameter is set, we have to load that one brand to be able to show the name
-    // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (firstRender)
         {
-            _departments = (await _mediator.Send(new GetAllDepartmentsQuery())).ToList();
+            departments = (await mediator.Send(new GetAllDepartmentsQuery())).ToList();
             ForceRender(true);
         }
     }
 
     private Task<IEnumerable<int?>> Search(string value)
     {
-        var list = new List<int?>();
+        List<int?> list = new List<int?>();
         if (string.IsNullOrEmpty(value))
         {
-            return Task.FromResult(_departments.Select(x =>new int?(x.Id)).AsEnumerable());
+            return Task.FromResult(departments.Select(x =>new int?(x.Id)).AsEnumerable());
         }
         else
         {
-            var result = _departments.Where(x => x.Name.ToLower().Contains(value.ToLower())).Select(x =>new int?(x.Id)).AsEnumerable();
+            IEnumerable<int?> result = departments.Where(x => x.Name.ToLower().Contains(value.ToLower())).Select(x =>new int?(x.Id)).AsEnumerable();
             return Task.FromResult(result);
         }
         
     }
 
-    private string GetName(int? id) => _departments.Find(b => b.Id == id)?.Name ?? string.Empty;
+    private string GetName(int? id) => departments.Find(b => b.Id == id)?.Name ?? string.Empty;
 }
