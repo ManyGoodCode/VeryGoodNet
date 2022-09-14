@@ -79,14 +79,16 @@
     </div>
 
 @code {
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     public int TotalVisitors { get; private set; }
     public int TotalCheckinVisitors { get; private set; }
     public int TotalCheckoutVisitors { get; private set; }
     protected override async Task OnInitializedAsync()
     {
-        var result = await _mediator.Send(new GetDashboardDataQuery());
+        Tuple<int,int,int> result = await mediator.Send(new GetDashboardDataQuery());
         if (result is not null)
         {
             TotalVisitors = result.Item1;

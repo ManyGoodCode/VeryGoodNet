@@ -5,7 +5,7 @@
 
 <MudTooltip Text="@CurrentLanguage">
     <MudMenu Class="mx-1" Icon="@Icons.Material.Outlined.Translate" Color="Color.Default" Direction="Direction.Bottom" OffsetY="true"
-        Dense="true">
+             Dense="true">
         @foreach (var language in SupportedLanguages)
         {
             if (language.Name == CurrentLanguage)
@@ -21,11 +21,15 @@
 </MudTooltip>
 
 @code {
+
     public string? CurrentLanguage { get; set; } = "en-US";
     public List<CultureInfo> SupportedLanguages { get; set; } = new();
-    [Inject] private NavigationManager _navigation { get; set; }=default!;
-    [Inject] private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = default!;
 
+    [Inject]
+    private NavigationManager navigation { get; set; } = default!;
+
+    [Inject]
+    private IOptions<RequestLocalizationOptions> localizationOptions { get; set; } = default!;
 
     protected override Task OnInitializedAsync()
     {
@@ -34,12 +38,10 @@
         return Task.CompletedTask;
     }
 
-
-    private  Task ChangeLanguageAsync(string languageCode)
+    private Task ChangeLanguageAsync(string languageCode)
     {
         CurrentLanguage = languageCode;
-        _navigation.NavigateTo(_navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
+        navigation.NavigateTo(uri: navigation.BaseUri + "?culture=" + languageCode, forceLoad: true);
         return Task.CompletedTask;
-       
     }
 }

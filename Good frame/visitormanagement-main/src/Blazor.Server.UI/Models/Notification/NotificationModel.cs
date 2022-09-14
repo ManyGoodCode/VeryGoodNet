@@ -2,7 +2,6 @@ using MudBlazor;
 
 namespace Blazor.Server.UI.Models.Notification
 {
-
     public class NotificationModel
     {
         public NotificationTypes NotificationType { get; set; }
@@ -31,7 +30,7 @@ namespace Blazor.Server.UI.Models.Notification
         {
             get
             {
-                var timeSinceEvent = DateTime.Now - DateTimeStamp;
+                TimeSpan timeSinceEvent = DateTime.Now - DateTimeStamp;
 
                 if (timeSinceEvent.TotalSeconds < 60)
                     return $"{timeSinceEvent.Seconds} seconds ago";
@@ -45,7 +44,6 @@ namespace Blazor.Server.UI.Models.Notification
                     return $"{timeSinceEvent.Days / 7} weeks ago";
                 if (timeSinceEvent.TotalDays < 365)
                     return $"{timeSinceEvent.Days / 30} months ago";
-
                 return $"{timeSinceEvent.Days / 365} years ago";
             }
         }
