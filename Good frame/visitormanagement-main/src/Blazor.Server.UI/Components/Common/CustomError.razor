@@ -5,10 +5,10 @@
     <MudText Typo="Typo.h6" Color="Color.Error">@statusCode</MudText>
     <div class="d-flex align-center gap-4">
         <MudText Typo="Typo.subtitle2" >@DateTime.Now</MudText>
-        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=>_showstacktrace=!_showstacktrace)">More</MudButton>
+        <MudButton Variant="Variant.Text" Color="Color.Primary" OnClick="@(()=> showstacktrace=!showstacktrace)">More</MudButton>
     </div>
     <MudText>@message For more information, contact your system administrator</MudText>
-    @if (_showstacktrace)
+    @if (showstacktrace)
     {
         <MudText Typo="Typo.body2" Class="mt-2">@stacktrace</MudText>
     }
@@ -21,12 +21,18 @@
 </MudPaper>
 
 @code {
+
     private string? message { get; set; }
-    private bool _showstacktrace { get; set; }
+    private bool showstacktrace { get; set; }
     private string? stacktrace { get; set; }
     private string? statusCode { get; set; } = HttpStatusCode.InternalServerError.ToString();
-    [EditorRequired][Parameter] public Exception Exception { get; set; } = default!;
-    [Inject] private NavigationManager _navigation { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public Exception Exception { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager navigation { get; set; } = default!;
 
     protected override Task OnInitializedAsync()
     {
@@ -38,7 +44,9 @@
                 {
                     message = string.Join(", ", e.ErrorMessages.ToArray());
                 }
+
                 break;
+
             default:
                 if (Exception.InnerException != null)
                 {
@@ -47,14 +55,17 @@
                         Exception = Exception.InnerException;
                     }
                 }
+
                 message = Exception.Message;
                 break;
         }
+
         stacktrace = Exception.StackTrace;
         return base.OnInitializedAsync();
     }
+
     private void OnRefresh()
     {
-        _navigation.NavigateTo(_navigation.Uri, true);
+        navigation.NavigateTo(navigation.Uri, true);
     }
 }

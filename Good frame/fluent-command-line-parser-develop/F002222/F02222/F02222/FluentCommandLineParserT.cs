@@ -19,7 +19,8 @@ namespace Fclp
         public FluentCommandLineParser(Func<TBuildType> creator)
 	    {
 	        Object = creator();
-            if(Object == null) throw new ArgumentNullException(nameof(creator));
+            if(Object == null) 
+				throw new ArgumentNullException(nameof(creator));
 	        Parser = new FluentCommandLineParser();
         }
 

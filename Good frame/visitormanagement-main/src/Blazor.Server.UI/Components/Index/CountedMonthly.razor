@@ -21,26 +21,29 @@
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
     };
+
     public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    private List<VisitorCountedMonth>? _result = new();
+    private ISender mediator { get; set; } = default!;
+    private List<VisitorCountedMonth>? result = new();
     private int year = DateTime.Now.Year;
+
     protected override async Task OnInitializedAsync()
     {
-        _result = await _mediator.Send(new GetVisitorCountedMonthlyDataQuery());
+        result = await mediator.Send(new GetVisitorCountedMonthlyDataQuery());
         await filter(year);
     }
+
     private Task filter(int year)
     {
         this.year = year;
-        var data = _result.Where(x=>x.Year==year).Select(x => Convert.ToDouble(x.Count)).ToArray();
-        Series=new List<ChartSeries>(){ new() { Name = "The number of visitors", Data = data } };
-        XAxisLabels = _result.Where(x=>x.Year==year).Select(x => $"{GetMonthName(x.Month)}").ToArray();
+        double[] data = result.Where(x => x.Year == year).Select(x => Convert.ToDouble(x.Count)).ToArray();
+        Series= new List<ChartSeries>(){ new() { Name = "The number of visitors", Data = data } };
+        XAxisLabels = result.Where(x=>x.Year==year).Select(x => $"{GetMonthName(x.Month)}").ToArray();
         return Task.CompletedTask;
     }
 
-    //Getting a Month Name Using Month Number
     private string GetMonthName(int month)
     {
         return CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(month);

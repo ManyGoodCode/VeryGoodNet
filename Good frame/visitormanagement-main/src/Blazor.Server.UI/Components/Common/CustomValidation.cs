@@ -3,11 +3,9 @@ using Microsoft.AspNetCore.Components.Forms;
 
 namespace Blazor.Server.UI.Components.Common
 {
-
-    // See https://docs.microsoft.com/en-us/aspnet/core/blazor/forms-validation?view=aspnetcore-6.0#server-validation-with-a-validator-component
     public class CustomModelValidation : ComponentBase
     {
-        private ValidationMessageStore? _messageStore;
+        private ValidationMessageStore? messageStore;
 
         [CascadingParameter]
         private EditContext? CurrentEditContext { get; set; }
@@ -23,12 +21,12 @@ namespace Blazor.Server.UI.Components.Common
                     $"inside an {nameof(EditForm)}.");
             }
 
-            _messageStore = new(CurrentEditContext);
+            messageStore = new(CurrentEditContext);
 
             CurrentEditContext.OnValidationRequested += (s, e) =>
-                _messageStore?.Clear();
+                messageStore?.Clear();
             CurrentEditContext.OnFieldChanged += (s, e) =>
-                _messageStore?.Clear(e.FieldIdentifier);
+                messageStore?.Clear(e.FieldIdentifier);
         }
 
         public void DisplayErrors(IDictionary<string, ICollection<string>> errors)
@@ -37,7 +35,7 @@ namespace Blazor.Server.UI.Components.Common
             {
                 foreach (var err in errors)
                 {
-                    _messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
+                    messageStore?.Add(CurrentEditContext.Field(err.Key), err.Value);
                 }
 
                 CurrentEditContext.NotifyValidationStateChanged();
@@ -46,7 +44,7 @@ namespace Blazor.Server.UI.Components.Common
 
         public void ClearErrors()
         {
-            _messageStore?.Clear();
+            messageStore?.Clear();
             CurrentEditContext?.NotifyValidationStateChanged();
         }
     }
