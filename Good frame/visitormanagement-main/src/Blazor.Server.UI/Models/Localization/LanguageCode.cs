@@ -5,14 +5,14 @@ namespace Blazor.Server.UI.Models.Localization
     {
         public static readonly LanguageCode[] SupportedLanguages =
         {
-            new("en-US", "English"),
-            new("fr-FR", "French"),
-            new("de-DE", "German"),
-            new("ja-JP", "Japanese"),
-            new("es-ES", "Spanish"),
-            new("ru-RU", "Russian"),
-            new("zh-CN", "Simplified Chinese")
-    };
+            new(code:"en-US",displayName:"English"),
+            new(code:"fr-FR",displayName:"French"),
+            new(code:"de-DE",displayName:"German"),
+            new(code:"ja-JP",displayName:"Japanese"),
+            new(code:"es-ES",displayName:"Spanish"),
+            new(code:"ru-RU",displayName:"Russian"),
+            new(code:"zh-CN",displayName:"Simplified Chinese")
+        };
     }
 }
 
