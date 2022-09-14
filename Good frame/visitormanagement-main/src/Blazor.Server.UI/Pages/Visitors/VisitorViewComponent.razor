@@ -9,45 +9,52 @@
 
 
 <MudExpansionPanels Class="mt-4" MultiExpansion="true">
-    <MudExpansionPanel Text="@L["Visitor Information"]" @bind-IsExpanded="@_expanded">
-        <Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent Visitor="_visitor"></Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent>
+    <MudExpansionPanel Text="@L["Visitor Information"]" @bind-IsExpanded="@expanded">
+        <Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent Visitor="visitor"></Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent>
     </MudExpansionPanel>
-    @if (_visitor.CompanionCount > 0)
+    @if (visitor.CompanionCount > 0)
     {
-        <MudExpansionPanel Text="@($"{L["Companion Information"]} ({_visitor.CompanionCount})")">
-            <Blazor.Server.UI.Pages.Visitors.ViewComponent.CompanionTableViewComponent Companion="_visitor.Companions"></Blazor.Server.UI.Pages.Visitors.ViewComponent.CompanionTableViewComponent>
+        <MudExpansionPanel Text="@($"{L["Companion Information"]} ({visitor.CompanionCount})")">
+            <Blazor.Server.UI.Pages.Visitors.ViewComponent.CompanionTableViewComponent Companion="visitor.Companions"></Blazor.Server.UI.Pages.Visitors.ViewComponent.CompanionTableViewComponent>
         </MudExpansionPanel>
     }
-    @if (_visitor.ApprovalHistories.Count > 0)
+    @if (visitor.ApprovalHistories.Count > 0)
     {
-        <MudExpansionPanel Text="@L["Approval Information"]" @bind-IsExpanded="_expandedhistory">
+        <MudExpansionPanel Text="@L["Approval Information"]" @bind-IsExpanded="expandedhistory">
 
-            <Blazor.Server.UI.Pages.Visitors.ViewComponent.ActivityTableViewComponent ApprovalHistories="_visitor.ApprovalHistories"></Blazor.Server.UI.Pages.Visitors.ViewComponent.ActivityTableViewComponent>
+            <Blazor.Server.UI.Pages.Visitors.ViewComponent.ActivityTableViewComponent ApprovalHistories="visitor.ApprovalHistories"></Blazor.Server.UI.Pages.Visitors.ViewComponent.ActivityTableViewComponent>
 
         </MudExpansionPanel>
     }
-</MudExpansionPanels>
+    </MudExpansionPanels>
 
-@code {
-    private bool _expanded = true;
-    private bool _expandedhistory = true;
+    @code {
+    private bool expanded = true;
+    private bool expandedhistory = true;
+
     [Parameter]
-    public VisitorDto _visitor { get; set; } = new();
+    public VisitorDto visitor { get; set; } = new VisitorDto();
 
     private async Task OnShowPreview(CompanionDto item)
     {
-        var parameters = new DialogParameters {
-                 { nameof(_PreviewDialog.HealthCode),item.HealthCode },
-                 { nameof(_PreviewDialog.NucleicAcidTestReport),item.NucleicAcidTestReport },
-                 { nameof(_PreviewDialog.TripCode),item.TripCode },
-            };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_PreviewDialog>
-        (L["Preview attachments"], parameters, options);
-        var state = await dialog.Result;
+        DialogParameters parameters = new DialogParameters
+        {
+            { nameof(_PreviewDialog.HealthCode),item.HealthCode },
+            { nameof(_PreviewDialog.NucleicAcidTestReport),item.NucleicAcidTestReport },
+            { nameof(_PreviewDialog.TripCode),item.TripCode },
+        };
+
+        DialogOptions options = new DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.Small,
+            FullWidth = true
+        };
+
+        IDialogReference dialog = DialogService.Show<_PreviewDialog>(L["Preview attachments"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
         }
-
     }
 }
