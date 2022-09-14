@@ -27,19 +27,19 @@
                   MultiSelection="true"
                   SelectedItems="SelectItems"
                   SortLabel="@L["Sort By"]"
-                  Loading="@_loading"
-                  Filter="new Func<UserModel,bool>(_quickFilter)">
+                  Loading="@loading"
+                  Filter="new Func<UserModel,bool>(quickFilter)">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">Users</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
-                        @if (_canCreate)
+                        @if (canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Add"
@@ -48,7 +48,7 @@
                                    OnClick="OnCreate"
                                    IconColor="Color.Surface">@L["Create"]</MudButton>
                         }
-                        @if (_canDelete)
+                        @if (canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Filled.Delete"
@@ -58,7 +58,7 @@
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@L["Delete"]</MudButton>
                         }
-                        @if (_canImport)
+                        @if (canImport)
                         {
                             <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
@@ -69,7 +69,7 @@
                                    HtmlTag="label"
                                    IconColor="Color.Surface">@L["Import Data"]</MudButton>
                         }
-                        @if (_canExport)
+                        @if (canExport)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Download"
@@ -80,22 +80,22 @@
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
-                            @if (_canCreate)
+                            <MudMenuItem Disabled="@loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            @if (canCreate)
                             {
                                 <MudMenuItem OnClick="OnCreate">@L["Create"]</MudMenuItem>
                             }
-                            @if (_canDelete)
+                            @if (canDelete)
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
                             }
-                            @if (_canImport)
+                            @if (canImport)
                             {
                                 <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
                                          HtmlTag="label">@L["Import Data"]</MudMenuItem>
                             }
-                            @if (_canExport)
+                            @if (canExport)
                             {
                                 <MudMenuItem OnClick="OnExport">@L["Export Data"]</MudMenuItem>
                             }
@@ -103,9 +103,9 @@
                     </MudHidden>
                 </div>
                 <MudSpacer />
-                @if (_canSearch)
+                @if (canSearch)
                 {
-                    <MudTextField @bind-Value="_searchString" Immediate="true" FullWidth="false"
+                    <MudTextField @bind-Value="searchString" Immediate="true" FullWidth="false"
                               Placeholder="@(L["Search for user name"])" Adornment="Adornment.End"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0 mb-3">
                     </MudTextField>
@@ -128,18 +128,18 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@L["Actions"]">
-                    @if (_canEdit || _canManageRoles || _canRestPassword || _canActive)
+                    @if (canEdit || canManageRoles || canRestPassword || canActive)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true"
                              Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                            @if (_canEdit)
+                            @if (canEdit)
                             {
                                 <MudMenuItem OnClick=@(()=>OnEdit(context))>@L["Edit"]</MudMenuItem>
                             }
-                            @if (_canActive)
+                            @if (canActive)
                             {
                                 @if (context.IsActive)
                                 {
@@ -151,7 +151,7 @@
                                 }
 
                             }
-                            @if (_canRestPassword)
+                            @if (canRestPassword)
                             {
                                 <MudMenuItem OnClick=@(()=>OnResetPassword(context))>@L["Rest Password"]</MudMenuItem>
                             }
@@ -214,7 +214,7 @@
     public CircuitHandler circuitHandler { get; set; } = default!;
 
     [Inject]
-    private ProfileService _profileService { get; set; } = default!;
+    private ProfileService profileService { get; set; } = default!;
     private bool canCreate;
     private bool canSearch;
     private bool canEdit;
@@ -395,10 +395,10 @@
                 AssignRoles = roles.ToArray()
             };
 
-        var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
-        var result = await dialog.Result;
+        DialogParameters parameters = new DialogParameters { ["model"] = model };
+        DialogOptions options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.Small, FullWidth = true };
+        IDialogReference dialog = DialogService.Show<_UserFormDialog>(L["Edit the user"], parameters, options);
+        DialogResult result = await dialog.Result;
         if (!result.Cancelled)
         {
             if (userName.ToLower() == "administrator" || userName.ToLower() == "demo")
@@ -406,7 +406,8 @@
                 Snackbar.Add($"Can't edit administrator", MudBlazor.Severity.Error);
                 return;
             }
-            var state = await AuthState;
+
+            AuthenticationState state = await AuthState;
             item.Email = model.Email;
             item.PhoneNumber = model.PhoneNumber;
             item.Avatar = model.ProfilePictureDataUrl;
@@ -419,9 +420,8 @@
             item.Designation = model.Designation;
             if (state.User.GetUserId() == item.UserId)
             {
-                await _profileService.Update(item);
+                await profileService.Update(item);
             }
-
 
             user.Email = model.Email;
             user.PhoneNumber = model.PhoneNumber;
@@ -433,14 +433,15 @@
             user.IsActive = model.IsActive;
             user.Department = model.Department;
             user.Designation = model.Designation;
-            var identityResult = await userManager.UpdateAsync(user);
+            IdentityResult identityResult = await userManager.UpdateAsync(user);
             if (identityResult.Succeeded)
             {
                 if (model.AssignRoles is not null && model.AssignRoles.Length > 0)
                 {
-                    await _userManager.RemoveFromRolesAsync(user, roles);
-                    await _userManager.AddToRolesAsync(user, model.AssignRoles);
+                    await userManager.RemoveFromRolesAsync(user, roles);
+                    await userManager.AddToRolesAsync(user, model.AssignRoles);
                 }
+
                 Snackbar.Add($"{L["Update successfully"]}", MudBlazor.Severity.Info);
             }
             else
@@ -453,37 +454,44 @@
     private async Task OnDeleteChecked()
     {
         string deleteContent = L["You're sure you want to delete selected items:{0}?"];
-        var parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) } };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
-        var result = await dialog.Result;
+        DialogParameters parameters = new DialogParameters { { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, SelectItems.Count) } };
+        DialogOptions options = new DialogOptions
+        {
+            CloseButton = true,
+            MaxWidth = MaxWidth.ExtraSmall,
+            FullWidth = true,
+            DisableBackdropClick = true
+        };
+
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult result = await dialog.Result;
         if (!result.Cancelled)
         {
-
-            var deleteId = SelectItems.Select(x => x.UserId).ToArray();
-            var deleteusers = await _userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
+            string?[] deleteId = SelectItems.Select(x => x.UserId).ToArray();
+            List<ApplicationUser> deleteusers = await userManager.Users.Where(x => deleteId.Contains(x.Id)).ToListAsync();
             if (deleteusers.Any(x => x.UserName.ToLower() == "administrator" || x.UserName.ToLower() == "demo"))
             {
                 Snackbar.Add($"Can't delete administrator", MudBlazor.Severity.Error);
                 return;
             }
-            foreach (var deleteuser in deleteusers)
+            foreach (ApplicationUser deleteuser in deleteusers)
             {
-                await _userManager.DeleteAsync(deleteuser);
+                await userManager.DeleteAsync(deleteuser);
             }
-            foreach (var item in SelectItems)
+            foreach (UserModel item in SelectItems)
             {
                 UserList.Remove(item);
             }
+
             Snackbar.Add($"{L["Delete successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnSetActive(UserModel item)
     {
-        var user = await _userManager.FindByIdAsync(item.UserId);
+        ApplicationUser user = await userManager.FindByIdAsync(item.UserId);
         user.IsActive = !item.IsActive;
-        var state = await _userManager.UpdateAsync(user);
+        IdentityResult state = await userManager.UpdateAsync(user);
         item.IsActive = !item.IsActive;
         if (state.Succeeded)
         {
@@ -498,12 +506,18 @@
     private async Task OnResetPassword(UserModel item)
     {
 
-        var model = new ResetPasswordFormModel()
-            { Id = item.UserId, DisplayName = item.DisplayName, UserName = item.UserName, ProfilePictureDataUrl = item.Avatar };
-        var parameters = new DialogParameters { ["model"] = model };
-        var options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
-        var dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
-        var result = await dialog.Result;
+        ResetPasswordFormModel model = new ResetPasswordFormModel()
+            {
+                Id = item.UserId,
+                DisplayName = item.DisplayName,
+                UserName = item.UserName,
+                ProfilePictureDataUrl = item.Avatar
+            };
+
+        DialogParameters parameters = new DialogParameters { ["model"] = model };
+        DialogOptions options = new DialogOptions { CloseOnEscapeKey = true, MaxWidth = MaxWidth.ExtraSmall };
+        IDialogReference dialog = DialogService.Show<_ResetPasswordDialog>(L["Set Password"], parameters, options);
+        DialogResult result = await dialog.Result;
         if (!result.Cancelled)
         {
             if (item.UserName.ToLower() == "administrator" || item.UserName.ToLower() == "demo")
@@ -511,9 +525,10 @@
                 Snackbar.Add($"Can't reset password", MudBlazor.Severity.Error);
                 return;
             }
-            var user = await _userManager.FindByIdAsync(item.UserId);
-            var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-            var state = await _userManager.ResetPasswordAsync(user, token, model.Password);
+            
+            ApplicationUser user = await userManager.FindByIdAsync(item.UserId);
+            string token = await userManager.GeneratePasswordResetTokenAsync(user);
+            IdentityResult state = await userManager.ResetPasswordAsync(user, token, model.Password);
             if (state.Succeeded)
             {
                 Snackbar.Add($"{L["Reset password successfully"]}", MudBlazor.Severity.Info);
