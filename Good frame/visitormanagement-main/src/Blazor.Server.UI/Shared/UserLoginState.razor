@@ -3,14 +3,21 @@
 @inherits OwningComponentBase
 @implements IAsyncDisposable
 @code{
-    [CascadingParameter]
-    protected Task<AuthenticationState> _authState { get; set; } = default!;
-    [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
-    [Inject]
-    private AuthenticationStateProvider _authenticationStateProvider { get; set; } = default!;
 
-    private IIdentityService _identityService { get; set; }=default!;
+    [CascadingParameter]
+    protected Task<AuthenticationState> authState { get; set; } = default!;
+
+    [Inject]
+    private NavigationManager navigationManager { get; set; } = default!;
+
+    [Inject]
+    private AuthenticationStateProvider authenticationStateProvider { get; set; } = default!;
+
+    private IIdentityService identityService { get; set; }=default!;
+
+    [Inject]
+    private HubClient client { get; set; }
+
     protected override void Dispose(bool disposing)
     {
         base.Dispose(disposing);
@@ -18,55 +25,58 @@
 
     public async ValueTask DisposeAsync()
     {
-        await _client.StopAsync();
-        _client.LoggedOut -= _client_LoggedOut;
-        _client.LoggedIn -= _client_LoggedIn;
-        _authenticationStateProvider.AuthenticationStateChanged -= _authenticationStateProvider_AuthenticationStateChanged;
+        await client.StopAsync();
+        client.LoggedOut -= client_LoggedOut;
+        client.LoggedIn -= client_LoggedIn;
+        authenticationStateProvider.AuthenticationStateChanged -= AuthenticationStateProvider_AuthenticationStateChanged;
         Dispose(true);
         GC.SuppressFinalize(this);
     }
-    [Inject]
-    private HubClient _client { get; set; }
+
+
     protected override async Task OnInitializedAsync()
     {
-        _identityService = ScopedServices.GetRequiredService<IIdentityService>();
-        _client.LoggedOut += _client_LoggedOut;
-        _client.LoggedIn += _client_LoggedIn;
-        var state = await _authState;
+        identityService = ScopedServices.GetRequiredService<IIdentityService>();
+        client.LoggedOut += client_LoggedOut;
+        client.LoggedIn += client_LoggedIn;
+        AuthenticationState state = await authState;
         if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
         {
-            await _client.StartAsync();
+            await client.StartAsync();
         }
-        _authenticationStateProvider.AuthenticationStateChanged += _authenticationStateProvider_AuthenticationStateChanged;
+
+        authenticationStateProvider.AuthenticationStateChanged += AuthenticationStateProvider_AuthenticationStateChanged;
     }
-    private void _authenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
+
+    private void AuthenticationStateProvider_AuthenticationStateChanged(Task<AuthenticationState> authenticationState)
     {
         InvokeAsync(async () =>
         {
-            var state = await authenticationState;
+            AuthenticationState state = await authenticationState;
             if (state.User.Identity != null && state.User.Identity.IsAuthenticated)
             {
-                await _client.StartAsync();
+                await client.StartAsync();
             }
         });
     }
-    private void _client_LoggedIn(object? sender, string e)
+
+    private void client_LoggedIn(object? sender, string e)
     {
         InvokeAsync(async () =>
         {
-            var username = await _identityService.GetUserNameAsync(e);
+            string username = await identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} login.", MudBlazor.Severity.Info);
-            await _identityService.UpdateLiveStatus(e, true);
+            await identityService.UpdateLiveStatus(e, true);
         });
     }
 
-    private void _client_LoggedOut(object? sender, string e)
+    private void client_LoggedOut(object? sender, string e)
     {
         InvokeAsync(async () =>
         {
-            var username = await _identityService.GetUserNameAsync(e);
+            string username = await identityService.GetUserNameAsync(e);
             Snackbar.Add($"{username} logout.", MudBlazor.Severity.Normal);
-            await _identityService.UpdateLiveStatus(e, false);
+            await identityService.UpdateLiveStatus(e, false);
         });
     }
 }

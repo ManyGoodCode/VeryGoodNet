@@ -1,5 +1,6 @@
-namespace Blazor.Server.UI.Shared;
-
-public class SharedResource
+namespace Blazor.Server.UI.Shared
 {
+    public class SharedResource
+    {
+    }
 }

@@ -6,9 +6,8 @@ public class Theme
 {
     public static MudTheme ApplicationTheme()
     {
-       var theme = new MudTheme()
+        MudTheme theme = new MudTheme()
         {
-
             Palette = new Palette
             {
                 Primary = "#283593",
@@ -171,6 +170,7 @@ public class Theme
                 }
             }
         };
+
         return theme;
     }
 }

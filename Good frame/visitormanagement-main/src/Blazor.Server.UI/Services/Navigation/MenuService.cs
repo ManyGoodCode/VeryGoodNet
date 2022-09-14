@@ -5,7 +5,7 @@ namespace Blazor.Server.UI.Services.Navigation;
 
 public class MenuService : IMenuService
 {
-    private readonly List<MenuSectionModel> _features = new List<MenuSectionModel>()
+    private readonly List<MenuSectionModel> features = new List<MenuSectionModel>()
     {
         new MenuSectionModel
         {
@@ -372,7 +372,7 @@ public class MenuService : IMenuService
             }
         },
     };
-    public IEnumerable<MenuSectionModel> AllFeatures => _features;
+    public IEnumerable<MenuSectionModel> AllFeatures => features;
     public IEnumerable<MenuSectionModel> GuestFeatures => _guestfeatures;
     public IEnumerable<MenuSectionModel> GuardFeatures => _guardfeatures;
     public IEnumerable<MenuSectionModel> UserFeatures => _userfeatures;
