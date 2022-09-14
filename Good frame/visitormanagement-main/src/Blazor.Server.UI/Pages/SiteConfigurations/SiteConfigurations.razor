@@ -21,60 +21,60 @@
                   FixedHeader="true"
                   FixedFooter="true"
                   Height="calc(100vh - 265px)"
-                  Loading="@_loading"
+                  Loading="@loading"
                   SortLabel="@L["Sort By"]"
-                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
-                  Hover="true" @ref="_table">
+                  MultiSelection="true" @bind-SelectedItems="selectedItems"
+                  Hover="true" @ref="table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Site Configurations"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
-                        @if (_canCreate)
+                        @if (canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Add"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    Size="Size.Small"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    IconColor="Color.Surface">@L["Create"]</MudButton>
                         }
-                        @if (_canDelete)
+                        @if (canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Disabled="@(!(selectedItems.Count>0))"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@L["Delete"]</MudButton>
                         }
-                        
-                        
+
+
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
-                            @if (_canCreate)
+                            <MudMenuItem Disabled="@loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            @if (canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                                <MudMenuItem Disabled="@loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
                             }
-                            @if (_canDelete)
+                            @if (canDelete)
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
                             }
-                           
+
                         </MudMenu>
                     </MudHidden>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@searchString" Placeholder="Search" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
@@ -90,17 +90,17 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@L["Actions"]">
-                    @if (_canEdit || _canDelete)
+                    @if (canEdit || canDelete)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                            @if (_canEdit)
+                            @if (canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
                             }
-                            @if (_canDelete)
+                            @if (canDelete)
                             {
                                 <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
                             }
@@ -120,13 +120,13 @@
                     <MudText Typo="Typo.body2">@context.CompanyName</MudText>
                 </MudTd>
                 <MudTd DataLabel="@L["Mandatory Health QrCode"]">
-                  <MudCheckBox Checked="@context.MandatoryHealthQrCode" Disabled="true"></MudCheckBox>
+                    <MudCheckBox Checked="@context.MandatoryHealthQrCode" Disabled="true"></MudCheckBox>
                 </MudTd>
                 <MudTd DataLabel="@L["Mandatory Trip Code"]">
-                  <MudCheckBox Checked="@context.MandatoryTripCode" Disabled="true"></MudCheckBox>
+                    <MudCheckBox Checked="@context.MandatoryTripCode" Disabled="true"></MudCheckBox>
                 </MudTd>
                 <MudTd DataLabel="@L["Mandatory Nucleic Aacid Test Report"]">
-                  <MudCheckBox Checked="@context.MandatoryNucleicAcidTestReport" Disabled="true"></MudCheckBox>
+                    <MudCheckBox Checked="@context.MandatoryNucleicAcidTestReport" Disabled="true"></MudCheckBox>
                 </MudTd>
             </RowTemplate>
             <NoRecordsContent>
@@ -146,91 +146,101 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
-    private HashSet<SiteConfigurationDto> _selectedItems = new HashSet<SiteConfigurationDto>();
-    private MudTable<SiteConfigurationDto> _table = default!;
-    private int _totalItems;
-    private string _searchString = string.Empty;
-    private bool _loading;
-    private bool _uploading;
-    private bool _downloading;
+    private HashSet<SiteConfigurationDto> selectedItems = new HashSet<SiteConfigurationDto>();
+    private MudTable<SiteConfigurationDto> table = default!;
+    private int totalItems;
+    private string searchString = string.Empty;
+    private bool loading;
+    private bool uploading;
+    private bool downloading;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private SiteConfigurationsWithPaginationQuery query { get; set; } = new();
+    private SiteConfigurationsWithPaginationQuery query { get; set; } = new SiteConfigurationsWithPaginationQuery();
 
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canImport;
-    private bool _canExport;
+    private bool canSearch;
+    private bool canCreate;
+    private bool canEdit;
+    private bool canDelete;
+    private bool canImport;
+    private bool canExport;
     protected override async Task OnInitializedAsync()
     {
         Title = L["site configurations"];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Delete)).Succeeded;
-        _canImport = false;
-        _canExport = false;
-
+        AuthenticationState state = await AuthState;
+        canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Create)).Succeeded;
+        canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Search)).Succeeded;
+        canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Edit)).Succeeded;
+        canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.SiteConfigurations.Delete)).Succeeded;
+        canImport = false;
+        canExport = false;
     }
+
     private async Task<TableData<SiteConfigurationDto>> ServerReload(TableState state)
     {
         try
         {
-            _loading = true;
-            query.Keyword = _searchString;
+            loading = true;
+            query.Keyword = searchString;
             query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             query.PageNumber = state.Page + 1;
             query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query);
+            PaginatedData<SiteConfigurationDto> result = await mediator.Send(query);
             return new TableData<SiteConfigurationDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
-            _loading = false;
+            loading = false;
         }
-
     }
 
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
-        _searchString = text;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<SiteConfigurationDto>();
+        searchString = text;
+        await table.ReloadServerData();
     }
+
     private async Task OnRefresh()
     {
-        _selectedItems = new();
-        _searchString = string.Empty;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<SiteConfigurationDto>();
+        searchString = string.Empty;
+        await table.ReloadServerData();
     }
+
     private async Task OnCreate()
     {
-        var command = new AddEditSiteConfigurationCommand();
-        var parameters = new DialogParameters
+        AddEditSiteConfigurationCommand command = new AddEditSiteConfigurationCommand();
+        DialogParameters parameters = new DialogParameters
             {
-        { nameof(_SiteConfigurationFormDialog.model),command },
+                  { nameof(_SiteConfigurationFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_SiteConfigurationFormDialog>
-        (L["Create a new configuration"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_SiteConfigurationFormDialog>(L["Create a new configuration"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            Result<int> result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
         }
     }
+
     private async Task OnEdit(SiteConfigurationDto dto)
     {
-        var command = new AddEditSiteConfigurationCommand()
+        AddEditSiteConfigurationCommand command = new AddEditSiteConfigurationCommand()
             {
                 Id = dto.Id,
                 SiteId = dto.SiteId,
@@ -240,63 +250,80 @@
                 MandatoryNucleicAcidTestReport = dto.MandatoryNucleicAcidTestReport,
                 MandatoryTripCode = dto.MandatoryTripCode,
             };
-        var parameters = new DialogParameters
+
+        DialogParameters parameters = new DialogParameters
                 {
-            { nameof(_SiteConfigurationFormDialog.model),command },
+                         { nameof(_SiteConfigurationFormDialog.model),command },
                 };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_SiteConfigurationFormDialog>
-        (L["Edit the configuration"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_SiteConfigurationFormDialog>(L["Edit the configuration"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            Result<int> result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Save successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDelete(SiteConfigurationDto dto)
     {
-        var deleteContent = L["You're sure you want to delete the site:{0}?"];
-        var parameters = new DialogParameters
+        LocalizedString deleteContent = L["You're sure you want to delete the site:{0}?"];
+        DialogParameters parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.SiteName) }
+                          { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.SiteName) }
                     };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
-        var state = await dialog.Result;
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
+
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteSiteConfigurationCommand(new int[] { dto.Id });
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            DeleteSiteConfigurationCommand command = new DeleteSiteConfigurationCommand(new int[] { dto.Id });
+            Result result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDeleteChecked()
     {
-        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
-        var parameters = new DialogParameters
+        LocalizedString deleteContent = L["You're sure you want to delete the selected items:{0}?"];
+        DialogParameters parameters = new DialogParameters
                         {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                              { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,selectedItems.Count) }
                         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.ExtraSmall,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
+
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteSiteConfigurationCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            DeleteSiteConfigurationCommand command = new DeleteSiteConfigurationCommand(selectedItems.Select(x => x.Id).ToArray());
+            Result result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<SiteConfigurationDto>
-            ();
+            selectedItems = new HashSet<SiteConfigurationDto>();
         }
     }
-
-
-    }
+}

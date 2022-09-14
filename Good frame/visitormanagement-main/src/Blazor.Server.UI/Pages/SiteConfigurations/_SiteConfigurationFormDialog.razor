@@ -59,10 +59,15 @@
 
 @code {
     MudForm form = default!;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
+
     AddEditSiteConfigurationCommandValidator modelValidator = new();
-    [EditorRequired] [Parameter] public AddEditSiteConfigurationCommand model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditSiteConfigurationCommand model { get; set; } = default!;
 
     async Task Submit()
     {
