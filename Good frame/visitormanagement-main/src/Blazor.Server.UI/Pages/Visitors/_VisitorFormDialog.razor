@@ -106,10 +106,10 @@
                     </MudItem>
                     <MudItem xs="12" sm="12">
                         <Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete Label="@L["Select Site - Address"]"
-                                          Disabled="@(model.Apppoved==true || model.Status==VisitorStatus.Canceled)"
-                                          For="@(() => model.SiteId)"
-                                          Required="true" RequiredError="@L["site - address is required!"]"
-                                          @bind-Value="model.SiteId">
+                                                                                  Disabled="@(model.Apppoved==true || model.Status==VisitorStatus.Canceled)"
+                                                                                  For="@(() => model.SiteId)"
+                                                                                  Required="true" RequiredError="@L["site - address is required!"]"
+                                                                                  @bind-Value="model.SiteId">
                         </Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete>
                     </MudItem>
                     <MudItem xs="12" sm="12">
@@ -215,13 +215,21 @@
 
 @code {
     MudForm form = default!;
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
+    [Inject]
+    private IUploadService uploadService { get; set; } = default!;
+
     AddEditVisitorCommandValidator modelValidator = new AddEditVisitorCommandValidator();
-    [EditorRequired][Parameter] public AddEditVisitorCommand model { get; set; } = default!;
+
+    [EditorRequired]
+    [Parameter]
+    public AddEditVisitorCommand model { get; set; } = default!;
 
 
     protected override Task OnAfterRenderAsync(bool firstRender)
@@ -233,9 +241,9 @@
     {
         if (model.QrCode is null)
         {
-            var qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
-            var qrcode = qr.ToPng(12, 4);
-            var result = await _uploadService.UploadAsync(new UploadRequest()
+            QrCode qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
+            byte[] qrcode = qr.ToPng(12, 4);
+            string result = await uploadService.UploadAsync(new UploadRequest()
                 {
                     Data = qrcode,
                     FileName = "Q_" + Guid.NewGuid().ToString() + ".png",
@@ -243,9 +251,9 @@
                     Folder = model.PassCode,
                     UploadType = UploadType.VisitorPricture
                 });
+
             model.QrCode = result.Replace("\\", "/");
         }
-
     }
 
 
@@ -254,25 +262,26 @@
         await form.Validate();
         if (form.IsValid)
         {
-            var siteConfig = await _mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
-                if (string.IsNullOrEmpty(model.HealthCode) && (siteConfig is not null && siteConfig.MandatoryHealthQrCode))
-                {
-                    Snackbar.Add(L["You must upload health code"], MudBlazor.Severity.Error);
-                    return;
-                }
-                if (string.IsNullOrEmpty(model.TripCode) && (siteConfig is not null && siteConfig.MandatoryTripCode))
-                {
-                    Snackbar.Add(L["You must upload trip code"], MudBlazor.Severity.Error);
-                    return;
-                }
-                if (string.IsNullOrEmpty(model.NucleicAcidTestReport) && (siteConfig is not null && siteConfig.MandatoryNucleicAcidTestReport))
-                {
-                    Snackbar.Add(L["You must upload nucleic acid test report"], MudBlazor.Severity.Error);
-                    return;
-                }
+            CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs.SiteConfigurationDto siteConfig = await mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
+            if (string.IsNullOrEmpty(model.HealthCode) && (siteConfig is not null && siteConfig.MandatoryHealthQrCode))
+            {
+                Snackbar.Add(L["You must upload health code"], MudBlazor.Severity.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(model.TripCode) && (siteConfig is not null && siteConfig.MandatoryTripCode))
+            {
+                Snackbar.Add(L["You must upload trip code"], MudBlazor.Severity.Error);
+                return;
+            }
+            if (string.IsNullOrEmpty(model.NucleicAcidTestReport) && (siteConfig is not null && siteConfig.MandatoryNucleicAcidTestReport))
+            {
+                Snackbar.Add(L["You must upload nucleic acid test report"], MudBlazor.Severity.Error);
+                return;
+            }
+
             MudDialog.Close(DialogResult.Ok(true));
         }
-
     }
+
     void Cancel() => MudDialog.Cancel();
 }

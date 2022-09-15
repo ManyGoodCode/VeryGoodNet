@@ -9,18 +9,13 @@ namespace Blazor.Server.UI.Pages.Visitors;
 
 public class EmployeeAutocomplete : MudAutocomplete<int?>
 {
- 
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
 
+    private List<EmployeeDto> employees = new List<EmployeeDto>();
 
-    private List<EmployeeDto> _employees = new();
-
-    // supply default parameters, but leave the possibility to override them
     public override Task SetParametersAsync(ParameterView parameters)
     {
-     
-   
         Dense = true;
         ResetValueOnEmptyText = true;
         SearchFunc = Search;
@@ -29,45 +24,44 @@ public class EmployeeAutocomplete : MudAutocomplete<int?>
         return base.SetParametersAsync(parameters);
     }
 
-    // when the value parameter is set, we have to load that one brand to be able to show the name
-    // we can't do that in OnInitialized because of a strange bug (https://github.com/MudBlazor/MudBlazor/issues/3818)
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)        
+        if (firstRender)
         {
-            _employees = (await _mediator.Send(new GetAllEmployeesQuery())).ToList();
+            employees = (await mediator.Send(new GetAllEmployeesQuery())).ToList();
             ForceRender(true);
         }
     }
 
-    private  Task<IEnumerable<int?>> Search(string value)
+    private Task<IEnumerable<int?>> Search(string value)
     {
-        var list = new List<int?>();
+        List<int?> list = new List<int?>();
         if (string.IsNullOrEmpty(value))
         {
-            var result = _employees.Select(x => x.Id);
-            foreach (var i in result)
+            IEnumerable<int> result = employees.Select(x => x.Id);
+            foreach (int i in result)
             {
                 list.Add(i);
             }
         }
         else
         {
-            var result = _employees.Where(x => value.Contains(x.Name)).Select(x => x.Id);
-            foreach (var i in result)
+            IEnumerable<int> result = employees.Where(x => value.Contains(x.Name)).Select(x => x.Id);
+            foreach (int i in result)
             {
                 list.Add(i);
             }
-            
         }
+
         return Task.FromResult(list.AsEnumerable());
     }
 
-    private string GetName(int? id) {
-        var emp = _employees.Find(b => b.Id == id);
-        if(emp is null)
+    private string GetName(int? id)
+    {
+        EmployeeDto emp = employees.Find(b => b.Id == id);
+        if (emp is null)
         {
-            return String.Empty;
+            return string.Empty;
         }
         else
         {

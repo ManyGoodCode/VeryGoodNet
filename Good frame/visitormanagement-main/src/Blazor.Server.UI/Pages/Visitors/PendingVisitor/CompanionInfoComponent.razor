@@ -18,16 +18,17 @@
             </tr>
         </thead>
         <tbody>
-            @foreach (var item in TRequest.Companions.Where(x=>x.TrackingState!= TrackingState.Deleted))
+            @foreach (var item in TRequest.Companions.Where(x => x.TrackingState != TrackingState.Deleted))
             {
                 <tr>
                     <td>
                         <MudText Typo="Typo.body1">@item.Name</MudText>
                         <MudText Typo="Typo.body2">@item.IdentificationNo</MudText>
-                        @if(!string.IsNullOrEmpty(item.Description)){
+                        @if (!string.IsNullOrEmpty(item.Description))
+                        {
                             <MudText Typo="Typo.body2">@item.Description</MudText>
                         }
-                        
+
                     </td>
                     <td>
                         @if (item.TripCode is not null)
@@ -62,50 +63,70 @@
 @code {
 
     [Parameter]
-    public CompleteVisitorInfoCommand TRequest { get; set; } = new();
+    public CompleteVisitorInfoCommand TRequest { get; set; } = new CompleteVisitorInfoCommand();
     private async Task Add()
     {
-        var companionDto = new CompanionDto() { VisitorId = TRequest.Id, TrackingState = TrackingState.Added };
-        var parameters = new DialogParameters {
-                 { nameof(_CompanionDialog.model),companionDto },
-                  { nameof(_CompanionDialog.PassCode),TRequest.PassCode }
+        CompanionDto companionDto = new CompanionDto()
+            {
+                VisitorId = TRequest.Id,
+                TrackingState = TrackingState.Added
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_CompanionDialog>
-        (L["Add a new companion"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogParameters parameters = new DialogParameters
+        {
+                  { nameof(_CompanionDialog.model),companionDto },
+                  { nameof(_CompanionDialog.PassCode),TRequest.PassCode }
+        };
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_CompanionDialog>(L["Add a new companion"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
             TRequest.Companions.Add(companionDto);
         }
     }
+
     private async Task Edit(CompanionDto item)
     {
-        var origin = new CompanionDto()
-        {
+        CompanionDto origin = new CompanionDto()
+            {
                 Description = item.Description,
                 HealthCode = item.HealthCode,
                 Id = item.Id,
                 Name = item.Name,
                 IdentificationNo = item.IdentificationNo,
                 NucleicAcidTestReport = item.NucleicAcidTestReport,
-                QrCode=item.QrCode,
+                QrCode = item.QrCode,
                 TripCode = item.TripCode,
                 VisitorId = item.VisitorId,
                 TrackingState = item.TrackingState
-        };
-        var parameters = new DialogParameters {
+            };
+
+        DialogParameters parameters = new DialogParameters {
                  { nameof(_CompanionDialog.model),item },
                  { nameof(_CompanionDialog.PassCode),TRequest.PassCode }
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_CompanionDialog>
-        (L["Edit the companion"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_CompanionDialog>(L["Edit the companion"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            if(item.TrackingState!= TrackingState.Added)
-               item.TrackingState = TrackingState.Modified;
+            if (item.TrackingState != TrackingState.Added)
+                item.TrackingState = TrackingState.Modified;
         }
         else
         {
@@ -129,25 +150,33 @@
         }
         else
         {
-           TRequest.Companions.Remove(item);
+            TRequest.Companions.Remove(item);
         }
-        
+
         return Task.CompletedTask;
     }
+
     private async Task OnShowPreview(CompanionDto item)
     {
-        var parameters = new DialogParameters {
+        DialogParameters parameters = new DialogParameters
+        {
                  { nameof(_PreviewDialog.HealthCode),item.HealthCode },
                  { nameof(_PreviewDialog.NucleicAcidTestReport),item.NucleicAcidTestReport },
                  { nameof(_PreviewDialog.TripCode),item.TripCode },
+         };
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_PreviewDialog>
-        (L["Preview upload attachments"], parameters, options);
-        var state = await dialog.Result;
+
+        IDialogReference dialog = DialogService.Show<_PreviewDialog>(L["Preview upload attachments"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-        }
 
+        }
     }
 }

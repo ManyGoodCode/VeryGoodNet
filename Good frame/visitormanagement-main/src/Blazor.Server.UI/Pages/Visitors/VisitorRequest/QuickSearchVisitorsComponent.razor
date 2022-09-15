@@ -3,12 +3,12 @@
 
 @inject IStringLocalizer<Visitors> L
 @inherits MudComponentBase
-<MudTable Items="@_list"
+<MudTable Items="@list"
           T="VisitorDto"
           OnRowClick="RowClickEvent"
           FixedHeader="true" FixedFooter="true" Height="400px"
           Hover="true"
-          Filter="new Func<VisitorDto,bool>(FilterFunc)" >
+          Filter="new Func<VisitorDto,bool>(FilterFunc)">
     <ToolBarContent>
         <MudSpacer />
         <MudTextField @bind-Value="@keyword" Placeholder="@L["Search"]" Adornment="Adornment.Start" AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
@@ -40,12 +40,16 @@
 </MudTable>
 
 @code {
-    private List<VisitorDto> _list = new();
+    private List<VisitorDto> list = new List<VisitorDto>();
+
     [Parameter]
     public string InputKeyword { get; set; } = string.Empty;
-    private string keyword { get; set; }= string.Empty;
+
+    private string keyword { get; set; } = string.Empty;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [Parameter]
     [EditorRequired]
     public EventCallback<VisitorDto> Selected { get; set; }
@@ -53,11 +57,11 @@
     protected override async Task OnInitializedAsync()
     {
         keyword = InputKeyword;
-        var result = await _mediator.Send(new SearchVisitorFuzzyQuery(keyword));
-        _list = result;
+        List<VisitorDto> result = await mediator.Send(new SearchVisitorFuzzyQuery(keyword));
+        list = result;
     }
 
-    private bool FilterFunc(VisitorDto element) 
+    private bool FilterFunc(VisitorDto element)
     {
         if (string.IsNullOrWhiteSpace(keyword))
             return true;
@@ -67,6 +71,7 @@
             return true;
         return false;
     }
+
     private void RowClickEvent(TableRowClickEventArgs<VisitorDto> tableRowClickEventArgs)
     {
         Selected.InvokeAsync(tableRowClickEventArgs.Item);

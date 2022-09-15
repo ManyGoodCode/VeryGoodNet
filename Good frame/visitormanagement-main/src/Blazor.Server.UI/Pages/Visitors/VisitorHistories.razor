@@ -19,41 +19,41 @@
                   FixedFooter="true"
                   Virtualize="true"
                   Height="calc(100vh - 265px)"
-                  Loading="@_loading"
+                  Loading="@loading"
                   SortLabel="@L["Sort By"]"
-                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
-                  Hover="true" @ref="_table">
+                  MultiSelection="true" @bind-SelectedItems="selectedItems"
+                  Hover="true" @ref="table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Visitor Histories"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
 
-                        @if (_canDelete)
+                        @if (canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Disabled="@(!(selectedItems.Count>0))"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@L["Delete"]</MudButton>
                         }
-                       
+
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            <MudMenuItem Disabled="@loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
                         </MudMenu>
                     </MudHidden>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@searchString" Placeholder="Search" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
@@ -84,7 +84,7 @@
                 </MudTd>
                 <MudTd DataLabel="@L["Temperature"]">@context.Temperature</MudTd>
                 <MudTd DataLabel="@L["Attachments"]">
-                  <Blazor.Server.UI.Pages.Visitors.ViewComponent.AttachmentsComponent Attachments="@context.Attachments"></Blazor.Server.UI.Pages.Visitors.ViewComponent.AttachmentsComponent>
+                    <Blazor.Server.UI.Pages.Visitors.ViewComponent.AttachmentsComponent Attachments="@context.Attachments"></Blazor.Server.UI.Pages.Visitors.ViewComponent.AttachmentsComponent>
                 </MudTd>
                 <MudTd DataLabel="@L["Comment"]">@context.Comment</MudTd>
             </RowTemplate>
@@ -105,80 +105,89 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
-    private HashSet<VisitorHistoryDto> _selectedItems = new HashSet<VisitorHistoryDto>();
-    private MudTable<VisitorHistoryDto> _table = default!;
-    private int _totalItems;
-    private string _searchString = string.Empty;
-    private bool _loading;
-    private bool _uploading;
-    private bool _downloading;
+    private HashSet<VisitorHistoryDto> selectedItems = new HashSet<VisitorHistoryDto>();
+    private MudTable<VisitorHistoryDto> table = default!;
+    private int totalItems;
+    private string searchString = string.Empty;
+    private bool loading;
+    private bool uploading;
+    private bool downloading;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
     private VisitorHistoriesWithPaginationQuery query { get; set; } = new();
 
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canDelete;
+    private bool canSearch;
+    private bool canCreate;
+    private bool canDelete;
     protected override async Task OnInitializedAsync()
     {
         Title = L["Visitor Histories"];
-        var state = await AuthState;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.VisitorHistories.Search)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.VisitorHistories.Delete)).Succeeded;
+        AuthenticationState state = await AuthState;
+        canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.VisitorHistories.Search)).Succeeded;
+        canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.VisitorHistories.Delete)).Succeeded;
     }
+
     private async Task<TableData<VisitorHistoryDto>> ServerReload(TableState state)
     {
         try
         {
-            _loading = true;
-            query.Keyword = _searchString;
+            loading = true;
+            query.Keyword = searchString;
             query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             query.PageNumber = state.Page + 1;
             query.PageSize = state.PageSize;
-            var result =await  _mediator.Send(query);
-            return new TableData<VisitorHistoryDto>() { TotalItems = result.TotalItems, Items = result.Items };
+            PaginatedData<VisitorHistoryDto> result = await mediator.Send(query);
+            return new TableData<VisitorHistoryDto>()
+                {
+                    TotalItems = result.TotalItems,
+                    Items = result.Items
+                };
         }
         finally
         {
-            _loading = false;
+            loading = false;
         }
-
     }
 
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
-        _searchString = text;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<VisitorHistoryDto>();
+        searchString = text;
+        await table.ReloadServerData();
     }
+
     private async Task OnRefresh()
     {
-        _selectedItems = new();
-        _searchString = string.Empty;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<VisitorHistoryDto>();
+        searchString = string.Empty;
+        await table.ReloadServerData();
     }
-     private async Task OnDeleteChecked()
+
+    private async Task OnDeleteChecked()
     {
-        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
-        var parameters = new DialogParameters
-                        {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
-                        };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
-        var state = await dialog.Result;
+        LocalizedString deleteContent = L["You're sure you want to delete the selected items:{0}?"];
+        DialogParameters parameters = new DialogParameters
+        {
+                     { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,selectedItems.Count) }
+        };
+
+        DialogOptions options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteVisitorHistoryCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            DeleteVisitorHistoryCommand command = new DeleteVisitorHistoryCommand(selectedItems.Select(x => x.Id).ToArray());
+            Result result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<VisitorHistoryDto>();
+            selectedItems = new HashSet<VisitorHistoryDto>();
         }
     }
-    }
+}
+

@@ -29,70 +29,70 @@
                   FixedFooter="true"
                   Virtualize="true"
                   Height="calc(100vh - 315px)"
-                  Loading="@_loading"
+                  Loading="@loading"
                   SortLabel="@L["Sort By"]"
-                  MultiSelection="true" @bind-SelectedItems="_selectedItems"
-                  Hover="true" @ref="_table">
+                  MultiSelection="true" @bind-SelectedItems="selectedItems"
+                  Hover="true" @ref="table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Visitors"]</MudText>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown">
                         <MudButton DisableElevation Variant="Variant.Outlined"
                                    Size="Size.Small"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    OnClick="@(()=>OnRefresh())"
                                    StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                    Style="margin-right: 4px; margin-bottom:4px">@L["Refresh"]</MudButton>
-                        @if (_canRequest)
+                        @if (canRequest)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.PostAdd"
-                                   Disabled="_loading"
+                                   Disabled="loading"
                                    Size="Size.Small"
                                    OnClick="OnRequest"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    IconColor="Color.Surface">@L["Visitor Request"]</MudButton>
                         }
-                        @if (_canApprove)
+                        @if (canApprove)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Approval"
-                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Disabled="@(!(selectedItems.Count>0))"
                                    Size="Size.Small"
                                    OnClick="OnApproval"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    IconColor="Color.Surface">@L["Quick Approve"]</MudButton>
                         }
-                        @if (_canCreate)
+                        @if (canCreate)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Add"
-                                   Disabled="@_loading"
+                                   Disabled="@loading"
                                    Size="Size.Small"
                                    OnClick="OnCreate"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    IconColor="Color.Surface">@L["Create"]</MudButton>
                         }
-                        @if (_canDelete)
+                        @if (canDelete)
                         {
                             <MudButton DisableElevation Variant="Variant.Outlined" Color="Color.Error"
                                    StartIcon="@Icons.Material.Filled.Delete"
-                                   Disabled="@(!(_selectedItems.Count>0))"
+                                   Disabled="@(!(selectedItems.Count>0))"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnDeleteChecked"
                                    IconColor="Color.Surface">@L["Delete"]</MudButton>
                         }
-                        @if (_canImport)
+                        @if (canImport)
                         {
-                            <MudButton Disabled="@_uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Disabled="@uploading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Upload"
                                    Size="Size.Small"
                                    Style="margin-right:1px; margin-bottom:4px"
                                    for="importdataInput"
                                    HtmlTag="label"
                                    IconColor="Color.Surface">
-                                @if (_uploading)
+                                @if (uploading)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                                     <MudText Class="ms-2"> @L["Uploading..."]</MudText>
@@ -105,15 +105,15 @@
                             </MudButton>
                             <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                         }
-                        @if (_canExport)
+                        @if (canExport)
                         {
-                            <MudButton Disabled="@_downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
+                            <MudButton Disabled="@downloading" DisableElevation Variant="Variant.Outlined" Color="Color.Primary"
                                    StartIcon="@Icons.Material.Filled.Download"
                                    Size="Size.Small"
                                    Style="margin-right: 4px; margin-bottom:4px"
                                    OnClick="OnExport"
                                    IconColor="Color.Surface">
-                                @if (_downloading)
+                                @if (downloading)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="Size.Small" Indeterminate="true" />
                                     <MudText Class="ms-2"> @L["Downloading..."]</MudText>
@@ -127,30 +127,30 @@
                     </MudHidden>
                     <MudHidden Breakpoint="Breakpoint.SmAndDown" Invert="true">
                         <MudMenu AnchorOrigin="Origin.BottomLeft" StartIcon="@Icons.Filled.KeyboardCommandKey" EndIcon="@Icons.Filled.KeyboardArrowDown" Label="@L["Action"]" Color="Color.Primary" Variant="Variant.Filled">
-                            <MudMenuItem Disabled="@_loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
-                            @if (_canRequest)
+                            <MudMenuItem Disabled="@loading" OnClick="@(()=>OnRefresh())">@L["Refresh"]</MudMenuItem>
+                            @if (canRequest)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnRequest">@L["Visitor Request"]</MudMenuItem>
+                                <MudMenuItem Disabled="@loading" OnClick="OnRequest">@L["Visitor Request"]</MudMenuItem>
                             }
-                            @if (_canApprove)
+                            @if (canApprove)
                             {
-                                <MudMenuItem Disabled="@(!(_selectedItems.Count>0))" OnClick="OnApproval">@L["Approve"]</MudMenuItem>
+                                <MudMenuItem Disabled="@(!(selectedItems.Count>0))" OnClick="OnApproval">@L["Approve"]</MudMenuItem>
                             }
-                            @if (_canCreate)
+                            @if (canCreate)
                             {
-                                <MudMenuItem Disabled="@_loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
+                                <MudMenuItem Disabled="@loading" OnClick="OnCreate">@L["Create"]</MudMenuItem>
                             }
-                            @if (_canDelete)
+                            @if (canDelete)
                             {
                                 <MudMenuItem OnClick="OnDeleteChecked">@L["Delete"]</MudMenuItem>
                             }
-                            @if (_canImport)
+                            @if (canImport)
                             {
                                 <InputFile id="importdataInput" OnChange="OnImportData" hidden accept=".xlsx" />
                                 <MudMenuItem for="importdataInput"
                                          HtmlTag="label">@L["Import Data"]</MudMenuItem>
                             }
-                            @if (_canExport)
+                            @if (canExport)
                             {
                                 <MudMenuItem OnClick="OnExport">@L["Export Data"]</MudMenuItem>
                             }
@@ -158,7 +158,7 @@
                     </MudHidden>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@searchString" Placeholder="Search" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
@@ -183,17 +183,17 @@
             </HeaderContent>
             <RowTemplate>
                 <MudTd DataLabel="@L["Actions"]">
-                    @if (_canEdit || _canDelete)
+                    @if (canEdit || canDelete)
                     {
                         <MudMenu Label="@L["Actions"]" Variant="Variant.Filled" DisableElevation="true" Size="Size.Small"
                              Dense="true"
                              EndIcon="@Icons.Filled.KeyboardArrowDown" IconColor="Color.Info" Direction="Direction.Left"
                              OffsetX="true">
-                            @if (_canEdit)
+                            @if (canEdit)
                             {
                                 <MudMenuItem OnClick="@(()=>OnEdit(context))">@L["Edit"]</MudMenuItem>
                             }
-                            @if (_canDelete)
+                            @if (canDelete)
                             {
                                 <MudMenuItem OnClick="@(()=>OnDelete(context))">@L["Delete"]</MudMenuItem>
                             }
@@ -240,7 +240,7 @@
                     <MudText>@context.ExpectedDate?.ToString("MM/dd/yy",CultureInfo.InvariantCulture)</MudText>
                     @if (context.ExpectedTime is not null)
                     {
-                        <MudText Typo="Typo.body2">@(new DateTime().Add(context.ExpectedTime.Value).ToString("hh:mm tt",CultureInfo.InvariantCulture))</MudText>
+                        <MudText Typo="Typo.body2">@(new DateTime().Add(context.ExpectedTime.Value).ToString("hh:mm tt", CultureInfo.InvariantCulture))</MudText>
                     }
                 </MudTd>
                 <MudTd DataLabel="@L["Check-in/out Time"]">
@@ -289,151 +289,183 @@
 </ErrorBoundary>
 @code {
     public string? Title { get; private set; }
-    private HashSet<VisitorDto> _selectedItems = new HashSet<VisitorDto>();
-    private MudTable<VisitorDto> _table = default!;
-    private int _totalItems;
-    private string _searchString = string.Empty;
-    private bool _loading;
-    private bool _uploading;
-    private bool _downloading;
+    private HashSet<VisitorDto> selectedItems = new HashSet<VisitorDto>();
+    private MudTable<VisitorDto> table = default!;
+    private int totalItems;
+    private string searchString = string.Empty;
+    private bool loading;
+    private bool uploading;
+    private bool downloading;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [Inject]
     private Hashids hashids { get; set; } = default!;
+
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
+    private NavigationManager navigationManager { get; set; } = default!;
+
     [Inject]
-    private IFluentEmail _fluentEmail { get; set; }
+    private IFluentEmail fluentEmail { get; set; }
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
-    private VisitorsWithPaginationQuery query { get; set; } = new();
+    private VisitorsWithPaginationQuery query { get; set; } = new VisitorsWithPaginationQuery();
 
-    private bool _canSearch;
-    private bool _canCreate;
-    private bool _canEdit;
-    private bool _canDelete;
-    private bool _canApprove;
-    private bool _canImport;
-    private bool _canExport;
-    private bool _canRequest;
+    private bool canSearch;
+    private bool canCreate;
+    private bool canEdit;
+    private bool canDelete;
+    private bool canApprove;
+    private bool canImport;
+    private bool canExport;
+    private bool canRequest;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["Visitors"];
-        var state = await AuthState;
-        _canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Create)).Succeeded;
-        _canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Search)).Succeeded;
-        _canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Edit)).Succeeded;
-        _canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Delete)).Succeeded;
-        _canApprove = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Approve)).Succeeded;
-        _canRequest = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.VisitorRequest)).Succeeded;
-        _canImport = false;
-        _canExport = false;
-
+        AuthenticationState state = await AuthState;
+        canCreate = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Create)).Succeeded;
+        canSearch = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Search)).Succeeded;
+        canEdit = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Edit)).Succeeded;
+        canDelete = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Delete)).Succeeded;
+        canApprove = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.Approve)).Succeeded;
+        canRequest = (await AuthService.AuthorizeAsync(state.User, Permissions.Visitors.VisitorRequest)).Succeeded;
+        canImport = false;
+        canExport = false;
     }
+
     private async Task<TableData<VisitorDto>> ServerReload(TableState state)
     {
         try
         {
-            _loading = true;
-            query.Keyword = _searchString;
+            loading = true;
+            query.Keyword = searchString;
             query.OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel;
             query.SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString());
             query.PageNumber = state.Page + 1;
             query.PageSize = state.PageSize;
-            var result = await _mediator.Send(query);
+            PaginatedData<VisitorDto> result = await mediator.Send(query);
             return new TableData<VisitorDto>() { TotalItems = result.TotalItems, Items = result.Items };
         }
         finally
         {
-            _loading = false;
+            loading = false;
         }
-
     }
 
     private void OnFilterChanged(string s)
     {
         InvokeAsync(async () =>
         {
-            await _table.ReloadServerData();
+            await table.ReloadServerData();
         });
     }
+
     private Task OnRequest()
     {
-        _navigationManager.NavigateTo("/visitor/visitorrequest");
+        navigationManager.NavigateTo("/visitor/visitorrequest");
         return Task.CompletedTask;
     }
+
     private async Task OnSearch(string text)
     {
-        _selectedItems = new();
-        _searchString = text;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<VisitorDto>();
+        searchString = text;
+        await table.ReloadServerData();
     }
+
     private async Task OnRefresh()
     {
-        _selectedItems = new();
-        _searchString = string.Empty;
-        await _table.ReloadServerData();
+        selectedItems = new HashSet<VisitorDto>();
+        searchString = string.Empty;
+        await table.ReloadServerData();
     }
+
     private async Task OnShowPreview(VisitorDto dto)
     {
-        var parameters = new DialogParameters {
+        DialogParameters parameters = new DialogParameters
+        {
                  { nameof(_PreviewDialog.HealthCode),dto.HealthCode },
                  { nameof(_PreviewDialog.NucleicAcidTestReport),dto.NucleicAcidTestReport },
                  { nameof(_PreviewDialog.TripCode),dto.TripCode },
+        };
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_PreviewDialog>(L["Preview attachments"], parameters, options);
-        var state = await dialog.Result;
+
+        IDialogReference dialog = DialogService.Show<_PreviewDialog>(L["Preview attachments"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
         }
     }
+
     private async Task OnApproval()
     {
-        var parameters = new DialogParameters
+        DialogParameters parameters = new DialogParameters
             {
-
-        { nameof(_ApprovalDialog.Selected),_selectedItems.ToList() },
+                    { nameof(_ApprovalDialog.Selected),selectedItems.ToList() },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true };
-        var dialog = DialogService.Show<_ApprovalDialog>(L["Approval visitor request"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_ApprovalDialog>(L["Approval visitor request"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(new ApprovalVisitorsCommand(state.Data.ToString(), _selectedItems.Select(x => x.Id).ToArray()));
-            await _table.ReloadServerData();
+            Result<int> result = await mediator.Send(new ApprovalVisitorsCommand(state.Data.ToString(), selectedItems.Select(x => x.Id).ToArray()));
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Approved successfully"]}", MudBlazor.Severity.Info);
         }
     }
+
     private async Task OnCreate()
     {
-        var command = new AddEditVisitorCommand()
+        AddEditVisitorCommand command = new AddEditVisitorCommand()
             {
                 PassCode = hashids.EncodeLong(DateTime.Now.Ticks),
                 Apppoved = false,
                 PrivacyPolicy = true,
                 Promise = true
             };
-        var parameters = new DialogParameters
-            {
 
-        { nameof(_VisitorFormDialog.model),command },
+        DialogParameters parameters = new DialogParameters
+            {
+                    { nameof(_VisitorFormDialog.model),command },
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_VisitorFormDialog>
-        (L["Create a new visitor"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_VisitorFormDialog>(L["Create a new visitor"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            Result<int> result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Create successfully"]}", MudBlazor.Severity.Info);
         }
     }
+
     private async Task OnEdit(VisitorDto dto)
     {
-        var command = new AddEditVisitorCommand()
+        AddEditVisitorCommand command = new AddEditVisitorCommand()
             {
                 Id = dto.Id,
                 Name = dto.Name,
@@ -470,63 +502,81 @@
                 ApprovalHistories = dto.ApprovalHistories,
                 ApprovalComment = dto.ApprovalComment,
             };
-        var parameters = new DialogParameters
+        DialogParameters parameters = new DialogParameters
                 {
-            { nameof(_VisitorFormDialog.model),command },
+                    { nameof(_VisitorFormDialog.model),command },
                 };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_VisitorFormDialog>
-        (L["Edit the visitor"], parameters, options);
-        var state = await dialog.Result;
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true
+            };
+
+        IDialogReference dialog = DialogService.Show<_VisitorFormDialog>(L["Edit the visitor"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            Result<int> result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Save successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDelete(VisitorDto dto)
     {
-        var deleteContent = L["You're sure you want to delete the Visitor:{0}?"];
-        var parameters = new DialogParameters
+        LocalizedString deleteContent = L["You're sure you want to delete the Visitor:{0}?"];
+        DialogParameters parameters = new DialogParameters
                     {
-                { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
+                           { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent, dto.Name) }
                     };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Small, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
-        var state = await dialog.Result;
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Small,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
+
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteVisitorCommand(new int[] { dto.Id });
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            DeleteVisitorCommand command = new DeleteVisitorCommand(new int[] { dto.Id });
+            Result result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
         }
     }
 
     private async Task OnDeleteChecked()
     {
-        var deleteContent = L["You're sure you want to delete the selected items:{0}?"];
-        var parameters = new DialogParameters
+        LocalizedString deleteContent = L["You're sure you want to delete the selected items:{0}?"];
+        DialogParameters parameters = new DialogParameters
                         {
-                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,_selectedItems.Count) }
+                    { nameof(DeleteConfirmation.ContentText), string.Format(deleteContent,selectedItems.Count) }
                         };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall, FullWidth = true, DisableBackdropClick = true };
-        var dialog = DialogService.Show<DeleteConfirmation>
-        (L["Delete"], parameters, options);
-        var state = await dialog.Result;
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.ExtraSmall,
+                FullWidth = true,
+                DisableBackdropClick = true
+            };
+
+        IDialogReference dialog = DialogService.Show<DeleteConfirmation>(L["Delete"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var command = new DeleteVisitorCommand(_selectedItems.Select(x => x.Id).ToArray());
-            var result = await _mediator.Send(command);
-            await _table.ReloadServerData();
+            DeleteVisitorCommand command = new DeleteVisitorCommand(selectedItems.Select(x => x.Id).ToArray());
+            Result result = await mediator.Send(command);
+            await table.ReloadServerData();
             Snackbar.Add($"{L["Deleted successfully"]}", MudBlazor.Severity.Info);
-            _selectedItems = new HashSet<VisitorDto>
-            ();
+            selectedItems = new HashSet<VisitorDto>();
         }
     }
+
     private void OnExport()
     {
 
@@ -535,4 +585,4 @@
     {
 
     }
-    }
+}

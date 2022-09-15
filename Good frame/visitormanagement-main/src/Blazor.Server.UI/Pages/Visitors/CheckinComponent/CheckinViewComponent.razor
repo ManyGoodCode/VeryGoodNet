@@ -52,11 +52,11 @@
                 }
             }
             <Blazor.Server.UI.Pages.CheckinPoints.CheckinPointWithSiteIdAutocomplete Label="@L["Select Check-in Point"]"
-                                                                     For="@(() => TRequest.CheckinPointId)"
-                                                                     @bind-Value="TRequest.CheckinPointId"
-                                                                     SiteId="@TRequest.SiteId"
-                                                                     Required="true"
-                                                                     RequiredError="@L["check-in point is required!"]"></Blazor.Server.UI.Pages.CheckinPoints.CheckinPointWithSiteIdAutocomplete>
+                                                                                     For="@(() => TRequest.CheckinPointId)"
+                                                                                     @bind-Value="TRequest.CheckinPointId"
+                                                                                     SiteId="@TRequest.SiteId"
+                                                                                     Required="true"
+                                                                                     RequiredError="@L["check-in point is required!"]"></Blazor.Server.UI.Pages.CheckinPoints.CheckinPointWithSiteIdAutocomplete>
             <MudTextField For="@(() => TRequest.Temperature)" @bind-Value="@TRequest.Temperature" Label="@L["Visitor's Temperature"]" Required="true" RequiredError="temperature is required!" />
             <div class="d-flex gap-2">
                 <InputFile id="uploadAttachmentsInput1" OnChange="UploadFiles" hidden multiple />
@@ -85,8 +85,8 @@
         </MudForm>
     </MudCardContent>
     <MudCardActions Style="height:45px">
-        <MudButton Class="ml-auto" Disabled="@(_submiting || TRequest.CurrentStatus!=VisitorStatus.PendingCheckin)" Variant="Variant.Text" OnClick="OnSubmit" Color="MudBlazor.Color.Primary">
-            @if (_submiting)
+        <MudButton Class="ml-auto" Disabled="@(submiting || TRequest.CurrentStatus!=VisitorStatus.PendingCheckin)" Variant="Variant.Text" OnClick="OnSubmit" Color="MudBlazor.Color.Primary">
+            @if (submiting)
             {
                 <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                 <MudText Class="ms-2">@L["Processing"]</MudText>
@@ -102,32 +102,36 @@
 <CheckinHistoryComponent VisitorHistories="TRequest.Histories"></CheckinHistoryComponent>
 @code {
     [Parameter]
-    public CreateVisitorHistoryCommand TRequest { get; set; } = new();
-    private CreateVisitorHistoryCommandValidator modelValidator = new();
+    public CreateVisitorHistoryCommand TRequest { get; set; } = new CreateVisitorHistoryCommand();
+    private CreateVisitorHistoryCommandValidator modelValidator = new CreateVisitorHistoryCommandValidator();
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
-    private bool _submiting;
+    private ISender mediator { get; set; } = default!;
+
+    [Inject] private IUploadService uploadService { get; set; } = default!;
+
+    private bool submiting;
     MudForm form = default!;
 
     protected override Task OnInitializedAsync()
     {
         return Task.CompletedTask;
     }
+
     private async void UploadFiles(InputFileChangeEventArgs e)
     {
-        var list = new List<string>();
-        foreach (var file in e.GetMultipleFiles())
+        List<string> list = new List<string>();
+        foreach (IBrowserFile file in e.GetMultipleFiles())
         {
-            var filestream = file.OpenReadStream();
-            var imgstream = new MemoryStream();
+            Stream filestream = file.OpenReadStream();
+            MemoryStream imgstream = new MemoryStream();
             await filestream.CopyToAsync(imgstream);
             imgstream.Position = 0;
-            using (var outStream = new MemoryStream())
+            using (MemoryStream outStream = new MemoryStream())
             {
-                using (var image = Image.Load(imgstream, out IImageFormat format))
+                using (Image image = Image.Load(imgstream, out IImageFormat format))
                 {
-                    var scale = 0m;
+                    Decimal scale = 0m;
                     if (image.Width > 1200)
                     {
                         scale = 0.3m;
@@ -140,47 +144,50 @@
                     {
                         scale = 1m;
                     }
+
                     image.Mutate(
                        i => i.AutoOrient().Resize(Convert.ToInt32((image.Width * scale)), 0));
                     image.Save(outStream, format);
-                    var filename = file.Name;
-                    var fi = new FileInfo(filename);
-                    var ext = fi.Extension;
-                    var result = await _uploadService.UploadAsync(new UploadRequest()
+                    string filename = file.Name;
+                    FileInfo fi = new FileInfo(filename);
+                    string ext = fi.Extension;
+                    string result = await uploadService.UploadAsync(new UploadRequest()
                         {
                             Data = outStream.ToArray(),
-                            FileName =  "in_" + Guid.NewGuid().ToString() + ext,
+                            FileName = "in_" + Guid.NewGuid().ToString() + ext,
                             Extension = ext,
                             Folder = TRequest.PassCode,
                             UploadType = UploadType.VisitHistoryPricture
                         });
-                    var uri = result.Replace("\\", "/");
+
+                    string uri = result.Replace("\\", "/");
                     list.Add(uri);
                 }
             }
         }
+
         TRequest.Attachments = list.ToArray();
         StateHasChanged();
         Snackbar.Add(L["Upload photo successfully"], MudBlazor.Severity.Info);
     }
+
     private async Task OnSubmit()
     {
-        _submiting = true;
+        submiting = true;
         TRequest.Stage = CheckStage.Checkin;
         try
         {
             await form.Validate();
             if (form.IsValid)
             {
-                var result = await _mediator.Send(TRequest);
+                Result<int> result = await mediator.Send(TRequest);
                 Snackbar.Add(string.Format(L["{0} check-in successfully"], TRequest.Visitor), MudBlazor.Severity.Info);
-                TRequest.Histories = (await _mediator.Send(new GetByVisitorIdVisitorHistoriesQuery(TRequest.VisitorId))).ToList();
+                TRequest.Histories = (await mediator.Send(new GetByVisitorIdVisitorHistoriesQuery(TRequest.VisitorId))).ToList();
             }
         }
         finally
         {
-            _submiting = false;
+            submiting = false;
         }
-
     }
 }

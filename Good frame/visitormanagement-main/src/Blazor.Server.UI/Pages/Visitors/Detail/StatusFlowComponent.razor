@@ -56,7 +56,9 @@
 @code {
     [Parameter]
     public string CurrentStatus { get; set; } = string.Empty;
-    private string[] Status = new string[] {
+
+    private string[] Status = new string[]
+     {
         VisitorStatus.PendingVisitor,
         VisitorStatus.PendingApproval,
         VisitorStatus.PendingChecking,
@@ -64,6 +66,8 @@
         VisitorStatus.PendingConfirm,
         VisitorStatus.PendingCheckout,
         VisitorStatus.PendingFeedback,
-        VisitorStatus.Finished };
+        VisitorStatus.Finished
+    };
+
     private bool isDone { get; set; } = true;
 }

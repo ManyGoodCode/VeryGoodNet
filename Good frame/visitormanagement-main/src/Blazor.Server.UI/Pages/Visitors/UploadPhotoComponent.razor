@@ -14,39 +14,48 @@
     [EditorRequired]
     [Parameter]
     public string? ImageUrl { get; set; }
+
     [EditorRequired]
     [Parameter]
-    public EventCallback<string?> OnUploaded { get; set; }    
+    public EventCallback<string?> OnUploaded { get; set; }
+    
     [EditorRequired]
     [Parameter]
     public string? Label { get; set; }
+
     [EditorRequired]
     [Parameter]
     public string? Desciption { get; set; }
+
     [EditorRequired]
     [Parameter]    
     public string? Tag { get; set; }
+
     [EditorRequired]
     [Parameter]
     public string? PassCode { get; set; }
+
     [EditorRequired]
     [Parameter]
     public bool Disabled { get; set; }
+
     private string id = Guid.NewGuid().ToString();
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
+
+    [Inject]
+    private IUploadService uploadService { get; set; } = default!;
 
     private async Task UploadPhoto(InputFileChangeEventArgs e)
     {
-        var file = e.File;
-        var filestream = file.OpenReadStream();
-        var imgstream = new MemoryStream();
+        IBrowserFile file = e.File;
+        Stream filestream = file.OpenReadStream();
+        MemoryStream imgstream = new MemoryStream();
         await filestream.CopyToAsync(imgstream);
         imgstream.Position = 0;
-        using (var outStream = new MemoryStream())
+        using (MemoryStream outStream = new MemoryStream())
         {
-            using (var image = Image.Load(imgstream, out IImageFormat format))
+            using (Image image = Image.Load(imgstream, out IImageFormat format))
             {
-                var scale = 0m;
+                decimal scale = 0m;
                 if (image.Width > 900)
                 {
                     scale = 0.3m;
@@ -62,10 +71,10 @@
                 image.Mutate(
                    i => i.AutoOrient().Resize(Convert.ToInt32((image.Width*scale)), 0));
                 image.Save(outStream, format);
-                var filename = file.Name;
-                var fi = new FileInfo(filename);
-                var ext = fi.Extension;
-                var result = await _uploadService.UploadAsync(new UploadRequest()
+                string filename = file.Name;
+                FileInfo fi = new FileInfo(filename);
+                string ext = fi.Extension;
+                string result = await uploadService.UploadAsync(new UploadRequest()
                     {
                         Data = outStream.ToArray(),
                         FileName = Tag + "_" + Guid.NewGuid().ToString() + ext,
@@ -79,6 +88,5 @@
         }
 
         Snackbar.Add(L["Upload attachment successfully"], MudBlazor.Severity.Info);
-
     }
 }

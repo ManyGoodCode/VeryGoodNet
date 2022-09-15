@@ -111,10 +111,10 @@
                         </MudItem>
                         <MudItem xs="12" sm="12">
                             <Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete Label="@L["Select Site - Address"]"
-                                                                                   Disabled="@(model.Apppoved==true)"
-                                                                                   For="@(() => model.SiteId)"
-                                                                                   Required="true" RequiredError="@L["site - address is required!"]"
-                                                                                   @bind-Value="model.SiteId">
+                                                                                      Disabled="@(model.Apppoved==true)"
+                                                                                      For="@(() => model.SiteId)"
+                                                                                      Required="true" RequiredError="@L["site - address is required!"]"
+                                                                                      @bind-Value="model.SiteId">
                             </Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete>
                         </MudItem>
                         <MudItem xs="12" sm="12">
@@ -129,8 +129,8 @@
             </MudPaper>
             <MudPaper Class="d-flex pa-4 mt-4">
                 <MudButton Variant="Variant.Filled" Color="MudBlazor.Color.Secondary" DisableElevation="true" OnClick="Reset" Class="ml-auto mx-2">@L["Reset"]</MudButton>
-                <MudButton Disabled="@(_submiting)" Variant="Variant.Filled" OnClick="Submit" Color="MudBlazor.Color.Primary">
-                    @if (_submiting)
+                <MudButton Disabled="@(submiting)" Variant="Variant.Filled" OnClick="Submit" Color="MudBlazor.Color.Primary">
+                    @if (submiting)
                     {
                         <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                         <MudText Class="ms-2">@L["Processing"]</MudText>
@@ -148,39 +148,53 @@
     </ErrorBoundary>
 </MudContainer>
 @code {
-    public bool _submiting;
+
+    public bool submiting;
     public string Title = "visitor request";
     private MudForm form = default!;
-    private VisitorRequestCommandValidator modelValidator = new();
-    private VisitorRequestCommand model { get; set; } = new();
+    private VisitorRequestCommandValidator modelValidator = new VisitorRequestCommandValidator();
+    private VisitorRequestCommand model { get; set; } = new VisitorRequestCommand();
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [Inject]
-    private IPublisher _publisher { get; set; } = default!;
+    private IPublisher publisher { get; set; } = default!;
+
     [Inject]
     private Hashids hashids { get; set; } = default!;
+
     [Inject]
-    private IUploadService _uploadService { get; set; } = default!;
+    private IUploadService uploadService { get; set; } = default!;
+
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
+    private NavigationManager navigationManager { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
         Title = L["visitor request"];
         model.PassCode = hashids.EncodeLong(DateTime.Now.Ticks);
     }
+
     private async Task SearchVisitors()
     {
-
-        var parameters = new DialogParameters {
+        DialogParameters parameters = new DialogParameters
+        {
                  { nameof(_QuickSearchDialog.keyword),model.Name },
+         };
+
+        DialogOptions options = new DialogOptions
+            {
+                CloseButton = true,
+                MaxWidth = MaxWidth.Medium,
+                FullWidth = true
             };
-        var options = new DialogOptions { CloseButton = true, MaxWidth = MaxWidth.Medium, FullWidth = true };
-        var dialog = DialogService.Show<_QuickSearchDialog>
-        (L["Quick Search Visitors"], parameters, options);
-        var state = await dialog.Result;
+
+        IDialogReference dialog = DialogService.Show<_QuickSearchDialog>(L["Quick Search Visitors"], parameters, options);
+        DialogResult state = await dialog.Result;
         if (!state.Cancelled)
         {
-            var dto = state.Data as VisitorDto;
+            VisitorDto dto = state.Data as VisitorDto;
             if (dto is not null)
             {
                 model.Name = dto.Name;
@@ -195,38 +209,38 @@
     }
     private Task Reset()
     {
-
-        model = new();
+        model = new VisitorRequestCommand();
         model.PassCode = hashids.EncodeLong(DateTime.Now.Ticks);
         return Task.CompletedTask;
     }
+
     private async Task Submit()
     {
-        _submiting = true;
+        submiting = true;
         try
         {
             await form.Validate();
             if (form.IsValid)
             {
                 await this.generateQrCode();
-                var result = await _mediator.Send(model);
+                Result<int> result = await mediator.Send(model);
                 model.Id = result.Data;
                 Snackbar.Add(L["Submit successfully"], MudBlazor.Severity.Info);
-                _navigationManager.NavigateTo("/visitor/visitors");
+                navigationManager.NavigateTo("/visitor/visitors");
             }
         }
         finally
         {
-            _submiting = false;
+            submiting = false;
         }
 
 
     }
     private async Task generateQrCode()
     {
-        var qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
-        var qrcode = qr.ToPng(12, 4);
-        var result = await _uploadService.UploadAsync(new UploadRequest()
+        QrCode qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
+        byte[] qrcode = qr.ToPng(12, 4);
+        string result = await uploadService.UploadAsync(new UploadRequest()
             {
                 Data = qrcode,
                 FileName = "Q_" + Guid.NewGuid().ToString() + ".png",
@@ -234,6 +248,7 @@
                 Folder = model.PassCode,
                 UploadType = UploadType.VisitorPricture
             });
+
         model.QrCode = result.Replace("\\", "/");
     }
 }

@@ -9,7 +9,7 @@
         <MudList Clickable="true" Class="mud-height-full">
             <MudListSubheader>@L["Pending Visitor"]</MudListSubheader>
 
-            @foreach (var item in _list.Where(x => x.Status == VisitorStatus.PendingVisitor).Take(5))
+            @foreach (var item in list.Where(x => x.Status == VisitorStatus.PendingVisitor).Take(5))
             {
                 <MudListItem OnClick="@(()=>navigateTo(item.Id))">
                     <MudText Typo="Typo.body2">@item.Name - @item.PhoneNumber</MudText>
@@ -22,7 +22,7 @@
         <MudList Clickable="true" Class="mud-height-full">
             <MudListSubheader>@L["Pending Approval"]</MudListSubheader>
 
-            @foreach (var item in _list.Where(x => x.Status == VisitorStatus.PendingApproval).Take(5))
+            @foreach (var item in list.Where(x => x.Status == VisitorStatus.PendingApproval).Take(5))
             {
                 <MudListItem OnClick="@(()=>navigateTo(item.Id))">
                     <MudText Typo="Typo.body2">@item.Name - @item.PhoneNumber</MudText>
@@ -35,7 +35,7 @@
         <MudList Clickable="true" Class="mud-height-full">
             <MudListSubheader>@L["Pending Check-in"]</MudListSubheader>
 
-            @foreach (var item in _list.Where(x => x.Status == VisitorStatus.PendingCheckin).Take(5))
+            @foreach (var item in list.Where(x => x.Status == VisitorStatus.PendingCheckin).Take(5))
             {
                 <MudListItem OnClick="@(()=>navigateTo(item.Id))">
                     <MudText Typo="Typo.body2">@item.Name - @item.PhoneNumber</MudText>
@@ -48,7 +48,7 @@
         <MudList Clickable="true" Class="mud-height-full">
             <MudListSubheader>@L["Pending Check-out"]</MudListSubheader>
 
-            @foreach (var item in _list.Where(x => x.Status == VisitorStatus.PendingCheckout).Take(5))
+            @foreach (var item in list.Where(x => x.Status == VisitorStatus.PendingCheckout).Take(5))
             {
                 <MudListItem OnClick="@(()=>navigateTo(item.Id))">
                     <MudText Typo="Typo.body2">@item.Name - @item.PhoneNumber</MudText>
@@ -61,18 +61,21 @@
 
 
 @code {
-    private List<VisitorStatusSumarryDto> _list = new();
+    private List<VisitorStatusSumarryDto> list = new List<VisitorStatusSumarryDto>();
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
+
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
+    private NavigationManager navigationManager { get; set; } = default!;
+
     protected override async Task OnInitializedAsync()
     {
-        _list = await _mediator.Send(new GetKanbanDataQuery());
-
+        list = await mediator.Send(new GetKanbanDataQuery());
     }
+
     private void navigateTo(int id)
     {
-        _navigationManager.NavigateTo($"/visitor/detail?id={id}");
+        navigationManager.NavigateTo($"/visitor/detail?id={id}");
     }
 }

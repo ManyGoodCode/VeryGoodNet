@@ -27,6 +27,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Search
         public string CacheKey => VisitorCacheKey.Search(Keyword);
         public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
     }
+
     public class SearchVisitorFuzzyQuery : IRequest<List<VisitorDto>>, ICacheable
     {
         public string Keyword { get; private set; }
@@ -34,6 +35,7 @@ namespace CleanArchitecture.Blazor.Application.Features.Visitors.Queries.Search
         {
             Keyword = keyword;
         }
+
         public string CacheKey => VisitorCacheKey.SearchFuzzy(Keyword);
         public MemoryCacheEntryOptions? Options => VisitorCacheKey.MemoryCacheEntryOptions;
     }

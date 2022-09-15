@@ -19,21 +19,21 @@
                   RowsPerPage="25"
                   Height="calc(100vh - 265px)"
                   Style="min-height:700px"
-                  Loading="@_loading"
+                  Loading="@loading"
                   SortLabel="@L["Sort By"]"
-                  Hover="true" @ref="_table">
+                  Hover="true" @ref="table">
             <ToolBarContent>
                 <div class="justify-start pt-3">
                     <MudText Typo="Typo.h6">@L["Logs"]</MudText>
                     <MudButton DisableElevation Variant="Variant.Outlined"
                                Size="Size.Small"
-                               Disabled="@_loading"
+                               Disabled="@loading"
                                OnClick="@(()=>OnRefresh())"
                                StartIcon="@Icons.Material.Filled.Refresh" IconColor="Color.Surface" Color="Color.Primary"
                                Style="margin-right: 5px;">@L["Refresh"]</MudButton>
                 </div>
                 <MudSpacer />
-                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@_searchString" Placeholder="Search" Adornment="Adornment.Start"
+                <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Value="@searchString" Placeholder="Search" Adornment="Adornment.Start"
                               AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
             </ToolBarContent>
             <ColGroup>
@@ -61,23 +61,31 @@
                     @context.TimeStamp
                 </MudTd>
                 <MudTd Style="text-align:center" DataLabel="@L["Level"]">
-                    @switch(context.Level) {
-                         case "Trace" : <MudChip Label="true">@context.Level</MudChip>
+                    @switch (context.Level)
+                    {
+                        case "Trace":
+                            <MudChip Label="true">@context.Level</MudChip>
                             break;
-                        case "Debug" : <MudChip Label="true">@context.Level</MudChip>
+                        case "Debug":
+                            <MudChip Label="true">@context.Level</MudChip>
                             break;
-                        case "Information": <MudChip Color="Color.Info" Label="true">@context.Level</MudChip>
+                        case "Information":
+                            <MudChip Color="Color.Info" Label="true">@context.Level</MudChip>
                             break;
-                        case "Warning": <MudChip Color="Color.Warning" Label="true">@context.Level</MudChip>
+                        case "Warning":
+                            <MudChip Color="Color.Warning" Label="true">@context.Level</MudChip>
                             break;
-                       case "Error": <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
+                        case "Error":
+                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
-                        case "Critical":  <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
+                        case "Critical":
+                            <MudChip Color="Color.Error" Label="true">@context.Level</MudChip>
                             break;
-                       default: <MudChip Label="true">@context.Level</MudChip>
-                         break;
+                        default:
+                            <MudChip Label="true">@context.Level</MudChip>
+                            break;
                     }
-                       
+
                 </MudTd>
                 <MudTd DataLabel="@L["Message"]">
                     @context.Message
@@ -120,21 +128,22 @@
                 <MudText>@L["Loading.."].</MudText>
             </LoadingContent>
             <PagerContent>
-                <MudTablePager  />
+                <MudTablePager />
             </PagerContent>
         </MudTable>
     </ChildContent>
     <ErrorContent>
-        <CustomError Exception="context" ></CustomError>
+        <CustomError Exception="context"></CustomError>
     </ErrorContent>
 </ErrorBoundary>
 @code {
     public string Title { get; private set; } = "Logs";
-    private string _searchString = string.Empty;
-    private MudTable<LogDto> _table = default!;
-    private bool _loading;
+    private string searchString = string.Empty;
+    private MudTable<LogDto> table = default!;
+    private bool loading;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
 
     protected override void OnInitialized()
     {
@@ -143,34 +152,43 @@
 
     private async Task<TableData<LogDto>> ServerReload(TableState state)
     {
-        try{
-            _loading = true;
-            var request = new LogsWithPaginationQuery()
-            {
-                Keyword = _searchString,
-                OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
-                SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
-                PageNumber = state.Page + 1,
-                PageSize = state.PageSize
-            };
-            var result = await _mediator.Send(request).ConfigureAwait(false);
-            return new TableData<LogDto>() { TotalItems = result.TotalItems, Items = result.Items };
+        try
+        {
+            loading = true;
+            LogsWithPaginationQuery request = new LogsWithPaginationQuery()
+                {
+                    Keyword = searchString,
+                    OrderBy = string.IsNullOrEmpty(state.SortLabel) ? "Id" : state.SortLabel,
+                    SortDirection = (state.SortDirection == SortDirection.None ? SortDirection.Descending.ToString() : state.SortDirection.ToString()),
+                    PageNumber = state.Page + 1,
+                    PageSize = state.PageSize
+                };
+
+            PaginatedData<LogDto> result = await mediator.Send(request).ConfigureAwait(false);
+            return new TableData<LogDto>()
+                {
+                    TotalItems = result.TotalItems,
+                    Items = result.Items
+                };
         }
         finally
         {
-            _loading = false;
+            loading = false;
         }
     }
+
     private async Task OnSearch(string text)
     {
-        _searchString = text;
-        await _table.ReloadServerData();
+        searchString = text;
+        await table.ReloadServerData();
     }
+
     private async Task OnRefresh()
     {
-        _searchString = string.Empty;
-        await _table.ReloadServerData();
+        searchString = string.Empty;
+        await table.ReloadServerData();
     }
+
     private Task OnShowDetail(LogDto dto)
     {
         dto.ShowDetails = !dto.ShowDetails;

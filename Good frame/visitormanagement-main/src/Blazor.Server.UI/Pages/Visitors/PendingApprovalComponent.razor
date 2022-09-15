@@ -6,14 +6,14 @@
 @inherits MudComponentBase
 <div class="d-flex flex-column">
     <MudPaper Class="pa-4 mt-4">
-        <MudTextField @bind-Value="_keyword" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="SearchPendingVisitor" />
+        <MudTextField @bind-Value="keyword" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="SearchPendingVisitor" />
     </MudPaper>
     <MudPaper Class="mt-4">
         <MudList Clickable="true">
             <MudListSubheader>
-                @L["Pending Approval"] (@_list.Count)
+                @L["Pending Approval"] (@list.Count)
             </MudListSubheader>
-            @foreach (var item in _list)
+            @foreach (var item in list)
             {
                 <MudListItem OnClick="@(()=>Click(item))">
                     <div class="d-flex flex-row flex-grow-1 gap-4">
@@ -41,25 +41,30 @@
 </div>
 
 @code {
-    private string? _keyword { get; set; }
+    private string? keyword { get; set; }
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    private List<VisitorDto> _list { get; set; } = new();
+    private ISender mediator { get; set; } = default!;
+
+    private List<VisitorDto> list { get; set; } = new List<VisitorDto>();
+
     [Parameter]
     [EditorRequired]
     public EventCallback<VisitorDto> SelectChanged { get; set; }
+
     protected override async Task OnInitializedAsync()
     {
         await SearchPendingVisitor();
     }
+
     public async Task SearchPendingVisitor()
     {
-        _list = await _mediator.Send(new SearchPendingApprovalVisitorsQuery(_keyword));
+        list = await mediator.Send(new SearchPendingApprovalVisitorsQuery(keyword));
         StateHasChanged();
     }
+
     private async Task Click(VisitorDto visitor)
     {
         await SelectChanged.InvokeAsync(visitor);
     }
-    
 }

@@ -4,7 +4,7 @@
 <MudTabs Elevation="2" Rounded="true" ApplyEffectsToContainer="false" Centered="false" PanelClass="mt-4" Color="MudBlazor.Color.Transparent">
     <MudTabPanel Text="@L["Detail Information"]">
         <MudExpansionPanels Class="" MultiExpansion="true">
-            <MudExpansionPanel Text="@L["Visitor Information"]" @bind-IsExpanded="@_expanded">
+            <MudExpansionPanel Text="@L["Visitor Information"]" @bind-IsExpanded="@expanded">
                 <Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent Visitor="Visitor"></Blazor.Server.UI.Pages.Visitors.ViewComponent.VisitDetailViewComponent>
             </MudExpansionPanel>
             @if (Visitor.CompanionCount > 0)
@@ -32,8 +32,9 @@
 </MudTabs>
 
 @code {
-    private bool _expanded=true;
+    private bool expanded = true;
+
     [EditorRequired]
     [Parameter]
-    public VisitorDto Visitor { get; set; } = new();
+    public VisitorDto Visitor { get; set; } = new VisitorDto();
 }

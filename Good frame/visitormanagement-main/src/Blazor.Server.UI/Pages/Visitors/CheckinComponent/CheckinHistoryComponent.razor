@@ -18,7 +18,7 @@
                         </ItemOpposite>
                         <ItemContent>
                             <MudText Typo="Typo.body1" Class="mud-text-secondary" GutterBottom="true">@item.Stage</MudText>
-                            <MudText Typo="Typo.body2" Class="mud-text-secondary"  GutterBottom="true">@item.TransitDateTime?.ToString("MM/dd HH:mm")</MudText>
+                            <MudText Typo="Typo.body2" Class="mud-text-secondary" GutterBottom="true">@item.TransitDateTime?.ToString("MM/dd HH:mm")</MudText>
                             <MudText Typo="Typo.body2" Class="mud-text-secondary" GutterBottom="true">@item.Comment</MudText>
                             @if (item.Attachments != null && item.Attachments.Any())
                             {

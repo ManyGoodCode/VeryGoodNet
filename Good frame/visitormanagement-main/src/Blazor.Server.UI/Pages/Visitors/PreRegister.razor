@@ -31,7 +31,7 @@
         <MudGrid>
             <MudItem xs="12" sm="7">
                 <MudPaper Class="pa-4 mt-4">
-                    <MudTextField @bind-Value="_searchString" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="OnSearch" />
+                    <MudTextField @bind-Value="searchString" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="OnSearch" />
                 </MudPaper>
                 <MudPaper Class="pa-4 mt-4">
                     <MudForm Model="model" @ref="form" Validation="@(modelValidator.ValidateValue)">
@@ -125,10 +125,10 @@
                             </MudItem>
                             <MudItem xs="12" sm="12">
                                 <Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete Label="@L["Select Site - Address"]"
-                                                  Disabled="@(model.Apppoved==true)"
-                                                  For="@(() => model.SiteId)"
-                                                  Required="true" RequiredError="@L["site - address is required!"]"
-                                                  @bind-Value="model.SiteId">
+                                                                                          Disabled="@(model.Apppoved==true)"
+                                                                                          For="@(() => model.SiteId)"
+                                                                                          Required="true" RequiredError="@L["site - address is required!"]"
+                                                                                          @bind-Value="model.SiteId">
                                 </Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete>
                             </MudItem>
                             <MudItem xs="12" sm="12">
@@ -141,17 +141,17 @@
 
 
                             @* <MudItem xs="12" sm="6" md="4">
-                                <MudCheckBox Label="@L["Has apppoved"]"
-                                Disabled="@(model.Apppoved==true)"
-                                For="@(() => model.Apppoved)" ReadOnly="true"
-                                @bind-Checked="model.Apppoved"></MudCheckBox>
-                                </MudItem>
-                                <MudItem xs="12" sm="6" md="8">
-                                <MudTextField Label="@L["Approval Outcome"]"
-                                Disabled="@(model.Apppoved==true)"
-                                For="@(() => model.ApprovalOutcome)"
-                                @bind-Value="model.ApprovalOutcome"></MudTextField>
-                                </MudItem>*@
+                            <MudCheckBox Label="@L["Has apppoved"]"
+                            Disabled="@(model.Apppoved==true)"
+                            For="@(() => model.Apppoved)" ReadOnly="true"
+                            @bind-Checked="model.Apppoved"></MudCheckBox>
+                            </MudItem>
+                            <MudItem xs="12" sm="6" md="8">
+                            <MudTextField Label="@L["Approval Outcome"]"
+                            Disabled="@(model.Apppoved==true)"
+                            For="@(() => model.ApprovalOutcome)"
+                            @bind-Value="model.ApprovalOutcome"></MudTextField>
+                            </MudItem>*@
                             <MudItem xs="12" sm="12" md="12">
                                 <div class="d-flex flex-nowrap  overflow-auto pa-4">
                                     <div class="d-flex flex-nowrap gap-4" style="max-width:680px">
@@ -202,14 +202,14 @@
                 </MudPaper>
                 <MudPaper Class="d-flex pa-4 mt-4">
                     <MudButton Variant="Variant.Filled"
-                    Color="MudBlazor.Color.Secondary"
-                    DisableElevation="true"
-                    OnClick="Reset" Class="ml-auto mx-2">@L["Reset"]</MudButton>
+                               Color="MudBlazor.Color.Secondary"
+                               DisableElevation="true"
+                               OnClick="Reset" Class="ml-auto mx-2">@L["Reset"]</MudButton>
                     <MudButton Variant="Variant.Filled"
-                               Disabled="@(model.Id>0 || _submiting)"
+                               Disabled="@(model.Id>0 || submiting)"
                                DisableElevation="true"
                                OnClick="Submit">
-                        @if (_submiting)
+                        @if (submiting)
                         {
                             <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                             <MudText Class="ms-2">@L["Processing"]</MudText>
@@ -222,7 +222,7 @@
                 </MudPaper>
             </MudItem>
             <MudItem xs="12" sm="5">
-                <MyPassCodeComponent @ref="myqrcode" Keyword="@_searchQRcode"></MyPassCodeComponent>
+                <MyPassCodeComponent @ref="myqrcode" Keyword="@searchQRcode"></MyPassCodeComponent>
             </MudItem>
         </MudGrid>
     </ChildContent>
@@ -234,23 +234,28 @@
     private MyPassCodeComponent myqrcode;
     public string? Title { get; private set; }
     private MudForm form = default!;
-    private string? _searchString = string.Empty;
-    private string? _searchQRcode = string.Empty;
-    private VisitorDto? _visitorDto = new();
-    private VisitorDto? _visitorWithQRCode = new();
-    private List<VisitorHistoryDto> _visitorHistories = new();
-    public List<CompanionDto> _companionDtoList = new();
+    private string? searchString = string.Empty;
+    private string? searchQRcode = string.Empty;
+    private VisitorDto? visitorDto = new();
+    private VisitorDto? visitorWithQRCode = new();
+    private List<VisitorHistoryDto> visitorHistories = new();
+    public List<CompanionDto> companionDtoList = new();
     private CreateVisitorCommandValidator modelValidator = new CreateVisitorCommandValidator();
     private CreateVisitorCommand model { get; set; } = new CreateVisitorCommand();
-    private bool _notfound;
-    private bool _loading;
-    private bool _uploading;
-    private bool _submiting;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    private bool notfound;
+    private bool loading;
+    private bool uploading;
+    private bool submiting;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IUploadService uploadService { get; set; } = default!;
+
+    [Inject]
+    private ISender mediator { get; set; } = default!;
+
     [Inject]
     private Hashids hashids { get; set; } = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
@@ -258,49 +263,51 @@
     {
         Title = L["Pre Registers"];
         model.PassCode = hashids.EncodeLong(DateTime.Now.Ticks);
-        var state = await AuthState;
+        AuthenticationState state = await AuthState;
     }
+
     private async Task OnSearch()
     {
-        if (string.IsNullOrEmpty(_searchString)) _visitorDto = null;
-        _visitorDto = await _mediator.Send(new SearchVisitorQuery(_searchString));
-        if (_visitorDto != null)
+        if (string.IsNullOrEmpty(searchString))
+            visitorDto = null;
+        visitorDto = await mediator.Send(new SearchVisitorQuery(searchString));
+        if (visitorDto != null)
         {
-            if (_visitorDto.Apppoved != true && _visitorDto.CheckinDate is null)
+            if (visitorDto.Apppoved != true && visitorDto.CheckinDate is null)
             {
                 model = new CreateVisitorCommand()
                     {
-                        Id = _visitorDto.Id,
-                        PassCode = _visitorDto.PassCode,
-                        Name = _visitorDto.Name,
-                        IdentificationNo = _visitorDto.IdentificationNo,
-                        CompanyName = _visitorDto.CompanyName,
-                        Address = _visitorDto.Address,
-                        Avatar = _visitorDto.Avatar,
-                        Email = _visitorDto.Email,
-                        DesignationId = _visitorDto.DesignationId,
-                        EmployeeId = _visitorDto.EmployeeId,
-                        Gender = _visitorDto.Gender,
-                        LicensePlateNumber = _visitorDto.LicensePlateNumber,
-                        PhoneNumber = _visitorDto.PhoneNumber,
-                        Purpose = _visitorDto.Purpose,
-                        Apppoved = _visitorDto.Apppoved,
-                        ApprovalOutcome = _visitorDto.ApprovalOutcome,
-                        CheckinDate = _visitorDto.CheckinDate,
-                        CheckoutDate = _visitorDto.CheckoutDate,
-                        Comment = _visitorDto.Comment,
-                        Designation = _visitorDto.Designation,
-                        Companions = _visitorDto.Companions,
-                        Employee = _visitorDto.Employee,
-                        EmployeeDesignation = _visitorDto.EmployeeDesignation,
-                        ExpectedDate = _visitorDto.ExpectedDate,
-                        ExpectedTime = _visitorDto.ExpectedTime,
-                        HealthCode = _visitorDto.HealthCode,
-                        QrCode = _visitorDto.QrCode,
-                        NucleicAcidTestReport = _visitorDto.NucleicAcidTestReport,
-                        SiteId = _visitorDto.SiteId,
-                        Status = _visitorDto.Status,
-                        TripCode = _visitorDto.TripCode,
+                        Id = visitorDto.Id,
+                        PassCode = visitorDto.PassCode,
+                        Name = visitorDto.Name,
+                        IdentificationNo = visitorDto.IdentificationNo,
+                        CompanyName = visitorDto.CompanyName,
+                        Address = visitorDto.Address,
+                        Avatar = visitorDto.Avatar,
+                        Email = visitorDto.Email,
+                        DesignationId = visitorDto.DesignationId,
+                        EmployeeId = visitorDto.EmployeeId,
+                        Gender = visitorDto.Gender,
+                        LicensePlateNumber = visitorDto.LicensePlateNumber,
+                        PhoneNumber = visitorDto.PhoneNumber,
+                        Purpose = visitorDto.Purpose,
+                        Apppoved = visitorDto.Apppoved,
+                        ApprovalOutcome = visitorDto.ApprovalOutcome,
+                        CheckinDate = visitorDto.CheckinDate,
+                        CheckoutDate = visitorDto.CheckoutDate,
+                        Comment = visitorDto.Comment,
+                        Designation = visitorDto.Designation,
+                        Companions = visitorDto.Companions,
+                        Employee = visitorDto.Employee,
+                        EmployeeDesignation = visitorDto.EmployeeDesignation,
+                        ExpectedDate = visitorDto.ExpectedDate,
+                        ExpectedTime = visitorDto.ExpectedTime,
+                        HealthCode = visitorDto.HealthCode,
+                        QrCode = visitorDto.QrCode,
+                        NucleicAcidTestReport = visitorDto.NucleicAcidTestReport,
+                        SiteId = visitorDto.SiteId,
+                        Status = visitorDto.Status,
+                        TripCode = visitorDto.TripCode,
                         Promise = true,
                         PrivacyPolicy = true
                     };
@@ -310,45 +317,41 @@
                 model = new CreateVisitorCommand()
                     {
                         PassCode = hashids.EncodeLong(DateTime.Now.Ticks),
-                        Name = _visitorDto.Name,
-                        IdentificationNo = _visitorDto.IdentificationNo,
-                        CompanyName = _visitorDto.CompanyName,
-                        Address = _visitorDto.Address,
-                        Avatar = _visitorDto.Avatar,
-                        Email = _visitorDto.Email,
-                        DesignationId = _visitorDto.DesignationId,
-                        EmployeeId = _visitorDto.EmployeeId,
-                        Gender = _visitorDto.Gender,
-                        LicensePlateNumber = _visitorDto.LicensePlateNumber,
-                        PhoneNumber = _visitorDto.PhoneNumber,
-                        Purpose = _visitorDto.Purpose,
+                        Name = visitorDto.Name,
+                        IdentificationNo = visitorDto.IdentificationNo,
+                        CompanyName = visitorDto.CompanyName,
+                        Address = visitorDto.Address,
+                        Avatar = visitorDto.Avatar,
+                        Email = visitorDto.Email,
+                        DesignationId = visitorDto.DesignationId,
+                        EmployeeId = visitorDto.EmployeeId,
+                        Gender = visitorDto.Gender,
+                        LicensePlateNumber = visitorDto.LicensePlateNumber,
+                        PhoneNumber = visitorDto.PhoneNumber,
+                        Purpose = visitorDto.Purpose,
                         Promise = true,
                         PrivacyPolicy = true
-
                     };
             }
         }
-
     }
+
     private Task Reset()
     {
-
-
         model = new CreateVisitorCommand();
         model.PassCode = hashids.EncodeLong(DateTime.Now.Ticks);
-
         return Task.CompletedTask;
     }
 
     private async Task Submit()
     {
-        _submiting = true;
+        submiting = true;
         try
         {
             await form.Validate();
             if (form.IsValid)
             {
-                var siteConfig = await _mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
+                CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs.SiteConfigurationDto siteConfig = await mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
                 if (model.Promise != true)
                 {
                     Snackbar.Add(L["You must promise"], MudBlazor.Severity.Error);
@@ -376,10 +379,10 @@
                 }
 
                 await this.generateQrCode();
-                var result = await _mediator.Send(model);
+                Result<int> result = await mediator.Send(model);
                 model.Id = result.Data;
-                _submiting = true;
-                _searchQRcode = model.PassCode;
+                submiting = true;
+                searchQRcode = model.PassCode;
                 Snackbar.Add(L["Submit successfully"], MudBlazor.Severity.Info);
                 await Reset();
                 await Task.Delay(1000);
@@ -391,14 +394,15 @@
         }
         finally
         {
-            _submiting = false;
+            submiting = false;
         }
     }
+
     private async Task generateQrCode()
     {
-        var qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
-        var qrcode = qr.ToPng(12, 4);
-        var result = await _uploadService.UploadAsync(new UploadRequest()
+        QrCode qr = QrCode.EncodeText(model.PassCode, QrCode.Ecc.Medium);
+        byte[] qrcode = qr.ToPng(12, 4);
+        string result = await uploadService.UploadAsync(new UploadRequest()
             {
                 Data = qrcode,
                 FileName = "Q_" + Guid.NewGuid().ToString() + ".png",
@@ -406,7 +410,7 @@
                 Folder = model.PassCode,
                 UploadType = UploadType.VisitorPricture
             });
+
         model.QrCode = result.Replace("\\", "/");
     }
-
-    }
+}

@@ -12,7 +12,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in VisitHistories)
+        @foreach (VisitorHistoryDto item in VisitHistories)
         {
             <tr>
                 <td>
@@ -27,7 +27,7 @@
                     <MudText Typo="Typo.body2">@item.Temperature</MudText>
                 </td>
                 <td>
-                   <AttachmentsComponent Attachments="@item.Attachments"></AttachmentsComponent>
+                    <AttachmentsComponent Attachments="@item.Attachments"></AttachmentsComponent>
                 </td>
                 <td>
                     <MudText Typo="Typo.body2">@item.TransitDateTime</MudText>
@@ -39,5 +39,5 @@
 @code {
     [EditorRequired]
     [Parameter]
-    public List<VisitorHistoryDto> VisitHistories { get; set; } = new();
+    public List<VisitorHistoryDto> VisitHistories { get; set; } = new List<VisitorHistoryDto>();
 }

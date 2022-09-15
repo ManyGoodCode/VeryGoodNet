@@ -21,41 +21,35 @@
                     </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
-                     <MudTextField Label="@L["Comment"]" @bind-Value="model.Description"
+                    <MudTextField Label="@L["Comment"]" @bind-Value="model.Description"
                                   For="@(() => model.Description)">
-                    </MudTextField>                    
+                    </MudTextField>
                 </MudItem>
                 <MudItem xs="12">
                     <MudText>@L["Upload attachments"]</MudText>
                     <MudContainer Class="my-2" Style="overflow-x: scroll">
                         <MudPaper Class="my-2 d-flex flex-grow-1 gap-5" Width="725px" Elevation="0">
-                            <UploadPhotoComponent
-                               Desciption="@L["Only green codes are allowed"]"
-                               Disabled="false"
-                               ImageUrl="@model.HealthCode"
-                               Label="@L["Upload a health code"]"
-                               PassCode="@PassCode"
-                               OnUploaded="@(s=> model.HealthCode=s)"
-                               Tag="H"
-                            ></UploadPhotoComponent>
-                            <UploadPhotoComponent
-                               Desciption="@L["Make sure you haven't been to a medium-high risk area for 14 days"]"
-                               Disabled="false"
-                               ImageUrl="@model.TripCode"
-                               Label="@L["Upload a trip code"]"
-                               PassCode="@PassCode"
-                              OnUploaded="@(s=> model.TripCode=s)"
-                               Tag="T"
-                            ></UploadPhotoComponent>
-                            <UploadPhotoComponent
-                               Desciption="@L["Valid nucleic acid test report within 48 hours"]"
-                               Disabled="false"
-                               ImageUrl="@model.NucleicAcidTestReport"
-                               Label="@L["Upload a nucleic acid test report"]"
-                               PassCode="@PassCode"
-                               OnUploaded="@(s=> model.NucleicAcidTestReport=s)"
-                               Tag="R"
-                            ></UploadPhotoComponent>
+                            <UploadPhotoComponent Desciption="@L["Only green codes are allowed"]"
+                                                  Disabled="false"
+                                                  ImageUrl="@model.HealthCode"
+                                                  Label="@L["Upload a health code"]"
+                                                  PassCode="@PassCode"
+                                                  OnUploaded="@(s=> model.HealthCode=s)"
+                                                  Tag="H"></UploadPhotoComponent>
+                            <UploadPhotoComponent Desciption="@L["Make sure you haven't been to a medium-high risk area for 14 days"]"
+                                                  Disabled="false"
+                                                  ImageUrl="@model.TripCode"
+                                                  Label="@L["Upload a trip code"]"
+                                                  PassCode="@PassCode"
+                                                  OnUploaded="@(s=> model.TripCode=s)"
+                                                  Tag="T"></UploadPhotoComponent>
+                            <UploadPhotoComponent Desciption="@L["Valid nucleic acid test report within 48 hours"]"
+                                                  Disabled="false"
+                                                  ImageUrl="@model.NucleicAcidTestReport"
+                                                  Label="@L["Upload a nucleic acid test report"]"
+                                                  PassCode="@PassCode"
+                                                  OnUploaded="@(s=> model.NucleicAcidTestReport=s)"
+                                                  Tag="R"></UploadPhotoComponent>
                         </MudPaper>
                     </MudContainer>
                 </MudItem>
@@ -69,22 +63,23 @@
 </MudDialog>
 @code {
     MudForm form;
+
     [EditorRequired]
     [Parameter]
-    public CompanionDto model { get; set; } = new();
+    public CompanionDto model { get; set; } = new CompanionDto();
+
     [Parameter]
     public string? PassCode { get; set; }
+
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
     private CreateVisitorCompanionDtoValidator modelValidator = new CreateVisitorCompanionDtoValidator();
-
 
     private async Task Submit()
     {
         await form.Validate();
         if (form.IsValid)
         {
-            
             if (string.IsNullOrEmpty(model.HealthCode))
             {
                 Snackbar.Add(L["You must upload health code"], MudBlazor.Severity.Error);
@@ -95,9 +90,8 @@
                 Snackbar.Add(L["You must upload trip code"], MudBlazor.Severity.Error);
                 return;
             }
+
             MudDialog.Close(DialogResult.Ok(true));
-            
         }
-        
     }
 }

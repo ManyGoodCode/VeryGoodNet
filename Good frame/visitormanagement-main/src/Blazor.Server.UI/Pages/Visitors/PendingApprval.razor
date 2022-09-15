@@ -11,9 +11,9 @@
                 <PendingApprovalComponent @ref="pending" SelectChanged="SelectChanged"></PendingApprovalComponent>
             </MudItem>
             <MudItem xs="12" sm="7" md="9">
-                <VisitorApprovalViewComponent Visitor="@_visitor" @ref="approval"  ApproveChanged="ApproveChanged" ></VisitorApprovalViewComponent>
+                <VisitorApprovalViewComponent Visitor="@visitor" @ref="approval" ApproveChanged="ApproveChanged"></VisitorApprovalViewComponent>
             </MudItem>
-         </MudGrid>
+        </MudGrid>
     </ChildContent>
     <ErrorContent>
         <CustomError Exception="context"></CustomError>
@@ -22,41 +22,43 @@
 @code {
     private VisitorApprovalViewComponent approval;
     private PendingApprovalComponent pending;
-    private VisitorDto _visitor = new();
+    private VisitorDto visitor = new VisitorDto();
+
     [Parameter]
     [SupplyParameterFromQuery(Name = "code")]
     public string? Code { get; set; }
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private ISender mediator { get; set; } = default!;
 
     protected override async Task OnInitializedAsync()
     {
-         await SearchVisitor();
+        await SearchVisitor();
     }
+
     public async Task SearchVisitor()
     {
         if (string.IsNullOrEmpty(Code)) return;
-        var result = await _mediator.Send(new SearchVisitorQuery(Code));
+        VisitorDto result = await mediator.Send(new SearchVisitorQuery(Code));
         if (result is null)
         {
-            _visitor = new();
-            Snackbar.Add(string.Format(L["Not found visitor information with code:{0}"],Code), MudBlazor.Severity.Warning);
+            visitor = new VisitorDto();
+            Snackbar.Add(string.Format(L["Not found visitor information with code:{0}"], Code), MudBlazor.Severity.Warning);
         }
         else
         {
-            _visitor = result;
+            visitor = result;
         }
     }
-    
+
     private Task SelectChanged(VisitorDto visitor)
     {
-        _visitor = visitor;
+        visitor = visitor;
         return Task.CompletedTask;
-
     }
+
     private async Task ApproveChanged()
     {
         await pending.SearchPendingVisitor();
     }
-
 }

@@ -30,10 +30,10 @@
     <ErrorBoundary>
         <ChildContent>
             <MudPaper Class="pa-4 mt-4">
-                <MudTextField @bind-Value="_searchString" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="OnSearch" />
+                <MudTextField @bind-Value="searchString" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="OnSearch" />
             </MudPaper>
             <MudPaper Class="pa-4 mt-4">
-                @if (_notfound)
+                @if (notfound)
                 {
                     <MudAlert Severity="MudBlazor.Severity.Error">@L["Not found visitor's information"]</MudAlert>
                 }
@@ -130,12 +130,12 @@
                         </MudItem>
                         <MudItem xs="12" sm="12">
                             <Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete Label="@L["Select Site - Address"]"
-                                              Disabled="@(model.Apppoved==true)"
-                                              For="@(() => model.SiteId)"
-                                              ReadOnly="true"
-                                              Required="true"
-                                              RequiredError="@L["site - address is required!"]"
-                                              @bind-Value="model.SiteId">
+                                                                                      Disabled="@(model.Apppoved==true)"
+                                                                                      For="@(() => model.SiteId)"
+                                                                                      ReadOnly="true"
+                                                                                      Required="true"
+                                                                                      RequiredError="@L["site - address is required!"]"
+                                                                                      @bind-Value="model.SiteId">
                             </Blazor.Server.UI.Pages.Sites.SiteWithAddressAutocomplete>
                         </MudItem>
                         <MudItem xs="12" sm="12">
@@ -194,8 +194,8 @@
                 </MudForm>
             </MudPaper>
             <MudPaper Class="d-flex pa-4 mt-4">
-                 <MudButton Class="ml-auto mx-2" Variant="Variant.Filled" Disabled="@(model.Id==0 || _submiting)" DisableElevation="true" OnClick="Submit">
-                    @if (_submiting)
+                <MudButton Class="ml-auto mx-2" Variant="Variant.Filled" Disabled="@(model.Id==0 || submiting)" DisableElevation="true" OnClick="Submit">
+                    @if (submiting)
                     {
                         <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
                         <MudText Class="ms-2">@L["Processing"]</MudText>
@@ -205,7 +205,7 @@
                         <MudText>@L["Submit"]</MudText>
                     }
                 </MudButton>
-                
+
             </MudPaper>
         </ChildContent>
         <ErrorContent>
@@ -218,23 +218,31 @@
 
     [Parameter]
     [SupplyParameterFromQuery(Name = "code")]
+
     public string? Code { get; set; }
     public string? Title { get; private set; }
-    private string? _searchString { get; set; }
+
+    private string? searchString { get; set; }
     private MudForm form = default!;
-    private CompleteVisitorInfoCommandValidator modelValidator = new();
-    private CompleteVisitorInfoCommand model { get; set; } = new();
-    private bool _notfound;
-    private bool _loading;
-    private bool _uploading;
-    private bool _submiting;
-    [Inject] private IUploadService _uploadService { get; set; } = default!;
+    private CompleteVisitorInfoCommandValidator modelValidator = new CompleteVisitorInfoCommandValidator();
+    private CompleteVisitorInfoCommand model { get; set; } = new CompleteVisitorInfoCommand();
+    private bool notfound;
+    private bool loading;
+    private bool uploading;
+    private bool submiting;
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
+    private IUploadService uploadService { get; set; } = default!;
+
+    [Inject]
+    private ISender mediator { get; set; } = default!;
+
     [Inject]
     private Hashids hashids { get; set; } = default!;
+
     [Inject]
-    private NavigationManager _navigationManager { get; set; } = default!;
+    private NavigationManager navigationManager { get; set; } = default!;
+
     [CascadingParameter]
     protected Task<AuthenticationState> AuthState { get; set; } = default!;
 
@@ -246,24 +254,28 @@
             await FindVisitor();
         }
     }
+
     private async Task OnSearch()
     {
-        Code = _searchString;
+        Code = searchString;
         await FindVisitor();
     }
+
     private async Task FindVisitor()
     {
         if (string.IsNullOrEmpty(Code))
         {
-            _notfound = true;
+            notfound = true;
             return;
         }
-        var dto = await _mediator.Send(new SearchVisitorQuery(Code));
+
+        VisitorDto dto = await mediator.Send(new SearchVisitorQuery(Code));
         if (dto is null)
         {
-            _notfound = true;
+            notfound = true;
             return;
         }
+
         model = new CompleteVisitorInfoCommand()
             {
                 Id = dto.Id,
@@ -300,20 +312,21 @@
                 Promise = true,
                 PrivacyPolicy = true,
             };
-        _notfound = false;
+
+        notfound = false;
 
     }
 
 
     private async Task Submit()
     {
-        _submiting = true;
+        submiting = true;
         try
         {
             await form.Validate();
             if (form.IsValid)
             {
-                var siteConfig = await _mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
+                CleanArchitecture.Blazor.Application.Features.SiteConfigurations.DTOs.SiteConfigurationDto siteConfig = await mediator.Send(new GetBySiteIdConfigurationsQuery(model.SiteId));
                 if (model.Promise != true)
                 {
                     Snackbar.Add(L["You must promise"], MudBlazor.Severity.Error);
@@ -339,16 +352,15 @@
                     Snackbar.Add(L["You must upload nucleic acid test report"], MudBlazor.Severity.Error);
                     return;
                 }
-                var result = await _mediator.Send(model);
-                Snackbar.Add(L["Submit successfully"], MudBlazor.Severity.Info);
-                _navigationManager.NavigateTo("/visitor/mycode?code=" + model.PassCode);
 
+                Result result = await mediator.Send(model);
+                Snackbar.Add(L["Submit successfully"], MudBlazor.Severity.Info);
+                navigationManager.NavigateTo("/visitor/mycode?code=" + model.PassCode);
             }
         }
         finally
         {
-            _submiting = false;
+            submiting = false;
         }
     }
-
-    }
+}

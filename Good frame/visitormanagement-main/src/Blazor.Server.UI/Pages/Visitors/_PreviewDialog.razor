@@ -43,12 +43,16 @@
 @code {
     [CascadingParameter]
     MudDialogInstance MudDialog { get; set; } = default!;
+
     [Parameter]
     public string? TripCode { get; set; }
+
     [Parameter]
     public string? HealthCode { get; set; }
+
     [Parameter]
-    public string? NucleicAcidTestReport { get; set; }     
+    public string? NucleicAcidTestReport { get; set; }
+    
     private void Submit()
     {
         MudDialog.Close();

@@ -7,14 +7,14 @@
 @inherits MudComponentBase
 <div class="d-flex flex-column">
     <MudPaper Class="pa-4 mt-4">
-        <MudTextField @bind-Value="_keyword" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="SearchPendingVisitor" />
+        <MudTextField @bind-Value="keyword" Label="@L["Search for visitor's email or phone number."]" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="MudBlazor.Color.Primary" OnAdornmentClick="SearchPendingVisitor" />
     </MudPaper>
     <MudPaper Class="mt-4">
         <MudList Clickable="true">
             <MudListSubheader>
-                @L["Pending Confirm"] (@_list.Count)
+                @L["Pending Confirm"] (@list.Count)
             </MudListSubheader>
-            @foreach (var item in _list)
+            @foreach (var item in list)
             {
                 <MudListItem>
                     <div class="d-flex flex-row flex-grow-1 gap-4">
@@ -26,11 +26,11 @@
                         </div>
                         <div class="d-flex flex-column flex-grow-0">
                             <MudButton Class="ml-auto"
-                                       Disabled="@(item._processing)"
-                                       EndIcon="@Icons.Filled.FactCheck"
-                                       Variant="Variant.Text"
-                                       OnClick="@(()=>Confirm(item))"
-                                       Color="MudBlazor.Color.Primary">
+                                   Disabled="@(item._processing)"
+                                   EndIcon="@Icons.Filled.FactCheck"
+                                   Variant="Variant.Text"
+                                   OnClick="@(()=>Confirm(item))"
+                                   Color="MudBlazor.Color.Primary">
                                 @if (item._processing)
                                 {
                                     <MudProgressCircular Class="ms-n1" Size="MudBlazor.Size.Small" Indeterminate="true" />
@@ -41,7 +41,7 @@
                                     <MudText>@L["Confirm"]</MudText>
                                 }
                             </MudButton>
-                           
+
                         </div>
                     </div>
                 </MudListItem>
@@ -53,17 +53,20 @@
 
 @code {
 
-    private string? _keyword { get; set; }
+    private string? keyword { get; set; }
+
     [Inject]
-    private ISender _mediator { get; set; } = default!;
-    private List<VisitorDto> _list { get; set; } = new();
+    private ISender mediator { get; set; } = default!;
+
+    private List<VisitorDto> list { get; set; } = new List<VisitorDto>();
+
     protected override async Task OnInitializedAsync()
     {
         await SearchPendingVisitor();
     }
     public async Task SearchPendingVisitor()
     {
-        _list = await _mediator.Send(new SearchPendingConfirmVisitorsQuery(_keyword));
+        list = await mediator.Send(new SearchPendingConfirmVisitorsQuery(keyword));
         StateHasChanged();
     }
 
@@ -72,7 +75,7 @@
         item._processing = true;
         try
         {
-            var result = await _mediator.Send(new ConfirmVisitorCommand(new int[] { item.Id }));
+            Result<int> result = await mediator.Send(new ConfirmVisitorCommand(new int[] { item.Id }));
             Snackbar.Add($"{string.Format(L["{0} confirmed"], item.Name)}", MudBlazor.Severity.Success);
             await SearchPendingVisitor();
         }
@@ -82,7 +85,4 @@
         }
 
     }
-
-
-
 }
