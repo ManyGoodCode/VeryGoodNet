@@ -1,27 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AxisUtilities.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Static utility methods for the Axis classes.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
     using System;
     using System.Collections.Generic;
-
-    /// <summary>
-    /// Static utility methods for the <see cref="Axis" /> classes.
-    /// </summary>
     public static class AxisUtilities
     {
-        /// <summary>
-        /// Calculates the minor interval.
-        /// </summary>
-        /// <param name="majorInterval">The major interval.</param>
-        /// <returns>The minor interval.</returns>
         public static double CalculateMinorInterval(double majorInterval)
         {
             // check if majorInterval = 2*10^x
@@ -36,11 +19,6 @@ namespace OxyPlot.Axes
         }
 
 #if DEBUG
-        /// <summary>
-        /// Calculates the minor interval (alternative algorithm).
-        /// </summary>
-        /// <param name="majorInterval">The major interval.</param>
-        /// <returns>The minor interval.</returns>
         public static double CalculateMinorInterval2(double majorInterval)
         {
             var exponent = Math.Ceiling(Math.Log(majorInterval, 10));
@@ -49,15 +27,6 @@ namespace OxyPlot.Axes
         }
 #endif
 
-        /// <summary>
-        /// Creates tick values at the specified interval.
-        /// </summary>
-        /// <param name="from">The start value.</param>
-        /// <param name="to">The end value.</param>
-        /// <param name="step">The interval.</param>
-        /// <param name="maxTicks">The maximum number of ticks (optional). The default value is 1000.</param>
-        /// <returns>A sequence of values.</returns>
-        /// <exception cref="System.ArgumentException">Step cannot be zero or negative.;step</exception>
         public static IList<double> CreateTickValues(double from, double to, double step, int maxTicks = 1000)
         {
             if (step <= 0)
@@ -94,12 +63,6 @@ namespace OxyPlot.Axes
             return values;
         }
 
-        /// <summary>
-        /// Analyses two lists of major and minor ticks and creates a new containing the subset of the minor ticks which are not too close to any of the major ticks.
-        /// </summary>
-        /// <param name="majorTicks">The major ticks. Must be monotonically ascending or descending.</param>
-        /// <param name="minorTicks">The minor ticks. Must be monotonically ascending or descending (same direction as major ticks).</param>
-        /// <returns>A new list containing a subset of the original minor ticks such that there are no minor ticks too close to a major tick.</returns>
         public static IList<double> FilterRedundantMinorTicks(IList<double> majorTicks, IList<double> minorTicks)
         {
             if (majorTicks.Count == 0 || minorTicks.Count == 0)
