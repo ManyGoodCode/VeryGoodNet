@@ -1,17 +1,7 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TransposableAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2020 OxyPlot contributors
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace OxyPlot.Annotations
 {
-    /// <summary>
-    /// Provides an abstract base class for transposable annotations.
-    /// </summary>
     public abstract class TransposableAnnotation : Annotation, ITransposablePlotElement
     {
-        /// <inheritdoc/>
         public override OxyRect GetClippingRect()
         {
             var rect = this.PlotModel.PlotArea;
@@ -41,13 +31,11 @@ namespace OxyPlot.Annotations
             return rect.Clip(axisClipRect);
         }
 
-        /// <inheritdoc/>
         public override ScreenPoint Transform(DataPoint p)
         {
             return PlotElementUtilities.TransformOrientated(this, p);
         }
-
-        /// <inheritdoc/>
+        
         public override DataPoint InverseTransform(ScreenPoint p)
         {
             return PlotElementUtilities.InverseTransformOrientated(this, p);
