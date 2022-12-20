@@ -1,38 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AngleAxisFullPlotAreaRenderer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render with the plot area filled completely <see cref="AngleAxis" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
     using System;
     using System.Linq;
 
-    /// <summary>
-    /// Provides functionality to render <see cref="AngleAxis" /> using the full plot area.
-    /// </summary>
     public class AngleAxisFullPlotAreaRenderer : AxisRendererBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AngleAxisFullPlotAreaRenderer" /> class.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="plot">The plot.</param>
         public AngleAxisFullPlotAreaRenderer(IRenderContext rc, PlotModel plot)
             : base(rc, plot)
         {
         }
 
-        /// <summary>
-        /// Renders the specified axis.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="pass">The render pass.</param>
-        /// <exception cref="System.InvalidOperationException">Magnitude axis not defined.</exception>
         public override void Render(Axis axis, int pass)
         {
             var angleAxis = (AngleAxis)axis;
@@ -84,7 +62,6 @@ namespace OxyPlot.Axes
                 }
             }
 
-            //Text rendering
             foreach (var value in this.MajorLabelValues.Take(majorTickCount))
             {
                 ScreenPoint pt = TransformToClientRectangle(magnitudeAxis.ClipMaximum, value, axis, this.Plot.PlotArea, magnitudeAxis.MidPoint);
@@ -154,21 +131,11 @@ namespace OxyPlot.Axes
                     outsideposition, text, axis.ActualTextColor, axis.ActualFont, axis.ActualFontSize, axis.ActualFontWeight, 0, ha, va);
             }
         }
-
-        /// <summary>
-        /// Transforms the specified point to screen coordinates.
-        /// </summary>
-        /// <param name="actualMaximum"></param>
-        /// <param name="x"></param>
-        /// <param name="axis"></param>
-        /// <param name="plotArea"></param>
-        /// <param name="midPoint"></param>
-        /// <returns></returns>
+        
         public ScreenPoint TransformToClientRectangle(double actualMaximum, double x, Axis axis, OxyRect plotArea, ScreenPoint midPoint)
         {
             ScreenPoint result = new ScreenPoint();
-            //I think the key is to NOT compute the axis scaled value of the angle, BUT to just draw it from the Midpoint to the end of the PlotView
-            //For each MinorTickValue, compute an intersection point within the client area
+         
             double width_to_height = plotArea.Width / plotArea.Height;
 
 
