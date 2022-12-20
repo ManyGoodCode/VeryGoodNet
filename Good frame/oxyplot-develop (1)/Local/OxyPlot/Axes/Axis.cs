@@ -1,11 +1,3 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Axis.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides an abstract base class for axes.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
@@ -15,44 +7,15 @@ namespace OxyPlot.Axes
     using OxyPlot.Series;
     using OxyPlot.Utilities;
 
-    /// <summary>
-    /// Provides an abstract base class for axes.
-    /// </summary>
     public abstract class Axis : PlotElement
     {
-        /// <summary>
-        /// Exponent function.
-        /// </summary>
         protected static readonly Func<double, double> Exponent = x => Math.Floor(ThresholdRound(Math.Log(Math.Abs(x), 10)));
-
-        /// <summary>
-        /// Mantissa function.
-        /// </summary>
         protected static readonly Func<double, double> Mantissa = x => ThresholdRound(x / Math.Pow(10, Exponent(x)));
-
-        /// <summary>
-        /// Rounds a value if the difference between the rounded value and the original value is less than 1e-6.
-        /// </summary>
         protected static readonly Func<double, double> ThresholdRound = x => Math.Abs(Math.Round(x) - x) < 1e-6 ? Math.Round(x) : x;
 
-        /// <summary>
-        /// The offset.
-        /// </summary>
         private double offset;
-
-        /// <summary>
-        /// The scale.
-        /// </summary>
         private double scale;
-
-        /// <summary>
-        /// The position of the axis.
-        /// </summary>
         private AxisPosition position;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="Axis" /> class.
-        /// </summary>
         protected Axis()
         {
             this.Position = AxisPosition.Left;
@@ -135,79 +98,21 @@ namespace OxyPlot.Axes
             this.DataMinimum = double.NaN;
         }
 
-        /// <summary>
-        /// Occurs when the axis has been changed (by zooming, panning or resetting).
-        /// </summary>
         [Obsolete("May be removed in v4.0 (#111)")]
         public event EventHandler<AxisChangedEventArgs> AxisChanged;
 
-        /// <summary>
-        /// Occurs when the transform changed (size or axis range was changed).
-        /// </summary>
         [Obsolete("May be removed in v4.0 (#111)")]
         public event EventHandler TransformChanged;
 
-        /// <summary>
-        /// Gets or sets the absolute maximum. This is only used for the UI control. It will not be possible to zoom/pan beyond this limit. The default value is <c>double.MaxValue</c>.
-        /// </summary>
         public double AbsoluteMaximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the absolute minimum. This is only used for the UI control. It will not be possible to zoom/pan beyond this limit. The default value is <c>double.MinValue</c>.
-        /// </summary>
         public double AbsoluteMinimum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the actual major step.
-        /// </summary>
         public double ActualMajorStep { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the actual maximum value of the axis.
-        /// </summary>
-        /// <remarks>If <see cref="ViewMaximum" /> is not <c>NaN</c>, this value will be defined by <see cref="ViewMaximum" />.
-        /// Otherwise, if <see cref="Maximum" /> is not <c>NaN</c>, this value will be defined by <see cref="Maximum" />.
-        /// Otherwise, this value will be defined by the maximum (+padding) of the data.</remarks>
         public double ActualMaximum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the actual minimum value of the axis.
-        /// </summary>
-        /// <remarks>If <see cref="ViewMinimum" /> is not <c>NaN</c>, this value will be defined by <see cref="ViewMinimum" />.
-        /// Otherwise, if <see cref="Minimum" /> is not <c>NaN</c>, this value will be defined by <see cref="Minimum" />.
-        /// Otherwise this value will be defined by the minimum (+padding) of the data.</remarks>
         public double ActualMinimum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the maximum displayed value on the axis, as determined by the <see cref="ActualMaximum"/> and <see cref="MaximumDataMargin"/>.
-        /// </summary>
-        /// <remarks>
-        /// The value is refreshed by <see cref="UpdateTransform(OxyRect)"/>, which is called before any plot elements are rendered.
-        /// </remarks>
         public double ClipMaximum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the minimum displayed value on the axis, as determined by the <see cref="ActualMinimum"/> and <see cref="MinimumDataMargin"/>.
-        /// </summary>
-        /// <remarks>
-        /// The value is refreshed by <see cref="UpdateTransform(OxyRect)"/>, which is called before any plot elements are rendered.
-        /// </remarks>
         public double ClipMinimum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the actual minor step.
-        /// </summary>
         public double ActualMinorStep { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the actual string format being used.
-        /// </summary>
         public string ActualStringFormat { get; protected set; }
-
-        /// <summary>
-        /// Gets the actual title of the axis.
-        /// </summary>
-        /// <remarks>If the <see cref="Unit" /> property is set, the <see cref="TitleFormatString" /> property is used to format the actual title.</remarks>
         public string ActualTitle
         {
             get
@@ -221,121 +126,28 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets or sets the orientation angle (degrees) for the axis labels. The default value is <c>0</c>.
-        /// </summary>
         public double Angle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the distance from the end of the tick lines to the labels. The default value is <c>4</c>.
-        /// </summary>
         public double AxisTickToLabelDistance { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum distance from the axis labels to the axis title. The default value is <c>4</c>.
-        /// </summary>
         public double AxisTitleDistance { get; set; }
-
-        /// <summary>
-        /// Gets or sets the distance between the plot area and the axis. The default value is <c>0</c>.
-        /// </summary>
         public double AxisDistance { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the axis line. The default value is <see cref="OxyColors.Black" />.
-        /// </summary>
         public OxyColor AxislineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style of the axis line. The default value is <see cref="LineStyle.None" />.
-        /// </summary>
         public LineStyle AxislineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the axis line. The default value is <c>1</c>.
-        /// </summary>
         public double AxislineThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to clip the axis title. The default value is <c>true</c>.
-        /// </summary>
         public bool ClipTitle { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to crop gridlines with perpendicular axes Start/EndPositions. The default value is <c>false</c>.
-        /// </summary>
         public bool CropGridlines { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value of the data displayed on this axis.
-        /// </summary>
         public double DataMaximum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value of the data displayed on this axis.
-        /// </summary>
         public double DataMinimum { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the end position of the axis on the plot area. The default value is <c>1</c>.
-        /// </summary>
-        /// <remarks>The position is defined by a fraction in the range from <c>0</c> to <c>1</c>, where <c>0</c> is at the bottom/left
-        /// and <c>1</c> is at the top/right. </remarks>
         public double EndPosition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the extra gridlines. The default value is <see cref="OxyColors.Black"/>.
-        /// </summary>
         public OxyColor ExtraGridlineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style of the extra gridlines. The default value is <see cref="LineStyle.Solid"/>.
-        /// </summary>
         public LineStyle ExtraGridlineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the extra gridlines. The default value is <c>1</c>.
-        /// </summary>
         public double ExtraGridlineThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the values for the extra gridlines. The default value is <c>null</c>.
-        /// </summary>
         public double[] ExtraGridlines { get; set; }
-
-        /// <summary>
-        /// Gets or sets the filter function. The default value is <c>null</c>.
-        /// </summary>
         public Func<double, bool> FilterFunction { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value that can be shown using this axis. Values greater or equal to this value will not be shown. The default value is <c>double.MaxValue</c>.
-        /// </summary>
         public double FilterMaxValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value that can be shown using this axis. Values smaller or equal to this value will not be shown. The default value is <c>double.MinValue</c>.
-        /// </summary>
         public double FilterMinValue { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum length (screen space) of the intervals. The available length of the axis will be divided by this length to get the approximate number of major intervals on the axis. The default value is <c>60</c>.
-        /// </summary>
         public double IntervalLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether this axis is visible. The default value is <c>true</c>.
-        /// </summary>
         public bool IsAxisVisible { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether panning is enabled. The default value is <c>true</c>.
-        /// </summary>
         public bool IsPanEnabled { get; set; }
-
-        /// <summary>
-        /// Gets a value indicating whether this axis is reversed. It is reversed if <see cref="StartPosition" /> &gt; <see cref="EndPosition" />.
-        /// </summary>
         public bool IsReversed
         {
             get
@@ -343,154 +155,34 @@ namespace OxyPlot.Axes
                 return this.StartPosition > this.EndPosition;
             }
         }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether zooming is enabled. The default value is <c>true</c>.
-        /// </summary>
+        
         public bool IsZoomEnabled { get; set; }
-
-        /// <summary>
-        /// Gets or sets the key of the axis. This can be used to specify an axis if you have defined multiple axes in a plot. The default value is <c>null</c>.
-        /// </summary>
         public string Key { get; set; }
-
-        /// <summary>
-        /// Gets or sets the formatting function for the labels. The default value is <c>null</c>.
-        /// </summary>
-        /// <remarks>This function can be used instead of overriding the <see cref="FormatValue" /> method.</remarks>
         public Func<double, string> LabelFormatter { get; set; }
-
-        /// <summary>
-        /// Gets or sets the layer of the axis. The default value is <see cref="AxisLayer.BelowSeries"/>.
-        /// </summary>
         public AxisLayer Layer { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the major gridlines. The default value is <c>#40000000</c>.
-        /// </summary>
         public OxyColor MajorGridlineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style of the major gridlines. The default value is <see cref="LineStyle.None"/>.
-        /// </summary>
         public LineStyle MajorGridlineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the major gridlines. The default value is <c>1</c>.
-        /// </summary>
         public double MajorGridlineThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the interval between major ticks. The default value is <c>double.NaN</c>.
-        /// </summary>
         public double MajorStep { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the major ticks. The default value is <c>7</c>.
-        /// </summary>
         public double MajorTickSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum value of the axis. The default value is <c>double.NaN</c>.
-        /// </summary>
         public double Maximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the 'padding' fraction of the maximum value. The default value is <c>0.01</c>.
-        /// </summary>
-        /// <remarks> A value of 0.01 gives 1% more space on the maximum end of the axis. This property is not used if the <see cref="Maximum" /> property is set.</remarks>
         public double MaximumPadding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the screen-space data margin at the maximum. The default value is <c>0</c>.
-        /// </summary>
-        /// <value>The number of device independent units to included between the <see cref="ClipMaximum"/> and <see cref="ActualMaximum"/>.</value>
         public double MaximumDataMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the screen-space margin at the maximum. The default value is <c>0</c>.
-        /// </summary>
-        /// <value>The number of device independent units to be left empty between the axis and the <see cref="EndPosition"/>.</value>
         public double MaximumMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum range of the axis. Setting this property ensures that <c>ActualMaximum-ActualMinimum &lt; MaximumRange</c>. The default value is <c>double.PositiveInfinity</c>.
-        /// </summary>
         public double MaximumRange { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value of the axis. The default value is <c>double.NaN</c>.
-        /// </summary>
         public double Minimum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value for the interval between major ticks. The default value is <c>0</c>.
-        /// </summary>
         public double MinimumMajorStep { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum value for the interval between minor ticks. The default value is <c>0</c>.
-        /// </summary>
         public double MinimumMinorStep { get; set; }
-
-        /// <summary>
-        /// Gets or sets the 'padding' fraction of the minimum value. The default value is <c>0.01</c>.
-        /// </summary>
-        /// <remarks>A value of 0.01 gives 1% more space on the minimum end of the axis. This property is not used if the <see cref="Minimum" /> property is set.</remarks>
         public double MinimumPadding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the screen-space data margin at the minimum. The default value is <c>0</c>.
-        /// </summary>
-        /// <value>The number of device independent units to included between the <see cref="ClipMinimum"/> and <see cref="ActualMinimum"/>.</value>
         public double MinimumDataMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the screen-space margin at the minimum. The default value is <c>0</c>.
-        /// </summary>
-        /// <value>The number of device independent units to be left empty between the axis the <see cref="StartPosition"/>.</value>
         public double MinimumMargin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum range of the axis. Setting this property ensures that <c>ActualMaximum-ActualMinimum > MinimumRange</c>. The default value is <c>0</c>.
-        /// </summary>
         public double MinimumRange { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the minor gridlines. The default value is <c>#20000000</c>.
-        /// </summary>
         public OxyColor MinorGridlineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style of the minor gridlines. The default value is <see cref="LineStyle.None"/>.
-        /// </summary>
         public LineStyle MinorGridlineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the thickness of the minor gridlines. The default value is <c>1</c>.
-        /// </summary>
         public double MinorGridlineThickness { get; set; }
-
-        /// <summary>
-        /// Gets or sets the interval between minor ticks. The default value is <c>double.NaN</c>.
-        /// </summary>
         public double MinorStep { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the minor ticks. The default value is <see cref="OxyColors.Automatic"/>.
-        /// </summary>
-        /// <remarks>If the value is <see cref="OxyColors.Automatic"/>, the value of
-        /// <see cref="Axis.TicklineColor"/> will be used.</remarks>
         public OxyColor MinorTicklineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the minor ticks. The default value is <c>4</c>.
-        /// </summary>
         public double MinorTickSize { get; set; }
-
-        /// <summary>
-        /// Gets the offset. This is used to transform between data and screen coordinates.
-        /// </summary>
         public double Offset
         {
             get
@@ -499,9 +191,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets or sets the position of the axis. The default value is <see cref="AxisPosition.Left"/>.
-        /// </summary>
         public AxisPosition Position
         {
             get
@@ -515,20 +204,8 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the axis should be positioned at the zero-crossing of the related axis. The default value is <c>false</c>.
-        /// </summary>
         public bool PositionAtZeroCrossing { get; set; }
-
-        /// <summary>
-        /// Gets or sets the position tier which defines in which tier the axis is displayed. The default value is <c>0</c>.
-        /// </summary>
-        /// <remarks>The bigger the value the further afar is the axis from the graph.</remarks>
         public int PositionTier { get; set; }
-
-        /// <summary>
-        /// Gets the scaling factor of the axis. This is used to transform between data and screen coordinates.
-        /// </summary>
         public double Scale
         {
             get
@@ -537,121 +214,27 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets or sets the screen coordinate of the maximum end of the axis.
-        /// </summary>
         public ScreenPoint ScreenMax { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the screen coordinate of the minimum end of the axis.
-        /// </summary>
         public ScreenPoint ScreenMin { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the start position of the axis on the plot area. The default value is <c>0</c>.
-        /// </summary>
-        /// <remarks>The position is defined by a fraction in the range from <c>0</c> to <c>1</c>, where <c>0</c> is at the bottom/left
-        /// and <c>1</c> is at the top/right. </remarks>
         public double StartPosition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the string format used for formatting the axis values. The default value is <c>null</c>.
-        /// </summary>
         public string StringFormat { get; set; }
-
-        /// <summary>
-        /// Gets or sets the tick style for major and minor ticks. The default value is <see cref="OxyPlot.Axes.TickStyle.Outside"/>.
-        /// </summary>
         public TickStyle TickStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the major and minor ticks. The default value is <see cref="OxyColors.Black"/>.
-        /// </summary>
         public OxyColor TicklineColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title of the axis. The default value is <c>null</c>.
-        /// </summary>
         public string Title { get; set; }
-
-        /// <summary>
-        /// Gets or sets the length of the title clipping rectangle (fraction of the available length of the axis). The default value is <c>0.9</c>.
-        /// </summary>
         public double TitleClippingLength { get; set; }
-
-        /// <summary>
-        /// Gets or sets the color of the title. The default value is <see cref="OxyColors.Automatic"/>.
-        /// </summary>
-        /// <remarks>If the value is <c>null</c>, the <see cref="PlotModel.TextColor" /> will be used.</remarks>
         public OxyColor TitleColor { get; set; }
-
-        /// <summary>
-        /// Gets or sets the title font. The default value is <c>null</c>.
-        /// </summary>
         public string TitleFont { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the title font. The default value is <c>double.NaN</c>.
-        /// </summary>
         public double TitleFontSize { get; set; }
-
-        /// <summary>
-        /// Gets or sets the weight of the title font. The default value is <see cref="FontWeights.Normal"/>.
-        /// </summary>
         public double TitleFontWeight { get; set; }
-
-        /// <summary>
-        /// Gets or sets the format string used for formatting the title and unit when <see cref="Unit" /> is defined.
-        /// The default value is "{0} [{1}]", where {0} refers to the <see cref="Title" /> and {1} refers to the <see cref="Unit" />.
-        /// </summary>
-        /// <remarks>If <see cref="Unit" /> is <c>null</c>, the actual title is defined by <see cref="Title" /> only.</remarks>
         public string TitleFormatString { get; set; }
-
-        /// <summary>
-        /// Gets or sets the position of the title. The default value is <c>0.5</c>.
-        /// </summary>
-        /// <remarks>The position is defined by a fraction in the range <c>0</c> to <c>1</c>.</remarks>
         public double TitlePosition { get; set; }
-
-        /// <summary>
-        /// Gets or sets the unit of the axis. The default value is <c>null</c>.
-        /// </summary>
-        /// <remarks>The <see cref="TitleFormatString" /> is used to format the title including this unit.</remarks>
         public string Unit { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether to use superscript exponential format. The default value is <c>false</c>.
-        /// </summary>
-        /// <remarks>
-        /// This format will convert 1.5E+03 to 1.5·10^{3} and render the superscript properly.
-        /// If <see cref="StringFormat" /> is <c>null</c>, 1.0E+03 will be converted to 10^{3}, otherwise it will use the format string for the mantissa.
-        /// </remarks>
         public bool UseSuperExponentialFormat { get; set; }
 
-        /// <summary>
-        /// Gets or sets the desired margins such that the axis text ticks will not be clipped.
-        /// The actual margins may be smaller or larger than the desired margins if they are set manually.
-        /// </summary>
         public OxyThickness DesiredMargin { get; protected set; }
-
-        /// <summary>
-        /// Gets or sets the position tier max shift.
-        /// </summary>
         internal double PositionTierMaxShift { get; set; }
-
-        /// <summary>
-        /// Gets or sets the position tier min shift.
-        /// </summary>
         internal double PositionTierMinShift { get; set; }
-
-        /// <summary>
-        /// Gets or sets the size of the position tier.
-        /// </summary>
         internal double PositionTierSize { get; set; }
-
-        /// <summary>
-        /// Gets the actual color of the title.
-        /// </summary>
         protected internal OxyColor ActualTitleColor
         {
             get
@@ -660,9 +243,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the actual title font.
-        /// </summary>
         protected internal string ActualTitleFont
         {
             get
@@ -671,9 +251,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the actual size of the title font.
-        /// </summary>
         protected internal double ActualTitleFontSize
         {
             get
@@ -682,9 +259,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the actual title font weight.
-        /// </summary>
         protected internal double ActualTitleFontWeight
         {
             get
@@ -693,23 +267,8 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets or sets the current view's maximum. This value is used when the user zooms or pans.
-        /// </summary>
-        /// <value>The view maximum.</value>
         protected double ViewMaximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the current view's minimum. This value is used when the user zooms or pans.
-        /// </summary>
-        /// <value>The view minimum.</value>
         protected double ViewMinimum { get; set; }
-
-        /// <summary>
-        /// Converts the value of the specified object to a double precision floating point number. DateTime objects are converted using DateTimeAxis.ToDouble and TimeSpan objects are converted using TimeSpanAxis.ToDouble.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns>The floating point number value.</returns>
         public static double ToDouble(object value)
         {
             if (value is DateTime)
@@ -725,23 +284,11 @@ namespace OxyPlot.Axes
             return Convert.ToDouble(value);
         }
 
-        /// <summary>
-        /// Transforms the specified point from screen space to data space.
-        /// </summary>
-        /// <param name="p">The point.</param>
-        /// <param name="xaxis">The x axis.</param>
-        /// <param name="yaxis">The y axis.</param>
-        /// <returns>The data point.</returns>
         public static DataPoint InverseTransform(ScreenPoint p, Axis xaxis, Axis yaxis)
         {
             return xaxis.InverseTransform(p.x, p.y, yaxis);
         }
 
-        /// <summary>
-        /// Formats the value to be used on the axis.
-        /// </summary>
-        /// <param name="x">The value.</param>
-        /// <returns>The formatted value.</returns>
         public string FormatValue(double x)
         {
             if (this.LabelFormatter != null)
@@ -752,12 +299,6 @@ namespace OxyPlot.Axes
             return this.FormatValueOverride(x);
         }
 
-        /// <summary>
-        /// Gets the coordinates used to draw ticks and tick labels (numbers or category names).
-        /// </summary>
-        /// <param name="majorLabelValues">The major label values.</param>
-        /// <param name="majorTickValues">The major tick values.</param>
-        /// <param name="minorTickValues">The minor tick values.</param>
         public virtual void GetTickValues(
             out IList<double> majorLabelValues, out IList<double> majorTickValues, out IList<double> minorTickValues)
         {
@@ -767,54 +308,27 @@ namespace OxyPlot.Axes
 
             minorTickValues = AxisUtilities.FilterRedundantMinorTicks(majorTickValues, minorTickValues);
         }
-
-        /// <summary>
-        /// Gets the value from an axis coordinate, converts from a coordinate <see cref="double" /> value to the actual data type.
-        /// </summary>
-        /// <param name="x">The coordinate.</param>
-        /// <returns>The converted value.</returns>
-        /// <remarks>Examples: The <see cref="DateTimeAxis" /> returns the <see cref="DateTime" /> and <see cref="CategoryAxis" /> returns category strings.</remarks>
+        
         public virtual object GetValue(double x)
         {
             return x;
         }
 
-        /// <summary>
-        /// Inverse transform the specified screen point.
-        /// </summary>
-        /// <param name="x">The x coordinate.</param>
-        /// <param name="y">The y coordinate.</param>
-        /// <param name="yaxis">The y-axis.</param>
-        /// <returns>The data point.</returns>
         public virtual DataPoint InverseTransform(double x, double y, Axis yaxis)
         {
             return new DataPoint(this.InverseTransform(x), yaxis != null ? yaxis.InverseTransform(y) : 0);
         }
 
-        /// <summary>
-        /// Inverse transforms the specified screen coordinate. This method can only be used with non-polar coordinate systems.
-        /// </summary>
-        /// <param name="sx">The screen coordinate.</param>
-        /// <returns>The value.</returns>
         public virtual double InverseTransform(double sx)
         {
             return (sx / this.scale) + this.offset;
         }
 
-        /// <summary>
-        /// Determines whether the axis is horizontal.
-        /// </summary>
-        /// <returns><c>true</c> if the axis is horizontal; otherwise, <c>false</c> .</returns>
         public bool IsHorizontal()
         {
             return this.position == AxisPosition.Top || this.position == AxisPosition.Bottom;
         }
 
-        /// <summary>
-        /// Determines whether the specified value is valid.
-        /// </summary>
-        /// <param name="value">The value.</param>
-        /// <returns><c>true</c> if the specified value is valid; otherwise, <c>false</c> .</returns>
         public bool IsValidValue(double value)
         {
 #pragma warning disable 1718
@@ -831,35 +345,18 @@ namespace OxyPlot.Axes
 #pragma warning restore 1718
         }
 
-        /// <summary>
-        /// Determines whether the axis is vertical.
-        /// </summary>
-        /// <returns><c>true</c> if the axis is vertical; otherwise, <c>false</c> .</returns>
+
         public bool IsVertical()
         {
             return this.position == AxisPosition.Left || this.position == AxisPosition.Right;
         }
 
-        /// <summary>
-        /// Determines whether the axis is used for X/Y values.
-        /// </summary>
-        /// <returns><c>true</c> if it is an XY axis; otherwise, <c>false</c> .</returns>
         public abstract bool IsXyAxis();
-
-        /// <summary>
-        /// Determines whether the axis is logarithmic.
-        /// </summary>
-        /// <returns><c>true</c> if it is a logarithmic axis; otherwise, <c>false</c> .</returns>
         public virtual bool IsLogarithmic()
         {
             return false;
         }
 
-        /// <summary>
-        /// Measures the size of the axis and updates <see cref="DesiredMargin"/> accordingly. This takes into account the axis title as well as tick labels
-        /// potentially exceeding the axis range.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
         public virtual void Measure(IRenderContext rc)
         {
             if (this.Position == AxisPosition.None)
@@ -1003,11 +500,6 @@ namespace OxyPlot.Axes
             this.DesiredMargin = new OxyThickness(marginLeft, marginTop, marginRight, marginBottom);
         }
 
-        /// <summary>
-        /// Pans the specified axis.
-        /// </summary>
-        /// <param name="ppt">The previous point (screen coordinates).</param>
-        /// <param name="cpt">The current point (screen coordinates).</param>
         public virtual void Pan(ScreenPoint ppt, ScreenPoint cpt)
         {
             if (!this.IsPanEnabled)
@@ -1021,10 +513,6 @@ namespace OxyPlot.Axes
             this.Pan(dsx);
         }
 
-        /// <summary>
-        /// Pans the specified axis.
-        /// </summary>
-        /// <param name="delta">The delta.</param>
         public virtual void Pan(double delta)
         {
             if (!this.IsPanEnabled)
@@ -1061,11 +549,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Pan, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Renders the axis on the specified render context.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="pass">The pass.</param>
         public virtual void Render(IRenderContext rc, int pass)
         {
             if (this.Position == AxisPosition.None)
@@ -1077,9 +560,6 @@ namespace OxyPlot.Axes
             r.Render(this, pass);
         }
 
-        /// <summary>
-        /// Resets the user's modification (zooming/panning) to minimum and maximum of this axis.
-        /// </summary>
         public virtual void Reset()
         {
             var oldMinimum = this.ActualMinimum;
@@ -1095,10 +575,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Reset, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Returns a <see cref="System.String" /> that represents this instance.
-        /// </summary>
-        /// <returns>A <see cref="System.String" /> that represents this instance.</returns>
         public override string ToString()
         {
             return string.Format(
@@ -1111,13 +587,6 @@ namespace OxyPlot.Axes
                 this.ActualMajorStep);
         }
 
-        /// <summary>
-        /// Transforms the specified point to screen coordinates.
-        /// </summary>
-        /// <param name="x">The x value (for the current axis).</param>
-        /// <param name="y">The y value.</param>
-        /// <param name="yaxis">The y axis.</param>
-        /// <returns>The transformed point.</returns>
         public virtual ScreenPoint Transform(double x, double y, Axis yaxis)
         {
             if (yaxis == null)
@@ -1128,11 +597,6 @@ namespace OxyPlot.Axes
             return new ScreenPoint(this.Transform(x), yaxis.Transform(y));
         }
 
-        /// <summary>
-        /// Transforms the specified coordinate to screen coordinates. This method can only be used with non-polar coordinate systems.
-        /// </summary>
-        /// <param name="x">The value.</param>
-        /// <returns>The transformed value (screen coordinate).</returns>
         public virtual double Transform(double x)
         {
 #if DEBUG
@@ -1150,10 +614,6 @@ namespace OxyPlot.Axes
 #endif
         }
 
-        /// <summary>
-        /// Zoom to the specified scale.
-        /// </summary>
-        /// <param name="newScale">The new scale.</param>
         public virtual void Zoom(double newScale)
         {
             var oldMinimum = this.ActualMinimum;
@@ -1213,11 +673,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Zoom, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Zooms the axis to the range [x0,x1].
-        /// </summary>
-        /// <param name="x0">The new minimum.</param>
-        /// <param name="x1">The new maximum.</param>
         public virtual void Zoom(double x0, double x1)
         {
             if (!this.IsZoomEnabled)
@@ -1241,11 +696,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Zoom, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Zooms the axis at the specified coordinate.
-        /// </summary>
-        /// <param name="factor">The zoom factor.</param>
-        /// <param name="x">The coordinate to zoom at.</param>
         public virtual void ZoomAt(double factor, double x)
         {
             if (!this.IsZoomEnabled)
@@ -1290,21 +740,13 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Zoom, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Zooms the axis with the specified zoom factor at the center of the axis.
-        /// </summary>
-        /// <param name="factor">The zoom factor.</param>
         public virtual void ZoomAtCenter(double factor)
         {
             double sx = (this.Transform(this.ClipMaximum) + this.Transform(this.ClipMinimum)) * 0.5;
             var x = this.InverseTransform(sx);
             this.ZoomAt(factor, x);
         }
-
-        /// <summary>
-        /// Modifies the data range of the axis [DataMinimum,DataMaximum] to includes the specified value.
-        /// </summary>
-        /// <param name="value">The value.</param>
+        
         public virtual void Include(double value)
         {
             if (!this.IsValidValue(value))
@@ -1316,20 +758,11 @@ namespace OxyPlot.Axes
             this.DataMaximum = double.IsNaN(this.DataMaximum) ? value : Math.Max(this.DataMaximum, value);
         }
 
-        /// <summary>
-        /// Resets the <see cref="DataMaximum" /> and <see cref="DataMinimum" /> values.
-        /// </summary>
         internal virtual void ResetDataMaxMin()
         {
             this.DataMaximum = this.DataMinimum = this.ActualMaximum = this.ActualMinimum = double.NaN;
         }
 
-        /// <summary>
-        /// Updates the <see cref="ActualMaximum" /> and <see cref="ActualMinimum" /> values.
-        /// </summary>
-        /// <remarks>If the user has zoomed/panned the axis, the internal ViewMaximum/ViewMinimum
-        /// values will be used. If Maximum or Minimum have been set, these values will be used. Otherwise the maximum and minimum values
-        /// of the series will be used, including the 'padding'.</remarks>
         internal virtual void UpdateActualMaxMin()
         {
             if (!double.IsNaN(this.ViewMaximum))
@@ -1364,10 +797,6 @@ namespace OxyPlot.Axes
             this.CoerceActualMaxMin();
         }
 
-        /// <summary>
-        /// Updates the actual minor and major step intervals.
-        /// </summary>
-        /// <param name="plotArea">The plot area rectangle.</param>
         internal virtual void UpdateIntervals(OxyRect plotArea)
         {
             double labelSize = this.IntervalLength;
@@ -1398,10 +827,6 @@ namespace OxyPlot.Axes
             this.ActualStringFormat = this.StringFormat ?? this.GetDefaultStringFormat();
         }
 
-        /// <summary>
-        /// Updates the scale and offset properties of the transform from the specified boundary rectangle.
-        /// </summary>
-        /// <param name="bounds">The bounds.</param>
         internal virtual void UpdateTransform(OxyRect bounds)
         {
             double x0 = bounds.Left;
@@ -1501,74 +926,35 @@ namespace OxyPlot.Axes
             this.ActualMaximumAndMinimumChangedOverride();
         }
 
-        /// <summary>
-        /// Invoked when <see cref="ActualMinimum"/>, <see cref="ActualMaximum"/>, <see cref="ClipMinimum"/>, and <see cref="ClipMaximum"/> are changed.
-        /// </summary>
         protected virtual void ActualMaximumAndMinimumChangedOverride()
         {
         }
 
-        /// <summary>
-        /// Gets the default format string.
-        /// </summary>
-        /// <returns>A format string.</returns>
-        /// <remarks>This format string is used if the StringFormat is not set.</remarks>
         protected virtual string GetDefaultStringFormat()
         {
             return "g6";
         }
 
-        /// <summary>
-        /// Applies a transformation after the inverse transform of the value.
-        /// </summary>
-        /// <param name="x">The value to transform.</param>
-        /// <returns>The transformed value.</returns>
-        /// <remarks>If this method is overridden, the <see cref="InverseTransform(double)" /> method must also be overridden.
-        /// See <see cref="LogarithmicAxis" /> for examples on how to implement this.</remarks>
         protected virtual double PostInverseTransform(double x)
         {
             return x;
         }
 
-        /// <summary>
-        /// Applies a transformation before the transform the value.
-        /// </summary>
-        /// <param name="x">The value to transform.</param>
-        /// <returns>The transformed value.</returns>
-        /// <remarks>If this method is overridden, the <see cref="Transform(double)" /> method must also be overridden.
-        /// See <see cref="LogarithmicAxis" /> for examples on how to implement this.</remarks>
         protected virtual double PreTransform(double x)
         {
             return x;
         }
 
-        /// <summary>
-        /// Calculates the minor interval.
-        /// </summary>
-        /// <param name="majorInterval">The major interval.</param>
-        /// <returns>The minor interval.</returns>
         protected virtual double CalculateMinorInterval(double majorInterval)
         {
             return AxisUtilities.CalculateMinorInterval(majorInterval);
         }
 
-        /// <summary>
-        /// Creates tick values at the specified interval.
-        /// </summary>
-        /// <param name="from">The start value.</param>
-        /// <param name="to">The end value.</param>
-        /// <param name="step">The interval.</param>
-        /// <param name="maxTicks">The maximum number of ticks (optional). The default value is 1000.</param>
-        /// <returns>A sequence of values.</returns>
-        /// <exception cref="System.ArgumentException">Step cannot be zero or negative.</exception>
         protected virtual IList<double> CreateTickValues(double from, double to, double step, int maxTicks = 1000)
         {
             return AxisUtilities.CreateTickValues(from, to, step, maxTicks);
         }
 
-        /// <summary>
-        /// Coerces the actual maximum and minimum values.
-        /// </summary>
         protected virtual void CoerceActualMaxMin()
         {
             // Check consistency of properties
@@ -1699,11 +1085,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Formats the value to be used on the axis.
-        /// </summary>
-        /// <param name="x">The value to format.</param>
-        /// <returns>The formatted value.</returns>
         protected virtual string FormatValueOverride(double x)
         {
             // The "SuperExponentialFormat" renders the number with superscript exponents. E.g. 10^2
@@ -1727,14 +1108,7 @@ namespace OxyPlot.Axes
             string format = string.Concat("{0:", this.ActualStringFormat ?? this.StringFormat ?? string.Empty, "}");
             return string.Format(this.ActualCulture, format, x);
         }
-
-        /// <summary>
-        /// Calculates the actual maximum value of the axis, including the <see cref="MaximumPadding" />.
-        /// </summary>
-        /// <returns>The new actual maximum value of the axis.</returns>
-        /// <remarks>
-        /// Must be called before <see cref="CalculateActualMinimum" />
-        /// </remarks>
+        
         protected virtual double CalculateActualMaximum()
         {
             var actualMaximum = this.DataMaximum;
@@ -1757,13 +1131,6 @@ namespace OxyPlot.Axes
             return actualMaximum;
         }
 
-        /// <summary>
-        /// Calculates the actual minimum value of the axis, including the <see cref="MinimumPadding" />.
-        /// </summary>
-        /// <returns>The new actual minimum value of the axis.</returns>
-        /// <remarks>
-        /// Must be called after <see cref="CalculateActualMaximum" />
-        /// </remarks>
         protected virtual double CalculateActualMinimum()
         {
             var actualMinimum = this.DataMinimum;
@@ -1787,11 +1154,6 @@ namespace OxyPlot.Axes
             return actualMinimum;
         }
 
-        /// <summary>
-        /// Sets the transform.
-        /// </summary>
-        /// <param name="newScale">The new scale.</param>
-        /// <param name="newOffset">The new offset.</param>
         protected void SetTransform(double newScale, double newOffset)
         {
             this.scale = newScale;
@@ -1799,24 +1161,11 @@ namespace OxyPlot.Axes
             this.OnTransformChanged(new EventArgs());
         }
 
-        /// <summary>
-        /// Calculates the actual interval.
-        /// </summary>
-        /// <param name="availableSize">Size of the available area.</param>
-        /// <param name="maxIntervalSize">Maximum length of the intervals.</param>
-        /// <returns>The calculate actual interval.</returns>
         protected virtual double CalculateActualInterval(double availableSize, double maxIntervalSize)
         {
             return this.CalculateActualInterval(availableSize, maxIntervalSize, this.ActualMaximum - this.ActualMinimum);
         }
-
-        /// <summary>
-        /// Returns the actual interval to use to determine which values are displayed in the axis.
-        /// </summary>
-        /// <param name="availableSize">The available size.</param>
-        /// <param name="maxIntervalSize">The maximum interval size.</param>
-        /// <param name="range">The range.</param>
-        /// <returns>Actual interval to use to determine which values are displayed in the axis.</returns>
+        
         protected double CalculateActualInterval(double availableSize, double maxIntervalSize, double range)
         {
             if (availableSize <= 0)
@@ -1885,10 +1234,6 @@ namespace OxyPlot.Axes
             return interval;
         }
 
-        /// <summary>
-        /// Raises the <see cref="AxisChanged" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="OxyPlot.Axes.AxisChangedEventArgs" /> instance containing the event data.</param>
         protected virtual void OnAxisChanged(AxisChangedEventArgs args)
         {
             this.UpdateActualMaxMin();
@@ -1900,10 +1245,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Raises the <see cref="TransformChanged" /> event.
-        /// </summary>
-        /// <param name="args">The <see cref="EventArgs" /> instance containing the event data.</param>
         protected virtual void OnTransformChanged(EventArgs args)
         {
             var handler = this.TransformChanged;
