@@ -1,11 +1,3 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="LogarithmicAxis.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an axis with logarithmic scale.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
@@ -13,16 +5,9 @@ namespace OxyPlot.Axes
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-
-    /// <summary>
-    /// Represents an axis with logarithmic scale.
-    /// </summary>
-    /// <see href="http://en.wikipedia.org/wiki/Logarithmic_scale"/>
+    
     public class LogarithmicAxis : Axis
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "LogarithmicAxis" /> class.
-        /// </summary>
         public LogarithmicAxis()
         {
             this.PowerPadding = true;
@@ -30,48 +15,14 @@ namespace OxyPlot.Axes
             this.FilterMinValue = 0;
         }
 
-        /// <summary>
-        /// Gets or sets the logarithmic base (normally 10).
-        /// </summary>
-        /// <value>The logarithmic base.</value>
-        /// <see href="http://en.wikipedia.org/wiki/Logarithm"/>
         public double Base { get; set; }
-
-        /// <summary>
-        /// Gets or sets a value indicating whether the ActualMaximum and ActualMinimum values should be padded to the nearest power of the Base.
-        /// </summary>
         public bool PowerPadding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logarithmic actual maximum value of the axis.
-        /// </summary>
         protected double LogActualMaximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logarithmic actual minimum value of the axis.
-        /// </summary>
         protected double LogActualMinimum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logarithmic clip maximum value of the axis.
-        /// </summary>
         protected double LogClipMaximum { get; set; }
-
-        /// <summary>
-        /// Gets or sets the logarithmic clip minimum value of the axis.
-        /// </summary>
         protected double LogClipMinimum { get; set; }
-
-        /// <summary>
-        /// Gets the coordinates used to draw ticks and tick labels (numbers or category names).
-        /// </summary>
-        /// <param name="majorLabelValues">The major label values.</param>
-        /// <param name="majorTickValues">The major tick values.</param>
-        /// <param name="minorTickValues">The minor tick values.</param>
         public override void GetTickValues(out IList<double> majorLabelValues, out IList<double> majorTickValues, out IList<double> minorTickValues)
         {
-            // For easier readability, the nomenclature of this function and all related functions assumes a base of 10, and therefore uses the
-            // term "decade". However, the code supports all other bases as well.
             var logBandwidth = Math.Abs(this.LogClipMaximum - this.LogClipMinimum);
             var axisBandwidth = Math.Abs(this.IsVertical() ? this.ScreenMax.Y - this.ScreenMin.Y : this.ScreenMax.X - this.ScreenMin.X);
 
@@ -126,29 +77,16 @@ namespace OxyPlot.Axes
             minorTickValues = AxisUtilities.FilterRedundantMinorTicks(majorTickValues, minorTickValues);
         }
 
-        /// <summary>
-        /// Determines whether the axis is used for X/Y values.
-        /// </summary>
-        /// <returns><c>true</c> if it is an XY axis; otherwise, <c>false</c> .</returns>
         public override bool IsXyAxis()
         {
             return true;
         }
 
-        /// <summary>
-        /// Determines whether the axis is logarithmic.
-        /// </summary>
-        /// <returns><c>true</c> if it is a logarithmic axis; otherwise, <c>false</c> .</returns>
         public override bool IsLogarithmic()
         {
             return true;
         }
 
-        /// <summary>
-        /// Pans the specified axis.
-        /// </summary>
-        /// <param name="ppt">The previous point (screen coordinates).</param>
-        /// <param name="cpt">The current point (screen coordinates).</param>
         public override void Pan(ScreenPoint ppt, ScreenPoint cpt)
         {
             if (!this.IsPanEnabled)
@@ -194,22 +132,12 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Pan, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Inverse transforms the specified screen coordinate. This method can only be used with non-polar coordinate systems.
-        /// </summary>
-        /// <param name="sx">The screen coordinate.</param>
-        /// <returns>The value.</returns>
         public override double InverseTransform(double sx)
         {
             // Inline the <see cref="PostInverseTransform" /> method here.
             return Math.Exp((sx / this.Scale) + this.Offset);
         }
 
-        /// <summary>
-        /// Transforms the specified coordinate to screen coordinates.
-        /// </summary>
-        /// <param name="x">The value.</param>
-        /// <returns>The transformed value (screen coordinate).</returns>
         public override double Transform(double x)
         {
             if (x <= 0)
@@ -220,12 +148,7 @@ namespace OxyPlot.Axes
             // Inline the <see cref="PreTransform" /> method here.
             return (Math.Log(x) - this.Offset) * this.Scale;
         }
-
-        /// <summary>
-        /// Zooms the axis at the specified coordinate.
-        /// </summary>
-        /// <param name="factor">The zoom factor.</param>
-        /// <param name="x">The coordinate to zoom at.</param>
+        
         public override void ZoomAt(double factor, double x)
         {
             if (!this.IsZoomEnabled)
@@ -255,12 +178,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Zoom, deltaMinimum, deltaMaximum));
         }
 
-        /// <summary>
-        /// Raises all elements of a List to the power of <c>this.Base</c>.
-        /// </summary>
-        /// <param name="logInput">The input values.</param>
-        /// <param name="clip">If true, discards all values that are not in the axis range.</param>
-        /// <returns>A new IList containing the resulting values.</returns>
         internal IList<double> PowList(IList<double> logInput, bool clip = false)
         {
             return
@@ -270,12 +187,6 @@ namespace OxyPlot.Axes
                     .ToList();
         }
 
-        /// <summary>
-        /// Applies the logarithm with <c>this.Base</c> to all elements of a List.
-        /// </summary>
-        /// <param name="input">The input values.</param>
-        /// <param name="clip">If true, discards all values that are not in the axis range.</param>
-        /// <returns>A new IList containing the resulting values.</returns>
         internal IList<double> LogList(IList<double> input, bool clip = false)
         {
             return
@@ -284,22 +195,12 @@ namespace OxyPlot.Axes
                     .Select(item => Math.Log(item, this.Base))
                     .ToList();
         }
-
-        /// <summary>
-        /// Calculates ticks of the decades in the axis range with a specified step size.
-        /// </summary>
-        /// <param name="step">The step size.</param>
-        /// <returns>A new IList containing the decade ticks.</returns>
+        
         internal IList<double> DecadeTicks(double step = 1)
         {
             return this.PowList(this.LogDecadeTicks(step));
         }
 
-        /// <summary>
-        /// Calculates logarithmic ticks of the decades in the axis range with a specified step size.
-        /// </summary>
-        /// <param name="step">The step size.</param>
-        /// <returns>A new IList containing the logarithmic decade ticks.</returns>
         internal IList<double> LogDecadeTicks(double step = 1)
         {
             var ret = new List<double>();
@@ -324,21 +225,11 @@ namespace OxyPlot.Axes
             return ret;
         }
 
-        /// <summary>
-        /// Calculates logarithmic ticks of all decades in the axis range and their subdivisions.
-        /// </summary>
-        /// <param name="clip">If true (default), the lowest and highest decade are clipped to the axis range.</param>
-        /// <returns>A new IList containing the logarithmic decade ticks.</returns>
         internal IList<double> LogSubdividedDecadeTicks(bool clip = true)
         {
             return this.LogList(this.SubdividedDecadeTicks(clip));
         }
-
-        /// <summary>
-        /// Calculates ticks of all decades in the axis range and their subdivisions.
-        /// </summary>
-        /// <param name="clip">If true (default), the lowest and highest decade are clipped to the axis range.</param>
-        /// <returns>A new IList containing the decade ticks.</returns>
+        
         internal IList<double> SubdividedDecadeTicks(bool clip = true)
         {
             var ret = new List<double>();
@@ -370,23 +261,11 @@ namespace OxyPlot.Axes
             return ret;
         }
 
-        /// <summary>
-        /// Chooses from a list of candidates so that the resulting List matches the <paramref name="logDesiredStepSize"/> as far as possible.
-        /// </summary>
-        /// <param name="logCandidates">The candidates.</param>
-        /// <param name="logDesiredStepSize">The desired logarithmic step size.</param>
-        /// <returns>A new IList containing the chosen candidates.</returns>
         internal IList<double> AlignTicksToCandidates(IList<double> logCandidates, double logDesiredStepSize)
         {
             return this.PowList(this.LogAlignTicksToCandidates(logCandidates, logDesiredStepSize));
         }
-
-        /// <summary>
-        /// Chooses from a list of candidates so that the resulting List matches the <paramref name="logDesiredStepSize"/> as far as possible.
-        /// </summary>
-        /// <param name="logCandidates">The candidates.</param>
-        /// <param name="logDesiredStepSize">The desired logarithmic step size.</param>
-        /// <returns>A new IList containing the chosen logarithmic candidates.</returns>
+        
         internal IList<double> LogAlignTicksToCandidates(IList<double> logCandidates, double logDesiredStepSize)
         {
             var ret = new List<double>();
@@ -430,12 +309,6 @@ namespace OxyPlot.Axes
             return ret;
         }
 
-        /// <summary>
-        /// Calculates minor tick candidates for a given set of major candidates.
-        /// </summary>
-        /// <param name="logMajorCandidates">The major candidates.</param>
-        /// <param name="logDesiredMajorStepSize">The desired major step size.</param>
-        /// <returns>A new IList containing the minor candidates.</returns>
         internal IList<double> LogCalculateMinorCandidates(IList<double> logMajorCandidates, double logDesiredMajorStepSize)
         {
             var ret = new List<double>();
@@ -467,14 +340,6 @@ namespace OxyPlot.Axes
             return ret;
         }
 
-        /// <summary>
-        /// Subdivides a logarithmic range into multiple, evenly-spaced (in linear scale!) ticks. The number of ticks and the tick intervals are adapted so 
-        /// that the resulting steps are "nice" numbers.
-        /// </summary>
-        /// <param name="logTicks">The IList the computed steps will be added to.</param>
-        /// <param name="steps">The minimum number of steps.</param>
-        /// <param name="logFrom">The start of the range.</param>
-        /// <param name="logTo">The end of the range.</param>
         internal void LogSubdivideInterval(IList<double> logTicks, double steps, double logFrom, double logTo)
         {
             var actualNumberOfSteps = 1;
@@ -546,14 +411,7 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Updates the <see cref="Axis.ActualMaximum" /> and <see cref="Axis.ActualMinimum" /> values.
-        /// </summary>
-        /// <remarks>
-        /// If the user has zoomed/panned the axis, the internal ViewMaximum/ViewMinimum
-        /// values will be used. If Maximum or Minimum have been set, these values will be used. Otherwise the maximum and minimum values
-        /// of the series will be used, including the 'padding'.
-        /// </remarks>
+
         internal override void UpdateActualMaxMin()
         {
             if (this.PowerPadding)
@@ -580,7 +438,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <inheritdoc />
         protected override void ActualMaximumAndMinimumChangedOverride()
         {
             this.LogActualMinimum = Math.Log(this.ActualMinimum, this.Base);
@@ -588,22 +445,13 @@ namespace OxyPlot.Axes
             this.LogClipMinimum = Math.Log(this.ClipMinimum, this.Base);
             this.LogClipMaximum = Math.Log(this.ClipMaximum, this.Base);
         }
-
-        /// <summary>
-        /// Applies a transformation after the inverse transform of the value. This is used in logarithmic axis.
-        /// </summary>
-        /// <param name="x">The value to transform.</param>
-        /// <returns>The transformed value.</returns>
+        
         protected override double PostInverseTransform(double x)
         {
             return Math.Exp(x);
         }
 
-        /// <summary>
-        /// Applies a transformation before the transform the value. This is used in logarithmic axis.
-        /// </summary>
-        /// <param name="x">The value to transform.</param>
-        /// <returns>The transformed value.</returns>
+
         protected override double PreTransform(double x)
         {
             Debug.Assert(x > 0, "Value should be positive.");
@@ -611,9 +459,6 @@ namespace OxyPlot.Axes
             return x <= 0 ? 0 : Math.Log(x);
         }
 
-        /// <summary>
-        /// Coerces the actual maximum and minimum values.
-        /// </summary>
         protected override void CoerceActualMaxMin()
         {
             if (double.IsNaN(this.ActualMinimum) || double.IsInfinity(this.ActualMinimum))
