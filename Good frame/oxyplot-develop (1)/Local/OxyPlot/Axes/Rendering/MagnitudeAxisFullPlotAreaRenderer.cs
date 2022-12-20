@@ -1,49 +1,20 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MagnitudeAxisFullPlotAreaRenderer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render <see cref="MagnitudeAxis" /> using the full plot area.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Provides functionality to render <see cref="MagnitudeAxis" /> using the full plot area.
-    /// </summary>
     public class MagnitudeAxisFullPlotAreaRenderer : AxisRendererBase
     {
-        /// <summary>
-        /// constants to simplify angular calculations
-        /// </summary>
         const double degree = 180.0d / Math.PI;
         const double rad = Math.PI / 180.0d;
-
-        /// <summary>
-        /// this constant limit the number of segments to draw a tick arc
-        /// </summary>
         const double MaxSegments = 180.0;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MagnitudeAxisFullPlotAreaRenderer" /> class.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="plot">The plot.</param>
+        
         public MagnitudeAxisFullPlotAreaRenderer(IRenderContext rc, PlotModel plot)
             : base(rc, plot)
         {
         }
-
-        /// <summary>
-        /// Renders the specified axis.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="pass">The pass.</param>
-        /// <exception cref="System.NullReferenceException">Angle axis should not be <c>null</c>.</exception>
+        
         public override void Render(Axis axis, int pass)
         {
             base.Render(axis, pass);
@@ -268,13 +239,7 @@ namespace OxyPlot.Axes
                 }
             }
         }
-
-        /// <summary>
-        /// Returns the angle (in radian) of the axis line in screen coordinate
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <returns>The angle (in radians).</returns>
+        
         private static double GetActualAngle(Axis axis, Axis angleAxis)
         {
             var a = axis.Transform(0, angleAxis.Angle, angleAxis);
@@ -282,12 +247,6 @@ namespace OxyPlot.Axes
             return Math.Atan2(b.y - a.y, b.x - a.x);
         }
 
-        /// <summary>
-        /// Choose the most appropriate alignment for tick text
-        /// </summary>
-        /// <param name="actualAngle">The actual angle.</param>
-        /// <param name="ha">The horizontal alignment.</param>
-        /// <param name="va">The vertical alignment.</param>
         private static void GetTickTextAligment(double actualAngle, out HorizontalAlignment ha, out VerticalAlignment va)
         {
             //top
@@ -316,15 +275,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Renders a tick by drawing an lot of segments
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="pen">The pen.</param>
-        /// <param name="startAngle">The start angle.</param>
-        /// <param name="endAngle">The end angle.</param>
         private void RenderTickArc(Axis axis, AngleAxis angleAxis, double x, OxyPen pen, double startAngle, double endAngle)
         {
             if(startAngle>endAngle)
@@ -363,12 +313,6 @@ namespace OxyPlot.Axes
             this.RenderContext.DrawLine(points, pen.Color, pen.Thickness, axis.EdgeRenderingMode, pen.ActualDashArray);
         }
 
-        /// <summary>
-        /// Renders major tick text
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="angleAxis">The angle axis.</param>
         private void RenderTickText(Axis axis, double x, Axis angleAxis)
         {
             var actualAngle = GetActualAngle(axis, angleAxis);
