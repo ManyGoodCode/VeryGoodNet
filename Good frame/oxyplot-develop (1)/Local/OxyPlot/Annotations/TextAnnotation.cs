@@ -1,30 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TextAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an annotation that shows text.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Annotations
 {
     using System;
     using System.Collections.Generic;
 
-    /// <summary>
-    /// Represents an annotation that shows text.
-    /// </summary>
     public class TextAnnotation : TextualAnnotation
     {
-        /// <summary>
-        /// The actual bounds of the text.
-        /// </summary>
         private IList<ScreenPoint> actualBounds;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TextAnnotation" /> class.
-        /// </summary>
         public TextAnnotation()
         {
             this.Stroke = OxyColors.Black;
@@ -34,37 +16,11 @@ namespace OxyPlot.Annotations
             this.Padding = new OxyThickness(4);
         }
 
-        /// <summary>
-        /// Gets or sets the fill color of the background rectangle.
-        /// </summary>
-        /// <value>The background.</value>
         public OxyColor Background { get; set; }
-
-        /// <summary>
-        /// Gets or sets the position offset (screen coordinates).
-        /// </summary>
-        /// <value>The offset.</value>
         public ScreenVector Offset { get; set; }
-
-        /// <summary>
-        /// Gets or sets the padding of the background rectangle.
-        /// </summary>
-        /// <value>The padding.</value>
         public OxyThickness Padding { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke color of the background rectangle.
-        /// </summary>
-        /// <value>The stroke color.</value>
         public OxyColor Stroke { get; set; }
-
-        /// <summary>
-        /// Gets or sets the stroke thickness of the background rectangle.
-        /// </summary>
-        /// <value>The stroke thickness.</value>
         public double StrokeThickness { get; set; }
-
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -98,13 +54,6 @@ namespace OxyPlot.Annotations
                 va);
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if (this.actualBounds == null)
@@ -112,20 +61,9 @@ namespace OxyPlot.Annotations
                 return null;
             }
 
-            // Todo: see if performance can be improved by checking rectangle (with rotation and alignment), not polygon
             return ScreenPointHelper.IsPointInPolygon(args.Point, this.actualBounds) ? new HitTestResult(this, args.Point) : null;
         }
 
-        /// <summary>
-        /// Gets the coordinates of the (rotated) background rectangle.
-        /// </summary>
-        /// <param name="position">The position.</param>
-        /// <param name="size">The size.</param>
-        /// <param name="padding">The padding.</param>
-        /// <param name="rotation">The rotation.</param>
-        /// <param name="horizontalAlignment">The horizontal alignment.</param>
-        /// <param name="verticalAlignment">The vertical alignment.</param>
-        /// <returns>The background rectangle coordinates.</returns>
         private static IList<ScreenPoint> GetTextBounds(
             ScreenPoint position,
             OxySize size,
