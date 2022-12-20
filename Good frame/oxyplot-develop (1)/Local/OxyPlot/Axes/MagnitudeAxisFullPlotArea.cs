@@ -1,26 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MagnitudeAxisFullPlotArea.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents a magnitude axis for polar plots.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
     using System;
     using System.Collections.Generic;
-
-    /// <summary>
-    /// Represents a magnitude axis that covers the whole plot area.
-    /// </summary>
     public class MagnitudeAxisFullPlotArea : MagnitudeAxis
     {
-        private double _midshiftH = 0;
-        /// <summary>
-        /// Portion to shift the center in horizontal direction relative to the plot area size (from -0.5 to +0.5 meaning +-50% of the width)
-        /// </summary>
         public double MidshiftH
         {
             get { return _midshiftH; }
@@ -33,9 +17,6 @@ namespace OxyPlot.Axes
         }
 
         private double _midshiftV = 0d;
-        /// <summary>
-        /// Portion to shift the center in vertical direction relative to the plot area size (from -0.5 to +0.5 meaning +-50% of the height)
-        /// </summary>
         public double MidshiftV
         {
             get { return _midshiftV; }
@@ -46,10 +27,7 @@ namespace OxyPlot.Axes
                 _midshiftV = Math.Min(_midshiftV, 0.5d);
             }
         }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MagnitudeAxis" /> class.
-        /// </summary>
+        
         public MagnitudeAxisFullPlotArea()
         {
             this.Position = AxisPosition.None;
@@ -60,18 +38,12 @@ namespace OxyPlot.Axes
             this.MinorGridlineStyle = LineStyle.Solid;
         }
 
-        /// <summary>
-        /// Renders the axis on the specified render context.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="pass">The rendering pass.</param>
         public override void Render(IRenderContext rc, int pass)
         {
             var r = new MagnitudeAxisFullPlotAreaRenderer(rc, this.PlotModel);
             r.Render(this, pass);
         }
 
-        /// <inheritdoc/>
         public override void GetTickValues(out IList<double> majorLabelValues, out IList<double> majorTickValues, out IList<double> minorTickValues)
         {
             var axisRect = new OxyRect(this.ScreenMin, this.ScreenMax);
@@ -94,10 +66,6 @@ namespace OxyPlot.Axes
             majorLabelValues = majorTickValues;
         }
 
-        /// <summary>
-        /// Updates the scale and offset properties of the transform from the specified boundary rectangle.
-        /// </summary>
-        /// <param name="bounds">The bounds.</param>
         internal override void UpdateTransform(OxyRect bounds)
         {
             double x0 = bounds.Left;
@@ -183,11 +151,6 @@ namespace OxyPlot.Axes
             this.ActualMaximumAndMinimumChangedOverride();
         }
 
-        /// <summary>
-        /// Pans the specified axis.
-        /// </summary>
-        /// <param name="ppt">The previous point (screen coordinates).</param>
-        /// <param name="cpt">The current point (screen coordinates).</param>
         public override void Pan(ScreenPoint ppt, ScreenPoint cpt)
         {
             if (!this.IsPanEnabled)
@@ -212,11 +175,6 @@ namespace OxyPlot.Axes
             this.OnAxisChanged(new AxisChangedEventArgs(AxisChangeTypes.Pan, 0, 0));
         }
 
-        /// <summary>
-        /// Zooms the axis at the specified coordinate.
-        /// </summary>
-        /// <param name="factor">The zoom factor.</param>
-        /// <param name="x">The coordinate to zoom at.</param>
         public override void ZoomAt(double factor, double x)
         {
             if (!this.IsZoomEnabled)
