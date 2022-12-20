@@ -1,29 +1,11 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RectangleAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an annotation that shows a rectangle.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
+
 
 namespace OxyPlot.Annotations
 {
     using System;
-
-    /// <summary>
-    /// Represents an annotation that shows a rectangle.
-    /// </summary>
     public class RectangleAnnotation : ShapeAnnotation
     {
-        /// <summary>
-        /// The rectangle transformed to screen coordinates.
-        /// </summary>
         private OxyRect screenRectangle;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="RectangleAnnotation" /> class.
-        /// </summary>
         public RectangleAnnotation()
         {
             this.MinimumX = double.NegativeInfinity;
@@ -35,31 +17,11 @@ namespace OxyPlot.Annotations
             this.TextVerticalAlignment = VerticalAlignment.Middle;
         }
 
-        /// <summary>
-        /// Gets or sets the minimum X.
-        /// </summary>
-        /// <value>The minimum X.</value>
         public double MinimumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum X.
-        /// </summary>
-        /// <value>The maximum X.</value>
         public double MaximumX { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum Y.
-        /// </summary>
-        /// <value>The minimum Y.</value>
         public double MinimumY { get; set; }
-
-        /// <summary>
-        /// Gets or sets the maximum Y.
-        /// </summary>
-        /// <value>The maximum Y.</value>
         public double MaximumY { get; set; }
 
-        /// <inheritdoc/>
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -102,13 +64,6 @@ namespace OxyPlot.Annotations
                 va);
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if (this.screenRectangle.Contains(args.Point))
