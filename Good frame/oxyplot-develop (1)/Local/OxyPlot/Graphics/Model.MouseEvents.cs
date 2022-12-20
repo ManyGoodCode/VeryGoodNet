@@ -1,29 +1,10 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="Model.MouseEvents.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides an abstract base class for graphics models.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot
 {
     using System;
-
-    /// <summary>
-    /// Provides an abstract base class for graphics models.
-    /// </summary>
     public abstract partial class Model
     {
-        /// <summary>
-        /// The mouse hit tolerance.
-        /// </summary>
         private const double MouseHitTolerance = 10;
-
-        /// <summary>
-        /// The element that receives mouse move events.
-        /// </summary>
         private Element currentMouseEventElement;
 
         /// <summary>
