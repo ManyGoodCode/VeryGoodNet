@@ -1,38 +1,16 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="AngleAxisRenderer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render <see cref="AngleAxis" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
     using System;
     using System.Linq;
 
-    /// <summary>
-    /// Provides functionality to render <see cref="AngleAxis" />.
-    /// </summary>
     public class AngleAxisRenderer : AxisRendererBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AngleAxisRenderer" /> class.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="plot">The plot.</param>
         public AngleAxisRenderer(IRenderContext rc, PlotModel plot)
             : base(rc, plot)
         {
         }
 
-        /// <summary>
-        /// Renders the specified axis.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="pass">The render pass.</param>
-        /// <exception cref="System.InvalidOperationException">Magnitude axis not defined.</exception>
         public override void Render(Axis axis, int pass)
         {
             var angleAxis = (AngleAxis)axis;
