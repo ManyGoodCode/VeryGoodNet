@@ -1,31 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="PolygonAnnotation.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an annotation that shows a polygon.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
-
 namespace OxyPlot.Annotations
 {
     using System;
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Represents an annotation that shows a polygon.
-    /// </summary>
     public class PolygonAnnotation : ShapeAnnotation
     {
-        /// <summary>
-        /// The polygon points transformed to screen coordinates.
-        /// </summary>
         private IList<ScreenPoint> screenPoints;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PolygonAnnotation" /> class.
-        /// </summary>
         public PolygonAnnotation()
         {
             this.LineStyle = LineStyle.Solid;
@@ -35,33 +16,11 @@ namespace OxyPlot.Annotations
             this.Points = new List<DataPoint>();
         }
 
-        /// <summary>
-        /// Gets or sets the line join.
-        /// </summary>
-        /// <value>The line join.</value>
         public LineJoin LineJoin { get; set; }
-
-        /// <summary>
-        /// Gets or sets the line style.
-        /// </summary>
-        /// <value>The line style.</value>
         public LineStyle LineStyle { get; set; }
-
-        /// <summary>
-        /// Gets or sets the minimum length of the segment.
-        /// Increasing this number will increase performance,
-        /// but make the polygon less accurate. The default is <c>2</c>.
-        /// </summary>
-        /// <value>The minimum length of the segment.</value>
         public double MinimumSegmentLength { get; set; }
-
-        /// <summary>
-        /// Gets the points.
-        /// </summary>
-        /// <value>The points.</value>
         public List<DataPoint> Points { get; private set; }
-
-        /// <inheritdoc/>
+        
         public override void Render(IRenderContext rc)
         {
             base.Render(rc);
@@ -70,7 +29,6 @@ namespace OxyPlot.Annotations
                 return;
             }
 
-            // transform to screen coordinates
             this.screenPoints = this.Points.Select(this.Transform).ToList();
             if (this.screenPoints.Count == 0)
             {
@@ -105,18 +63,10 @@ namespace OxyPlot.Annotations
             }
         }
 
-        /// <summary>
-        /// When overridden in a derived class, tests if the plot element is hit by the specified point.
-        /// </summary>
-        /// <param name="args">The hit test arguments.</param>
-        /// <returns>
-        /// The result of the hit test.
-        /// </returns>
         protected override HitTestResult HitTestOverride(HitTestArguments args)
         {
             if (this.screenPoints == null)
             {
-                // Points not specified.
                 return null;
             }
 
