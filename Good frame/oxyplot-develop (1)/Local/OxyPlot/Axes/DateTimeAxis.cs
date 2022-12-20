@@ -1,11 +1,3 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="DateTimeAxis.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Represents an axis presenting <see cref="System.DateTime" /> values.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
@@ -14,47 +6,14 @@ namespace OxyPlot.Axes
     using System.Collections.ObjectModel;
     using System.Globalization;
     using System.Linq;
-
-    /// <summary>
-    /// Represents an axis presenting <see cref="System.DateTime" /> values.
-    /// </summary>
-    /// <remarks>The actual numeric values on the axis are days since 1900/01/01.
-    /// Use the static ToDouble and ToDateTime to convert numeric values to and from DateTimes.
-    /// The StringFormat value can be used to force formatting of the axis values
-    /// <code>"yyyy-MM-dd"</code> shows date
-    /// <code>"w"</code> or <code>"ww"</code> shows week number
-    /// <code>"h:mm"</code> shows hours and minutes</remarks>
+    
     public class DateTimeAxis : LinearAxis
     {
-        /// <summary>
-        /// The time origin.
-        /// </summary>
-        /// <remarks>This gives the same numeric date values as Excel</remarks>
         private static readonly DateTime TimeOrigin = new DateTime(1899, 12, 31, 0, 0, 0, DateTimeKind.Utc);
-
-        /// <summary>
-        /// The maximum day value
-        /// </summary>
         private static readonly double MaxDayValue = (DateTime.MaxValue - TimeOrigin).TotalDays;
-
-        /// <summary>
-        /// The minimum day value
-        /// </summary>
         private static readonly double MinDayValue = (DateTime.MinValue - TimeOrigin).TotalDays;
-
-        /// <summary>
-        /// The actual interval type.
-        /// </summary>
         private DateTimeIntervalType actualIntervalType;
-
-        /// <summary>
-        /// The actual minor interval type.
-        /// </summary>
         private DateTimeIntervalType actualMinorIntervalType;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref = "DateTimeAxis" /> class.
-        /// </summary>
         public DateTimeAxis()
         {
             this.Position = AxisPosition.Bottom;
@@ -63,71 +22,26 @@ namespace OxyPlot.Axes
             this.CalendarWeekRule = CalendarWeekRule.FirstFourDayWeek;
         }
 
-        /// <summary>
-        /// Gets or sets CalendarWeekRule.
-        /// </summary>
         public CalendarWeekRule CalendarWeekRule { get; set; }
-
-        /// <summary>
-        /// Gets or sets FirstDayOfWeek.
-        /// </summary>
         public DayOfWeek FirstDayOfWeek { get; set; }
-
-        /// <summary>
-        /// Gets or sets IntervalType.
-        /// </summary>
         public DateTimeIntervalType IntervalType { get; set; }
-
-        /// <summary>
-        /// Gets or sets MinorIntervalType.
-        /// </summary>
         public DateTimeIntervalType MinorIntervalType { get; set; }
-
-        /// <summary>
-        /// Gets or sets the time zone (used when formatting date/time values).
-        /// </summary>
-        /// <value>The time zone info.</value>
-        /// <remarks>No date/time conversion will be performed if this property is <c>null</c>.</remarks>
         public TimeZoneInfo TimeZone { get; set; }
-
-        /// <summary>
-        /// Creates a data point.
-        /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <returns>A data point.</returns>
         public static DataPoint CreateDataPoint(DateTime x, double y)
         {
             return new DataPoint(ToDouble(x), y);
         }
 
-        /// <summary>
-        /// Creates a data point.
-        /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <returns>A data point.</returns>
         public static DataPoint CreateDataPoint(DateTime x, DateTime y)
         {
             return new DataPoint(ToDouble(x), ToDouble(y));
         }
 
-        /// <summary>
-        /// Creates a data point.
-        /// </summary>
-        /// <param name="x">The x value.</param>
-        /// <param name="y">The y value.</param>
-        /// <returns>A data point.</returns>
         public static DataPoint CreateDataPoint(double x, DateTime y)
         {
             return new DataPoint(x, ToDouble(y));
         }
 
-        /// <summary>
-        /// Converts a numeric representation of the date (number of days after the time origin) to a DateTime structure.
-        /// </summary>
-        /// <param name="value">The number of days after the time origin.</param>
-        /// <returns>A <see cref="DateTime" /> structure. Ticks = 0 if the value is invalid.</returns>
         public static DateTime ToDateTime(double value)
         {
             if (double.IsNaN(value) || value < MinDayValue || value > MaxDayValue)
@@ -138,23 +52,12 @@ namespace OxyPlot.Axes
             return TimeOrigin.AddDays(value - 1);
         }
 
-        /// <summary>
-        /// Converts a DateTime to days after the time origin.
-        /// </summary>
-        /// <param name="value">The date/time structure.</param>
-        /// <returns>The number of days after the time origin.</returns>
         public static double ToDouble(DateTime value)
         {
             var span = value - TimeOrigin;
             return span.TotalDays + 1;
         }
 
-        /// <summary>
-        /// Gets the tick values.
-        /// </summary>
-        /// <param name="majorLabelValues">The major label values.</param>
-        /// <param name="majorTickValues">The major tick values.</param>
-        /// <param name="minorTickValues">The minor tick values.</param>
         public override void GetTickValues(
             out IList<double> majorLabelValues, out IList<double> majorTickValues, out IList<double> minorTickValues)
         {
@@ -167,12 +70,6 @@ namespace OxyPlot.Axes
             minorTickValues = AxisUtilities.FilterRedundantMinorTicks(majorTickValues, minorTickValues);
         }
 
-        /// <summary>
-        /// Gets the value from an axis coordinate, converts from double to the correct data type if necessary.
-        /// e.g. DateTimeAxis returns the DateTime and CategoryAxis returns category strings.
-        /// </summary>
-        /// <param name="x">The coordinate.</param>
-        /// <returns>The value.</returns>
         public override object GetValue(double x)
         {
             var time = ToDateTime(x);
@@ -184,11 +81,7 @@ namespace OxyPlot.Axes
 
             return time;
         }
-
-        /// <summary>
-        /// Updates the intervals.
-        /// </summary>
-        /// <param name="plotArea">The plot area.</param>
+        
         internal override void UpdateIntervals(OxyRect plotArea)
         {
             base.UpdateIntervals(plotArea);
@@ -272,22 +165,11 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the default string format.
-        /// </summary>
-        /// <returns>
-        /// The format string.
-        /// </returns>
         protected override string GetDefaultStringFormat()
         {
             return null;
         }
 
-        /// <summary>
-        /// Formats the value to be used on the axis.
-        /// </summary>
-        /// <param name="x">The value to format.</param>
-        /// <returns>The formatted value.</returns>
         protected override string FormatValueOverride(double x)
         {
             // convert the double value to a DateTime
@@ -312,12 +194,6 @@ namespace OxyPlot.Axes
             return string.Format(this.ActualCulture, fmt, time);
         }
 
-        /// <summary>
-        /// Calculates the actual interval.
-        /// </summary>
-        /// <param name="availableSize">Size of the available area.</param>
-        /// <param name="maxIntervalSize">Maximum length of the intervals.</param>
-        /// <returns>The calculate actual interval.</returns>
         protected override double CalculateActualInterval(double availableSize, double maxIntervalSize)
         {
             const double Year = 365.25;
@@ -437,14 +313,6 @@ namespace OxyPlot.Axes
             return interval;
         }
 
-        /// <summary>
-        /// Creates the date tick values.
-        /// </summary>
-        /// <param name="min">The min.</param>
-        /// <param name="max">The max.</param>
-        /// <param name="step">The step.</param>
-        /// <param name="intervalType">Type of the interval.</param>
-        /// <returns>Date tick values.</returns>
         private IList<double> CreateDateTickValues(
             double min, double max, double step, DateTimeIntervalType intervalType)
         {
@@ -527,14 +395,6 @@ namespace OxyPlot.Axes
             return values;
         }
 
-        /// <summary>
-        /// Creates <see cref="DateTime" /> tick values.
-        /// </summary>
-        /// <param name="min">The min.</param>
-        /// <param name="max">The max.</param>
-        /// <param name="interval">The interval.</param>
-        /// <param name="intervalType">The interval type.</param>
-        /// <returns>A list of <see cref="DateTime" /> tick values.</returns>
         private IList<double> CreateDateTimeTickValues(
             double min, double max, double interval, DateTimeIntervalType intervalType)
         {
@@ -547,12 +407,7 @@ namespace OxyPlot.Axes
             // For shorter step sizes we use the method from Axis
             return this.CreateTickValues(min, max, interval);
         }
-
-        /// <summary>
-        /// Gets the week number for the specified date.
-        /// </summary>
-        /// <param name="date">The date.</param>
-        /// <returns>The week number for the current culture.</returns>
+        
         private int GetWeek(DateTime date)
         {
             return this.ActualCulture.Calendar.GetWeekOfYear(date, this.CalendarWeekRule, this.FirstDayOfWeek);
