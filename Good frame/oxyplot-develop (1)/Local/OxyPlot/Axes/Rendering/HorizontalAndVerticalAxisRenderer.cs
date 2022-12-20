@@ -1,11 +1,3 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="HorizontalAndVerticalAxisRenderer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render horizontal and vertical axes.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
@@ -13,27 +5,14 @@ namespace OxyPlot.Axes
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-
-    /// <summary>
-    /// Provides functionality to render horizontal and vertical axes.
-    /// </summary>
+    
     public class HorizontalAndVerticalAxisRenderer : AxisRendererBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="HorizontalAndVerticalAxisRenderer" /> class.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="plot">The plot.</param>
         public HorizontalAndVerticalAxisRenderer(IRenderContext rc, PlotModel plot)
             : base(rc, plot)
         {
         }
 
-        /// <summary>
-        /// Renders the specified axis.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="pass">The pass.</param>
         public override void Render(Axis axis, int pass)
         {
             base.Render(axis, pass);
@@ -167,25 +146,12 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Interpolates linearly between two values.
-        /// </summary>
-        /// <param name="x0">The x0.</param>
-        /// <param name="x1">The x1.</param>
-        /// <param name="f">The interpolation factor.</param>
-        /// <returns>The interpolated value.</returns>
+
         protected static double Lerp(double x0, double x1, double f)
         {
-            // http://en.wikipedia.org/wiki/Linear_interpolation
             return (x0 * (1 - f)) + (x1 * f);
         }
 
-        /// <summary>
-        /// Snaps v to value if it is within the specified distance.
-        /// </summary>
-        /// <param name="target">The target value.</param>
-        /// <param name="v">The value to snap.</param>
-        /// <param name="eps">The distance tolerance.</param>
         protected static void SnapTo(double target, ref double v, double eps = 0.5)
         {
             if (v > target - eps && v < target + eps)
@@ -194,15 +160,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the axis title position, rotation and alignment.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="titlePosition">The title position.</param>
-        /// <param name="angle">The angle.</param>
-        /// <param name="halign">The horizontal alignment.</param>
-        /// <param name="valign">The vertical alignment.</param>
-        /// <returns>The <see cref="ScreenPoint" />.</returns>
         protected virtual ScreenPoint GetAxisTitlePositionAndAlignment(
             Axis axis,
             double titlePosition,
@@ -241,11 +198,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Renders the axis title.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="titlePosition">The title position.</param>
         protected virtual void RenderAxisTitle(Axis axis, double titlePosition)
         {
             if (string.IsNullOrEmpty(axis.ActualTitle))
@@ -286,14 +238,7 @@ namespace OxyPlot.Axes
                 valign,
                 maxSize);
         }
-
-        /// <summary>
-        /// Renders the major items.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="axisPosition">The axis position.</param>
-        /// <param name="titlePosition">The title position.</param>
-        /// <param name="drawAxisLine">Draw the axis line if set to <c>true</c>.</param>
+        
         protected virtual void RenderMajorItems(Axis axis, double axisPosition, double titlePosition, bool drawAxisLine)
         {
             double eps = axis.ActualMinorStep * 1e-3;
@@ -506,12 +451,7 @@ namespace OxyPlot.Axes
                 this.RenderContext.DrawLineSegments(majorTickSegments, this.MajorTickPen, axis.EdgeRenderingMode.GetActual(EdgeRenderingMode.PreferSharpness));
             }
         }
-
-        /// <summary>
-        /// Renders the minor items.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="axisPosition">The axis position.</param>
+        
         protected virtual void RenderMinorItems(Axis axis, double axisPosition)
         {
             double eps = axis.ActualMinorStep * 1e-3;
@@ -608,19 +548,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Adds segments to <paramref name="segments"/> array. 
-        /// If <paramref name="cropGridlines"/> is true, then lines will be cropped with <paramref name="perpAxes"/> lists axes.
-        /// </summary>
-        /// <param name="segments">The target segments.</param>
-        /// <param name="perpAxes">Perpendicular axes list.</param>
-        /// <param name="isHorizontal">True, if current axis is horizontal.</param>
-        /// <param name="cropGridlines">True, if gridlines should be cropped.</param>
-        /// <param name="transformedValue">Starting point position.</param>
-        /// <param name="plotAreaLeft">Plot area left position.</param>
-        /// <param name="plotAreaRight">Plot area right position.</param>
-        /// <param name="plotAreaTop">Plot area top position.</param>
-        /// <param name="plotAreaBottom">Plot area bottom position.</param>
         private void AddSegments(
             List<ScreenPoint> segments, 
             List<Axis> perpAxes,
@@ -666,21 +593,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Gets the alignments given the specified rotation angle.
-        /// </summary>
-        /// <param name="boxAngle">The angle of a box to rotate (usually it is label angle).</param>
-        /// <param name="axisAngle">
-        /// The axis angle, the original angle belongs to. The Top axis should have 0, next angles are computed clockwise. 
-        /// The angle should be in [-180, 180). (T, R, B, L) is (0, 90, -180, -90). 
-        /// </param>
-        /// <param name="ha">Horizontal alignment.</param>
-        /// <param name="va">Vertical alignment.</param>
-        /// <remarks>
-        /// This method is supposed to compute the alignment of the labels that are put near axis. 
-        /// Because such labels can have different angles, and the axis can have different angles as well,
-        /// computing the alignment is not straightforward.
-        /// </remarks>
         private void GetRotatedAlignments(
             double boxAngle,
             double axisAngle,
