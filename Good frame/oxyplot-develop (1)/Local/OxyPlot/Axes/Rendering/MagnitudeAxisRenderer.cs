@@ -1,11 +1,3 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="MagnitudeAxisRenderer.cs" company="OxyPlot">
-//   Copyright (c) 2014 OxyPlot contributors
-// </copyright>
-// <summary>
-//   Provides functionality to render <see cref="MagnitudeAxis" />.
-// </summary>
-// --------------------------------------------------------------------------------------------------------------------
 
 namespace OxyPlot.Axes
 {
@@ -13,27 +5,14 @@ namespace OxyPlot.Axes
     using System.Collections.Generic;
     using System.Linq;
 
-    /// <summary>
-    /// Provides functionality to render <see cref="MagnitudeAxis" />.
-    /// </summary>
     public class MagnitudeAxisRenderer : AxisRendererBase
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MagnitudeAxisRenderer" /> class.
-        /// </summary>
-        /// <param name="rc">The render context.</param>
-        /// <param name="plot">The plot.</param>
         public MagnitudeAxisRenderer(IRenderContext rc, PlotModel plot)
             : base(rc, plot)
         {
         }
 
-        /// <summary>
-        /// Renders the specified axis.
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="pass">The pass.</param>
-        /// <exception cref="System.NullReferenceException">Angle axis should not be <c>null</c>.</exception>
+
         public override void Render(Axis axis, int pass)
         {
             base.Render(axis, pass);
@@ -84,12 +63,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Returns the angle (in radian) of the axis line in screen coordinate
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <returns>The angle (in radians).</returns>
         private static double GetActualAngle(Axis axis, Axis angleAxis)
         {
             var a = axis.Transform(0, angleAxis.Angle, angleAxis);
@@ -97,12 +70,6 @@ namespace OxyPlot.Axes
             return Math.Atan2(b.y - a.y, b.x - a.x);
         }
 
-        /// <summary>
-        /// Choose the most appropriate alignment for tick text
-        /// </summary>
-        /// <param name="actualAngle">The actual angle.</param>
-        /// <param name="ha">The horizontal alignment.</param>
-        /// <param name="va">The vertical alignment.</param>
         private static void GetTickTextAligment(double actualAngle, out HorizontalAlignment ha, out VerticalAlignment va)
         {
             if (actualAngle > 3 * Math.PI / 4 || actualAngle < -3 * Math.PI / 4)
@@ -127,13 +94,6 @@ namespace OxyPlot.Axes
             }
         }
 
-        /// <summary>
-        /// Renders a tick, chooses the best implementation
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="pen">The pen.</param>
         private void RenderTick(Axis axis, AngleAxis angleAxis, double x, OxyPen pen)
         {
             var isFullCircle = Math.Abs(Math.Abs(angleAxis.EndAngle - angleAxis.StartAngle) - 360) < 1e-6;
@@ -147,14 +107,7 @@ namespace OxyPlot.Axes
                 this.RenderTickArc(axis, angleAxis, x, pen);
             }
         }
-
-        /// <summary>
-        /// Renders a tick by drawing an ellipse
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="pen">The pen.</param>
+        
         private void RenderTickCircle(Axis axis, Axis angleAxis, double x, OxyPen pen)
         {
             var zero = angleAxis.Offset;
@@ -169,26 +122,14 @@ namespace OxyPlot.Axes
             this.RenderContext.DrawEllipse(new OxyRect(left, top, width, height), OxyColors.Undefined, pen.Color, pen.Thickness, axis.EdgeRenderingMode);
         }
 
-        /// <summary>
-        /// Renders a tick by drawing an lot of segments
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="angleAxis">The angle axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="pen">The pen.</param>
+
         private void RenderTickArc(Axis axis, AngleAxis angleAxis, double x, OxyPen pen)
         {
             // caution: make sure angleAxis.UpdateActualMaxMin(); has been called
             var minAngle = angleAxis.ClipMinimum;
             var maxAngle = angleAxis.ClipMaximum;
 
-            // number of segment to draw a full circle
-            // - decrease if you want get more speed
-            // - increase if you want more detail
-            // (making a public property of it would be a great idea)
             const double MaxSegments = 90.0;
-
-            // compute the actual number of segments
             var segmentCount = (int)(MaxSegments * Math.Abs(angleAxis.EndAngle - angleAxis.StartAngle) / 360.0);
 
             var angleStep = (maxAngle - minAngle) / (segmentCount - 1);
@@ -204,12 +145,6 @@ namespace OxyPlot.Axes
             this.RenderContext.DrawLine(points, pen.Color, pen.Thickness, axis.EdgeRenderingMode, pen.ActualDashArray);
         }
 
-        /// <summary>
-        /// Renders major tick text
-        /// </summary>
-        /// <param name="axis">The axis.</param>
-        /// <param name="x">The x-value.</param>
-        /// <param name="angleAxis">The angle axis.</param>
         private void RenderTickText(Axis axis, double x, Axis angleAxis)
         {
             var actualAngle = GetActualAngle(axis, angleAxis);
